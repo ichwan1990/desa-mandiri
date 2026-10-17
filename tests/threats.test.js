@@ -1,11 +1,11 @@
-// Musim & ancaman (docs/RISET-MUSIM-ANCAMAN.md): kelaparan, kayu bakar, sakit & rawat, pergi, serigala, kebakaran, banjir, kematian & makam, skala tahun.
+// Tema empat musim (?tema=sedang) — musim & ancaman (docs/RISET-MUSIM-ANCAMAN.md): kelaparan, kayu bakar, sakit & rawat, pergi, serigala, kebakaran, banjir, kematian & makam, skala tahun.
 const { chromium } = require('playwright');
 const path = require('path');
 const SHOT = n => path.join(__dirname, '..', 'docs', 'screenshots', n);
 (async () => {
   const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1600, height: 900 } });
   const errs = []; p.on('console', m => m.type() === 'error' && errs.push(m.text())); p.on('pageerror', e => errs.push(String(e)));
-  await p.goto(process.env.GAME_URL || 'http://localhost:8095/'); await p.evaluate(() => localStorage.clear()); await p.reload();
+  const U = new URL(process.env.GAME_URL || 'http://localhost:8095/'); U.searchParams.set('tema', 'sedang'); await p.goto(U.href); await p.evaluate(() => localStorage.clear()); await p.reload();
   await p.waitForFunction(() => window.DESA && DESA.state, null, { timeout: 15000 });
   await p.click('#btnNew'); await p.click('#tutSkip');
   const base = () => p.evaluate(() => { const S = DESA.state, A = DESA.addBuilding;

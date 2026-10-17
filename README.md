@@ -23,7 +23,7 @@ npm test          # semua tes: menu, panel, riset, pasar, teks, audio, pencapaia
 node balance-sim.test.js 5   # simulasi balancing 24 hari (5 kali), cetak kurva stok makanan + kematian/kepergian
 node balance-sim.test.js 6 120   # simulasi panjang 120 hari: kematian, kepergian, stok hari 60/120, soft-lock
 ```
-Tes gagal (exit code 1) bila ada error di konsol. Screenshot disimpan di `docs/screenshots/`.
+Tes memakai tema bawaan (Nusantara); `threats.test.js` menguji tema empat musim lewat `?tema=sedang`. Tes gagal (exit code 1) bila ada error di konsol. Screenshot disimpan di `docs/screenshots/`.
 
 ## Fitur tahap 3
 - **Pasar & pedagang keliling** — tombol 🛒 Pasar (butuh bangunan Pasar atau pedagang yang sedang singgah). Barter berbasis nilai: tiap barang punya harga jual & beli, harga bergeser tiap hari (0,92–1,08, dibatasi 0,7–1,4), dipengaruhi musim & event, dengan kuota nilai harian per era. Menjual pangan saat stok > ±16 hari dihargai lebih murah. Om Robert datang berkala dengan gerobaknya lewat jembatan dan memberi diskon beli 10%. Angka di `balance.js` (`MARKET`, `MERCHANT`).
@@ -47,10 +47,21 @@ Tes gagal (exit code 1) bila ada error di konsol. Screenshot disimpan di `docs/s
 - Kayu, batu, makanan (termasuk gandum) dan air ditumpuk di samping Gudang (atau api unggun / pusat kemah sebelum ada gudang). Tingkat 0–4: `stok == 0 ? 0 : min(4, 1 + floor(3 × stok / kapasitas))`, kapasitas per jenis di `balance.js` (`STOCKPILE.capacity`). Musim dingin memakai varian `_winter`. Sprite: `assets/stockpiles/stockpile_<res>_<0-4>[_winter].png` (kunci `stockpile_*` di `assets.js`); tanpa sprite, game menumpuk ikon sumber daya.
 - Penduduk selalu memakai sprite membawa sesuai jenis barang (kayu/batu/makanan/air; papan/bata/alat/kulit memakai baris terdekat), juga saat berhenti. Saat setor, muncul teks melayang `+N` dengan ikon sumber daya (digabung bila beruntun).
 
+## Tema Nusantara (tahap 7, `docs/RISET-INDONESIA.md`)
+Tema bawaan sekarang **Nusantara**; tema empat musim lama tetap ada (buka `index.html?tema=sedang`). Semua perbedaan antar-tema ada di `tema.js`, game.js hanya membaca `CONFIG`.
+- **Musim** (1 tahun = 28 hari): Musim Hujan 9 hari → Pancaroba Mareng 5 → **Musim Kemarau 9 (musim sulit)** → Pancaroba Labuh 5. `season()` dihitung kumulatif dari `SEASON_LEN`; `isHardSeason()` = kemarau. Tanpa salju.
+- Efek digerakkan oleh isi `SEASON_FX`: hujan (60% hari hujan, banjir maks 2×, kayu bakar 2/hari, pembusukan ×1.5, padi tumbuh lebih cepat), mareng (panen raya, hitung mundur stok kemarau, syukuran, masuk angin), kemarau (lapar ×1.4, air ×1.5, sumur −1, sungai ×0.6, kekeringan, terik tanpa caping), labuh (hujan pertama, masuk angin).
+- **Padi**: id internal tetap `gandum` (simpanan & misi tetap cocok), label tampil "Padi". Ladang (tegalan) bergiliran padi, jagung, padi, ubi, padi, singkong; padi berhenti di kemarau kecuali riset Irigasi (T04, lalu ×1.5 lebih lama), tanaman tegalan tetap tumbuh (×1.25). Padi digambar di atas tile sawah (autotile 4-bit).
+- **Babi hutan** menggantikan serigala (kode serigala dipakai ulang): jejak sore → dengusan → masuk desa → pergi saat fajar. Sasaran utama ladang (1–2 petak rusak); melukai penduduk baru mulai era Dusun, serangan fatal hanya tahun ke-2+. Pertahanan: Pagar Bambu (jalur ×3, langkah melambat), Oncor (peluang serang & rusak ladang ×0.4), Pos Ronda + prioritas Jaga (kentongan mengusir 1×/malam).
+- **Hari Jadi Desa** hanya muncul tepat di ulang tahun desa (hari 29, 57, …), sekali per tahun.
+- Event bersalju/serigala/empat musim dimatikan (`EVENT_DISABLE`) sampai teks Nusantara dari Asisten Dokumen tersedia; kait teks baru ada di `THEMES.indonesia.TXT` (path TEKS bisa diisi tanpa ubah kode).
+- Sprite tropis tahap 7: varian musim `seasons/tropis/<musim>/`, cuaca (hujan lebat + kilat, debu & tint kemarau, bayang awan labuh), gubuk bambu, lumbung padi, pos ronda, pagar bambu, obor bambu, babi hutan, kunang-kunang malam (`ASSET_SWAP` di tema).
+
 ## Struktur file
 ```
 index.html          Tata letak & UI
 balance.js          SEMUA angka balancing (CONFIG) — ubah di sini untuk tuning
+tema.js             Tema/bioma: musim (nama, panjang, SEASON_FX), tanaman, ancaman malam, sprite & teks per tema (bawaan: indonesia)
 assets.js           Peta aset tunggal (ASSETS): path sprite, ukuran frame, animasi, warna placeholder
 audio.js            Musik ambien & SFX (WebAudio, tanpa file suara)
 serve.py            Server lokal multi-thread (python serve.py [port] [folder], bawaan 8095)

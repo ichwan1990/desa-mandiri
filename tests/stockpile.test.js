@@ -38,8 +38,8 @@ const path = require('path');
   const carryDrawn = await p.evaluate(() => DESA.state.villagers.every(v => v.carry));
   await p.waitForTimeout(500);
   await p.screenshot({ path: path.join(__dirname, '..', 'docs', 'screenshots', 'v5-stockpile.png') });
-  // musim dingin -> varian _winter
-  const winter = await p.evaluate(() => { const S = DESA.state; S.day = 22; return DESA.season() === 'dingin' && !!ASSETS.stockpile_kayu_4_winter.image; });
+  // tema empat musim: musim dingin -> varian _winter; tema Nusantara: tanpa salju (varian _winter tidak dimuat)
+  const winter = await p.evaluate(() => { const S = DESA.state; S.day = 22; return CONFIG.THEME === 'sedang' ? DESA.season() === 'dingin' && !!ASSETS.stockpile_kayu_4_winter.image : !ASSETS.stockpile_kayu_4_winter && DESA.season() === 'kemarau'; });
   console.log(JSON.stringify({ ...r, carryDrawn, winter }));
   const ok = r.missing.length === 0 && r.campTiers.every(t => t === 0) && r.campSpots.length === 4 && r.formula && r.foodIncludesWheat && r.nearWarehouse && r.free
     && r.gud.join() === 'kayu4,batu2,makanan1,air1' && r.carryRows && r.deposit && carryDrawn && winter && errs.length === 0;

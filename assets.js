@@ -142,10 +142,57 @@ window.ASSETS = {
   menara_jaga: { color: '#7a5434', img: 'assets/structures/watchtower.png', fw: 64, fh: 96 },
   makam:  { color: '#9a9a9a', img: ['assets/structures/graves/grave_mound_fresh.png', 'assets/structures/graves/grave_cross_wood.png', 'assets/structures/graves/grave_stone_round.png', 'assets/structures/graves/grave_stone_flowers.png', 'assets/structures/graves/grave_cairn.png'] },
   makam_dingin: { img: 'assets/structures/graves/grave_stone_snow.png' },
+  // ---------- tahap 7: Nusantara (assets/README.md "Tahap 7"); dipakai lewat tema (CONFIG.ASSET_SWAP / ART_SUFFIX) ----------
+  // varian musim tropis: seasons/tropis/<musim>/<asli>_<musim>.png, format & indeks sama dengan aslinya
+  ...Object.fromEntries(['hujan', 'mareng', 'kemarau', 'labuh'].flatMap(m => [
+    [`rumput_${m}`, { img: `assets/seasons/tropis/${m}/grass_${m}.png` }], [`rumput2_${m}`, { img: `assets/seasons/tropis/${m}/grass_flowers_${m}.png` }],
+    [`auto_air_${m}`, { img: `assets/seasons/tropis/${m}/autotile_water_grass_${m}.png`, blob: true, animFrames: 2, fps: 2 }],
+    [`pohon_${m}`, { img: `assets/seasons/tropis/${m}/tree_${m}.png`, fw: 32, fh: 64 }],
+    [`semak_${m}`, { img: `assets/seasons/tropis/${m}/berry_bush_full_${m}.png` }], [`semak_kosong_${m}`, { img: `assets/seasons/tropis/${m}/berry_bush_empty_${m}.png` }]])),
+  // cuaca tropis
+  cuaca_hujan_lebat: { img: 'assets/effects/weather/rain_heavy_overlay.png', fw: 64, fh: 64, frames: 4, ms: 60, color: 'rgba(160,190,230,0.55)' },
+  kilat_flash: { img: 'assets/effects/weather/lightning_flash.png', color: 'rgba(255,255,255,0.6)' },
+  kilat: { img: 'assets/effects/weather/lightning_bolt.png', fw: 32, fh: 96, frames: 3 },
+  cuaca_debu: { img: 'assets/effects/weather/dust_overlay.png', fw: 64, fh: 64, frames: 4, ms: 150 },
+  debu: { img: 'assets/effects/weather/particle_dust.png', fw: 8, fh: 8, frames: 4 },
+  tint_kemarau: { img: 'assets/effects/weather/kemarau_tint.png', color: 'rgba(230,170,90,0.16)' },
+  bayang_awan: { img: 'assets/effects/weather/cloud_shadow_overlay.png', fw: 128, fh: 128 },
+  // sawah (4-bit, N1+E2+S4+W8) + overlay padi 6 tahap; tanaman tegalan format crop_wheat
+  sawah: { img: 'assets/tiles/tropis/sawah_autotile.png', color: '#6f9a5a' }, sawah_kilau: { img: 'assets/tiles/tropis/sawah_water_anim.png', frames: 2, ms: 600 },
+  sawah_undakan: { img: 'assets/tiles/tropis/sawah_terrace_riser.png', frames: 3 },
+  tanaman_padi: { color: '#9fbf4a', img: 'assets/nature/crops/crop_padi.png', frames: 6, overSawah: true },
+  tanaman_jagung: { color: '#d9c04a', img: 'assets/nature/crops/crop_jagung.png', frames: 6 },
+  tanaman_singkong: { color: '#6f9a3a', img: 'assets/nature/crops/crop_singkong.png', frames: 6 },
+  tanaman_ubi: { color: '#a0523a', img: 'assets/nature/crops/crop_ubi.png', frames: 6 },
+  tanaman_kopi: { color: '#7a2a2a', img: 'assets/nature/crops/crop_kopi.png', frames: 6 },
+  // fauna: baris = mode*4 + arah (diam 0, jalan 1, serang 2; bawah, kiri, kanan, atas)
+  babi_hutan: { img: 'assets/characters/fauna/babi_hutan.png', frames: 4, color: '#4a3324' },
+  kunang_kunang: { img: 'assets/characters/fauna/ambient/kunang_kunang.png', fw: 8, fh: 8, frames: 4, ms: 200 },
+  // bangunan & struktur lokal (pengganti lewat ASSET_SWAP)
+  gubuk_bambu: { color: '#c9a25a', roof: '#7a6a3a', img: 'assets/buildings/tropis/gubuk_bambu.png', fw: 64, fh: 64 },
+  gubuk_bambu_malam: { img: 'assets/buildings/tropis/night/gubuk_bambu_night.png', fw: 64, fh: 64 },
+  gubuk_bambu_mati: { img: 'assets/buildings/tropis/night/gubuk_bambu_night_off.png', fw: 64, fh: 64 },
+  rumah_panggung: { img: 'assets/buildings/tropis/rumah_panggung.png', fw: 96, fh: 96 },
+  rumah_panggung_malam: { img: 'assets/buildings/tropis/night/rumah_panggung_night.png', fw: 96, fh: 96 },
+  rumah_panggung_mati: { img: 'assets/buildings/tropis/night/rumah_panggung_night_off.png', fw: 96, fh: 96 },
+  lumbung_padi: { color: '#a0803c', img: 'assets/buildings/tropis/lumbung_padi.png', fw: 64, fh: 96 },
+  pos_ronda: { color: '#7a5434', img: 'assets/buildings/tropis/pos_ronda.png', fw: 64, fh: 64, frames: 3, ms: 150 },
+  pos_ronda_malam: { img: 'assets/buildings/tropis/night/pos_ronda_night.png', fw: 64, fh: 64, frames: 3, ms: 150 },
+  pagar_bambu: { color: '#b0a050', img: 'assets/structures/tropis/pagar_bambu_autotile.png' },
+  obor_bambu: { color: '#ffb040', img: 'assets/structures/tropis/obor_bambu.png', fw: 32, fh: 64, frames: 4, ms: 120, frameMati: 4 },
   // UI peringatan & status
   WARN_DIR: 'assets/ui/warning/', STATUS_DIR: 'assets/icons/status/',
   blob47:   { json: 'assets/tiles/autotile_blob47.json' },
 };
+// Tema: ganti sprite bangunan (CONFIG.ASSET_SWAP: id -> id aset tema, termasuk varian _malam/_mati) dan buang varian musim tema lain agar tidak ikut dimuat.
+(function applyThemeAssets() { const C = window.CONFIG || {}, A = window.ASSETS, swap = C.ASSET_SWAP || {};
+  for (const [k, to] of Object.entries(swap)) for (const suf of ['', '_malam', '_mati']) { if (A[to + suf]) A[k + suf] = Object.assign({}, A[k + suf] || {}, A[to + suf]); else if (suf && A[k + suf] && A[k]) delete A[k + suf]; }
+  const tropis = C.THEME !== 'sedang', drop = tropis ? /_(semi|panas|gugur|dingin|winter)$/ : /_(hujan|mareng|kemarau|labuh)$/;
+  for (const k of Object.keys(A)) if (drop.test(k) && !['makam_dingin', 'tanah_retak_panas', 'rumput_meadow_semi'].includes(k)) delete A[k];
+  if (tropis) for (const k of ['cuaca_salju', 'tint_beku', 'vignette_beku']) delete A[k];
+  else for (const k of ['cuaca_hujan_lebat', 'kilat_flash', 'kilat', 'cuaca_debu', 'debu', 'tint_kemarau', 'bayang_awan', 'sawah', 'sawah_kilau', 'sawah_undakan', 'tanaman_padi', 'tanaman_jagung', 'tanaman_singkong', 'tanaman_ubi', 'tanaman_kopi',
+    'babi_hutan', 'kunang_kunang', 'gubuk_bambu', 'gubuk_bambu_malam', 'gubuk_bambu_mati', 'rumah_panggung', 'rumah_panggung_malam', 'rumah_panggung_mati', 'lumbung_padi', 'pos_ronda', 'pos_ronda_malam', 'pagar_bambu', 'obor_bambu']) delete A[k];
+})();
 // Muat gambar dengan batas paralel (agar server sederhana tidak menolak koneksi) + coba ulang.
 window.loadAssets = function (done, opts = {}) {
   const MAX = opts.parallel || 12, RETRY = opts.retry ?? 2, queue = [];
