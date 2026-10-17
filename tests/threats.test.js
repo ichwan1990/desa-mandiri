@@ -41,7 +41,9 @@ const SHOT = n => path.join(__dirname, '..', 'docs', 'screenshots', n);
     S.villagers[0].x = 33; S.villagers[0].y = 14; S.villagers[0].task = { kind: 'diam', target: { x: 33, y: 14 } };
     S.wolf = { day: S.day, phase: 'serang', tracksOnly: false, spawned: true, scared: {} }; DESA.spawnWolf(); DESA.spawnWolf(); out.spawned = S.wolves.length;
     out.warn = DESA.warnings().some(w => w.k === 'howl' && w.c === 'red');
-    out.bit = run(40, () => (S.wolfBites || 0) > 0); return out; });
+    // deterministik: serigala ditaruh 2 tile dari penduduk, penduduk ditahan di luar (jam tidur 21:00 tidak membuatnya pulang) sampai tergigit
+    const v0 = S.villagers[0]; setDay(8, 0.80); S.wolves.forEach((o, i) => { o.x = v0.x - 1.5; o.y = v0.y + i * 0.3; o.path = null; }); // sebelum jam tidur 21:00, sisi barat (bukan seberang sungai)
+    out.bit = run(40, () => { v0.goHome = false; if (!v0.task || v0.task.kind !== 'diam') { if (v0.inside != null) DESA.exitHouse && DESA.exitHouse(v0); v0.task = { kind: 'diam', target: { x: 33, y: 14 } }; } return (S.wolfBites || 0) > 0; }); return out; });
   await p.evaluate(() => { const S = DESA.state; DESA.addBuilding('obor', 31, 16, true); DESA.addBuilding('pagar', 34, 17, true); DESA.addBuilding('pagar', 35, 17, true); DESA.addBuilding('pagar', 36, 17, true);
     S.wolves = []; DESA.spawnWolf(); DESA.spawnWolf(); const v = S.villagers[0]; S.wolves.forEach((o, i) => { o.x = v.x + 3 + i; o.y = v.y + 1 - i * 2; o.mode = 'jalan'; o.moving = true; });
     S.tracks = [{ x: 30, y: 13, t: S.t, dir: 1 }, { x: 31, y: 13, t: S.t, dir: 1 }]; S.t = (S.day - 1) * CONFIG.DAY_LENGTH_SEC + 0.88 * CONFIG.DAY_LENGTH_SEC;

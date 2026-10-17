@@ -25,6 +25,7 @@ const path = require('path'); const SHOT = n => path.join(__dirname, '..', 'docs
     for (let i = 0; i < 4; i++) A('ladang', 14 + i, 26, true); const L = S.buildings.filter(x => x.type === 'ladang'); out.rotation = L.map(DESA.cropId);
     const padi = L.find(x => DESA.cropId(x) === 'padi'), jag = L.find(x => DESA.cropId(x) === 'jagung'); padi.stage = jag.stage = 'tumbuh'; padi.grow = jag.grow = 0;
     setDay(16, 0.3); out.kemarauGrow = { padi: DESA.canGrow(padi), jagung: DESA.canGrow(jag), jagungDays: DESA.growDaysOf(jag), jagungBase: C.FIELD.crops.jagung.growDays };
+    S.droughtDone = S.floodDone = true; // kekeringan acak menunda tumbuh (dijepit >= 0); di sini hanya laju tumbuh yang diuji
     for (let i = 0; i < 100; i++) DESA.step(0.1); out.kemarauProgress = { padi: padi.grow, jagung: +jag.grow.toFixed(3) };
     S.techDone.push('T04'); out.irrigated = DESA.canGrow(padi) && DESA.growDaysOf(padi) > C.FIELD.crops.padi.growDays; S.techDone.pop();
     setDay(3, 0.3); out.hujanPadiDays = DESA.growDaysOf(padi); padi.stage = jag.stage = 'kosong'; padi.grow = jag.grow = 0;

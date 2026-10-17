@@ -25,10 +25,38 @@ window.THEMES = {
     WEATHER: { panas: 'panas', gugur: 'daun', dingin: 'salju' }, ASSET_SWAP: {}, BUILDING_NAMES: {},
     RES_LABEL: {}, EVENT_DISABLE: [], EVENT_SEASON_ALIAS: {}, EVENT_RULES: {},
     MARKET_MUSIM: { dingin: { jual: { makanan: 1.25, gandum: 1.25 }, beli: { makanan: 1.4, gandum: 1.4 } }, semi: { jual: { kayu: 0.9 } }, panas: { jual: { makanan: 0.85 } } },
-    TXT: {}, TEXT_PATCH: {},
-    SCHEDULE_PATCH: { dayWorkMult: 1.2, daySpeedMult: 1.2 }, // kompensasi jam tidur per tema (sim d24: 1.35 membuat empat musim ~56)
-    // TEKS-GAME.json v1.4.0 sudah Nusantara; tema empat musim memakai salinan v1.3.0 (teks lama, tanpa nasi bungkus/macan)
-    TEXT_FILE: 'TEKS-GAME-sedang.json',
+    // teks empat musim: path TEKS lama ([path, cadangan]); isi path-nya ditimpa TEKS-TEMA-sedang.json (lihat TEXT_OVERLAY)
+    TXT: {
+      tahun_baru: ['musim_pembuka.musim_tahun_baru', 'Tahun ke-{tahun} dimulai.'],
+      musim_mulai: [null, 'Musim {musim} dimulai.'],
+      musim_semi: ['musim_pembuka.musim_semi', 'Musim semi — saatnya menanam sebelum hujan deras.'],
+      musim_panas: ['musim_pembuka.musim_panas', 'Musim panas datang. Jaga stok air!'],
+      musim_gugur: ['musim_pembuka.musim_gugur', 'Musim gugur tiba. Waktunya panen dan menyimpan bekal.'],
+      sulit_mulai: ['musim_pembuka.musim_dingin', 'Musim dingin datang. Api unggun butuh kayu bakar.'],
+      hujan: ['musim_pembuka.musim_semi_hujan', 'Hujan rintik turun.'],
+      menuju_sulit: ['musim_pembuka.musim_gugur_menuju_dingin', 'Sisa {hari_sisa} hari sebelum musim dingin. Stok {jumlah}/{jumlah2} hari.'],
+      stok_kurang: ['musim_pembuka.musim_gugur_stok_kurang', ''],
+      syukur: ['musim_pembuka.musim_gugur_syukur', 'Lumbung penuh sebelum salju. Syukuran kecil!'],
+      kayu_bakar: ['musim_pembuka.musim_dingin_kayu_bakar', 'Api unggun memakai {jumlah} kayu bakar per hari.'],
+      api_padam: ['log_ancaman.kayu_bakar_habis', 'Kayu bakar habis! Api unggun meredup.'],
+      jejak: ['log_ancaman.serigala_jejak', 'Ada jejak serigala di tepi hutan. Auman jauh terdengar…'],
+      mendekat: ['log_ancaman.serigala_mendekat', 'Lolongan serigala makin dekat. Penduduk bergegas pulang.'],
+      mengintai: [null, 'Serigala hanya mengintai dari jauh malam ini.'],
+      usai: ['log_ancaman.serigala_usai', 'Fajar menyingsing. Serigala sudah kembali ke hutan.'],
+      serang: ['log_ancaman.serangan_serigala', 'Seekor serigala menerkam {nama}! Kesehatannya turun {jumlah}.'],
+      diusir: ['log_ancaman.diusir', 'Cahaya obor membuat serigala ragu. Mereka berbalik ke hutan.'],
+      menara: ['bangunan_ancaman.bangunan_menara_jaga.usir', 'Dari Menara jaga, {nama} meniup terompet. Serigala lari ke hutan.'],
+      warn_jejak: [null, 'Jejak serigala'], warn_mendekat: [null, 'Auman mendekat!'], warn_serang: [null, 'Serigala menyerang!'],
+      warn_ekstrem: [null, 'Dingin ekstrem hari ini'], warn_ekstrem_besok: [null, 'Angin membeku malam ini…'], ikon_ekstrem: [null, '🥶'],
+      ekstrem_waspada: ['peringatan_dini.ancaman_dingin_ekstrem.tingkat.waspada.teks', 'Angin membeku malam ini… Besok akan sangat dingin.'],
+      ekstrem_reda: ['peringatan_dini.ancaman_dingin_ekstrem.tingkat.reda.teks', 'Angin beku sudah reda.'],
+    },
+    TEXT_PATCH: {},
+    TRAITS_PATCH: { founderNeedOneOf: null }, // aturan pengaman RISET-CERITA-TUJUAN §5.1: median d24 > 48 setelah efek sifat (55) -> hapus syarat sifat kerja pendiri
+    SCHEDULE_PATCH: { dayWorkMult: 1.12, daySpeedMult: 1.2 }, // kompensasi jam tidur per tema (sim d24: 1.35 -> ~56; 1.2 + efek sifat -> 51-55; 1.12 -> lihat README)
+    // TEKS-GAME.json (v1.5) dipakai semua tema. Teks lama yang di v1.4+ ditulis ulang bernuansa Nusantara ditimpa dengan teks empat musim
+    // dari TEKS-TEMA-sedang.json (selisih v1.3.0 vs v1.5.0, dibuat tools/buat_overlay_sedang.js; larik ber-id digabung per id)
+    TEXT_OVERLAY: 'TEKS-TEMA-sedang.json',
   },
   // ---------- Nusantara: hujan, mareng, kemarau, labuh (tanpa salju) ----------
   indonesia: {
@@ -48,7 +76,7 @@ window.THEMES = {
                  wellYieldAdd: -1, riverYieldMult: 0.6, fishMult: 0.5, droughtChance: 0.12, droughtDays: 3, droughtGrowDelay: 1, droughtWaterSafeDays: 3,
                  fireNightChance: 0.06, fireDayChance: 0.04, exposureMood: { tanpa: -4, dengan: -1 }, exposureDayOnly: true,
                  failHarvestChance: 0.20, failHarvestMult: 0.5 },
-      labuh:   { rainChance: 0.30, wellRecover: 1, firstRainMood: 5, plantTimeMult: 0.9, windChance: 0.08, windHp: 20,
+      labuh:   { rainChance: 0.30, rainBushRegrowMult: 1, chopTimeMultRain: 1.05, wellRecover: 1, // tanpa 2 kunci ini semak & tebang kayu NaN saat hujan labuh (semak mati permanen) firstRainMood: 5, plantTimeMult: 0.9, windChance: 0.08, windHp: 20,
                  pestChance: 0.10, pestYieldMult: 0.5, chillSickChance: 0.02, chillMoodBelow: 50 },
     },
     YEAR_SCALE: { daysPerYear: 28, threatChanceMult: 1.25, hardBufferDays: 10, longDryChance: 0.10, longDryExtraDays: 3 },
@@ -66,7 +94,7 @@ window.THEMES = {
     ASSET_SWAP: { gubuk: 'gubuk_bambu', rumah: 'rumah_panggung', lumbung: 'lumbung_padi', menara_jaga: 'pos_ronda', pagar: 'pagar_bambu', obor: 'obor_bambu' },
     BUILDING_NAMES: { gubuk: 'Gubuk Bambu', rumah: 'Rumah Panggung', lumbung: 'Lumbung Padi', menara_jaga: 'Pos Ronda', pagar: 'Pagar Bambu', obor: 'Oncor', ladang: 'Ladang (Tegalan)' },
     RES_LABEL: { gandum: 'Padi' }, // id internal tetap 'gandum' (save & quest tetap cocok)
-    RES_ICON: { gandum: 'assets/icons/resources/icon_padi.png' }, // ikon sementara (tools/buat_ikon_padi.py) sampai ada ikon resmi
+    RES_ICON: { gandum: 'assets/icons/resources/icon_padi_ikat.png' }, // ikon resmi tahap 8c (ikat padi); icon_padi.png lama = cadangan sementara
     // TEKS v1.4.0 sudah melokalkan semua event (id lama tetap, teks Nusantara) -> tidak ada yang dimatikan; musim event lama dipetakan ke musim tropis
     EVENT_DISABLE: [],
     EVENT_SEASON_ALIAS: { semi: 'hujan', panas: 'kemarau', gugur: 'mareng', dingin: 'kemarau' }, // = TEKS meta.alias_id_v140.musim
@@ -93,13 +121,17 @@ window.THEMES = {
       rusak_ladang: ['log_ancaman.babi_hutan_rusak_ladang', 'Babi hutan mengobrak-abrik ladang {tanaman}. Tanamannya rusak.'],
       diusir: ['log_ancaman.babi_hutan_diusir', 'Cahaya obor membuat babi hutan ragu. Ia berbalik ke hutan.'],
       menara: ['log_ancaman.pos_ronda_usir', 'Dari menara, {nama} memukul kentongan. Babi hutan lari ke hutan.'],
+      warn_jejak: [null, 'Jejak babi hutan'], warn_mendekat: [null, 'Dengusan mendekat!'], warn_serang: [null, 'Babi hutan masuk desa!'],
+      warn_ekstrem: [null, 'Malam bediding: udara sangat dingin'], warn_ekstrem_besok: [null, 'Bediding malam ini…'], ikon_ekstrem: [null, '🌬️'],
+      ekstrem_waspada: ['peringatan_dini.ancaman_dingin_ekstrem.tingkat.waspada.teks', 'Angin kemarau berembus kencang. Malam nanti bediding, udara akan sangat dingin.'],
+      ekstrem_reda: ['peringatan_dini.ancaman_dingin_ekstrem.tingkat.reda.teks', 'Bediding sudah lewat. Pagi kembali hangat.'],
     },
-    TERMS: { hewan: 'babi hutan', ancaman: 'Babi hutan' },
+    TERMS: { hewan: 'babi hutan', ancaman: 'Babi hutan', ikon: '🐗' },
     // tambalan teks di memori (file TEKS-GAME.json tidak diubah): path -> teks
     TEXT_PATCH: { 'event:panen_raya.pilihan.0.teks_hasil': 'Lumbung penuh gabah. Kemarau tidak lagi menakutkan.' },
   },
 };
-THEMES.sedang.TERMS = { hewan: 'serigala', ancaman: 'Serigala' };
+THEMES.sedang.TERMS = { hewan: 'serigala', ancaman: 'Serigala', ikon: '🐺' };
 // babi hutan: kerangka serigala (jejak -> mendekat -> beraksi -> pergi), sasaran utama ladang; melukai penduduk baru mulai era Dusun
 CONFIG.THREAT.babi = Object.assign({}, CONFIG.THREAT.wolf, {
   minEra: 'perkemahan', injureFromEra: 'dusun', baseNightChance: 0.07, hardMult: 1.3, plotsDamaged: [1, 2], damage: [15, 30], speed: 2.8, count: [1, 2],
@@ -111,9 +143,10 @@ CONFIG.THREAT.wolf.hardMult = CONFIG.THREAT.wolf.winterMult;
   try { const q = new URLSearchParams(location.search).get('tema'); if (q && THEMES[q]) id = q; } catch (e) { /* tanpa location */ }
   const T = THEMES[id]; CONFIG.THEME = id;
   for (const k of ['SEASONS', 'SEASON_LEN', 'SEASON_NAMES', 'SEASON_ICONS', 'HARD_SEASON', 'HARD_COLD', 'HARD_HUNGER_MULT', 'GRANARY_HARD_HUNGER_MULT', 'HARD_BUFFER_DAYS',
-    'SEASON_FX', 'NIGHT_THREAT', 'ART_SUFFIX', 'WINTER_ART', 'WEATHER', 'EVENT_DISABLE', 'EVENT_SEASON_ALIAS', 'TXT', 'TEXT_PATCH', 'TERMS', 'FIELD_ROTATION', 'ASSET_SWAP', 'RES_ICON', 'TEXT_FILE']) CONFIG[k] = T[k];
+    'SEASON_FX', 'NIGHT_THREAT', 'ART_SUFFIX', 'WINTER_ART', 'WEATHER', 'EVENT_DISABLE', 'EVENT_SEASON_ALIAS', 'TXT', 'TEXT_PATCH', 'TERMS', 'FIELD_ROTATION', 'ASSET_SWAP', 'RES_ICON', 'TEXT_FILE', 'TEXT_OVERLAY']) CONFIG[k] = T[k];
   for (const [b, n] of Object.entries(T.BUILDING_NAMES || {})) if (CONFIG.BUILDINGS[b]) CONFIG.BUILDINGS[b] = Object.assign({}, CONFIG.BUILDINGS[b], { nama: n });
   CONFIG.YEAR_SCALE = Object.assign({}, CONFIG.YEAR_SCALE, T.YEAR_SCALE);
+  if (T.TRAITS_PATCH && CONFIG.TRAITS) CONFIG.TRAITS = Object.assign({}, CONFIG.TRAITS, T.TRAITS_PATCH);
   if (T.SCHEDULE_PATCH && CONFIG.SCHEDULE) CONFIG.SCHEDULE = Object.assign({}, CONFIG.SCHEDULE, T.SCHEDULE_PATCH);
   CONFIG.FIELD = Object.assign({}, CONFIG.FIELD, { crops: T.FIELD_CROPS });
   CONFIG.MARKET.musim = T.MARKET_MUSIM;

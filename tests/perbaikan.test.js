@@ -41,22 +41,22 @@ const path = require('path'); const SHOT = n => path.join(__dirname, '..', 'docs
     for (let i = 0; i < 6; i++) A('ladang', 14 + (i % 3) * 1, 26 + Math.floor(i / 3), true);
     const padi = S.buildings.filter(x => x.type === 'ladang' && DESA.cropId(x) === 'padi'); padi.forEach(x => { x.stage = 'tumbuh'; x.grow = 1; });
     setDay(16); out.dryKemarau = DESA.sawahDry(padi[0]); S.techDone.push('T04'); out.dryIrrigated = DESA.sawahDry(padi[0]); S.techDone.pop(); setDay(3); out.dryHujan = DESA.sawahDry(padi[0]);
-    const c = DESA.drySawahImg(), d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let blue = 0; for (let k = 0; k < d.length; k += 4) if (d[k + 3] > 8 && d[k + 2] > d[k] + 10) blue++; out.dryBluePx = blue;
+    const im = DESA.drySawahImg(); out.drySrc = im.src || 'canvas'; const c = document.createElement('canvas'); c.width = im.width; c.height = im.height; c.getContext('2d').drawImage(im, 0, 0); const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let blue = 0; for (let k = 0; k < d.length; k += 4) if (d[k + 3] > 8 && d[k + 2] > d[k] + 10) blue++; out.dryBluePx = blue;
     // ringkasan saat hari dilompati: label rentang
     S.dayStats = { gathered: { kayu: 5 } }; S.statsFrom = 9; setDay(15, 0.99); run(2); setDay(20, 0.01); run(0.2); out.summary = S.lastSummary && [S.lastSummary.from, S.lastSummary.day];
     setDay(16, 0.5); S.cam && 0; return out; });
-  await p.evaluate(() => { const S = DESA.state; S.t = 15 * CONFIG.DAY_LENGTH_SEC + 0.5 * CONFIG.DAY_LENGTH_SEC; S.day = 16; const l = S.buildings.find(x => x.type === 'ladang'); DESA.centerCam(l.x + 1, l.y); });
+  await p.evaluate(() => { const S = DESA.state; S.t = 15 * CONFIG.DAY_LENGTH_SEC + 0.5 * CONFIG.DAY_LENGTH_SEC; S.day = 16; const l = S.buildings.find(x => x.type === 'ladang'); S.event = null; document.getElementById('modal').style.display = 'none'; document.getElementById('toasts').innerHTML = ''; S.buildings.filter(x => x.type === 'ladang').forEach((x, i) => { x.done = true; x.stage = i % 2 ? 'siap' : 'tumbuh'; x.grow = 1; }); DESA.setZoom && DESA.setZoom(3); DESA.centerCam(l.x + 1, l.y); });
   await p.waitForTimeout(400); await p.screenshot({ path: SHOT('v8-sawah-kemarau.png') });
   const sumUI = await p.textContent('#summary');
-  // tema empat musim: teks lama (v1.3.0), tanpa teks Nusantara; ikon gandum tetap
+  // tema empat musim: TEKS v1.5 + overlay teks empat musim (TEKS-TEMA-sedang.json), tanpa teks Nusantara; ikon gandum tetap
   const q = await open('sedang');
   const s = await q.evaluate(() => { const S = DESA.state, t = JSON.stringify(window.TEXT_DEBUG || {}); for (let i = 0; i < 6000; i++) { DESA.step(0.1); if (S.event) { const e = [...document.querySelectorAll('[data-ev]')].find(x => !x.disabled); e && e.click(); } }
     const all = DESA.allEvents().map(e => JSON.stringify(e)).join(' ') + ' ' + S.log.join(' ');
-    return { hits: (all.match(/.{0,60}(nasi bungkus|macan|kemarau|sawah|mareng).{0,30}/gi) || []).slice(0, 6), nusantara: /nasi bungkus|macan|kemarau|sawah|mareng/i.test(all), wheat: ASSETS.res_ikon.img[ASSETS.res_ikon.keys.indexOf('gandum')], file: CONFIG.TEXT_FILE, log: S.log.length }; });
+    return { hits: (all.match(/.{0,60}(nasi bungkus|macan|kemarau|sawah|mareng).{0,30}/gi) || []).slice(0, 6), nusantara: /nasi bungkus|macan|kemarau|sawah|mareng/i.test(all), wheat: ASSETS.res_ikon.img[ASSETS.res_ikon.keys.indexOf('gandum')], file: CONFIG.TEXT_OVERLAY, versi: DESA.text.meta.versi, sifat: Object.keys(DESA.text.sifat || {}).filter(k => !k.startsWith('_') && DESA.text.sifat[k].nama).length, jejak: DESA.TT('jejak', { hari: 3, nama: 'Sari' }), musimDingin: DESA.TT('sulit_mulai'), a27: DESA.text.pencapaian.find(a => a.id === 'A27').nama, warn: DESA.TT('warn_mendekat'), log: S.log.length }; });
   console.log(JSON.stringify({ badge0, r, sumUI, s }));
   const ok = r.txtBound && badge0.includes('belum ada rumah') && r.tuning.join() === '0.25,4,0.25,4,0.15,30,16,1' && r.hutGather === 'kayu' && r.hutEarly && r.hutBuild === 'bangun'
     && r.capDamaged && r.repaired && r.hp === 100 && /2\/2|\d+\/\d+/.test(r.badge) && !r.badge.includes('belum')
-    && r.graceDay && r.tended && r.untendedDies && /icon_padi/.test(r.padiIcon) && r.dryKemarau && !r.dryIrrigated && !r.dryHujan && r.dryBluePx === 0
-    && r.summary && r.summary[0] < r.summary[1] && /Hari \d+–\d+/.test(sumUI) && !s.nusantara && /icon_wheat/.test(s.wheat) && s.file === 'TEKS-GAME-sedang.json' && !errs.length;
+    && r.graceDay && r.tended && r.untendedDies && /icon_padi_ikat/.test(r.padiIcon) && /sawah_kering_autotile/.test(r.drySrc) && r.dryKemarau && !r.dryIrrigated && !r.dryHujan && r.dryBluePx === 0
+    && r.summary && r.summary[0] < r.summary[1] && /Hari \d+–\d+/.test(sumUI) && !s.nusantara && /icon_wheat/.test(s.wheat) && s.file === 'TEKS-TEMA-sedang.json' && s.versi >= '1.5' && s.sifat === 20 && s.jejak.length > 10 && !/babi|moncong|sawah|pematang/i.test(s.jejak) && s.musimDingin.length > 10 && !/kemarau|sawah/i.test(s.musimDingin) && !/Kemarau/.test(s.a27) && /Auman/.test(s.warn) && !errs.length;
   console.log(errs.length ? 'ERR ' + errs.slice(0, 3) : 'no errors', ok ? 'LULUS' : 'GAGAL'); if (!ok) process.exitCode = 1; await b.close();
 })();

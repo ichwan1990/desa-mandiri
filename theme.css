@@ -28,7 +28,7 @@ h3{margin:8px 0 4px;color:var(--accent);font-size:14px} .row{display:flex;justif
 .tut-hl{outline:3px solid var(--highlight)!important;outline-offset:2px;animation:tutpulse 1s infinite alternate;position:relative;z-index:11}
 @keyframes tutpulse{from{box-shadow:0 0 0 0 rgba(255,225,74,.7)}to{box-shadow:0 0 14px 6px rgba(255,225,74,.35)}}
 /* Panel penduduk */
-#vpanel{right:280px;top:60px;width:300px;max-height:720px;overflow:auto}
+#vpanel{right:280px;top:calc(var(--topH, 60px) + 6px);width:300px;max-height:calc(100vh - var(--topH, 60px) - 20px);overflow:auto} /* di bawah bilah atas: tombol Pasar/Pencapaian/Simpan/Muat tetap bisa diklik */
 .bar{height:9px;background:var(--bar-bg);border-radius:4px;overflow:hidden;margin:2px 0 6px} .bar>i{display:block;height:100%;background:var(--c,var(--accent))}
 #vpanel .close,#techpanel .close{float:right}
 #vpanel ul{margin:4px 0;padding-left:16px;font-size:12px}
@@ -102,3 +102,19 @@ body.mobile #warnbar{max-width:92%}
 
 /* ikon sumber daya (PNG, bukan emoji) */
 img.resico{width:16px;height:16px;image-rendering:pixelated;image-rendering:crisp-edges;vertical-align:-3px;display:inline-block}
+
+/* layar sedang (900–1500px): bilah atas ringkas, maks 2 baris; tinggi kanvas & panel samping mengikuti viewport (fitCanvas) */
+html,body{margin:0}
+body:not(.mobile){overflow:hidden}
+#top{position:relative;z-index:30}
+body.compact #top{gap:6px;padding:3px 6px;font-size:12px;row-gap:3px}
+body.compact #top .lbl{display:none}
+body.compact #top button{font-size:11px;padding:0 3px;margin:1px 0;border-width:3px 4px 4px 4px}
+body.compact #top{font-size:11px}
+body.compact #time{white-space:nowrap}
+body.compact #res .ico, body.compact #res img{width:14px;height:14px}
+body.compact #buildbar{order:10;flex:1 1 220px;min-width:220px;display:flex;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;white-space:nowrap;scrollbar-width:thin}
+body.compact #buildbar button{flex:none}
+body.compact #res small{display:none}
+body.compact #top{gap:5px}
+#top button .lbl{pointer-events:none} /* klik pada label tetap mengenai tombol (handler memakai e.target.id) */

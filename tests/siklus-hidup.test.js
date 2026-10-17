@@ -61,7 +61,7 @@ const path = require('path'); const SHOT = n => path.join(__dirname, '..', 'docs
     // save/load hubungan & sifat
     document.getElementById('save').click(); const relBefore = JSON.stringify(S.rel), trBefore = JSON.stringify(S.villagers.map(v => v.traits));
     DESA.loadGame(); const S2 = DESA.state; out.saveLoad = JSON.stringify(S2.rel) === relBefore && JSON.stringify(S2.villagers.map(v => v.traits)) === trBefore;
-    const jo2 = S2.villagers.find(v => v.name === 'Joko'), bu2 = S2.villagers.find(v => v.id === bu.id); jo2.mood = 80; DESA.killVillager(bu2, 'sakit');
+    const jo2 = S2.villagers.find(v => v.name === 'Joko'), bu2 = S2.villagers.find(v => v.id === bu.id); jo2.mood = 80; jo2.traits = ['rajin', 'jujur']; DESA.killVillager(bu2, 'sakit'); // sifat netral duka (sabar/religius x0.7 diuji terpisah)
     out.grief = Math.round(80 - jo2.mood); out.griefExpect = -C.DEATH.griefMoodInstant - C.RELATION.grief.temanInstant;
     // mati tua
     const old = S2.villagers.find(v => v.id === jo2.id); old.ageF = old.age = C.AGE.maxAge; L.oldAgeDaily(); out.oldDeath = !S2.villagers.includes(old) && (S2.deathsOld || 0) >= 1;

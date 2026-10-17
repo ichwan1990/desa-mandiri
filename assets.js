@@ -188,6 +188,8 @@ window.ASSETS = {
   sawah: { img: 'assets/tiles/tropis/sawah_autotile.png', color: '#6f9a5a' }, sawah_kilau: { img: 'assets/tiles/tropis/sawah_water_anim.png', frames: 2, ms: 600 },
   sawah_undakan: { img: 'assets/tiles/tropis/sawah_terrace_riser.png', frames: 3 },
   tanaman_padi: { color: '#9fbf4a', img: 'assets/nature/crops/crop_padi.png', frames: 6, overSawah: true },
+  tanaman_padi_kering: { color: '#b8a050', img: 'assets/nature/crops/crop_padi_kering.png', frames: 6 }, // tahap 8c: padi layu di sawah kering (kemarau, tanpa irigasi)
+  sawah_kering: { img: 'assets/tiles/tropis/sawah_kering_autotile.png', color: '#b08c5e' }, // tahap 8c: tata letak 4-bit sama dengan sawah_autotile
   tanaman_jagung: { color: '#d9c04a', img: 'assets/nature/crops/crop_jagung.png', frames: 6 },
   tanaman_singkong: { color: '#6f9a3a', img: 'assets/nature/crops/crop_singkong.png', frames: 6 },
   tanaman_ubi: { color: '#a0523a', img: 'assets/nature/crops/crop_ubi.png', frames: 6 },

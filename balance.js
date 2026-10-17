@@ -1,6 +1,6 @@
 // Semua konstanta balancing (sesuai RISET-MEKANIK.md, V1). Satuan waktu: detik game pada 1x.
 window.CONFIG = {
-  TILE: 32, MAP_W: 60, MAP_H: 40, VIEW_W: 1280, VIEW_H: 800, VIEW_MIN_W: 560, SIDE_MIN_W: 280, SIDE_MAX_W: 320, // kanvas menyusut di layar sedang agar panel samping >= SIDE_MIN_W
+  TILE: 32, MAP_W: 60, MAP_H: 40, VIEW_W: 1280, VIEW_H: 800, VIEW_MIN_W: 560, VIEW_MIN_H: 360, TOPBAR_COMPACT_W: 1500, SIDE_MIN_W: 280, SIDE_MAX_W: 320, // kanvas menyusut di layar sedang agar panel samping >= SIDE_MIN_W
   ZOOM_LEVELS: [1, 2, 3], START_ZOOM: 1, CAMP: { x: 22, y: 20 },
   RIVER_X: 34, BRIDGE_ROWS: [20, 33], // baris jembatan yang melintasi sungai
   DAY_LENGTH_SEC: 120, NIGHT_START: 0.75, NIGHT_END: 0.25,
@@ -110,12 +110,13 @@ window.CONFIG = {
     bareRegen: 0.6, bareMood: -6,
     winterMood: -12, winterSickAdd: 0.05,
   },
-  PAIRING: { minAge: 18, maxAge: 50, minMood: 65, moodDays: 2, chancePerDay: 0.15, rematchDays: 14, widowGriefMult: 1.5 },
+  PAIRING: { minAge: 18, maxAge: 50, minMood: 65, moodDays: 2, chancePerDay: 0.25, /* 0.15 -> 0.25 (sim v3 Asisten Analisa) */ rematchDays: 14, widowGriefMult: 1.5 },
   PREGNANCY: {
-    minEra: 'dusun',
-    motherAge: [18, 45], minMood: 70, minFoodDays: 7, famineLevels: ['aman', 'waspada'], // sim 140 hari: foodDays 12 + hanya 'aman' membuat lahir pertama ~hari 65 (target 30-45)
-    minHp: 70, cooldownDays: 21, perSeasonCapDiv: 5,
-    chancePerDay: 0.10, winterMult: 0.5,
+    minEra: 'perkemahan', needHome: true, // keputusan desain 17-10: boleh sejak Perkemahan asal pasangan serumah di rumah jadi (dulu 'dusun')
+    motherAge: [18, 45], minMood: 70, minFoodDays: 5, famineLevels: ['aman', 'waspada'], // pangan >= 5 hari (dulu 7); target lahir pertama hari 30-45
+    minHp: 70, cooldownDays: 35, // 21 -> 35 (17-10): sim 20x140 hari cooldown 21 -> pop d140 19, 28 -> 18, 35 -> 17
+    perSeasonCapDiv: 5,
+    chancePerDay: 0.15, winterMult: 0.5, // 0.10 -> 0.15 (sim v3 Asisten Analisa, setelah perbaikan NaN semak labuh); lahir pertama median hari 34
     lengthDays: 7, lateWorkMult: 0.85, lateDays: 3,
     birthRiskCritical: 0.10, birthMood: 10, parentMood: 15,
     newcomerCooldownMult: 1.5,
@@ -177,7 +178,7 @@ window.CONFIG = {
     dailyGainCap: 6,
     gain: { kerjaPer30s: 0.5, kerjaMax: 3, kerjaRadius: 4, makan: 1.5, makanMax: 3, makanRadius: 3, apiMalam: 1, apiRadius: 3,
             ronda: 5, kerjaBakti: 3, lombaTim: 5, lombaMenang: 8, hadiah: 8, tolong: 10,
-            serumahMalam: 2 }, // TAMBAHAN di luar spec: sim menunjukkan kerja bareng jarang (penduduk tersebar) -> tanpa ini skor tak pernah capai 50 & tak ada kelahiran
+            serumahMalam: 3 } /* 2 -> 3 (sim v3) */, // TAMBAHAN di luar spec: sim menunjukkan kerja bareng jarang (penduduk tersebar) -> tanpa ini skor tak pernah capai 50 & tak ada kelahiran
     gossip: { speakerListener: 1, targetListener: -4 },               // sumber: sifat jahil
     welcome: { ramahRel: 15, jujurRel: 5 },
     conflict: { chancePerDay: 0.03, below: 0, rel: -8, mood: -4, meetHours: 1 },

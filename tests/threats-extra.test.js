@@ -53,7 +53,7 @@ const URL = process.env.GAME_URL || 'http://localhost:8095/';
     A('menara_jaga', 36, 8, true); const tw = S.buildings.find(x => x.type === 'menara_jaga');
     S.wolf = { day: S.day, phase: 'mendekat', scared: {} }; S.villagers.forEach(o => { o.task = null; o.energy = 90; o.hunger = 90; o.sick = null; });
     S.prio.jaga = 0; const jagaOff = S.villagers.map(o => DESA.chooseTask(o)).filter(t => t && t.kind === 'jaga').length;
-    S.prio.jaga = 3; const g = S.villagers[1], tg = DESA.chooseTask(g); const jagaOn = tg && tg.kind === 'jaga';
+    S.prio.jaga = 3; const g = S.villagers[1]; g.traits = ['rajin', 'jujur']; /* penakut tidak mau jaga malam (sifat acak) */ const tg = DESA.chooseTask(g); const jagaOn = tg && tg.kind === 'jaga';
     const wt = { x: 38, y: 12, mode: 'jalan', home: { x: 59, y: 12 }, path: null, repath: 0, plots: 9, maxPlots: 0 }; DESA.updateWolf(wt, 0.1); const noGuard = wt.mode;
     g.task = { ...tg, arrived: true }; DESA.updateWolf(wt, 0.1); const guarded = wt.mode;
     const wt2 = { x: 38, y: 12, mode: 'jalan', home: { x: 59, y: 12 }, path: null, repath: 0, plots: 9, maxPlots: 0 }; DESA.updateWolf(wt2, 0.1); const perNightCap = wt2.mode;
