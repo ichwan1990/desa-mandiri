@@ -60,3 +60,5 @@ body.skin #menu{background:#1d1610 url(assets/ui/title/title_bg_640x360.png) cen
 body.skin #menu .box{background:none}
 .ico{width:16px;height:16px;vertical-align:-3px;image-rendering:pixelated;margin-right:3px}
 #menu .logo{display:block;margin:0 auto 6px;image-rendering:pixelated}
+
+#market{left:50%;top:70px;transform:translateX(-50%);width:520px} #market th{border-bottom:1px solid var(--line)} #market tr:hover td{background:rgba(0,0,0,.06)}

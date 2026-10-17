@@ -79,6 +79,22 @@ window.CONFIG = {
   ],
   FAV_TASK_BONUS: 12,   // bonus utilitas untuk tugas favorit penduduk (tidak menimpa kebutuhan kritis)
   VILLAGER_HISTORY: 10, // panjang riwayat per penduduk
+  // Pasar & pedagang keliling (docs/RISET-TAHAP3.md §2). Barter berbasis nilai: jual = qty × hargaJual × mod, beli = qty × hargaBeli × mod.
+  MARKET: {
+    harga: { makanan: [3, 5], gandum: [2, 4], kayu: [1, 2], batu: [1.2, 2.2], papan: [3, 5], batu_bata: [3, 5], alat: [12, 18], kulit: [4, 7] }, // [jual, beli]
+    drift: [0.92, 1.08], clamp: [0.7, 1.4],
+    musim: { // pengali per sisi
+      dingin: { jual: { makanan: 1.25, gandum: 1.25 }, beli: { makanan: 1.4, gandum: 1.4 } },
+      semi:   { jual: { kayu: 0.9 } },
+      panas:  { jual: { makanan: 0.85 } },
+    },
+    eventDays: 5,
+    eventMods: { panen_raya: { jual: { makanan: -0.2, gandum: -0.2 } }, badai: { beli: { makanan: 0.3 } }, kekeringan: { beli: { makanan: 0.3 } } },
+    merchantBuyDiscount: 0.1,         // diskon beli saat pedagang keliling mampir
+    foodSellSoftCapDays: 16, foodSellFloorDays: 24, foodSellMinMult: 0.6, // jual pangan melemah di atas 16 hari stok, min 0.6 pada 24 hari
+    quota: { perkemahan: [25, 20], dusun: [25, 20], desa_pertanian: [40, 30], kota_kecil: [70, 50] }, // [jual, beli] nilai per hari
+  },
+  MERCHANT: { firstDay: 4, everyDays: [9, 12], stayFrac: 0.35, speed: 2.0, spawn: { x: 59, row: 0 } }, // row = indeks BRIDGE_ROWS
   MAX_LOG: 40, MAX_NOTES: 6,
   FOOD_SURPLUS_FACTOR: 1.2, FOOD_SURPLUS_PENALTY: 25, // jika stok makanan melimpah, kerja makanan turun prioritas
   DEFAULT_PRIO: { bangun: 3, makanan: 3, bertani: 2, air: 2, kayu: 2, batu: 2, riset: 1 }, // 0=mati .. 3=tinggi

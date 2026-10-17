@@ -85,6 +85,8 @@ window.ASSETS = {
   ikon_tech_era_camp: { ui: 'assets/icons/tech/tech_era_camp.png' }, ikon_tech_storage: { ui: 'assets/icons/tech/tech_storage.png' },
   ikon_tech_farming: { ui: 'assets/icons/tech/tech_farming.png' }, ikon_tech_well: { ui: 'assets/icons/tech/tech_well.png' },
   ikon_tech_bread: { ui: 'assets/icons/tech/tech_bread.png' }, ikon_tech_tools: { ui: 'assets/icons/tech/tech_tools.png' },
+  pedagang: { color: '#7a3b8a', img: 'assets/characters/merchant.png', fw: 32, fh: 32, frames: 4 },
+  gerobak:  { color: '#8a5a32', img: 'assets/characters/merchant_cart.png', fw: 64, fh: 64 }, // kolom = arah, baris = frame roda
   blob47:   { json: 'assets/tiles/autotile_blob47.json' },
 };
 window.loadAssets = function (done) {
