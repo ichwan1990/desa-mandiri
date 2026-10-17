@@ -5,6 +5,13 @@ ROOT = "/workspace/village-game/"
 new = json.load(open(ROOT + "TEKS-GAME.json", encoding="utf-8"))
 old = json.load(open(ROOT + "tools/TEKS-GAME.v1.0.0.json", encoding="utf-8"))
 err = []
+# Tuning pangan yang disetujui tim riset (Okt 2026): hanya nilai hadiah ini yang boleh beda dari v1.0.0.
+TUNING_V10 = {("quest_awal", "q02_kayu_bakar", "hadiah", None, "makanan"): 6, ("quest_awal", "q07_ladang_pertama", "hadiah", None, "makanan"): 10,
+  ("event_acak", "pedagang_keliling", "pilihan", 0, "makanan"): 6, ("event_acak", "panen_raya", "pilihan", 0, "gandum"): 8,
+  ("event_acak", "panen_raya", "pilihan", 0, "makanan"): 5, ("event_acak", "panen_raya", "pilihan", 1, "makanan"): 5,
+  ("event_acak", "panen_raya", "pilihan", 2, "gandum"): 4, ("event_acak", "hewan_buas", "pilihan", 0, "daging"): 8}
+for (sec, id_, fld, i, key), val in TUNING_V10.items():
+    e = next(x for x in old[sec] if x["id"] == id_); (e[fld] if i is None else e[fld][i]["efek"])[key] = val
 # 1. entri lama tidak berubah (kecuali meta.versi); key lama tetap ada
 def sub(a, b, p):
     if isinstance(a, dict):

@@ -624,7 +624,7 @@
           "teks": "Tukar kayu dengan makanan",
           "efek": {
             "kayu": -15,
-            "makanan": 10
+            "makanan": 6
           },
           "teks_hasil": "Pedagang mengangguk puas. Lumbung desa terasa sedikit lebih penuh."
         },
@@ -686,7 +686,7 @@
           "teks": "Kumpulkan penduduk untuk mengusirnya",
           "efek": {
             "energi": -15,
-            "daging": 15,
+            "daging": 8,
             "kulit": 2
           },
           "teks_hasil": "Dengan teriakan dan obor, babi hutan berhasil dihalau. Desa bahkan mendapat daging dan kulit."
@@ -741,15 +741,15 @@
         {
           "teks": "Simpan semua di Lumbung",
           "efek": {
-            "gandum": 12,
-            "makanan": 8
+            "gandum": 8,
+            "makanan": 5
           },
           "teks_hasil": "Lumbung penuh sesak. Musim dingin tidak lagi menakutkan."
         },
         {
           "teks": "Adakan pesta panen",
           "efek": {
-            "makanan": 8,
+            "makanan": 5,
             "suasana_hati": 15
           },
           "teks_hasil": "Penduduk menari dan bernyanyi semalaman. Ini malam yang akan dikenang lama."
@@ -757,7 +757,7 @@
         {
           "teks": "Jual sebagian ke pedagang",
           "efek": {
-            "gandum": 6,
+            "gandum": 4,
             "alat": 1,
             "batu": 8
           },
@@ -974,7 +974,7 @@
         "jumlah": 20
       },
       "hadiah": {
-        "makanan": 10
+        "makanan": 6
       },
       "teks_selesai": "Tumpukan kayu tersusun rapi. Penduduk siap membangun!"
     },
@@ -1052,7 +1052,7 @@
         "jumlah": 20
       },
       "hadiah": {
-        "makanan": 20
+        "makanan": 10
       },
       "teks_selesai": "Bulir gandum pertama berayun ditiup angin. Masa depan desa terlihat cerah."
     },
@@ -1737,7 +1737,7 @@
         "jumlah": 1
       },
       "hadiah": {
-        "gandum": 5
+        "gandum": 3
       },
       "teks_terbuka": "Panen pertama! Gandumnya mungkin sedikit, tapi rasanya istimewa."
     },
@@ -1858,7 +1858,7 @@
         "jumlah": 5
       },
       "hadiah": {
-        "makanan": 20
+        "makanan": 10
       },
       "teks_terbuka": "Lima ilmu sudah dikuasai. Desa ini ternyata penuh orang pintar!"
     },
@@ -2431,7 +2431,7 @@
         {
           "teks": "Panen lebih awal",
           "efek": {
-            "gandum": 10,
+            "gandum": 6,
             "energi": -10
           },
           "teks_hasil": "Semua tangan turun ke ladang. Gandum diselamatkan sebelum beku, walau belum terlalu besar."
@@ -2698,7 +2698,7 @@
         "jumlah": 1
       },
       "hadiah": {
-        "makanan": 10,
+        "makanan": 5,
         "suasana_hati": 5
       },
       "teks_selesai": "Asap tipis mengepul dari cerobong Dapur. Aroma masakan membuat semua orang pulang lebih cepat."
@@ -2715,7 +2715,7 @@
       },
       "hadiah": {
         "kayu": 15,
-        "gandum": 5
+        "gandum": 3
       },
       "teks_selesai": "Tiga petak ladang berjajar rapi. Dari kejauhan, desa mulai tampak seperti kain bermotif kotak-kotak."
     },
@@ -2763,7 +2763,7 @@
         "jumlah": 3
       },
       "hadiah": {
-        "makanan": 15,
+        "makanan": 8,
         "suasana_hati": 5
       },
       "teks_selesai": "Tiga ilmu baru dikuasai. Penduduk mulai suka berdiskusi di dekat api sebelum tidur."

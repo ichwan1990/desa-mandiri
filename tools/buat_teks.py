@@ -114,7 +114,7 @@ event = [
   C("Lanjutkan bekerja seperti biasa",{"kesehatan_bangunan":-20,"kayu":10,"suasana_hati":-10},"Beberapa dahan tumbang bisa dijadikan kayu, tapi bangunan rusak dan penduduk basah kuyup.")
  ],"cuaca"),
  E("pedagang_keliling","Pedagang Keliling","Seorang pedagang berpikul tiba di desa sambil membunyikan lonceng kecil. \"Barang bagus, harga bersahabat!\" katanya.",[
-  C("Tukar kayu dengan makanan",{"kayu":-15,"makanan":10},"Pedagang mengangguk puas. Lumbung desa terasa sedikit lebih penuh."),
+  C("Tukar kayu dengan makanan",{"kayu":-15,"makanan":6},"Pedagang mengangguk puas. Lumbung desa terasa sedikit lebih penuh."),
   C("Beli perkakas dengan batu",{"batu":-15,"alat":2},"Perkakas baru berkilau di tangan penduduk. Kerja jadi lebih cepat!"),
   C("Tawarkan teh hangat saja",{"suasana_hati":5},"Pedagang berterima kasih dan berjanji akan mampir lagi. Ia juga meninggalkan cerita lucu dari desa seberang.")
  ],"perdagangan"),
@@ -124,7 +124,7 @@ event = [
   C("Tolak dengan sopan",{"suasana_hati":-3},"Pengembara berlalu pelan. Beberapa penduduk tampak sedikit sedih.")
  ],"penduduk"),
  E("hewan_buas","Babi Hutan Mengamuk","Seekor babi hutan besar menerobos semak dan mendekati ladang! Penduduk panik.",[
-  C("Kumpulkan penduduk untuk mengusirnya",{"energi":-15,"daging":15,"kulit":2},"Dengan teriakan dan obor, babi hutan berhasil dihalau. Desa bahkan mendapat daging dan kulit."),
+  C("Kumpulkan penduduk untuk mengusirnya",{"energi":-15,"daging":8,"kulit":2},"Dengan teriakan dan obor, babi hutan berhasil dihalau. Desa bahkan mendapat daging dan kulit."),
   C("Bangun pagar darurat",{"kayu":-20},"Pagar kayu berdiri tepat waktu. Babi hutan mendengus lalu pergi."),
   C("Biarkan saja dan berlindung",{"makanan":-20,"gandum":-10},"Babi hutan berpesta di ladang. Panen kali ini berkurang.")
  ],"bahaya"),
@@ -133,9 +133,9 @@ event = [
   C("Jaga bergantian sepanjang malam",{"energi":-20,"suasana_hati":5},"Para penjaga mengantuk esok harinya, tapi semua merasa aman.")
  ],"bahaya"),
  E("panen_raya","Panen Raya!","Ladang menguning dan buah bergelantungan di mana-mana. Ini panen terbaik tahun ini!",[
-  C("Simpan semua di Lumbung",{"gandum":12,"makanan":8},"Lumbung penuh sesak. Musim dingin tidak lagi menakutkan."),
-  C("Adakan pesta panen",{"makanan":8,"suasana_hati":15},"Penduduk menari dan bernyanyi semalaman. Ini malam yang akan dikenang lama."),
-  C("Jual sebagian ke pedagang",{"gandum":6,"alat":1,"batu":8},"Sebagian hasil panen ditukar dengan barang berguna untuk membangun.")
+  C("Simpan semua di Lumbung",{"gandum":8,"makanan":5},"Lumbung penuh sesak. Musim dingin tidak lagi menakutkan."),
+  C("Adakan pesta panen",{"makanan":5,"suasana_hati":15},"Penduduk menari dan bernyanyi semalaman. Ini malam yang akan dikenang lama."),
+  C("Jual sebagian ke pedagang",{"gandum":4,"alat":1,"batu":8},"Sebagian hasil panen ditukar dengan barang berguna untuk membangun.")
  ],"musim"),
  E("wabah","Wabah Batuk","Beberapa penduduk mulai batuk dan demam. Penyakit menyebar perlahan di desa.",[
   C("Rawat dengan ramuan daun obat",{"makanan":-15,"kesehatan":10},"Ramuan pahit itu ampuh. Satu per satu penduduk mulai pulih."),
@@ -175,12 +175,12 @@ tutorial = [
 Q = lambda id, judul, desk, tipe, target, jml, hadiah, selesai, tingkat: {"id":id,"urutan":tingkat,"judul":judul,"deskripsi":desk,"tujuan":{"tipe":tipe,"target":target,"jumlah":jml},"hadiah":hadiah,"teks_selesai":selesai}
 quest = [
  Q("q01_api_pertama","Api Pertama","Malam pertama akan segera tiba. Bangun Api unggun agar penduduk merasa hangat dan aman.","bangun","api_unggun",1,{"suasana_hati":10},"Nyala api menerangi wajah kedua penduduk. Rumah baru ini mulai terasa seperti rumah.",1),
- Q("q02_kayu_bakar","Tumpukan Kayu","Kumpulkan kayu untuk persiapan membangun.","kumpulkan","kayu",20,{"makanan":10},"Tumpukan kayu tersusun rapi. Penduduk siap membangun!",2),
+ Q("q02_kayu_bakar","Tumpukan Kayu","Kumpulkan kayu untuk persiapan membangun.","kumpulkan","kayu",20,{"makanan":6},"Tumpukan kayu tersusun rapi. Penduduk siap membangun!",2),
  Q("q03_atap_pertama","Atap di Atas Kepala","Bangun Gubuk supaya penduduk bisa tidur nyenyak.","bangun","gubuk",1,{"kayu":10,"suasana_hati":5},"Untuk pertama kalinya, penduduk tidur beratap. Dengkuran pelan terdengar sampai pagi.",3),
  Q("q04_perut_kenyang","Perut Kenyang","Kumpulkan makanan dari buah, ikan, atau daging.","kumpulkan","makanan",30,{"batu":10},"Ada cukup makanan untuk beberapa hari ke depan. Semua bisa bekerja dengan tenang.",4),
  Q("q05_gudang","Tempat Menyimpan","Bangun Gudang agar sumber daya tidak berserakan.","bangun","gudang",1,{"kayu":15,"batu":15},"Semua barang kini tersimpan rapi. Penduduk tak perlu lagi mencari-cari.",5),
  Q("q06_air_bersih","Air Bersih","Bangun Sumur supaya penduduk tidak perlu bolak-balik ke sungai.","bangun","sumur",1,{"air":20,"suasana_hati":5},"Air jernih kini ada di tengah desa. Langkah penduduk terasa lebih ringan.",6),
- Q("q07_ladang_pertama","Benih Harapan","Bangun Ladang dan panen gandum pertama desa.","kumpulkan","gandum",20,{"makanan":20},"Bulir gandum pertama berayun ditiup angin. Masa depan desa terlihat cerah.",7),
+ Q("q07_ladang_pertama","Benih Harapan","Bangun Ladang dan panen gandum pertama desa.","kumpulkan","gandum",20,{"makanan":10},"Bulir gandum pertama berayun ditiup angin. Masa depan desa terlihat cerah.",7),
  Q("q08_desa_bertumbuh","Keluarga Bertambah","Siapkan makanan berlebih dan rumah kosong agar penduduk baru mau tinggal.","capai_penduduk","penduduk",5,{"alat":2,"suasana_hati":10},"Kini ada lima penduduk di desa. Suara tawa terdengar di mana-mana.",8),
  Q("q09_siap_dingin","Siap Hadapi Musim Dingin","Bangun Lumbung dan isi dengan stok makanan sebelum musim dingin tiba.","simpan","makanan",100,{"kulit":5,"kayu":30},"Lumbung penuh. Saat salju turun nanti, tak seorang pun akan kelaparan.",9),
  Q("q10_dusun","Dari Perkemahan Menjadi Dusun","Bangun Rumah kayu dan Dapur, lalu capai 8 penduduk untuk naik ke era Dusun.","capai_era","dusun",1,{"papan":20,"batu_bata":20,"suasana_hati":20},"Perkemahan kecil kini menjadi Dusun yang ramai. Perjalanan desa baru saja dimulai!",10)
@@ -516,7 +516,7 @@ pencapaian = [
  A("A05","Tetangga Baru","Capai 3 penduduk.",S_("capai_penduduk","penduduk",3),
    "Ada wajah baru di sekitar api unggun. Selamat datang, tetangga!"),
  A("A06","Petani Sejati","Panen Ladang untuk pertama kalinya.",S_("panen","ladang",1),
-   "Panen pertama! Gandumnya mungkin sedikit, tapi rasanya istimewa.",{"gandum":5}),
+   "Panen pertama! Gandumnya mungkin sedikit, tapi rasanya istimewa.",{"gandum":3}),
  A("A07","Air Jernih","Bangun Sumur.",S_("bangun","sumur",1),
    "Tak perlu lagi berjalan jauh ke sungai. Airnya dingin dan segar."),
  A("A08","Dusun Raya","Capai era Dusun.",S_("capai_era","dusun",1),
@@ -535,7 +535,7 @@ pencapaian = [
    "Tangan para penambang kini kuat seperti batu itu sendiri. Mereka bisa membawa sedikit lebih banyak.",{},
    {"tipe":"bonus_angkut","target":"batu","jumlah":1}),
  A("A14","Peneliti Desa","Selesaikan riset 5 teknologi.",S_("riset","semua",5),
-   "Lima ilmu sudah dikuasai. Desa ini ternyata penuh orang pintar!",{"makanan":20}),
+   "Lima ilmu sudah dikuasai. Desa ini ternyata penuh orang pintar!",{"makanan":10}),
  A("A15","Dinding Tegak","Selesaikan riset Dinding Bata.",S_("riset","T18",1),
    "Dinding bata berdiri kokoh. Badai boleh datang, desa tetap tenang.",{"suasana_hati":10}),
  A("A16","Festival Pertama","Adakan festival pertama desa.",S_("adakan_festival","semua",1),
@@ -740,7 +740,7 @@ event_lanjut = [
   C("Tidur lebih awal saja",{"energi":10},"Penduduk tidur sambil melihat kelip dari jendela. Esok paginya mereka bangun segar.")
  ],"langka"),
  EL("desa_pertanian","embun_beku","Embun Beku Datang Lebih Awal","Pagi ini rumput berlapis es tipis, padahal musim dingin belum tiba. Udara terasa menggigit.",[
-  C("Panen lebih awal",{"gandum":10,"energi":-10},"Semua tangan turun ke ladang. Gandum diselamatkan sebelum beku, walau belum terlalu besar."),
+  C("Panen lebih awal",{"gandum":6,"energi":-10},"Semua tangan turun ke ladang. Gandum diselamatkan sebelum beku, walau belum terlalu besar."),
   C("Tutupi ladang dengan jerami",{"kayu":-15,"suasana_hati":5},"Selimut jerami melindungi tanaman. Mereka tetap tumbuh pelan-pelan di bawahnya."),
   C("Berkumpul di dekat api",{"suasana_hati":-5,"kesehatan":-5},"Penduduk berhangat bersama, tapi sebagian tanaman di ladang layu kedinginan.")
  ],"musim"),
@@ -782,11 +782,11 @@ event_lanjut = [
 ]
 
 quest_lanjutan = [
- Q("q11_dapur_mengepul","Dapur Mengepul","Bangun Dapur supaya bahan mentah bisa diolah menjadi masakan yang lebih mengenyangkan.","bangun","dapur",1,{"makanan":10,"suasana_hati":5},"Asap tipis mengepul dari cerobong Dapur. Aroma masakan membuat semua orang pulang lebih cepat.",11),
- Q("q12_hamparan_ladang","Hamparan Ladang","Bangun total 3 petak Ladang agar desa tidak bergantung pada buah liar.","bangun","ladang",3,{"kayu":15,"gandum":5},"Tiga petak ladang berjajar rapi. Dari kejauhan, desa mulai tampak seperti kain bermotif kotak-kotak.",12),
+ Q("q11_dapur_mengepul","Dapur Mengepul","Bangun Dapur supaya bahan mentah bisa diolah menjadi masakan yang lebih mengenyangkan.","bangun","dapur",1,{"makanan":5,"suasana_hati":5},"Asap tipis mengepul dari cerobong Dapur. Aroma masakan membuat semua orang pulang lebih cepat.",11),
+ Q("q12_hamparan_ladang","Hamparan Ladang","Bangun total 3 petak Ladang agar desa tidak bergantung pada buah liar.","bangun","ladang",3,{"kayu":15,"gandum":3},"Tiga petak ladang berjajar rapi. Dari kejauhan, desa mulai tampak seperti kain bermotif kotak-kotak.",12),
  Q("q13_desa_pertanian","Desa yang Menguning","Penuhi syarat era Desa Pertanian: penduduk, ladang, sumur, dapur, dan stok pangan yang cukup.","capai_era","desa_pertanian",1,{"papan":10,"alat":1,"suasana_hati":10},"Desa kini resmi menjadi Desa Pertanian. Setiap musim panen terasa seperti pesta kecil.",13),
  Q("q14_dentang_palu","Dentang Palu","Bangun Bengkel alat agar desa bisa membuat perkakas, papan, dan batu bata sendiri.","bangun","bengkel_alat",1,{"batu":15,"kayu":15},"Denting palu pertama terdengar sampai ke sungai. Kini desa bisa membuat alatnya sendiri.",14),
- Q("q15_ilmu_pertama","Ilmu dari Pengalaman","Selesaikan riset 3 teknologi. Pilih yang paling dibutuhkan desa saat ini.","riset","semua",3,{"makanan":15,"suasana_hati":5},"Tiga ilmu baru dikuasai. Penduduk mulai suka berdiskusi di dekat api sebelum tidur.",15),
+ Q("q15_ilmu_pertama","Ilmu dari Pengalaman","Selesaikan riset 3 teknologi. Pilih yang paling dibutuhkan desa saat ini.","riset","semua",3,{"makanan":8,"suasana_hati":5},"Tiga ilmu baru dikuasai. Penduduk mulai suka berdiskusi di dekat api sebelum tidur.",15),
  Q("q16_perkakas_cadangan","Perkakas Cadangan","Simpan minimal 5 perkakas supaya kerja tidak terhenti saat alat aus.","simpan","alat",5,{"papan":10,"batu_bata":5},"Rak perkakas penuh dan berkilau. Tidak ada lagi yang harus bekerja dengan tangan kosong.",16),
  Q("q17_lapak_pertama","Lapak Pertama","Bangun Pasar agar pedagang punya tempat untuk menggelar dagangan.","bangun","pasar",1,{"suasana_hati":10,"alat":1},"Lapak-lapak kayu berdiri. Lonceng pedagang kini terdengar lebih sering di desa.",17),
  Q("q18_pandai_berdagang","Pandai Berdagang","Selesaikan 5 transaksi di Pasar. Jual saat harga naik, beli saat harga turun.","transaksi_pasar","pasar",5,{"papan":15,"suasana_hati":5},"Pedagang mulai memanggil desamu \"langganan tetap\". Tawar-menawar pun jadi lebih seru.",18),

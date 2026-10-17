@@ -48,7 +48,7 @@ window.CONFIG = {
   TOOLS: { bonus: 0.25, wearPerHaul: 0.03 },          // alat >=1 -> kerja +25%
   KITCHEN_EAT_BONUS: 0.25,
   WORKSHOP_DAILY: { in: { kayu: 6, batu: 4 }, out: { alat: 1, papan: 2, batu_bata: 2 } },
-  MARKET_DAILY: { minKayu: 60, in: { kayu: 10 }, out: { makanan: 3 } },
+  MARKET_DAILY: { minKayu: 60, in: { kayu: 10 }, out: { makanan: 2 } },
   GRANARY_WINTER_HUNGER_MULT: 1.25, TOWN_HALL_SPAWN_COOLDOWN_CUT: 2,
   BUILDING_DAMAGE: { repairBelow: 80, noCapacityBelow: 40, repairPerSec: 2 },
   // Penduduk baru: SEMUA syarat harus terpenuhi
