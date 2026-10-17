@@ -67,6 +67,16 @@ window.CONFIG = {
     wabah:             { bobot: 1.2 },
     pendatang:         { bobot: 0.8 },
   },
+  // Tutorial interaktif: per langkah (urutan sama dengan TEKS-GAME.json tutorial) elemen yang disorot & aksi pemain
+  // yang otomatis melanjutkan. Langkah di JSON boleh punya 'target'/'aksi' sendiri (menimpa ini).
+  // Aksi: klik_penduduk, ubah_prioritas, taruh_bangunan, buka_riset, ubah_kecepatan
+  TUTORIAL_HOOKS: [
+    { target: '#c' },
+    { target: '#vil', aksi: 'klik_penduduk' },
+    { target: '#prio', aksi: 'ubah_prioritas' },
+    { target: '#buildbar', aksi: 'taruh_bangunan' },
+    { target: '#log' },
+  ],
   MAX_LOG: 40, MAX_NOTES: 6,
   FOOD_SURPLUS_FACTOR: 1.2, FOOD_SURPLUS_PENALTY: 25, // jika stok makanan melimpah, kerja makanan turun prioritas
   DEFAULT_PRIO: { bangun: 3, makanan: 3, bertani: 2, air: 2, kayu: 2, batu: 2 }, // 0=mati .. 3=tinggi

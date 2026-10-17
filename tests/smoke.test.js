@@ -3,7 +3,7 @@ const { chromium } = require('playwright');
   const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1560, height: 860 } });
   const errs = []; p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); }); p.on('pageerror', e => errs.push(String(e)));
   await p.goto(process.env.GAME_URL || 'http://localhost:8080/'); await p.waitForTimeout(1000);
-  await p.click('#tutSkip'); await p.click('[data-b="apiunggun"]'); await p.mouse.move(400,450); await p.mouse.click(400,450);
+  await p.click('#btnNew'); await p.click('#tutSkip'); await p.click('[data-b="apiunggun"]'); await p.mouse.move(400,450); await p.mouse.click(400,450);
   await p.click('[data-s="3"]'); await p.waitForTimeout(6000);
   // fast-forward 3 days headlessly to exercise AI
   const r = await p.evaluate(() => { for (let i = 0; i < 3600; i++) { DESA.step(0.1); const b = document.querySelector('[data-ev="0"]'); if (DESA.state.event && b) b.click(); } const S = DESA.state;

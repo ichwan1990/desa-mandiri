@@ -1,21 +1,19 @@
 <!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><title>Desa Mandiri</title>
-<style>
-body{margin:0;background:#2b2118;color:#fbeed5;font-family:sans-serif;font-size:13px}
-#top{display:flex;gap:14px;padding:6px 10px;background:#4a3524;align-items:center;flex-wrap:wrap}
-#top b{color:#ffd27a} button:disabled{opacity:.4;cursor:default} button{background:#7a5434;color:#fff;border:1px solid #c9925a;border-radius:4px;padding:3px 8px;cursor:pointer}
-button.on{background:#d98b2b} #wrap{display:flex} canvas{display:block;cursor:crosshair;image-rendering:pixelated;image-rendering:crisp-edges}
-#side{width:260px;padding:8px;background:#3a2a1c;height:800px;overflow:auto;box-sizing:border-box}
-h3{margin:8px 0 4px;color:#ffd27a;font-size:14px} .row{display:flex;justify-content:space-between;align-items:center;margin:2px 0}
-#log{font-size:12px;line-height:1.4} .v{font-size:12px;border-bottom:1px solid #5a4330;padding:2px 0}
-#modal,#tut{display:none;position:fixed;background:#4a3524;border:2px solid #ffd27a;border-radius:8px;padding:12px;max-width:420px;z-index:9}
-#modal{left:50%;top:30%;transform:translateX(-50%)} #modal button:disabled{opacity:.4;cursor:default} button{margin:3px 0} #tut{left:20px;bottom:20px;max-width:340px}
-#quest{font-size:12px}</style></head><body>
+<link rel="stylesheet" href="theme.css"></head><body>
 <div id="top"><span id="res"></span><span id="time"></span>
 <span>Kecepatan: <button data-s="0">Jeda</button><button data-s="1" class="on">1x</button><button data-s="2">2x</button><button data-s="3">3x</button><button data-s="4">4x</button></span>
 <span id="buildbar"></span>
-<span>Zoom: <button id="zout">−</button><button id="zin">+</button></span> <button id="save">Simpan</button><button id="load">Muat</button><button id="reset">Baru</button></div>
+<span>Zoom: <button id="zout">−</button><button id="zin">+</button></span> <button id="techbtn">🔬 Riset</button> <button id="save">Simpan</button><button id="load">Muat</button><button id="reset">Baru</button><button id="menubtn">Menu</button></div>
 <div id="wrap"><canvas id="c"></canvas><div id="side">
 <h3>Prioritas Kerja</h3><div id="prio"></div><h3>Era</h3><div id="era" style="font-size:12px"></div><h3>Misi</h3><div id="quest"></div><h3>Penduduk</h3><div id="vil"></div><h3>Log Desa</h3><div id="log"></div></div></div>
-<div id="modal"></div><div id="tut"></div>
+<div id="modal" class="panel"></div><div id="tut" class="panel"></div><div id="vpanel" class="panel"></div><div id="techpanel" class="panel"></div>
+<div id="menu"><div class="box" id="menuMain"><h1>Desa Mandiri</h1><div class="sub">Bangun desamu, rawat penduduknya.</div>
+<button class="big" id="btnNew">Main Baru</button><button class="big" id="btnContinue">Lanjutkan</button><button class="big" id="btnSettings">Pengaturan</button></div>
+<div class="box" id="menuSettings" style="display:none"><h1 style="font-size:28px">Pengaturan</h1>
+<label>Volume <input type="range" id="setVolume" min="0" max="100"></label>
+<label>Kecepatan awal <select id="setSpeed"><option value="1">1x</option><option value="2">2x</option><option value="3">3x</option><option value="4">4x</option></select></label>
+<label>Bahasa <select id="setLang"><option value="id">Bahasa Indonesia</option><option value="en" disabled>English (segera)</option></select></label>
+<small style="opacity:.7">Suara belum tersedia; volume disimpan untuk versi berikutnya.</small><br>
+<button class="big" id="btnBack">Kembali</button></div></div>
 <script src="balance.js"></script><script src="assets.js"></script><script src="game.js"></script>
 </body></html>

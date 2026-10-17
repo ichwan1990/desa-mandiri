@@ -1,0 +1,40 @@
+/* Tema UI Desa Mandiri. Ganti variabel di :root (atau tambahkan gambar 9-slice lewat --panel-bg / --btn-bg) untuk menerapkan aset UI dari desainer. */
+:root{
+  --bg:#2b2118; --text:#fbeed5; --accent:#ffd27a; --topbar:#4a3524; --side:#3a2a1c; --line:#5a4330;
+  --btn:#7a5434; --btn-border:#c9925a; --btn-on:#d98b2b; --btn-text:#fff;
+  --panel:#4a3524; --panel-border:#ffd27a; --panel-radius:8px; --panel-bg:none; --btn-bg:none;
+  --bar-bg:#1d1610; --bar-hunger:#e0843a; --bar-energy:#5ab0e6; --bar-mood:#e6c35a; --bar-health:#6bd06b;
+  --highlight:#ffe14a; --font:sans-serif; --title-font:Georgia,serif;
+}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);font-size:13px}
+#top{display:flex;gap:14px;padding:6px 10px;background:var(--topbar);align-items:center;flex-wrap:wrap}
+#top b{color:var(--accent)}
+button{background:var(--btn) var(--btn-bg);color:var(--btn-text);border:1px solid var(--btn-border);border-radius:4px;padding:3px 8px;cursor:pointer;margin:3px 0}
+button:disabled{opacity:.4;cursor:default} button.on{background:var(--btn-on)}
+#wrap{display:flex} canvas{display:block;cursor:crosshair;image-rendering:pixelated;image-rendering:crisp-edges}
+#side{width:260px;padding:8px;background:var(--side);height:800px;overflow:auto;box-sizing:border-box}
+h3{margin:8px 0 4px;color:var(--accent);font-size:14px} .row{display:flex;justify-content:space-between;align-items:center;margin:2px 0}
+#log{font-size:12px;line-height:1.4} .v{font-size:12px;border-bottom:1px solid var(--line);padding:2px 0;cursor:pointer} .v:hover{background:rgba(255,255,255,.05)}
+.panel{display:none;position:fixed;background:var(--panel) var(--panel-bg);border:2px solid var(--panel-border);border-radius:var(--panel-radius);padding:12px;z-index:9;box-shadow:0 6px 24px rgba(0,0,0,.5)}
+#modal{left:50%;top:30%;transform:translateX(-50%);max-width:420px} #tut{left:20px;bottom:20px;max-width:340px;z-index:12}
+#quest{font-size:12px}
+/* Menu utama */
+#menu{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;background:rgba(20,14,10,.78)}
+#menu .box{background:var(--panel) var(--panel-bg);border:3px solid var(--panel-border);border-radius:12px;padding:28px 40px;text-align:center;min-width:320px}
+#menu h1{font-family:var(--title-font);color:var(--accent);font-size:42px;margin:0 0 4px;letter-spacing:2px;text-shadow:3px 3px 0 #000}
+#menu .sub{opacity:.8;margin-bottom:18px} #menu button.big{display:block;width:100%;font-size:17px;padding:9px;margin:8px 0}
+#menu label{display:flex;justify-content:space-between;gap:12px;margin:8px 0;text-align:left}
+/* Tutorial: sorotan elemen */
+.tut-hl{outline:3px solid var(--highlight)!important;outline-offset:2px;animation:tutpulse 1s infinite alternate;position:relative;z-index:11}
+@keyframes tutpulse{from{box-shadow:0 0 0 0 rgba(255,225,74,.7)}to{box-shadow:0 0 14px 6px rgba(255,225,74,.35)}}
+/* Panel penduduk */
+#vpanel{right:280px;top:60px;width:300px;max-height:720px;overflow:auto}
+.bar{height:9px;background:var(--bar-bg);border-radius:4px;overflow:hidden;margin:2px 0 6px} .bar>i{display:block;height:100%}
+#vpanel .close,#techpanel .close{float:right}
+#vpanel ul{margin:4px 0;padding-left:16px;font-size:12px}
+/* Pohon teknologi */
+#techpanel{left:50%;top:70px;transform:translateX(-50%);width:880px;max-height:720px;overflow:auto}
+.tech-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.tech{border:1px solid var(--line);border-radius:6px;padding:8px;font-size:12px;background:rgba(0,0,0,.15)}
+.tech b{color:var(--accent)} .tech.done{border-color:#6bd06b;background:rgba(107,208,107,.12)} .tech.active{border-color:var(--highlight)}
+.tech.locked{opacity:.5} .tech small{display:block;opacity:.8;margin-top:3px}

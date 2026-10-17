@@ -8,6 +8,7 @@ const SKILL_OF = { kayu: 'menebang', batu: 'menambang', makanan: 'meramu', bangu
 const JOB_LABEL = { bangun: 'Membangun', makanan: 'Makanan', bertani: 'Bertani', air: 'Air', kayu: 'Kayu', batu: 'Batu' };
 const RES_LABEL = { kayu: 'Kayu', batu: 'Batu', makanan: 'Makanan', gandum: 'Gandum', air: 'Air', alat: 'Alat', kulit: 'Kulit', papan: 'Papan', batu_bata: 'Batu bata' };
 const CAMP = C.CAMP;
+let menuOpen = true;
 let S, speed = 1, placing = null, mouse = { x: 0, y: 0 };
 
 // ---------- RNG (seedable for map) ----------
@@ -285,9 +286,18 @@ function checkQuest() { const q = quest(); if (!q) return; const pr = questProgr
   if (pr >= q.tujuan.jumlah) { applyEffects(q.hadiah, 'quest ' + q.id); log(`✅ Misi selesai: ${q.judul}. ${q.teks_selesai || ''}`); S.questIdx++; } }
 function questUI() { const q = quest(); if (!q) return TEXT ? 'Semua misi selesai!' : '-'; const pr = questProgress(q) ?? 0;
   return `<b>${q.judul}</b><br>${q.deskripsi}<br>Progres: ${Math.min(pr, q.tujuan.jumlah)}/${q.tujuan.jumlah}`; }
+// tutorial interaktif: sorot elemen target, lanjut saat pemain melakukan aksi atau klik Lanjut
+const tutHook = i => { const t = TEXT && TEXT.tutorial && TEXT.tutorial[i]; const h = (C.TUTORIAL_HOOKS || [])[i] || {};
+  return { target: (t && t.target) || h.target, aksi: (t && t.aksi) || h.aksi }; };
+const AKSI_LABEL = { klik_penduduk: 'Klik salah satu penduduk', ubah_prioritas: 'Ubah salah satu prioritas kerja', taruh_bangunan: 'Taruh satu rencana bangunan', buka_riset: 'Buka panel Riset', ubah_kecepatan: 'Ubah kecepatan' };
 function tutorialUI() { const t = TEXT && TEXT.tutorial && TEXT.tutorial[S.tutorialStep], el = $('tut');
-  if (!t) { el.style.display = 'none'; return; } el.style.display = 'block';
-  el.innerHTML = `<b>${t.judul}</b><br>${t.teks}<br><button id="tutNext">Lanjut</button> <button id="tutSkip">Lewati</button>`; }
+  document.querySelectorAll('.tut-hl').forEach(x => x.classList.remove('tut-hl'));
+  if (!t || menuOpen) { el.style.display = 'none'; return; } el.style.display = 'block';
+  const h = tutHook(S.tutorialStep), tgt = h.target && document.querySelector(h.target); if (tgt) tgt.classList.add('tut-hl');
+  el.innerHTML = `<small>Tutorial ${S.tutorialStep + 1}/${TEXT.tutorial.length}</small><br><b>${t.judul}</b><br>${t.teks}` +
+    (h.aksi ? `<br><i>👉 ${AKSI_LABEL[h.aksi] || h.aksi}</i>` : '') + `<br><button id="tutNext">Lanjut</button> <button id="tutSkip">Lewati</button>`; }
+function openVillager(id) { tutAction('klik_penduduk'); }
+function tutAction(name) { if (tutHook(S.tutorialStep).aksi === name) { S.tutorialStep++; tutorialUI(); } }
 // ---------- dunia ----------
 let lastDay = 1;
 function step(dt) {
@@ -482,6 +492,8 @@ function validSpot(type, x, y) { const d = C.BUILDINGS[type];
   return true; }
 // ---------- UI ----------
 const $ = id => document.getElementById(id);
+const _html = {};
+function setHTML(id, h) { if (_html[id] !== h) { _html[id] = h; $(id).innerHTML = h; } }
 function ui() {
   const f = dayFrac(), h = Math.floor(f * 24), m = Math.floor((f * 24 % 1) * 60);
   const ICONS = { kayu: '🪵', batu: '🪨', makanan: '🍎', gandum: '🌾', air: '💧', alat: '🔨', kulit: '🧥', papan: '🪚', batu_bata: '🧱' };
@@ -490,15 +502,15 @@ function ui() {
   const se = season(), dayInSeason = (S.day - 1) % C.SEASON_DAYS + 1;
   $('time').innerHTML = `${{ semi: '🌱', panas: '☀️', gugur: '🍂', dingin: '❄️' }[se]} ${C.SEASON_NAMES[se]} (${dayInSeason}/${C.SEASON_DAYS}) · Hari <b>${S.day}</b> — ${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')} ${isNight() ? '🌙 Malam' : '☀️ Siang'}`;
   const TL = { makan: 'Makan', tidur: 'Tidur', kumpul: 'Mengumpulkan', setor: 'Menyetor', bangun: 'Membangun', diam: 'Santai', tani: 'Bertani', air: 'Mengambil air' };
-  $('vil').innerHTML = S.villagers.map(v => `<div class="v"><b>${v.name}</b> (${v.age} th, ${role(v)}) — ${v.task ? TL[v.task.kind] + (v.task.kind === 'kumpul' ? ' ' + v.task.res : v.task.kind === 'tani' ? (v.task.harvest ? ' (panen)' : ' (tanam)') : '') : '-'}<br>
-    Lapar ${v.hunger | 0} · Energi ${v.energy | 0} · Hati ${v.mood | 0} · Sehat ${(v.health ?? 100) | 0}</div>`).join('');
+  setHTML('vil', S.villagers.map(v => `<div class="v" data-vid="${v.id}"><b>${v.name}</b> (${v.age} th, ${role(v)}) — ${v.task ? TL[v.task.kind] + (v.task.kind === 'kumpul' ? ' ' + v.task.res : v.task.kind === 'tani' ? (v.task.harvest ? ' (panen)' : ' (tanam)') : '') : '-'}<br>
+    Lapar ${v.hunger | 0} · Energi ${v.energy | 0} · Hati ${v.mood | 0} · Sehat ${(v.health ?? 100) | 0}</div>`).join(''));
   const warn = foodTotal() < foodPerDay() * 2, wwarn = (se === 'gugur' || se === 'dingin') && foodTotal() < foodPerDay() * C.WINTER_BUFFER_DAYS;
   $('res').innerHTML += (warn ? ' &nbsp; <b style="color:#ff6b6b">⚠️ Makanan menipis!</b>' : wwarn ? ' &nbsp; <b style="color:#ffb36b">❄️ Stok musim dingin kurang</b>' : '') + (S.res.air < S.villagers.length ? ' &nbsp; <b style="color:#6bc6ff">💧 Air menipis!</b>' : '');
   const era = C.ERAS[S.era | 0], next = C.ERAS[(S.era | 0) + 1];
-  $('era').innerHTML = `<b>${era.nama}</b>` + (next ? `<br>Menuju <b>${next.nama}</b>:<br>` + eraReqStatus(next).map(([t, ok]) => `${ok ? '✅' : '▫️'} ${t}`).join('<br>') : '<br>Era tertinggi tercapai!');
+  setHTML('era', `<b>${era.nama}</b>` + (next ? `<br>Menuju <b>${next.nama}</b>:<br>` + eraReqStatus(next).map(([t, ok]) => `${ok ? '✅' : '▫️'} ${t}`).join('<br>') : '<br>Era tertinggi tercapai!'));
   document.querySelectorAll('[data-b]').forEach(bt => { const k = bt.dataset.b; if (k) bt.disabled = !unlocked(k) || !canAfford(C.BUILDINGS[k].cost); });
-  $('quest').innerHTML = questUI();
-  $('log').innerHTML = S.log.slice(0, 15).map(l => `<div>${l}</div>`).join('');
+  setHTML('quest', questUI());
+  setHTML('log', S.log.slice(0, 15).map(l => `<div>${l}</div>`).join(''));
 }
 function buildBuildBar() {
   $('buildbar').innerHTML = 'Bangun: ' + Object.entries(C.BUILDINGS).filter(([k]) => unlocked(k)).map(([k, d]) =>
@@ -509,10 +521,11 @@ function buildPrioUI() {
 }
 document.addEventListener('click', e => { const d = e.target.dataset; if (!d) return;
   if (d.ev !== undefined) chooseEvent(+d.ev);
+  const vrow = e.target.closest && e.target.closest('[data-vid]'); if (vrow) openVillager(+vrow.dataset.vid);
   if (e.target.id === 'tutNext') { S.tutorialStep++; tutorialUI(); }
   if (e.target.id === 'tutSkip') { S.tutorialStep = 999; tutorialUI(); }
-  if (d.p) { S.prio[d.p] = +d.n; buildPrioUI(); }
-  if (d.s !== undefined) { speed = +d.s; document.querySelectorAll('[data-s]').forEach(b => b.classList.toggle('on', b === e.target)); }
+  if (d.p) { S.prio[d.p] = +d.n; buildPrioUI(); tutAction('ubah_prioritas'); }
+  if (d.s !== undefined) { setSpeed(+d.s); tutAction('ubah_kecepatan'); }
   if (d.b !== undefined) placing = d.b || null; });
 // kamera: seret (klik kiri/tengah) untuk geser, roda mouse / tombol untuk zoom, WASD/panah untuk geser
 let drag = null;
@@ -533,13 +546,13 @@ cv.addEventListener('click', e => { if (drag && drag.moved) return; const p = sc
   if (!canAfford(d.cost)) return log(`Bahan tidak cukup untuk ${d.nama}.`);
   if (!validSpot(placing, mouse.x, mouse.y)) return;
   for (const [k, n] of Object.entries(d.cost)) S.res[k] -= n;
-  addBuilding(placing, mouse.x, mouse.y, false); log(`Rencana ${d.nama} ditempatkan.`); placing = null; });
+  addBuilding(placing, mouse.x, mouse.y, false); log(`Rencana ${d.nama} ditempatkan.`); placing = null; tutAction('taruh_bangunan'); });
 cv.addEventListener('contextmenu', e => { e.preventDefault(); placing = null; });
 // save/load: referensi node/bangunan di task tidak diserialisasi, task direset saat muat
 const KEY = 'desaMandiriSave';
 $('save').onclick = () => { localStorage.setItem(KEY, JSON.stringify({ ...S, villagers: S.villagers.map(v => ({ ...v, task: null, path: null, pathKey: null })) })); log('Permainan disimpan.'); };
 $('load').onclick = () => loadGame(true);
-$('reset').onclick = () => { if (confirm('Mulai permainan baru?')) { newGame(); lastDay = S.day; buildPrioUI(); buildBuildBar(); tutorialUI(); } };
+$('reset').onclick = () => { if (confirm('Mulai permainan baru?')) { S = null; newGame(); lastDay = S.day; buildPrioUI(); buildBuildBar(); tutorialUI(); } };
 function loadGame(verbose) { const s = localStorage.getItem(KEY); if (!s) { if (verbose) log('Belum ada simpanan.'); return false; }
   try { const L = JSON.parse(s); if (!L.tiles || L.tiles.length !== C.MAP_H || L.tiles[0].length !== C.MAP_W) { if (verbose) log('Simpanan versi lama tidak cocok dengan peta baru.'); return false; } S = L; lastDay = S.day; S.prio = { ...C.DEFAULT_PRIO, ...S.prio }; S.gathered = S.gathered || {}; S.era |= 0; for (const [k, n] of Object.entries(C.START_RES)) if (!(k in S.res)) S.res[k] = 0; if (!S.banks) computeBanks(); S.villagers.forEach(v => { v.skills.bertani = v.skills.bertani || 0; if (v.health == null) v.health = 100; }); S.questIdx |= 0; S.tutorialStep |= 0; S.restUntil = S.restUntil || 0; buildPrioUI(); buildBuildBar(); tutorialUI(); $('modal').style.display = 'none'; if (S.event) showEvent(); log('Permainan dimuat.'); return true; } catch (e) { console.warn(e); return false; } }
 
@@ -547,10 +560,25 @@ function loadGame(verbose) { const s = localStorage.getItem(KEY); if (!s) { if (
 let prev = performance.now();
 function frame(now) { const real = Math.min(0.25, (now - prev) / 1000); prev = now;
   for (const n of notes) n.life -= real; while (notes.length && notes[0].life <= 0) notes.shift();
-  let sim = real * speed; while (sim > 0) { const d = Math.min(0.1, sim); step(d); sim -= d; }
+  let sim = menuOpen ? 0 : real * speed; while (sim > 0) { const d = Math.min(0.1, sim); step(d); sim -= d; }
   render(); ui(); requestAnimationFrame(frame); }
 window.DESA = { get state() { return S; }, showEvent, validSpot, canAfford, addBuilding, season,  step, cam, findPath, setZoom, centerCam };
 fetch('TEKS-GAME.json').then(r => r.ok ? r.json() : null).catch(() => null).then(t => { TEXT = t;
   if (!t) console.warn('TEKS-GAME.json tidak dapat dimuat; memakai teks bawaan.');
-  loadAssets(() => { if (!loadGame(false)) newGame(); lastDay = S.day; buildPrioUI(); buildBuildBar(); tutorialUI(); centerCam(CAMP.x, CAMP.y); requestAnimationFrame(frame); }); });
+  loadAssets(() => { newGame(); lastDay = S.day; buildPrioUI(); buildBuildBar(); centerCam(CAMP.x, CAMP.y); openMenu(); requestAnimationFrame(frame); }); });
+// ---------- menu utama & pengaturan ----------
+const SET_KEY = 'desaMandiriSettings';
+const SET = Object.assign({ volume: 70, speed: 1, lang: 'id' }, (() => { try { return JSON.parse(localStorage.getItem(SET_KEY)) || {}; } catch (e) { return {}; } })());
+function setSpeed(n) { speed = n; document.querySelectorAll('[data-s]').forEach(b => b.classList.toggle('on', +b.dataset.s === n)); }
+function hasSave() { try { const L = JSON.parse(localStorage.getItem(KEY)); return !!(L && L.tiles && L.tiles.length === C.MAP_H); } catch (e) { return false; } }
+function openMenu() { menuOpen = true; $('menu').style.display = 'flex'; $('menuMain').style.display = ''; $('menuSettings').style.display = 'none';
+  $('btnContinue').style.display = hasSave() ? '' : 'none'; tutorialUI(); }
+function closeMenu() { menuOpen = false; $('menu').style.display = 'none'; setSpeed(+SET.speed || 1); tutorialUI(); }
+$('btnNew').onclick = () => { newGame(); lastDay = S.day; buildPrioUI(); buildBuildBar(); centerCam(CAMP.x, CAMP.y); closeMenu(); };
+$('btnContinue').onclick = () => { if (loadGame(true)) { centerCam(CAMP.x, CAMP.y); closeMenu(); } };
+$('btnSettings').onclick = () => { $('menuMain').style.display = 'none'; $('menuSettings').style.display = '';
+  $('setVolume').value = SET.volume; $('setSpeed').value = SET.speed; $('setLang').value = SET.lang; };
+$('btnBack').onclick = () => { SET.volume = +$('setVolume').value; SET.speed = +$('setSpeed').value; SET.lang = $('setLang').value;
+  localStorage.setItem(SET_KEY, JSON.stringify(SET)); openMenu(); };
+$('menubtn').onclick = () => openMenu();
 })();

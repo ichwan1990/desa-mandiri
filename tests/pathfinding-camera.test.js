@@ -8,7 +8,7 @@ const { chromium } = require('playwright');
   const pt = await p.evaluate(() => { const S = DESA.state; const path = DESA.findPath(22, 10, 50, 10);
     return { len: path && path.length, waterCrossed: path ? path.filter(q => S.tiles[q.y][q.x] === 1).length : -1, bridgeUsed: path ? path.filter(q => S.tiles[q.y][q.x] === 2).length : -1 }; });
   // build via camera-mapped click at zoom 2
-  await p.click('#tutSkip'); await p.click('#zin');
+  await p.click('#btnNew'); await p.click('#tutSkip'); await p.click('#zin');
   const target = await p.evaluate(() => { const c = DESA.cam; const tx = 24, ty = 18; return { sx: (tx * 32 + 16 - c.x) * c.zoom, sy: (ty * 32 + 16 - c.y) * c.zoom, zoom: c.zoom }; });
   const box = await p.locator('#c').boundingBox();
   await p.click('[data-b="apiunggun"]'); await p.mouse.move(box.x + target.sx, box.y + target.sy); await p.mouse.click(box.x + target.sx, box.y + target.sy);
