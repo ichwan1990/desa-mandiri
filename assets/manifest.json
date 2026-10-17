@@ -1140,6 +1140,96 @@
    200,
    150,
    90
+  ],
+  "merak": [
+   36,
+   120,
+   104
+  ],
+  "merak_l": [
+   96,
+   184,
+   140
+  ],
+  "merak_eye": [
+   44,
+   72,
+   170
+  ],
+  "merak_g": [
+   236,
+   196,
+   80
+  ],
+  "khaki": [
+   176,
+   156,
+   104
+  ],
+  "khaki_d": [
+   132,
+   112,
+   72
+  ],
+  "khaki_l": [
+   208,
+   190,
+   140
+  ],
+  "coat": [
+   236,
+   240,
+   240
+  ],
+  "coat_d": [
+   190,
+   200,
+   206
+  ],
+  "kader": [
+   232,
+   130,
+   164
+  ],
+  "kader_d": [
+   186,
+   90,
+   124
+  ],
+  "kader_l": [
+   248,
+   190,
+   210
+  ],
+  "kerudung": [
+   250,
+   214,
+   226
+  ],
+  "ksatria": [
+   150,
+   40,
+   40
+  ],
+  "kayu_ukir": [
+   170,
+   100,
+   50
+  ],
+  "kerupuk": [
+   244,
+   226,
+   170
+  ],
+  "kerupuk_d": [
+   214,
+   186,
+   120
+  ],
+  "kabah": [
+   40,
+   36,
+   44
   ]
  },
  "files": [
@@ -8892,6 +8982,2586 @@
    "frames": 1,
    "note": "16x16",
    "stage": 8
+  },
+  {
+   "file": "icons/traits/trait_perantau.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "sifat perantau (netral (bingkai hijau sesuai riset)), format sama dengan icons/traits",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/traits/trait_perantau_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/traits/trait_ahli_tani.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "sifat ahli_tani (positif), format sama dengan icons/traits",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/traits/trait_ahli_tani_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/traits/trait_pandai_masak.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "sifat pandai_masak (positif), format sama dengan icons/traits",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/traits/trait_pandai_masak_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/traits/trait_seniman.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "sifat seniman (positif), format sama dengan icons/traits",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/traits/trait_seniman_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/relations/rel_sahabat.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "hubungan 32x32",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/relations/rel_sahabat_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/relations/rel_keluarga.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "hubungan 32x32",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/relations/rel_keluarga_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/relations/rel_teman_12.png",
+   "size": [
+    12,
+    12
+   ],
+   "frame": [
+    12,
+    12
+   ],
+   "frames": 1,
+   "note": "12x12 tanpa bingkai (riset \u00a77: ikon hubungan 12x12 di panel/garis antar penduduk)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/relations/rel_sahabat_12.png",
+   "size": [
+    12,
+    12
+   ],
+   "frame": [
+    12,
+    12
+   ],
+   "frames": 1,
+   "note": "12x12 tanpa bingkai (riset \u00a77: ikon hubungan 12x12 di panel/garis antar penduduk)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/relations/rel_rival_12.png",
+   "size": [
+    12,
+    12
+   ],
+   "frame": [
+    12,
+    12
+   ],
+   "frames": 1,
+   "note": "12x12 tanpa bingkai (riset \u00a77: ikon hubungan 12x12 di panel/garis antar penduduk)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/relations/rel_pasangan_12.png",
+   "size": [
+    12,
+    12
+   ],
+   "frame": [
+    12,
+    12
+   ],
+   "frames": 1,
+   "note": "12x12 tanpa bingkai (riset \u00a77: ikon hubungan 12x12 di panel/garis antar penduduk)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/relations/rel_keluarga_12.png",
+   "size": [
+    12,
+    12
+   ],
+   "frame": [
+    12,
+    12
+   ],
+   "frames": 1,
+   "note": "12x12 tanpa bingkai (riset \u00a77: ikon hubungan 12x12 di panel/garis antar penduduk)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/wish/wish_bubble.png",
+   "size": [
+    96,
+    24
+   ],
+   "frame": [
+    24,
+    24
+   ],
+   "frames": 4,
+   "note": "gelembung keinginan (awan pikiran) 4 frame: 0 kecil, 1 membesar, 2 normal, 3 bob; slot ikon 16x16 di (4,2) frame 2 dan (4,1) frame 3",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/wish/wish_bubble_hampir.png",
+   "size": [
+    96,
+    24
+   ],
+   "frame": [
+    24,
+    24
+   ],
+   "frames": 4,
+   "note": "varian gelembung saat keinginan hampir kedaluwarsa (\u22641 hari), slot sama",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/wish/wish_bubble_static.png",
+   "size": [
+    24,
+    24
+   ],
+   "frame": [
+    24,
+    24
+   ],
+   "frames": 1,
+   "note": "24x24 statis = frame 2; slot 16x16 di (4,2)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_makan_rendang.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "keinginan makan_rendang 32x32 (kartu panel Keinginan Warga)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_makan_rendang_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16 untuk slot gelembung",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_nasi_pecel.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "keinginan nasi_pecel 32x32 (kartu panel Keinginan Warga)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_nasi_pecel_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16 untuk slot gelembung",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_kopi_pagi.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "keinginan kopi_pagi 32x32 (kartu panel Keinginan Warga)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_kopi_pagi_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16 untuk slot gelembung",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_rumah_panggung.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "keinginan rumah_panggung 32x32 (kartu panel Keinginan Warga)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_rumah_panggung_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16 untuk slot gelembung",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_nonton_reog.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "keinginan nonton_reog 32x32 (kartu panel Keinginan Warga)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_nonton_reog_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16 untuk slot gelembung",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_tabungan_haji.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "keinginan tabungan_haji 32x32 (kartu panel Keinginan Warga)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_tabungan_haji_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16 untuk slot gelembung",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_mancing_sore.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "keinginan mancing_sore 32x32 (kartu panel Keinginan Warga)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_mancing_sore_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16 untuk slot gelembung",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_punya_ayam.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "keinginan punya_ayam 32x32 (kartu panel Keinginan Warga)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_punya_ayam_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16 untuk slot gelembung",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_baju_baru.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "keinginan baju_baru 32x32 (kartu panel Keinginan Warga)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_baju_baru_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16 untuk slot gelembung",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_ziarah_makam.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "keinginan ziarah_makam 32x32 (kartu panel Keinginan Warga)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_ziarah_makam_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16 untuk slot gelembung",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_wayang_semalam.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "keinginan wayang_semalam 32x32 (kartu panel Keinginan Warga)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_wayang_semalam_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16 untuk slot gelembung",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_tidur_siang.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "keinginan tidur_siang 32x32 (kartu panel Keinginan Warga)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_tidur_siang_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16 untuk slot gelembung",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_kerja_bakti.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "keinginan kerja_bakti 32x32 (kartu panel Keinginan Warga)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_kerja_bakti_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16 untuk slot gelembung",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_ngobrol_sahabat.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "keinginan ngobrol_sahabat 32x32 (kartu panel Keinginan Warga)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_ngobrol_sahabat_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16 untuk slot gelembung",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_punya_anak.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "keinginan punya_anak 32x32 (kartu panel Keinginan Warga)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_punya_anak_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16 untuk slot gelembung",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_sawah_menguning.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "keinginan sawah_menguning 32x32 (kartu panel Keinginan Warga)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_sawah_menguning_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16 untuk slot gelembung",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_jajan_pasar.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "keinginan jajan_pasar 32x32 (kartu panel Keinginan Warga)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_jajan_pasar_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16 untuk slot gelembung",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_belajar_gamelan.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "keinginan belajar_gamelan 32x32 (kartu panel Keinginan Warga)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_belajar_gamelan_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16 untuk slot gelembung",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_rujak_bareng.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "keinginan rujak_bareng 32x32 (kartu panel Keinginan Warga)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_rujak_bareng_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16 untuk slot gelembung",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_bancakan_weton.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "keinginan bancakan_weton 32x32 (kartu panel Keinginan Warga)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_bancakan_weton_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16 untuk slot gelembung",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_pulang_kampung.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "keinginan pulang_kampung 32x32 (kartu panel Keinginan Warga)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_pulang_kampung_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16 untuk slot gelembung",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_ronda_malam.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "keinginan ronda_malam 32x32 (kartu panel Keinginan Warga)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_ronda_malam_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16 untuk slot gelembung",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_main_layangan.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "keinginan main_layangan 32x32 (kartu panel Keinginan Warga)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_main_layangan_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16 untuk slot gelembung",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_menang_lomba.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "keinginan menang_lomba 32x32 (kartu panel Keinginan Warga)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_menang_lomba_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16 untuk slot gelembung",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_tumpeng_syukuran.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "keinginan tumpeng_syukuran 32x32 (kartu panel Keinginan Warga)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_tumpeng_syukuran_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16 untuk slot gelembung",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_mandi_kali.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "keinginan mandi_kali 32x32 (kartu panel Keinginan Warga)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/wishes/wish_mandi_kali_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16 untuk slot gelembung",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/progress/monument_bar_frame.png",
+   "size": [
+    48,
+    12
+   ],
+   "frame": [
+    48,
+    12
+   ],
+   "frames": 1,
+   "note": "9-slice 48x12, margin 4 semua sisi; isi (track) di x 4..43, y 4..7 (tinggi 4)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/progress/monument_bar_fill.png",
+   "size": [
+    4,
+    4
+   ],
+   "frame": [
+    4,
+    4
+   ],
+   "frames": 1,
+   "note": "4x4 tile isi hijau, ulang horizontal sepanjang progres",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/progress/monument_bar_fill_end.png",
+   "size": [
+    2,
+    4
+   ],
+   "frame": [
+    2,
+    4
+   ],
+   "frames": 1,
+   "note": "2x4 ujung kanan isi (kilau), tempel di akhir fill",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/progress/monument_bar_divider.png",
+   "size": [
+    2,
+    8
+   ],
+   "frame": [
+    2,
+    8
+   ],
+   "frames": 1,
+   "note": "2x8 pemisah segmen tahap, x = trackX + trackW*k/N - 1, y = 2",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/progress/monument_bar_fill_done.png",
+   "size": [
+    4,
+    4
+   ],
+   "frame": [
+    4,
+    4
+   ],
+   "frames": 1,
+   "note": "4x4 tile segmen tahap yang sudah selesai (hijau muda bercorak), dipakai di kiri segmen aktif",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/progress/monument_bar_frame_panel.png",
+   "size": [
+    96,
+    20
+   ],
+   "frame": [
+    96,
+    20
+   ],
+   "frames": 1,
+   "note": "9-slice 96x20, margin 6 semua sisi; isi (track) di x 6..89, y 6..13 (tinggi 8)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/progress/monument_bar_fill_panel.png",
+   "size": [
+    4,
+    8
+   ],
+   "frame": [
+    4,
+    8
+   ],
+   "frames": 1,
+   "note": "4x8 tile isi hijau, ulang horizontal sepanjang progres",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/progress/monument_bar_fill_end_panel.png",
+   "size": [
+    2,
+    8
+   ],
+   "frame": [
+    2,
+    8
+   ],
+   "frames": 1,
+   "note": "2x8 ujung kanan isi (kilau), tempel di akhir fill",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/progress/monument_bar_divider_panel.png",
+   "size": [
+    2,
+    12
+   ],
+   "frame": [
+    2,
+    12
+   ],
+   "frames": 1,
+   "note": "2x12 pemisah segmen tahap, x = trackX + trackW*k/N - 1, y = 4",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/progress/monument_bar_fill_done_panel.png",
+   "size": [
+    4,
+    8
+   ],
+   "frame": [
+    4,
+    8
+   ],
+   "frames": 1,
+   "note": "4x8 tile segmen tahap yang sudah selesai (hijau muda bercorak), dipakai di kiri segmen aktif",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/progress/monument_stage_pip.png",
+   "size": [
+    24,
+    8
+   ],
+   "frame": [
+    8,
+    8
+   ],
+   "frames": 3,
+   "note": "penanda tahap: 0 belum, 1 sedang dikerjakan, 2 selesai; deret N pip di kiri label \"Tahap 2/3 \u2014 64%\"",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/progress/icon_bangun.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "ikon palu kerja (Mulai tahap N / Kerja bakti) 32x32",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/progress/icon_bangun_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "buildings/monuments/masjid_tahap1_stages.png",
+   "size": [
+    512,
+    128
+   ],
+   "frame": [
+    128,
+    128
+   ],
+   "frames": 4,
+   "note": "masjid 128x128 (tahap 1 memakai 3x3 tengah, tahap 2-3 4x4); tahap 1/3 \"Langgar Bambu\" sedang dibangun: 0 fondasi batu + perancah bambu, 1 rangka, 2 setengah jadi, 3 selesai; frame = min(3, floor(progres*3)), selesai = 3; anchor tengah-bawah",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "buildings/monuments/masjid_tahap1.png",
+   "size": [
+    128,
+    128
+   ],
+   "frame": [
+    128,
+    128
+   ],
+   "frames": 1,
+   "note": "masjid 128x128 (tahap 1 memakai 3x3 tengah, tahap 2-3 4x4); tahap 1/3 \"Langgar Bambu\" selesai",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "buildings/monuments/masjid_tahap2_stages.png",
+   "size": [
+    512,
+    128
+   ],
+   "frame": [
+    128,
+    128
+   ],
+   "frames": 4,
+   "note": "masjid 128x128 (tahap 1 memakai 3x3 tengah, tahap 2-3 4x4); tahap 2/3 \"Masjid Kayu\" sedang dibangun: 0 bangunan tahap 1 + perancah bambu, 1 rangka, 2 setengah jadi, 3 selesai; frame = min(3, floor(progres*3)), selesai = 3; anchor tengah-bawah",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "buildings/monuments/masjid_tahap2.png",
+   "size": [
+    128,
+    128
+   ],
+   "frame": [
+    128,
+    128
+   ],
+   "frames": 1,
+   "note": "masjid 128x128 (tahap 1 memakai 3x3 tengah, tahap 2-3 4x4); tahap 2/3 \"Masjid Kayu\" selesai",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "buildings/monuments/masjid_tahap3_stages.png",
+   "size": [
+    512,
+    128
+   ],
+   "frame": [
+    128,
+    128
+   ],
+   "frames": 4,
+   "note": "masjid 128x128 (tahap 1 memakai 3x3 tengah, tahap 2-3 4x4); tahap 3/3 \"Masjid Jami'\" sedang dibangun: 0 bangunan tahap 2 + perancah bambu, 1 rangka, 2 setengah jadi, 3 selesai; frame = min(3, floor(progres*3)), selesai = 3; anchor tengah-bawah",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "buildings/monuments/masjid_tahap3.png",
+   "size": [
+    128,
+    128
+   ],
+   "frame": [
+    128,
+    128
+   ],
+   "frames": 1,
+   "note": "masjid 128x128 (tahap 1 memakai 3x3 tengah, tahap 2-3 4x4); tahap 3/3 \"Masjid Jami'\" selesai",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "buildings/monuments/balai_megah_tahap1_stages.png",
+   "size": [
+    512,
+    96
+   ],
+   "frame": [
+    128,
+    96
+   ],
+   "frames": 4,
+   "note": "balai desa megah 128x96 (4x3); tahap 1/3 \"Serambi & Kentongan Besar\" sedang dibangun: 0 fondasi batu + perancah bambu, 1 rangka, 2 setengah jadi, 3 selesai; frame = min(3, floor(progres*3)), selesai = 3; anchor tengah-bawah",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "buildings/monuments/balai_megah_tahap1.png",
+   "size": [
+    128,
+    96
+   ],
+   "frame": [
+    128,
+    96
+   ],
+   "frames": 1,
+   "note": "balai desa megah 128x96 (4x3); tahap 1/3 \"Serambi & Kentongan Besar\" selesai",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "buildings/monuments/balai_megah_tahap2_stages.png",
+   "size": [
+    512,
+    96
+   ],
+   "frame": [
+    128,
+    96
+   ],
+   "frames": 4,
+   "note": "balai desa megah 128x96 (4x3); tahap 2/3 \"Pendopo Joglo\" sedang dibangun: 0 bangunan tahap 1 + perancah bambu, 1 rangka, 2 setengah jadi, 3 selesai; frame = min(3, floor(progres*3)), selesai = 3; anchor tengah-bawah",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "buildings/monuments/balai_megah_tahap2.png",
+   "size": [
+    128,
+    96
+   ],
+   "frame": [
+    128,
+    96
+   ],
+   "frames": 1,
+   "note": "balai desa megah 128x96 (4x3); tahap 2/3 \"Pendopo Joglo\" selesai",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "buildings/monuments/balai_megah_tahap3_stages.png",
+   "size": [
+    512,
+    96
+   ],
+   "frame": [
+    128,
+    96
+   ],
+   "frames": 4,
+   "note": "balai desa megah 128x96 (4x3); tahap 3/3 \"Balai Megah (ukiran & gamelan)\" sedang dibangun: 0 bangunan tahap 2 + perancah bambu, 1 rangka, 2 setengah jadi, 3 selesai; frame = min(3, floor(progres*3)), selesai = 3; anchor tengah-bawah",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "buildings/monuments/balai_megah_tahap3.png",
+   "size": [
+    128,
+    96
+   ],
+   "frame": [
+    128,
+    96
+   ],
+   "frames": 1,
+   "note": "balai desa megah 128x96 (4x3); tahap 3/3 \"Balai Megah (ukiran & gamelan)\" selesai",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "buildings/monuments/bendungan_tahap1_stages.png",
+   "size": [
+    384,
+    64
+   ],
+   "frame": [
+    96,
+    64
+   ],
+   "frames": 4,
+   "note": "bendungan & irigasi 96x64 (3x2), letakkan melintang sungai; tahap 1/4 \"Bendung Bronjong Bambu\" sedang dibangun: 0 sungai kosong + perancah bambu, 1 sepertiga (kiri), 2 dua pertiga, 3 selesai; frame = min(3, floor(progres*3)); anchor tengah-bawah",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "buildings/monuments/bendungan_tahap1.png",
+   "size": [
+    96,
+    64
+   ],
+   "frame": [
+    96,
+    64
+   ],
+   "frames": 1,
+   "note": "bendungan & irigasi 96x64 (3x2), letakkan melintang sungai; tahap 1/4 \"Bendung Bronjong Bambu\" selesai",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "buildings/monuments/bendungan_tahap2_stages.png",
+   "size": [
+    384,
+    64
+   ],
+   "frame": [
+    96,
+    64
+   ],
+   "frames": 4,
+   "note": "bendungan & irigasi 96x64 (3x2), letakkan melintang sungai; tahap 2/4 \"Saluran Induk\" sedang dibangun: 0 bangunan tahap 1 + perancah bambu, 1 sepertiga (kiri), 2 dua pertiga, 3 selesai; frame = min(3, floor(progres*3)); anchor tengah-bawah",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "buildings/monuments/bendungan_tahap2.png",
+   "size": [
+    96,
+    64
+   ],
+   "frame": [
+    96,
+    64
+   ],
+   "frames": 1,
+   "note": "bendungan & irigasi 96x64 (3x2), letakkan melintang sungai; tahap 2/4 \"Saluran Induk\" selesai",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "buildings/monuments/bendungan_tahap3_stages.png",
+   "size": [
+    384,
+    64
+   ],
+   "frame": [
+    96,
+    64
+   ],
+   "frames": 4,
+   "note": "bendungan & irigasi 96x64 (3x2), letakkan melintang sungai; tahap 3/4 \"Pintu Air\" sedang dibangun: 0 bangunan tahap 2 + perancah bambu, 1 sepertiga (kiri), 2 dua pertiga, 3 selesai; frame = min(3, floor(progres*3)); anchor tengah-bawah",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "buildings/monuments/bendungan_tahap3.png",
+   "size": [
+    96,
+    64
+   ],
+   "frame": [
+    96,
+    64
+   ],
+   "frames": 1,
+   "note": "bendungan & irigasi 96x64 (3x2), letakkan melintang sungai; tahap 3/4 \"Pintu Air\" selesai",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "buildings/monuments/bendungan_tahap4_stages.png",
+   "size": [
+    384,
+    64
+   ],
+   "frame": [
+    96,
+    64
+   ],
+   "frames": 4,
+   "note": "bendungan & irigasi 96x64 (3x2), letakkan melintang sungai; tahap 4/4 \"Bendungan & Embung\" sedang dibangun: 0 bangunan tahap 3 + perancah bambu, 1 sepertiga (kiri), 2 dua pertiga, 3 selesai; frame = min(3, floor(progres*3)); anchor tengah-bawah",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "buildings/monuments/bendungan_tahap4.png",
+   "size": [
+    96,
+    64
+   ],
+   "frame": [
+    96,
+    64
+   ],
+   "frames": 1,
+   "note": "bendungan & irigasi 96x64 (3x2), letakkan melintang sungai; tahap 4/4 \"Bendungan & Embung\" selesai",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "buildings/monuments/pendopo_reog_tahap1_stages.png",
+   "size": [
+    512,
+    96
+   ],
+   "frame": [
+    128,
+    96
+   ],
+   "frames": 4,
+   "note": "pendopo reog 128x96 (4x3); tahap 1/3 \"Sanggar Latihan\" sedang dibangun: 0 fondasi batu + perancah bambu, 1 rangka, 2 setengah jadi, 3 selesai; frame = min(3, floor(progres*3)), selesai = 3; anchor tengah-bawah",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "buildings/monuments/pendopo_reog_tahap1.png",
+   "size": [
+    128,
+    96
+   ],
+   "frame": [
+    128,
+    96
+   ],
+   "frames": 1,
+   "note": "pendopo reog 128x96 (4x3); tahap 1/3 \"Sanggar Latihan\" selesai",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "buildings/monuments/pendopo_reog_tahap2_stages.png",
+   "size": [
+    512,
+    96
+   ],
+   "frame": [
+    128,
+    96
+   ],
+   "frames": 4,
+   "note": "pendopo reog 128x96 (4x3); tahap 2/3 \"Dadak Merak & Gamelan\" sedang dibangun: 0 bangunan tahap 1 + perancah bambu, 1 rangka, 2 setengah jadi, 3 selesai; frame = min(3, floor(progres*3)), selesai = 3; anchor tengah-bawah",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "buildings/monuments/pendopo_reog_tahap2.png",
+   "size": [
+    128,
+    96
+   ],
+   "frame": [
+    128,
+    96
+   ],
+   "frames": 1,
+   "note": "pendopo reog 128x96 (4x3); tahap 2/3 \"Dadak Merak & Gamelan\" selesai",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "buildings/monuments/pendopo_reog_tahap3_stages.png",
+   "size": [
+    512,
+    96
+   ],
+   "frame": [
+    128,
+    96
+   ],
+   "frames": 4,
+   "note": "pendopo reog 128x96 (4x3); tahap 3/3 \"Pendopo Agung\" sedang dibangun: 0 bangunan tahap 2 + perancah bambu, 1 rangka, 2 setengah jadi, 3 selesai; frame = min(3, floor(progres*3)), selesai = 3; anchor tengah-bawah",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "buildings/monuments/pendopo_reog_tahap3.png",
+   "size": [
+    128,
+    96
+   ],
+   "frame": [
+    128,
+    96
+   ],
+   "frames": 1,
+   "note": "pendopo reog 128x96 (4x3); tahap 3/3 \"Pendopo Agung\" selesai",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "buildings/monuments/pasar_legi_tahap1_stages.png",
+   "size": [
+    512,
+    96
+   ],
+   "frame": [
+    128,
+    96
+   ],
+   "frames": 4,
+   "note": "pasar legi 128x96 (4x3), pasar tradisional Jawa; tahap 1/3 \"Los Bambu\" sedang dibangun: 0 fondasi batu + perancah bambu, 1 rangka, 2 setengah jadi, 3 selesai; frame = min(3, floor(progres*3)), selesai = 3; anchor tengah-bawah",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "buildings/monuments/pasar_legi_tahap1.png",
+   "size": [
+    128,
+    96
+   ],
+   "frame": [
+    128,
+    96
+   ],
+   "frames": 1,
+   "note": "pasar legi 128x96 (4x3), pasar tradisional Jawa; tahap 1/3 \"Los Bambu\" selesai",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "buildings/monuments/pasar_legi_tahap2_stages.png",
+   "size": [
+    512,
+    96
+   ],
+   "frame": [
+    128,
+    96
+   ],
+   "frames": 4,
+   "note": "pasar legi 128x96 (4x3), pasar tradisional Jawa; tahap 2/3 \"Hari Pasaran\" sedang dibangun: 0 bangunan tahap 1 + perancah bambu, 1 rangka, 2 setengah jadi, 3 selesai; frame = min(3, floor(progres*3)), selesai = 3; anchor tengah-bawah",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "buildings/monuments/pasar_legi_tahap2.png",
+   "size": [
+    128,
+    96
+   ],
+   "frame": [
+    128,
+    96
+   ],
+   "frames": 1,
+   "note": "pasar legi 128x96 (4x3), pasar tradisional Jawa; tahap 2/3 \"Hari Pasaran\" selesai",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "buildings/monuments/pasar_legi_tahap3_stages.png",
+   "size": [
+    512,
+    96
+   ],
+   "frame": [
+    128,
+    96
+   ],
+   "frames": 4,
+   "note": "pasar legi 128x96 (4x3), pasar tradisional Jawa; tahap 3/3 \"Pasar Batu Bata\" sedang dibangun: 0 bangunan tahap 2 + perancah bambu, 1 rangka, 2 setengah jadi, 3 selesai; frame = min(3, floor(progres*3)), selesai = 3; anchor tengah-bawah",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "buildings/monuments/pasar_legi_tahap3.png",
+   "size": [
+    128,
+    96
+   ],
+   "frame": [
+    128,
+    96
+   ],
+   "frames": 1,
+   "note": "pasar legi 128x96 (4x3), pasar tradisional Jawa; tahap 3/3 \"Pasar Batu Bata\" selesai",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "decor/agustus/tiang_pinang.png",
+   "size": [
+    64,
+    128
+   ],
+   "frame": [
+    64,
+    128
+   ],
+   "frames": 1,
+   "note": "64x128 batang pinang licin tanpa hadiah (posisi sama dengan panjat_pinang.png); puncak tiang y=22, x 30-33",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "decor/agustus/hadiah_pinang.png",
+   "size": [
+    64,
+    32
+   ],
+   "frame": [
+    64,
+    32
+   ],
+   "frames": 1,
+   "note": "64x32 cincin hadiah gantung; tempel di (tiangX-0, puncak tiang y 22 \u2192 offset y -10): pada kanvas tiang_pinang paste di (0,12); lepas/ambil satu per satu dengan menyembunyikan sprite ini saat menang",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "decor/agustus/karung.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "32x32 karung goni berdiri (prop lomba balap karung / tumpukan karung)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "decor/agustus/karung_tergeletak.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "32x32 karung kosong tergeletak (garis start/finish)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "decor/agustus/tambang_segmen.png",
+   "size": [
+    64,
+    16
+   ],
+   "frame": [
+    32,
+    16
+   ],
+   "frames": 2,
+   "note": "tambang tarik tambang, tile horizontal seamless (y tengah=8, tebal 3px); frame 0 kendur, 1 tegang",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "decor/agustus/tambang_tengah.png",
+   "size": [
+    32,
+    16
+   ],
+   "frame": [
+    32,
+    16
+   ],
+   "frames": 1,
+   "note": "32x16 bagian tengah tambang dengan pita merah (penanda menang), sambung dengan tambang_segmen",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "decor/agustus/tambang_gulung.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "32x32 tambang tergulung (disimpan setelah dibeli sekali)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "decor/agustus/bakiak.png",
+   "size": [
+    64,
+    32
+   ],
+   "frame": [
+    64,
+    32
+   ],
+   "frames": 1,
+   "note": "64x32 bakiak (terompah panjang) 3 orang tampak atas, horizontal; kaki penduduk di x 10/30/50; untuk arah vertikal putar 90\u00b0",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "decor/agustus/kerupuk_gantung.png",
+   "size": [
+    64,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 2,
+   "note": "tali dengan 2 kerupuk untuk lomba makan kerupuk, 2 frame ayun ~300ms; palang di y 4-5, kerupuk setinggi kepala penduduk (y 16-28)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "decor/agustus/piala.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "32x32 piala juara (juara umum 14 hari / papan Teladan)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "icons/status/icon_piala_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16 ikon piala kecil di atas kepala juara umum selama 14 hari; offset seperti Zzz (+16,-12)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "decor/agustus/piala_emas_besar.png",
+   "size": [
+    48,
+    64
+   ],
+   "frame": [
+    48,
+    64
+   ],
+   "frames": 1,
+   "note": "48x64 piala emas besar di Balai (Desa Teladan Nasional, tingkat 4)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/dilemma/kartu_dilema_ringan.png",
+   "size": [
+    64,
+    80
+   ],
+   "frame": [
+    64,
+    80
+   ],
+   "frames": 1,
+   "note": "9-slice 64x80: margin atas 20 (pita judul pos_c), bawah 8, kiri/kanan 8; judul di y 4-13, isi mulai y 22",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/dilemma/log_tanda_ringan.png",
+   "size": [
+    8,
+    12
+   ],
+   "frame": [
+    8,
+    12
+   ],
+   "frames": 1,
+   "note": "8x12 penanda warna di kiri baris log akibat tertunda (warna sama dengan kartu ringan)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/dilemma/kartu_dilema_berat.png",
+   "size": [
+    64,
+    80
+   ],
+   "frame": [
+    64,
+    80
+   ],
+   "frames": 1,
+   "note": "9-slice 64x80: margin atas 20 (pita judul roof), bawah 8, kiri/kanan 8; judul di y 4-13, isi mulai y 22",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/dilemma/log_tanda_berat.png",
+   "size": [
+    8,
+    12
+   ],
+   "frame": [
+    8,
+    12
+   ],
+   "frames": 1,
+   "note": "8x12 penanda warna di kiri baris log akibat tertunda (warna sama dengan kartu berat)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/dilemma/icon_tunda.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "ikon \u23f3 akibat tertunda 32x32",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/dilemma/icon_tunda_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16 (di kartu dan log)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/dilemma/reaksi_suka.png",
+   "size": [
+    12,
+    12
+   ],
+   "frame": [
+    12,
+    12
+   ],
+   "frames": 1,
+   "note": "12x12 reaksi sifat (\ud83d\ude0a suka / \ud83d\ude1f cemas / netral) di samping ikon sifat _16",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/dilemma/reaksi_cemas.png",
+   "size": [
+    12,
+    12
+   ],
+   "frame": [
+    12,
+    12
+   ],
+   "frames": 1,
+   "note": "12x12 reaksi sifat (\ud83d\ude0a suka / \ud83d\ude1f cemas / netral) di samping ikon sifat _16",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/dilemma/reaksi_netral.png",
+   "size": [
+    12,
+    12
+   ],
+   "frame": [
+    12,
+    12
+   ],
+   "frames": 1,
+   "note": "12x12 reaksi sifat (\ud83d\ude0a suka / \ud83d\ude1f cemas / netral) di samping ikon sifat _16",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/dilemma/reaksi_chip.png",
+   "size": [
+    32,
+    18
+   ],
+   "frame": [
+    32,
+    18
+   ],
+   "frames": 1,
+   "note": "32x18 latar chip reaksi: ikon sifat _16 di (1,1), ikon reaksi_* 12x12 di (18,3)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/dilemma/portraits/portrait_villager_1_netral.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "potret 32x32 ekspresi netral (wajah sama dengan portrait_villager_1)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/dilemma/portraits/portrait_villager_1_senang.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "potret 32x32 ekspresi senang (wajah sama dengan portrait_villager_1)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/dilemma/portraits/portrait_villager_1_marah.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "potret 32x32 ekspresi marah (wajah sama dengan portrait_villager_1)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/dilemma/portraits/portrait_villager_1_sedih.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "potret 32x32 ekspresi sedih (wajah sama dengan portrait_villager_1)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/dilemma/portraits/portrait_villager_1_khawatir.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "potret 32x32 ekspresi khawatir (wajah sama dengan portrait_villager_1)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/dilemma/portraits/portrait_villager_1_ekspresi.png",
+   "size": [
+    160,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 5,
+   "note": "sheet ekspresi 5 frame: 0 netral, 1 senang, 2 marah, 3 sedih, 4 khawatir",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/dilemma/portraits/portrait_villager_2_netral.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "potret 32x32 ekspresi netral (wajah sama dengan portrait_villager_2)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/dilemma/portraits/portrait_villager_2_senang.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "potret 32x32 ekspresi senang (wajah sama dengan portrait_villager_2)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/dilemma/portraits/portrait_villager_2_marah.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "potret 32x32 ekspresi marah (wajah sama dengan portrait_villager_2)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/dilemma/portraits/portrait_villager_2_sedih.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "potret 32x32 ekspresi sedih (wajah sama dengan portrait_villager_2)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/dilemma/portraits/portrait_villager_2_khawatir.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "potret 32x32 ekspresi khawatir (wajah sama dengan portrait_villager_2)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/dilemma/portraits/portrait_villager_2_ekspresi.png",
+   "size": [
+    160,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 5,
+   "note": "sheet ekspresi 5 frame: 0 netral, 1 senang, 2 marah, 3 sedih, 4 khawatir",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/dilemma/portraits/portrait_villager_3_netral.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "potret 32x32 ekspresi netral (wajah sama dengan portrait_villager_3)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/dilemma/portraits/portrait_villager_3_senang.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "potret 32x32 ekspresi senang (wajah sama dengan portrait_villager_3)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/dilemma/portraits/portrait_villager_3_marah.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "potret 32x32 ekspresi marah (wajah sama dengan portrait_villager_3)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/dilemma/portraits/portrait_villager_3_sedih.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "potret 32x32 ekspresi sedih (wajah sama dengan portrait_villager_3)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/dilemma/portraits/portrait_villager_3_khawatir.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "potret 32x32 ekspresi khawatir (wajah sama dengan portrait_villager_3)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/dilemma/portraits/portrait_villager_3_ekspresi.png",
+   "size": [
+    160,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 5,
+   "note": "sheet ekspresi 5 frame: 0 netral, 1 senang, 2 marah, 3 sedih, 4 khawatir",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/dilemma/portraits/portrait_villager_4_netral.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "potret 32x32 ekspresi netral (wajah sama dengan portrait_villager_4)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/dilemma/portraits/portrait_villager_4_senang.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "potret 32x32 ekspresi senang (wajah sama dengan portrait_villager_4)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/dilemma/portraits/portrait_villager_4_marah.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "potret 32x32 ekspresi marah (wajah sama dengan portrait_villager_4)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/dilemma/portraits/portrait_villager_4_sedih.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "potret 32x32 ekspresi sedih (wajah sama dengan portrait_villager_4)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/dilemma/portraits/portrait_villager_4_khawatir.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "potret 32x32 ekspresi khawatir (wajah sama dengan portrait_villager_4)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "ui/dilemma/portraits/portrait_villager_4_ekspresi.png",
+   "size": [
+    160,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 5,
+   "note": "sheet ekspresi 5 frame: 0 netral, 1 senang, 2 marah, 3 sedih, 4 khawatir",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "characters/visitors/tengkulak.png",
+   "size": [
+    128,
+    256
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 32,
+   "note": "tengkulak bertopi (pengepul hasil panen), tas karung kecil; format villager_N: 8 baris x 4 kolom, baris 0-3 diam, 4-7 jalan (bawah,kiri,kanan,atas); kaki y\u224829",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "characters/visitors/juragan.png",
+   "size": [
+    128,
+    256
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 32,
+   "note": "juragan berkalung emas, baju batik, berkumis; format villager_N: 8 baris x 4 kolom, baris 0-3 diam, 4-7 jalan (bawah,kiri,kanan,atas); kaki y\u224829",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "characters/visitors/mantri.png",
+   "size": [
+    128,
+    256
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 32,
+   "note": "mantri kesehatan, baju putih, tas obat; format villager_N: 8 baris x 4 kolom, baris 0-3 diam, 4-7 jalan (bawah,kiri,kanan,atas); kaki y\u224829",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "characters/visitors/pak_camat.png",
+   "size": [
+    128,
+    256
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 32,
+   "note": "Pak Camat berseragam khaki + peci; format villager_N: 8 baris x 4 kolom, baris 0-3 diam, 4-7 jalan (bawah,kiri,kanan,atas); kaki y\u224829",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "characters/visitors/kader_posyandu.png",
+   "size": [
+    128,
+    256
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 32,
+   "note": "kader posyandu: seragam merah muda + kerudung; format villager_N: 8 baris x 4 kolom, baris 0-3 diam, 4-7 jalan (bawah,kiri,kanan,atas); kaki y\u224829",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "characters/visitors/reog_berjalan.png",
+   "size": [
+    256,
+    512
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 32,
+   "note": "reog berjalan (pembarong + dadak merak besar) 64x64/frame; 8 baris x 4 kolom: 0-3 diam (dadak bergoyang pelan), 4-7 jalan; arah bawah,kiri,kanan,atas; kaki di y\u224861, anchor tengah-bawah (x 32)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "characters/fauna/kucing.png",
+   "size": [
+    128,
+    256
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 32,
+   "note": "kucing belang (putih-oranye) 32x32; baris 0-3 diam, 4-7 jalan; arah bawah,kiri,kanan,atas; format fauna",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "characters/fauna/kucing_tidur.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "32x32 kucing tidur melingkar (pakai bersama icon_zzz_anim)",
+   "stage": 8,
+   "sub": "8b"
+  },
+  {
+   "file": "buildings/posyandu_meja.png",
+   "size": [
+    64,
+    64
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 1,
+   "note": "64x64 meja posyandu: taplak merah muda, buku KMS, dacin (timbangan gantung bersarung), papan tanda posyandu; kader berdiri di depan/kiri",
+   "stage": 8,
+   "sub": "8b"
   }
  ]
 }

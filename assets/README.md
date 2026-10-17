@@ -970,3 +970,286 @@ Semua file di sini baru. File tahap 1–7 tidak berubah (dicek md5). Generator: 
 - Ikon 16px yang detailnya kecil (religius, cerdas) hanya terbaca bersama tooltip.
 - Belum ada animasi peserta panjat pinang memanjat, dan belum ada lomba lain (makan kerupuk, tarik tambang).
 - Belum ada versi malam untuk monumen dan dekorasi Agustus.
+
+
+## Tahap 8b: pelengkap sesuai `docs/RISET-CERITA-TUJUAN.md`
+
+Acuan: §1.1 (sifat), §1.2 (hubungan), §1.3 (keinginan), §2.1 (monumen), §2.3 (Agustusan), §6 (prioritas) dan §7 "Desain (sprite & UI)". Ada 172 file baru. Semua file lama tidak berubah: md5 dicek terhadap seluruh 554 file tahap 1–8.
+
+Di manifest, entri tahap ini memakai `stage: 8, sub: "8b"`. Generator: `tools/generate_assets.py` (fungsi `stage8b()`). Preview: `preview_stage8b.png` (`tools/make_preview_stage8b.py`).
+
+Palet bertambah: merak, khaki, coat, kader, kerupuk, kabah, kayu_ukir, dan lain-lain. Agar ikon `_16` tahap 8 tidak ikut berubah, `to16b` sekarang memakai snapshot palet tahap 8 (`_PAL16B`). Ikon baru memakai `to16c` (palet penuh).
+
+### Sifat (20 total, §1.1)
+- 4 ikon baru dengan format sama (32x32 + `_16`, berbingkai): `trait_perantau` (buntalan kain di tongkat), `trait_ahli_tani` (caping + padi), `trait_pandai_masak` (wajan dengan masakan dan uap), `trait_seniman` (topeng barongan + dadak merak mini).
+- Kutub: ahli_tani, pandai_masak, dan seniman positif. Perantau **netral**, tetapi tetap berbingkai hijau sesuai tabel riset.
+- Bingkai hijau = positif/netral, ungu-abu = negatif.
+- Ikon sifat lama yang dihapus di riset (kuat, ringkih, humoris, dan lain-lain) memang tidak pernah dibuat.
+
+### Hubungan (§1.2, §7)
+- `rel_sahabat` (jabat tangan, bingkai hijau tua) dan `rel_keluarga` (rumah + hati), masing-masing 32 + `_16`.
+- Riset meminta ikon **12x12**, jadi kelima tingkat mendapat versi tanpa bingkai: `rel_{teman,sahabat,rival,pasangan,keluarga}_12.png`. Warnanya: teman hijau muda, sahabat hijau tua, rival oranye, pasangan merah muda, keluarga rumah.
+- Kenalan tidak punya ikon.
+
+### Gelembung keinginan (§1.3)
+- `ui/wish/wish_bubble.png`: 96x24, berisi 4 frame 24x24 (awan pikiran) dengan pola animasi seperti emote: 0 kecil, 1 membesar, 2 normal, 3 bob. Putar 0→1→2 masing-masing ~80ms, lalu ulang 2↔3 (~300ms).
+- **Slot ikon 16x16:** di (4,2) pada frame 2 dan (4,1) pada frame 3. Pada frame 0–1, sembunyikan ikon atau skalakan bersama gelembung.
+- `wish_bubble_hampir.png`: varian kuning/oranye untuk keinginan yang sisa ≤ 1 hari. `wish_bubble_static.png`: frame 2 saja.
+- **Offset tempel** (relatif kiri-atas frame penduduk 32x32): dewasa (+4, −20), anak (+4, −16), lansia (+4, −19). Jangan tampilkan bersamaan dengan emote; emote didahulukan.
+- Ikon isi: `icons/wishes/wish_<id>.png` (32, untuk kartu panel Keinginan Warga) dan `wish_<id>_16.png` (slot). Tersedia untuk ke-26 id di §1.3: makan_rendang, nasi_pecel, kopi_pagi, rumah_panggung, nonton_reog, tabungan_haji, mancing_sore, punya_ayam, baju_baru, ziarah_makam, wayang_semalam, tidur_siang, kerja_bakti, ngobrol_sahabat, punya_anak, sawah_menguning, jajan_pasar, belajar_gamelan, rujak_bareng, bancakan_weton, pulang_kampung, ronda_malam, main_layangan, menang_lomba, tumpeng_syukuran, mandi_kali.
+- Slot boleh juga diisi ikon sumber daya atau sifat 16px yang sudah ada.
+
+### Bar progres monumen (§2.1, §7) di `ui/progress/`
+
+**Bar kecil di atas bangunan**
+- `monument_bar_frame.png`: 48x12, 9-slice margin 4. Track di y 4..7 (tinggi 4) dengan inset 4.
+- Isi segmen aktif: ulang `monument_bar_fill.png` (4x4) sepanjang `trackW * (k−1+progres)/N`.
+- Segmen tahap yang sudah selesai: ulang `monument_bar_fill_done.png`.
+- Ujung isi: `monument_bar_fill_end.png` (2x4).
+- Pemisah segmen: `monument_bar_divider.png` (2x8) di `trackX + trackW*j/N − 1`, y = 2.
+
+**Bar panel "Tujuan Desa"**: varian `_panel` dengan frame 96x20, margin 6, track tinggi 8 (y 6..13), dan divider 2x12.
+
+**Penanda tahap**: `monument_stage_pip.png` berisi 3 frame 8x8 (0 belum, 1 aktif, 2 selesai). Deretkan N pip, lalu teks "Tahap k/N — xx%" di kanannya. Teks dirender oleh kode.
+
+`icon_bangun(_16)` dipakai untuk tombol "Mulai tahap N" dan "Kerja bakti".
+
+### Monumen per tahap riset (§2.1, §7), semuanya dengan perancah bambu
+
+Penamaan: `buildings/monuments/<id>_tahap<N>.png` untuk tahap N yang sudah selesai, dan `<id>_tahap<N>_stages.png` untuk proses pembangunan tahap N.
+- Format proses pembangunan sama dengan `*_stages.png` lama: 4 frame horizontal.
+- Frame 0: bangunan tahap N−1 (tahap 1: fondasi batu, bendungan: sungai) + perancah bambu.
+- Frame 1: rangka. Frame 2: setengah jadi. Frame 3: selesai.
+
+**Pemetaan:** selama tahap N dikerjakan, tampilkan frame `min(2, floor(progres*3))`. Setelah selesai, tampilkan `<id>_tahap<N>.png` (sama dengan frame 3). Anchor tengah-bawah, ukuran kanvas tetap per monumen.
+
+| id (riset) | Kanvas | Tahap |
+|---|---|---|
+| `masjid` | 128x128 | 1 Langgar Bambu (memakai 3x3 di tengah) · 2 Masjid Kayu · 3 Masjid Jami' (menara + bedug) |
+| `balai_megah` | 128x96 (4x3) | 1 Serambi & Kentongan Besar · 2 Pendopo Joglo · 3 Balai Megah (ukiran emas & gamelan) |
+| `bendungan` | 96x64 (3x2) | 1 Bendung Bronjong Bambu · 2 Saluran Induk · 3 Pintu Air · 4 Bendungan & Embung (perancah dan progres berjalan kiri→kanan melintasi sungai) |
+| `pendopo_reog` | 128x96 | 1 Sanggar Latihan · 2 Dadak Merak & Gamelan · 3 Pendopo Agung |
+| `pasar_legi` | 128x96 | 1 Los Bambu · 2 Hari Pasaran (lapak tenda warna-warni, lampu) · 3 Pasar Batu Bata |
+
+**Hasil pengecekan file lama:** `balai_desa_megah_stages.png` (tahap 8) berukuran 128x128 (4x4) dengan 4 fase umum. Perancahnya hanya dua tiang bambu, dan formatnya tidak cocok dengan riset (4x3, 3 tahap). File itu dibiarkan apa adanya sebagai alternatif. Untuk game, gunakan `balai_megah_tahap1-3`. Hal yang sama berlaku untuk `masjid_stages`/`langgar_stages`/`bendungan_stages` lama (fase umum 1 tahap); versi `_tahapN` mengikuti tahapan riset.
+
+### Agustusan (§2.3, §7) di `decor/agustus/`
+- **Panjat pinang**
+  - `tiang_pinang.png`: 64x128, batang tanpa hadiah, posisi sama dengan `panjat_pinang.png`.
+  - `hadiah_pinang.png`: 64x32, cincin hadiah. Tempel di (0,12) pada kanvas tiang; sembunyikan saat hadiah diambil.
+- **Balap karung**: `karung.png` (berdiri) dan `karung_tergeletak.png`.
+- **Tarik tambang**
+  - `tambang_segmen.png`: 32x16 ×2 (0 kendur, 1 tegang), tile horizontal, y tengah = 8.
+  - `tambang_tengah.png`: pita merah di tengah.
+  - `tambang_gulung.png`: tambang yang disimpan.
+- **Bakiak**: `bakiak.png` 64x32, untuk 3 orang dengan kaki di x 10/30/50. Untuk arah vertikal, putar 90°.
+- **Makan kerupuk**: `kerupuk_gantung.png`, 32x64 ×2 frame ayun.
+- **Piala**
+  - `piala.png` 32x32.
+  - `icons/status/icon_piala_16.png` untuk juara umum, tampil di atas kepala selama 14 hari dengan offset seperti Zzz (+16, −12).
+  - `piala_emas_besar.png` 48x64 untuk Balai pada tingkat Teladan 4.
+
+### Kartu dilema & reaksi (§7) di `ui/dilemma/`
+- **Kartu**: `kartu_dilema_ringan.png` (pita hijau) dan `kartu_dilema_berat.png` (pita oranye).
+  - Ukuran 64x80, 9-slice dengan margin atas 20, bawah 8, kiri/kanan 8.
+  - Judul di y 4–13, isi mulai y 22.
+  - Potret: `portrait_frame_48` dengan potret di dalamnya. Pemain = `icon_kepala_desa`.
+- **Akibat tertunda**: ikon ⏳ `icon_tunda.png` (32) dan `icon_tunda_16.png`, dipakai di tombol pilihan yang punya `tunda` dan di baris log.
+  - Baris log akibat tertunda diberi penanda `log_tanda_{ringan,berat}.png` (8x12) dengan warna yang sama dengan kartu asalnya.
+- **Reaksi sifat**: `reaksi_chip.png` (32x18). Tempel `trait_<id>_16` di (1,1) dan `reaksi_{suka,cemas,netral}.png` (12x12, 😊/😟/😐) di (18,3).
+- **Ekspresi potret**: `portraits/portrait_villager_N_{netral,senang,marah,sedih,khawatir}.png` (32x32) untuk N = 1–4, plus sheet `portrait_villager_N_ekspresi.png` (160x32, urutan sama).
+  - Contoh: tokoh `jujur` bereaksi cemas → chip jujur + 😟, dan potret tokoh memakai `_khawatir`.
+
+### Pengunjung & lain-lain (§7)
+- **Format villager_N** (128x256, frame 32x32, baris 0–3 diam, 4–7 jalan; arah bawah, kiri, kanan, atas; kaki y≈29), di `characters/visitors/`:
+  - `tengkulak` (topi lebar + tas karung)
+  - `juragan` (batik, kalung emas, kumis)
+  - `mantri` (baju putih + tas obat)
+  - `pak_camat` (seragam khaki + peci)
+  - `kader_posyandu` (seragam merah muda + kerudung putih)
+- **Reog berjalan**: `characters/visitors/reog_berjalan.png`, 256x512, frame **64x64** dengan tata letak 8 baris × 4 kolom yang sama. Kaki di y≈61, anchor tengah-bawah (x 32). Dadak merak bergoyang ±1px.
+- **Kucing belang**: `characters/fauna/kucing.png` dengan format fauna 32x32 (baris 0–3 diam, 4–7 jalan). Ada juga `kucing_tidur.png`. Riset menyebut "3 frame"; di sini dibuat 4 frame agar seragam dengan fauna lain (cukup putar frame 0–2 bila ingin 3).
+- **Posyandu**: `buildings/posyandu_meja.png` (64x64), berisi meja bertaplak, buku KMS, dacin, dan papan bertanda hati. Riset hanya menyebut "posyandu kecil", jadi prop ini cukup ditaruh di depan Balai bersama `kader_posyandu`.
+
+| File | Ukuran | Frame | Catatan |
+|---|---|---|---|
+| `icons/traits/trait_perantau.png` | 32x32 | 1 | sifat perantau (netral (bingkai hijau sesuai riset)), format sama dengan icons/traits |
+| `icons/traits/trait_perantau_16.png` | 16x16 | 1 | 16x16 |
+| `icons/traits/trait_ahli_tani.png` | 32x32 | 1 | sifat ahli_tani (positif), format sama dengan icons/traits |
+| `icons/traits/trait_ahli_tani_16.png` | 16x16 | 1 | 16x16 |
+| `icons/traits/trait_pandai_masak.png` | 32x32 | 1 | sifat pandai_masak (positif), format sama dengan icons/traits |
+| `icons/traits/trait_pandai_masak_16.png` | 16x16 | 1 | 16x16 |
+| `icons/traits/trait_seniman.png` | 32x32 | 1 | sifat seniman (positif), format sama dengan icons/traits |
+| `icons/traits/trait_seniman_16.png` | 16x16 | 1 | 16x16 |
+| `icons/relations/rel_sahabat.png` | 32x32 | 1 | hubungan 32x32 |
+| `icons/relations/rel_sahabat_16.png` | 16x16 | 1 | 16x16 |
+| `icons/relations/rel_keluarga.png` | 32x32 | 1 | hubungan 32x32 |
+| `icons/relations/rel_keluarga_16.png` | 16x16 | 1 | 16x16 |
+| `icons/relations/rel_teman_12.png` | 12x12 | 1 | 12x12 tanpa bingkai (riset §7: ikon hubungan 12x12 di panel/garis antar penduduk) |
+| `icons/relations/rel_sahabat_12.png` | 12x12 | 1 | 12x12 tanpa bingkai (riset §7: ikon hubungan 12x12 di panel/garis antar penduduk) |
+| `icons/relations/rel_rival_12.png` | 12x12 | 1 | 12x12 tanpa bingkai (riset §7: ikon hubungan 12x12 di panel/garis antar penduduk) |
+| `icons/relations/rel_pasangan_12.png` | 12x12 | 1 | 12x12 tanpa bingkai (riset §7: ikon hubungan 12x12 di panel/garis antar penduduk) |
+| `icons/relations/rel_keluarga_12.png` | 12x12 | 1 | 12x12 tanpa bingkai (riset §7: ikon hubungan 12x12 di panel/garis antar penduduk) |
+| `ui/wish/wish_bubble.png` | 96x24 | 4 | gelembung keinginan (awan pikiran) 4 frame: 0 kecil, 1 membesar, 2 normal, 3 bob; slot ikon 16x16 di (4,2) frame 2 dan (4,1) frame 3 |
+| `ui/wish/wish_bubble_hampir.png` | 96x24 | 4 | varian gelembung saat keinginan hampir kedaluwarsa (≤1 hari), slot sama |
+| `ui/wish/wish_bubble_static.png` | 24x24 | 1 | 24x24 statis = frame 2; slot 16x16 di (4,2) |
+| `icons/wishes/wish_makan_rendang.png` | 32x32 | 1 | keinginan makan_rendang 32x32 (kartu panel Keinginan Warga) |
+| `icons/wishes/wish_makan_rendang_16.png` | 16x16 | 1 | 16x16 untuk slot gelembung |
+| `icons/wishes/wish_nasi_pecel.png` | 32x32 | 1 | keinginan nasi_pecel 32x32 (kartu panel Keinginan Warga) |
+| `icons/wishes/wish_nasi_pecel_16.png` | 16x16 | 1 | 16x16 untuk slot gelembung |
+| `icons/wishes/wish_kopi_pagi.png` | 32x32 | 1 | keinginan kopi_pagi 32x32 (kartu panel Keinginan Warga) |
+| `icons/wishes/wish_kopi_pagi_16.png` | 16x16 | 1 | 16x16 untuk slot gelembung |
+| `icons/wishes/wish_rumah_panggung.png` | 32x32 | 1 | keinginan rumah_panggung 32x32 (kartu panel Keinginan Warga) |
+| `icons/wishes/wish_rumah_panggung_16.png` | 16x16 | 1 | 16x16 untuk slot gelembung |
+| `icons/wishes/wish_nonton_reog.png` | 32x32 | 1 | keinginan nonton_reog 32x32 (kartu panel Keinginan Warga) |
+| `icons/wishes/wish_nonton_reog_16.png` | 16x16 | 1 | 16x16 untuk slot gelembung |
+| `icons/wishes/wish_tabungan_haji.png` | 32x32 | 1 | keinginan tabungan_haji 32x32 (kartu panel Keinginan Warga) |
+| `icons/wishes/wish_tabungan_haji_16.png` | 16x16 | 1 | 16x16 untuk slot gelembung |
+| `icons/wishes/wish_mancing_sore.png` | 32x32 | 1 | keinginan mancing_sore 32x32 (kartu panel Keinginan Warga) |
+| `icons/wishes/wish_mancing_sore_16.png` | 16x16 | 1 | 16x16 untuk slot gelembung |
+| `icons/wishes/wish_punya_ayam.png` | 32x32 | 1 | keinginan punya_ayam 32x32 (kartu panel Keinginan Warga) |
+| `icons/wishes/wish_punya_ayam_16.png` | 16x16 | 1 | 16x16 untuk slot gelembung |
+| `icons/wishes/wish_baju_baru.png` | 32x32 | 1 | keinginan baju_baru 32x32 (kartu panel Keinginan Warga) |
+| `icons/wishes/wish_baju_baru_16.png` | 16x16 | 1 | 16x16 untuk slot gelembung |
+| `icons/wishes/wish_ziarah_makam.png` | 32x32 | 1 | keinginan ziarah_makam 32x32 (kartu panel Keinginan Warga) |
+| `icons/wishes/wish_ziarah_makam_16.png` | 16x16 | 1 | 16x16 untuk slot gelembung |
+| `icons/wishes/wish_wayang_semalam.png` | 32x32 | 1 | keinginan wayang_semalam 32x32 (kartu panel Keinginan Warga) |
+| `icons/wishes/wish_wayang_semalam_16.png` | 16x16 | 1 | 16x16 untuk slot gelembung |
+| `icons/wishes/wish_tidur_siang.png` | 32x32 | 1 | keinginan tidur_siang 32x32 (kartu panel Keinginan Warga) |
+| `icons/wishes/wish_tidur_siang_16.png` | 16x16 | 1 | 16x16 untuk slot gelembung |
+| `icons/wishes/wish_kerja_bakti.png` | 32x32 | 1 | keinginan kerja_bakti 32x32 (kartu panel Keinginan Warga) |
+| `icons/wishes/wish_kerja_bakti_16.png` | 16x16 | 1 | 16x16 untuk slot gelembung |
+| `icons/wishes/wish_ngobrol_sahabat.png` | 32x32 | 1 | keinginan ngobrol_sahabat 32x32 (kartu panel Keinginan Warga) |
+| `icons/wishes/wish_ngobrol_sahabat_16.png` | 16x16 | 1 | 16x16 untuk slot gelembung |
+| `icons/wishes/wish_punya_anak.png` | 32x32 | 1 | keinginan punya_anak 32x32 (kartu panel Keinginan Warga) |
+| `icons/wishes/wish_punya_anak_16.png` | 16x16 | 1 | 16x16 untuk slot gelembung |
+| `icons/wishes/wish_sawah_menguning.png` | 32x32 | 1 | keinginan sawah_menguning 32x32 (kartu panel Keinginan Warga) |
+| `icons/wishes/wish_sawah_menguning_16.png` | 16x16 | 1 | 16x16 untuk slot gelembung |
+| `icons/wishes/wish_jajan_pasar.png` | 32x32 | 1 | keinginan jajan_pasar 32x32 (kartu panel Keinginan Warga) |
+| `icons/wishes/wish_jajan_pasar_16.png` | 16x16 | 1 | 16x16 untuk slot gelembung |
+| `icons/wishes/wish_belajar_gamelan.png` | 32x32 | 1 | keinginan belajar_gamelan 32x32 (kartu panel Keinginan Warga) |
+| `icons/wishes/wish_belajar_gamelan_16.png` | 16x16 | 1 | 16x16 untuk slot gelembung |
+| `icons/wishes/wish_rujak_bareng.png` | 32x32 | 1 | keinginan rujak_bareng 32x32 (kartu panel Keinginan Warga) |
+| `icons/wishes/wish_rujak_bareng_16.png` | 16x16 | 1 | 16x16 untuk slot gelembung |
+| `icons/wishes/wish_bancakan_weton.png` | 32x32 | 1 | keinginan bancakan_weton 32x32 (kartu panel Keinginan Warga) |
+| `icons/wishes/wish_bancakan_weton_16.png` | 16x16 | 1 | 16x16 untuk slot gelembung |
+| `icons/wishes/wish_pulang_kampung.png` | 32x32 | 1 | keinginan pulang_kampung 32x32 (kartu panel Keinginan Warga) |
+| `icons/wishes/wish_pulang_kampung_16.png` | 16x16 | 1 | 16x16 untuk slot gelembung |
+| `icons/wishes/wish_ronda_malam.png` | 32x32 | 1 | keinginan ronda_malam 32x32 (kartu panel Keinginan Warga) |
+| `icons/wishes/wish_ronda_malam_16.png` | 16x16 | 1 | 16x16 untuk slot gelembung |
+| `icons/wishes/wish_main_layangan.png` | 32x32 | 1 | keinginan main_layangan 32x32 (kartu panel Keinginan Warga) |
+| `icons/wishes/wish_main_layangan_16.png` | 16x16 | 1 | 16x16 untuk slot gelembung |
+| `icons/wishes/wish_menang_lomba.png` | 32x32 | 1 | keinginan menang_lomba 32x32 (kartu panel Keinginan Warga) |
+| `icons/wishes/wish_menang_lomba_16.png` | 16x16 | 1 | 16x16 untuk slot gelembung |
+| `icons/wishes/wish_tumpeng_syukuran.png` | 32x32 | 1 | keinginan tumpeng_syukuran 32x32 (kartu panel Keinginan Warga) |
+| `icons/wishes/wish_tumpeng_syukuran_16.png` | 16x16 | 1 | 16x16 untuk slot gelembung |
+| `icons/wishes/wish_mandi_kali.png` | 32x32 | 1 | keinginan mandi_kali 32x32 (kartu panel Keinginan Warga) |
+| `icons/wishes/wish_mandi_kali_16.png` | 16x16 | 1 | 16x16 untuk slot gelembung |
+| `ui/progress/monument_bar_frame.png` | 48x12 | 1 | 9-slice 48x12, margin 4 semua sisi; isi (track) di x 4..43, y 4..7 (tinggi 4) |
+| `ui/progress/monument_bar_fill.png` | 4x4 | 1 | 4x4 tile isi hijau, ulang horizontal sepanjang progres |
+| `ui/progress/monument_bar_fill_end.png` | 2x4 | 1 | 2x4 ujung kanan isi (kilau), tempel di akhir fill |
+| `ui/progress/monument_bar_divider.png` | 2x8 | 1 | 2x8 pemisah segmen tahap, x = trackX + trackW*k/N - 1, y = 2 |
+| `ui/progress/monument_bar_fill_done.png` | 4x4 | 1 | 4x4 tile segmen tahap yang sudah selesai (hijau muda bercorak), dipakai di kiri segmen aktif |
+| `ui/progress/monument_bar_frame_panel.png` | 96x20 | 1 | 9-slice 96x20, margin 6 semua sisi; isi (track) di x 6..89, y 6..13 (tinggi 8) |
+| `ui/progress/monument_bar_fill_panel.png` | 4x8 | 1 | 4x8 tile isi hijau, ulang horizontal sepanjang progres |
+| `ui/progress/monument_bar_fill_end_panel.png` | 2x8 | 1 | 2x8 ujung kanan isi (kilau), tempel di akhir fill |
+| `ui/progress/monument_bar_divider_panel.png` | 2x12 | 1 | 2x12 pemisah segmen tahap, x = trackX + trackW*k/N - 1, y = 4 |
+| `ui/progress/monument_bar_fill_done_panel.png` | 4x8 | 1 | 4x8 tile segmen tahap yang sudah selesai (hijau muda bercorak), dipakai di kiri segmen aktif |
+| `ui/progress/monument_stage_pip.png` | 24x8 | 3 | penanda tahap: 0 belum, 1 sedang dikerjakan, 2 selesai; deret N pip di kiri label "Tahap 2/3 — 64%" |
+| `ui/progress/icon_bangun.png` | 32x32 | 1 | ikon palu kerja (Mulai tahap N / Kerja bakti) 32x32 |
+| `ui/progress/icon_bangun_16.png` | 16x16 | 1 | 16x16 |
+| `buildings/monuments/masjid_tahap1_stages.png` | 512x128 | 4 | masjid 128x128 (tahap 1 memakai 3x3 tengah, tahap 2-3 4x4); tahap 1/3 "Langgar Bambu" sedang dibangun: 0 fondasi batu + perancah bambu, 1 rangka, 2 setengah jadi, 3 selesai; frame = min(3, floor(progres*3)), selesai = 3; anchor tengah-bawah |
+| `buildings/monuments/masjid_tahap1.png` | 128x128 | 1 | masjid 128x128 (tahap 1 memakai 3x3 tengah, tahap 2-3 4x4); tahap 1/3 "Langgar Bambu" selesai |
+| `buildings/monuments/masjid_tahap2_stages.png` | 512x128 | 4 | masjid 128x128 (tahap 1 memakai 3x3 tengah, tahap 2-3 4x4); tahap 2/3 "Masjid Kayu" sedang dibangun: 0 bangunan tahap 1 + perancah bambu, 1 rangka, 2 setengah jadi, 3 selesai; frame = min(3, floor(progres*3)), selesai = 3; anchor tengah-bawah |
+| `buildings/monuments/masjid_tahap2.png` | 128x128 | 1 | masjid 128x128 (tahap 1 memakai 3x3 tengah, tahap 2-3 4x4); tahap 2/3 "Masjid Kayu" selesai |
+| `buildings/monuments/masjid_tahap3_stages.png` | 512x128 | 4 | masjid 128x128 (tahap 1 memakai 3x3 tengah, tahap 2-3 4x4); tahap 3/3 "Masjid Jami'" sedang dibangun: 0 bangunan tahap 2 + perancah bambu, 1 rangka, 2 setengah jadi, 3 selesai; frame = min(3, floor(progres*3)), selesai = 3; anchor tengah-bawah |
+| `buildings/monuments/masjid_tahap3.png` | 128x128 | 1 | masjid 128x128 (tahap 1 memakai 3x3 tengah, tahap 2-3 4x4); tahap 3/3 "Masjid Jami'" selesai |
+| `buildings/monuments/balai_megah_tahap1_stages.png` | 512x96 | 4 | balai desa megah 128x96 (4x3); tahap 1/3 "Serambi & Kentongan Besar" sedang dibangun: 0 fondasi batu + perancah bambu, 1 rangka, 2 setengah jadi, 3 selesai; frame = min(3, floor(progres*3)), selesai = 3; anchor tengah-bawah |
+| `buildings/monuments/balai_megah_tahap1.png` | 128x96 | 1 | balai desa megah 128x96 (4x3); tahap 1/3 "Serambi & Kentongan Besar" selesai |
+| `buildings/monuments/balai_megah_tahap2_stages.png` | 512x96 | 4 | balai desa megah 128x96 (4x3); tahap 2/3 "Pendopo Joglo" sedang dibangun: 0 bangunan tahap 1 + perancah bambu, 1 rangka, 2 setengah jadi, 3 selesai; frame = min(3, floor(progres*3)), selesai = 3; anchor tengah-bawah |
+| `buildings/monuments/balai_megah_tahap2.png` | 128x96 | 1 | balai desa megah 128x96 (4x3); tahap 2/3 "Pendopo Joglo" selesai |
+| `buildings/monuments/balai_megah_tahap3_stages.png` | 512x96 | 4 | balai desa megah 128x96 (4x3); tahap 3/3 "Balai Megah (ukiran & gamelan)" sedang dibangun: 0 bangunan tahap 2 + perancah bambu, 1 rangka, 2 setengah jadi, 3 selesai; frame = min(3, floor(progres*3)), selesai = 3; anchor tengah-bawah |
+| `buildings/monuments/balai_megah_tahap3.png` | 128x96 | 1 | balai desa megah 128x96 (4x3); tahap 3/3 "Balai Megah (ukiran & gamelan)" selesai |
+| `buildings/monuments/bendungan_tahap1_stages.png` | 384x64 | 4 | bendungan & irigasi 96x64 (3x2), letakkan melintang sungai; tahap 1/4 "Bendung Bronjong Bambu" sedang dibangun: 0 sungai kosong + perancah bambu, 1 sepertiga (kiri), 2 dua pertiga, 3 selesai; frame = min(3, floor(progres*3)); anchor tengah-bawah |
+| `buildings/monuments/bendungan_tahap1.png` | 96x64 | 1 | bendungan & irigasi 96x64 (3x2), letakkan melintang sungai; tahap 1/4 "Bendung Bronjong Bambu" selesai |
+| `buildings/monuments/bendungan_tahap2_stages.png` | 384x64 | 4 | bendungan & irigasi 96x64 (3x2), letakkan melintang sungai; tahap 2/4 "Saluran Induk" sedang dibangun: 0 bangunan tahap 1 + perancah bambu, 1 sepertiga (kiri), 2 dua pertiga, 3 selesai; frame = min(3, floor(progres*3)); anchor tengah-bawah |
+| `buildings/monuments/bendungan_tahap2.png` | 96x64 | 1 | bendungan & irigasi 96x64 (3x2), letakkan melintang sungai; tahap 2/4 "Saluran Induk" selesai |
+| `buildings/monuments/bendungan_tahap3_stages.png` | 384x64 | 4 | bendungan & irigasi 96x64 (3x2), letakkan melintang sungai; tahap 3/4 "Pintu Air" sedang dibangun: 0 bangunan tahap 2 + perancah bambu, 1 sepertiga (kiri), 2 dua pertiga, 3 selesai; frame = min(3, floor(progres*3)); anchor tengah-bawah |
+| `buildings/monuments/bendungan_tahap3.png` | 96x64 | 1 | bendungan & irigasi 96x64 (3x2), letakkan melintang sungai; tahap 3/4 "Pintu Air" selesai |
+| `buildings/monuments/bendungan_tahap4_stages.png` | 384x64 | 4 | bendungan & irigasi 96x64 (3x2), letakkan melintang sungai; tahap 4/4 "Bendungan & Embung" sedang dibangun: 0 bangunan tahap 3 + perancah bambu, 1 sepertiga (kiri), 2 dua pertiga, 3 selesai; frame = min(3, floor(progres*3)); anchor tengah-bawah |
+| `buildings/monuments/bendungan_tahap4.png` | 96x64 | 1 | bendungan & irigasi 96x64 (3x2), letakkan melintang sungai; tahap 4/4 "Bendungan & Embung" selesai |
+| `buildings/monuments/pendopo_reog_tahap1_stages.png` | 512x96 | 4 | pendopo reog 128x96 (4x3); tahap 1/3 "Sanggar Latihan" sedang dibangun: 0 fondasi batu + perancah bambu, 1 rangka, 2 setengah jadi, 3 selesai; frame = min(3, floor(progres*3)), selesai = 3; anchor tengah-bawah |
+| `buildings/monuments/pendopo_reog_tahap1.png` | 128x96 | 1 | pendopo reog 128x96 (4x3); tahap 1/3 "Sanggar Latihan" selesai |
+| `buildings/monuments/pendopo_reog_tahap2_stages.png` | 512x96 | 4 | pendopo reog 128x96 (4x3); tahap 2/3 "Dadak Merak & Gamelan" sedang dibangun: 0 bangunan tahap 1 + perancah bambu, 1 rangka, 2 setengah jadi, 3 selesai; frame = min(3, floor(progres*3)), selesai = 3; anchor tengah-bawah |
+| `buildings/monuments/pendopo_reog_tahap2.png` | 128x96 | 1 | pendopo reog 128x96 (4x3); tahap 2/3 "Dadak Merak & Gamelan" selesai |
+| `buildings/monuments/pendopo_reog_tahap3_stages.png` | 512x96 | 4 | pendopo reog 128x96 (4x3); tahap 3/3 "Pendopo Agung" sedang dibangun: 0 bangunan tahap 2 + perancah bambu, 1 rangka, 2 setengah jadi, 3 selesai; frame = min(3, floor(progres*3)), selesai = 3; anchor tengah-bawah |
+| `buildings/monuments/pendopo_reog_tahap3.png` | 128x96 | 1 | pendopo reog 128x96 (4x3); tahap 3/3 "Pendopo Agung" selesai |
+| `buildings/monuments/pasar_legi_tahap1_stages.png` | 512x96 | 4 | pasar legi 128x96 (4x3), pasar tradisional Jawa; tahap 1/3 "Los Bambu" sedang dibangun: 0 fondasi batu + perancah bambu, 1 rangka, 2 setengah jadi, 3 selesai; frame = min(3, floor(progres*3)), selesai = 3; anchor tengah-bawah |
+| `buildings/monuments/pasar_legi_tahap1.png` | 128x96 | 1 | pasar legi 128x96 (4x3), pasar tradisional Jawa; tahap 1/3 "Los Bambu" selesai |
+| `buildings/monuments/pasar_legi_tahap2_stages.png` | 512x96 | 4 | pasar legi 128x96 (4x3), pasar tradisional Jawa; tahap 2/3 "Hari Pasaran" sedang dibangun: 0 bangunan tahap 1 + perancah bambu, 1 rangka, 2 setengah jadi, 3 selesai; frame = min(3, floor(progres*3)), selesai = 3; anchor tengah-bawah |
+| `buildings/monuments/pasar_legi_tahap2.png` | 128x96 | 1 | pasar legi 128x96 (4x3), pasar tradisional Jawa; tahap 2/3 "Hari Pasaran" selesai |
+| `buildings/monuments/pasar_legi_tahap3_stages.png` | 512x96 | 4 | pasar legi 128x96 (4x3), pasar tradisional Jawa; tahap 3/3 "Pasar Batu Bata" sedang dibangun: 0 bangunan tahap 2 + perancah bambu, 1 rangka, 2 setengah jadi, 3 selesai; frame = min(3, floor(progres*3)), selesai = 3; anchor tengah-bawah |
+| `buildings/monuments/pasar_legi_tahap3.png` | 128x96 | 1 | pasar legi 128x96 (4x3), pasar tradisional Jawa; tahap 3/3 "Pasar Batu Bata" selesai |
+| `decor/agustus/tiang_pinang.png` | 64x128 | 1 | 64x128 batang pinang licin tanpa hadiah (posisi sama dengan panjat_pinang.png); puncak tiang y=22, x 30-33 |
+| `decor/agustus/hadiah_pinang.png` | 64x32 | 1 | 64x32 cincin hadiah gantung; tempel di (tiangX-0, puncak tiang y 22 → offset y -10): pada kanvas tiang_pinang paste di (0,12); lepas/ambil satu per satu dengan menyembunyikan sprite ini saat menang |
+| `decor/agustus/karung.png` | 32x32 | 1 | 32x32 karung goni berdiri (prop lomba balap karung / tumpukan karung) |
+| `decor/agustus/karung_tergeletak.png` | 32x32 | 1 | 32x32 karung kosong tergeletak (garis start/finish) |
+| `decor/agustus/tambang_segmen.png` | 64x16 | 2 | tambang tarik tambang, tile horizontal seamless (y tengah=8, tebal 3px); frame 0 kendur, 1 tegang |
+| `decor/agustus/tambang_tengah.png` | 32x16 | 1 | 32x16 bagian tengah tambang dengan pita merah (penanda menang), sambung dengan tambang_segmen |
+| `decor/agustus/tambang_gulung.png` | 32x32 | 1 | 32x32 tambang tergulung (disimpan setelah dibeli sekali) |
+| `decor/agustus/bakiak.png` | 64x32 | 1 | 64x32 bakiak (terompah panjang) 3 orang tampak atas, horizontal; kaki penduduk di x 10/30/50; untuk arah vertikal putar 90° |
+| `decor/agustus/kerupuk_gantung.png` | 64x64 | 2 | tali dengan 2 kerupuk untuk lomba makan kerupuk, 2 frame ayun ~300ms; palang di y 4-5, kerupuk setinggi kepala penduduk (y 16-28) |
+| `decor/agustus/piala.png` | 32x32 | 1 | 32x32 piala juara (juara umum 14 hari / papan Teladan) |
+| `icons/status/icon_piala_16.png` | 16x16 | 1 | 16x16 ikon piala kecil di atas kepala juara umum selama 14 hari; offset seperti Zzz (+16,-12) |
+| `decor/agustus/piala_emas_besar.png` | 48x64 | 1 | 48x64 piala emas besar di Balai (Desa Teladan Nasional, tingkat 4) |
+| `ui/dilemma/kartu_dilema_ringan.png` | 64x80 | 1 | 9-slice 64x80: margin atas 20 (pita judul pos_c), bawah 8, kiri/kanan 8; judul di y 4-13, isi mulai y 22 |
+| `ui/dilemma/log_tanda_ringan.png` | 8x12 | 1 | 8x12 penanda warna di kiri baris log akibat tertunda (warna sama dengan kartu ringan) |
+| `ui/dilemma/kartu_dilema_berat.png` | 64x80 | 1 | 9-slice 64x80: margin atas 20 (pita judul roof), bawah 8, kiri/kanan 8; judul di y 4-13, isi mulai y 22 |
+| `ui/dilemma/log_tanda_berat.png` | 8x12 | 1 | 8x12 penanda warna di kiri baris log akibat tertunda (warna sama dengan kartu berat) |
+| `ui/dilemma/icon_tunda.png` | 32x32 | 1 | ikon ⏳ akibat tertunda 32x32 |
+| `ui/dilemma/icon_tunda_16.png` | 16x16 | 1 | 16x16 (di kartu dan log) |
+| `ui/dilemma/reaksi_suka.png` | 12x12 | 1 | 12x12 reaksi sifat (😊 suka / 😟 cemas / netral) di samping ikon sifat _16 |
+| `ui/dilemma/reaksi_cemas.png` | 12x12 | 1 | 12x12 reaksi sifat (😊 suka / 😟 cemas / netral) di samping ikon sifat _16 |
+| `ui/dilemma/reaksi_netral.png` | 12x12 | 1 | 12x12 reaksi sifat (😊 suka / 😟 cemas / netral) di samping ikon sifat _16 |
+| `ui/dilemma/reaksi_chip.png` | 32x18 | 1 | 32x18 latar chip reaksi: ikon sifat _16 di (1,1), ikon reaksi_* 12x12 di (18,3) |
+| `ui/dilemma/portraits/portrait_villager_1_netral.png` | 32x32 | 1 | potret 32x32 ekspresi netral (wajah sama dengan portrait_villager_1) |
+| `ui/dilemma/portraits/portrait_villager_1_senang.png` | 32x32 | 1 | potret 32x32 ekspresi senang (wajah sama dengan portrait_villager_1) |
+| `ui/dilemma/portraits/portrait_villager_1_marah.png` | 32x32 | 1 | potret 32x32 ekspresi marah (wajah sama dengan portrait_villager_1) |
+| `ui/dilemma/portraits/portrait_villager_1_sedih.png` | 32x32 | 1 | potret 32x32 ekspresi sedih (wajah sama dengan portrait_villager_1) |
+| `ui/dilemma/portraits/portrait_villager_1_khawatir.png` | 32x32 | 1 | potret 32x32 ekspresi khawatir (wajah sama dengan portrait_villager_1) |
+| `ui/dilemma/portraits/portrait_villager_1_ekspresi.png` | 160x32 | 5 | sheet ekspresi 5 frame: 0 netral, 1 senang, 2 marah, 3 sedih, 4 khawatir |
+| `ui/dilemma/portraits/portrait_villager_2_netral.png` | 32x32 | 1 | potret 32x32 ekspresi netral (wajah sama dengan portrait_villager_2) |
+| `ui/dilemma/portraits/portrait_villager_2_senang.png` | 32x32 | 1 | potret 32x32 ekspresi senang (wajah sama dengan portrait_villager_2) |
+| `ui/dilemma/portraits/portrait_villager_2_marah.png` | 32x32 | 1 | potret 32x32 ekspresi marah (wajah sama dengan portrait_villager_2) |
+| `ui/dilemma/portraits/portrait_villager_2_sedih.png` | 32x32 | 1 | potret 32x32 ekspresi sedih (wajah sama dengan portrait_villager_2) |
+| `ui/dilemma/portraits/portrait_villager_2_khawatir.png` | 32x32 | 1 | potret 32x32 ekspresi khawatir (wajah sama dengan portrait_villager_2) |
+| `ui/dilemma/portraits/portrait_villager_2_ekspresi.png` | 160x32 | 5 | sheet ekspresi 5 frame: 0 netral, 1 senang, 2 marah, 3 sedih, 4 khawatir |
+| `ui/dilemma/portraits/portrait_villager_3_netral.png` | 32x32 | 1 | potret 32x32 ekspresi netral (wajah sama dengan portrait_villager_3) |
+| `ui/dilemma/portraits/portrait_villager_3_senang.png` | 32x32 | 1 | potret 32x32 ekspresi senang (wajah sama dengan portrait_villager_3) |
+| `ui/dilemma/portraits/portrait_villager_3_marah.png` | 32x32 | 1 | potret 32x32 ekspresi marah (wajah sama dengan portrait_villager_3) |
+| `ui/dilemma/portraits/portrait_villager_3_sedih.png` | 32x32 | 1 | potret 32x32 ekspresi sedih (wajah sama dengan portrait_villager_3) |
+| `ui/dilemma/portraits/portrait_villager_3_khawatir.png` | 32x32 | 1 | potret 32x32 ekspresi khawatir (wajah sama dengan portrait_villager_3) |
+| `ui/dilemma/portraits/portrait_villager_3_ekspresi.png` | 160x32 | 5 | sheet ekspresi 5 frame: 0 netral, 1 senang, 2 marah, 3 sedih, 4 khawatir |
+| `ui/dilemma/portraits/portrait_villager_4_netral.png` | 32x32 | 1 | potret 32x32 ekspresi netral (wajah sama dengan portrait_villager_4) |
+| `ui/dilemma/portraits/portrait_villager_4_senang.png` | 32x32 | 1 | potret 32x32 ekspresi senang (wajah sama dengan portrait_villager_4) |
+| `ui/dilemma/portraits/portrait_villager_4_marah.png` | 32x32 | 1 | potret 32x32 ekspresi marah (wajah sama dengan portrait_villager_4) |
+| `ui/dilemma/portraits/portrait_villager_4_sedih.png` | 32x32 | 1 | potret 32x32 ekspresi sedih (wajah sama dengan portrait_villager_4) |
+| `ui/dilemma/portraits/portrait_villager_4_khawatir.png` | 32x32 | 1 | potret 32x32 ekspresi khawatir (wajah sama dengan portrait_villager_4) |
+| `ui/dilemma/portraits/portrait_villager_4_ekspresi.png` | 160x32 | 5 | sheet ekspresi 5 frame: 0 netral, 1 senang, 2 marah, 3 sedih, 4 khawatir |
+| `characters/visitors/tengkulak.png` | 128x256 | 32 | tengkulak bertopi (pengepul hasil panen), tas karung kecil; format villager_N: 8 baris x 4 kolom, baris 0-3 diam, 4-7 jalan (bawah,kiri,kanan,atas); kaki y≈29 |
+| `characters/visitors/juragan.png` | 128x256 | 32 | juragan berkalung emas, baju batik, berkumis; format villager_N: 8 baris x 4 kolom, baris 0-3 diam, 4-7 jalan (bawah,kiri,kanan,atas); kaki y≈29 |
+| `characters/visitors/mantri.png` | 128x256 | 32 | mantri kesehatan, baju putih, tas obat; format villager_N: 8 baris x 4 kolom, baris 0-3 diam, 4-7 jalan (bawah,kiri,kanan,atas); kaki y≈29 |
+| `characters/visitors/pak_camat.png` | 128x256 | 32 | Pak Camat berseragam khaki + peci; format villager_N: 8 baris x 4 kolom, baris 0-3 diam, 4-7 jalan (bawah,kiri,kanan,atas); kaki y≈29 |
+| `characters/visitors/kader_posyandu.png` | 128x256 | 32 | kader posyandu: seragam merah muda + kerudung; format villager_N: 8 baris x 4 kolom, baris 0-3 diam, 4-7 jalan (bawah,kiri,kanan,atas); kaki y≈29 |
+| `characters/visitors/reog_berjalan.png` | 256x512 | 32 | reog berjalan (pembarong + dadak merak besar) 64x64/frame; 8 baris x 4 kolom: 0-3 diam (dadak bergoyang pelan), 4-7 jalan; arah bawah,kiri,kanan,atas; kaki di y≈61, anchor tengah-bawah (x 32) |
+| `characters/fauna/kucing.png` | 128x256 | 32 | kucing belang (putih-oranye) 32x32; baris 0-3 diam, 4-7 jalan; arah bawah,kiri,kanan,atas; format fauna |
+| `characters/fauna/kucing_tidur.png` | 32x32 | 1 | 32x32 kucing tidur melingkar (pakai bersama icon_zzz_anim) |
+| `buildings/posyandu_meja.png` | 64x64 | 1 | 64x64 meja posyandu: taplak merah muda, buku KMS, dacin (timbangan gantung bersarung), papan tanda posyandu; kader berdiri di depan/kiri |
+
+### Keterbatasan tahap 8b
+- Teks label (judul kartu, "Tahap 2/3 — 64%") tidak dibakar ke gambar. Font bitmap pixel lama tidak punya semua huruf, jadi teks dirender oleh kode.
+- Frame rangka dan setengah jadi dibuat otomatis dari siluet bangunan. Perancahnya generik (tiang + palang + silang bambu) dan cukup rapat menutupi bangunan.
+- Ekspresi potret kecil (32px). Paling terbaca bila diskalakan 2x di `portrait_frame_80`. Belum ada ekspresi untuk anak, lansia, atau pengunjung.
+- Pengunjung tidak punya animasi kerja/bicara. Reog belum punya animasi tari khusus (hanya diam/jalan) dan belum ada penari jathil/bujang ganong.
+- Belum ada lampu hias malam Agustusan, papan gelar Teladan per tingkat, maupun versi malam untuk monumen tahap.
+- Ikon keinginan 16px untuk wayang, gamelan, dan haji (Ka'bah) bersifat simbolik dan paling jelas bila disertai judul gelembung di tooltip.
