@@ -1,0 +1,4178 @@
+{
+  "_patch": {
+    "versi_dari": "1.4.0",
+    "versi_ke": "1.5.0",
+    "sifat": "hanya penambahan (bagian baru + entri meta + pencapaian A25-A32)",
+    "spec": "docs/RISET-CERITA-TUJUAN.md §1-§3, §7 Dokumen"
+  },
+  "tambah_item": {
+    "pencapaian": [
+      {
+        "id": "A25",
+        "nama": "Nyali Kentongan",
+        "deskripsi": "Seorang penakut menjadi pemberani lewat cerita Nyali Kentongan.",
+        "syarat": {
+          "tipe": "cerita_selesai",
+          "target": "penakut_babi",
+          "jumlah": 1
+        },
+        "hadiah": {
+          "suasana_hati": 5
+        },
+        "teks_terbuka": "Tong-tong-tong! Siapa sangka, si penakut kini paling nyaring memukul kentongan."
+      },
+      {
+        "id": "A26",
+        "nama": "Desa Teladan Nasional",
+        "deskripsi": "Raih gelar Desa Teladan Nasional.",
+        "syarat": {
+          "tipe": "gelar_teladan",
+          "target": "teladan",
+          "jumlah": 1
+        },
+        "hadiah": {
+          "suasana_hati": 10
+        },
+        "teks_terbuka": "Piala kecil berkilau di Balai. Desa ini kini teladan bagi seluruh negeri."
+      },
+      {
+        "id": "A27",
+        "nama": "Tujuh Purnama Kemarau",
+        "deskripsi": "Raih Piagam Tahunan tahun ke-7.",
+        "syarat": {
+          "tipe": "piagam_tahun",
+          "target": "semua",
+          "jumlah": 7
+        },
+        "hadiah": {
+          "suasana_hati": 8
+        },
+        "teks_terbuka": "Tujuh kemarau terlewati bersama. Desa ini tumbuh kuat seperti pohon jati."
+      },
+      {
+        "id": "A28",
+        "nama": "Juara Panjat Pinang",
+        "deskripsi": "Menangkan lomba panjat pinang.",
+        "syarat": {
+          "tipe": "lomba_menang",
+          "target": "panjat_pinang",
+          "jumlah": 1
+        },
+        "hadiah": {
+          "suasana_hati": 5
+        },
+        "teks_terbuka": "Belepotan oli dan lumpur, tapi hadiah di puncak pinang berhasil diraih!"
+      },
+      {
+        "id": "A29",
+        "nama": "Sahabat Sejati",
+        "deskripsi": "Dua penduduk mencapai hubungan terbaik (skor 100).",
+        "syarat": {
+          "tipe": "hubungan_maks",
+          "target": "semua",
+          "jumlah": 1
+        },
+        "hadiah": {
+          "suasana_hati": 5
+        },
+        "teks_terbuka": "Seperti saudara kandung. Persahabatan sejati lahir di desa ini."
+      },
+      {
+        "id": "A30",
+        "nama": "Monumen Pertama",
+        "deskripsi": "Selesaikan semua tahap satu monumen.",
+        "syarat": {
+          "tipe": "monumen_selesai",
+          "target": "semua",
+          "jumlah": 1
+        },
+        "hadiah": {
+          "suasana_hati": 8
+        },
+        "teks_terbuka": "Monumen pertama berdiri megah. Anak cucu akan mengingat kerja keras hari ini."
+      },
+      {
+        "id": "A31",
+        "nama": "Pak/Bu Haji",
+        "deskripsi": "Wujudkan keinginan menabung untuk naik haji.",
+        "syarat": {
+          "tipe": "keinginan_khusus",
+          "target": "tabungan_haji",
+          "jumlah": 1
+        },
+        "hadiah": {
+          "suasana_hati": 8
+        },
+        "teks_terbuka": "Seluruh desa mengantar keberangkatan dengan doa dan air mata haru."
+      },
+      {
+        "id": "A32",
+        "nama": "Lima Monumen",
+        "deskripsi": "Selesaikan kelima monumen desa.",
+        "syarat": {
+          "tipe": "monumen_selesai",
+          "target": "semua",
+          "jumlah": 5
+        },
+        "hadiah": {
+          "suasana_hati": 10
+        },
+        "teks_terbuka": "Masjid, Balai, Bendungan, Pendopo Reog, dan Pasar Legi. Desa Mandiri yang sesungguhnya."
+      },
+      {
+        "id": "A33",
+        "nama": "Tangan Bersih",
+        "deskripsi": "Tolak suap tiga kali (tambang pasir atau penebang liar) saat ada warga yang jujur.",
+        "syarat": {
+          "tipe": "tolak_suap",
+          "target": "semua",
+          "jumlah": 3
+        },
+        "hadiah": {
+          "suasana_hati": 6
+        },
+        "teks_terbuka": "Tiga kali amplop ditolak dengan sopan. Warga yang jujur bangga punya kepala desa seperti ini."
+      },
+      {
+        "id": "A34",
+        "nama": "Ramah Tamah",
+        "deskripsi": "Lima pendatang disambut warga yang ramah dan bertahan 28 hari.",
+        "syarat": {
+          "tipe": "sambut_pendatang",
+          "target": "semua",
+          "jumlah": 5
+        },
+        "hadiah": {
+          "suasana_hati": 6
+        },
+        "teks_terbuka": "Teh hangat, senyum lebar, dan sapaan di setiap pintu. Desa ini terkenal paling ramah se-kecamatan."
+      }
+    ]
+  },
+  "tambah_entri_meta": {
+    "placeholder": {
+      "{hari_keputusan}": "Hari saat dilema diputuskan (untuk teks_tertunda / log akibat tertunda); isi lewat extra fill()",
+      "{gelar}": "Nama gelar Desa Teladan (teladan.gelar[tier].nama)",
+      "{monumen}": "Nama monumen (monumen.<id>.nama)",
+      "{tahap}": "Nama tahap monumen (monumen.<id>.tahap[i].nama)",
+      "{lomba}": "Nama lomba 17-an (agustusan.lomba.<id>.nama)",
+      "{keinginan}": "Judul keinginan penduduk (keinginan.<id>.judul)",
+      "{pasaran}": "Nama hari pasaran Jawa (Legi, Pahing, Pon, Wage, Kliwon)"
+    },
+    "tipe_tujuan_quest": {
+      "cerita_selesai": "Selesaikan cerita berantai dengan id target (cerita.<id>) sebanyak jumlah",
+      "gelar_teladan": "Raih gelar Desa Teladan dengan id target (teladan.gelar) atau lebih tinggi",
+      "piagam_tahun": "Kumpulkan Piagam Tahunan sebanyak jumlah (target 'semua')",
+      "lomba_menang": "Menangkan lomba 17-an dengan id target (agustusan.lomba) sebanyak jumlah",
+      "hubungan_maks": "Jumlah pasangan penduduk dengan skor hubungan 100 (target 'semua')",
+      "monumen_selesai": "Selesaikan semua tahap monumen sebanyak jumlah (target 'semua' atau id monumen)",
+      "keinginan_khusus": "Penuhi keinginan dengan id target (keinginan.<id>) sebanyak jumlah",
+      "tolak_suap": "Jumlah suap yang ditolak di dilema tambang_pasir/penebang_liar saat ada penduduk jujur (S.bribesRefused; target 'semua')",
+      "sambut_pendatang": "Jumlah pendatang yang disambut penduduk ramah dan bertahan 28 hari (target 'semua')"
+    },
+    "target_khusus": {
+      "penakut_babi": "Cerita berantai Nyali Kentongan",
+      "teladan": "Gelar Desa Teladan Nasional",
+      "panjat_pinang": "Lomba panjat pinang",
+      "tabungan_haji": "Keinginan menabung untuk naik haji"
+    },
+    "struktur_tambahan": {
+      "sifat": "Dict id TRAITS (20) -> {nama, kata, deskripsi, tooltip, log_terlihat[]}; log_sifat{jahil_kejahilan, ramah_sambutan, jujur_tolak_suap, jujur_suap_diterima, jujur_timbangan, ...}",
+      "hubungan": "{tingkat{}, tooltip{}, panel{}, log{jenis -> [teks]}, duka_hubungan{tingkat -> [teks]}}; log selaras log_hubungan v1.3",
+      "keinginan": "Dict id WISHES -> {judul, deskripsi, teks_muncul[], teks_terpenuhi[], teks_kecewa[], tombol?}; _ui = teks panel",
+      "cerita": "Dict id STORY_CHAINS -> {judul, ringkasan, langkah[{teks, pilihan[{teks, teks_hasil}], hasil{kunci: teks}}], selesai}",
+      "monumen": "{ui{}, <id MONUMENTS> -> {nama, deskripsi, tahap[{nama, mulai, progres[3], selesai, bonus_ringkas}]}}",
+      "kerja_bakti": "Teks KERJA_BAKTI (tombol, log mulai/selesai)",
+      "teladan": "Teks TELADAN: gelar{}, kedatangan, naik_gelar, tetap, ditangguhkan, ending, panel",
+      "agustusan": "Teks AGUSTUSAN: panitia, umbul_umbul, malam_tirakatan, upacara, lomba{<id> -> {nama, deskripsi, aturan, mulai[], menang[], kalah[], lucu[]...}}, panggung_hiburan, juara_umum, pengumuman_lomba",
+      "rencana_tahun": "Teks YEAR_GOALS: panel, pembuka{tahun}, piagam, tanpa_piagam, kenangan_tahun, nama_target{tipe}, ending_mandiri",
+      "dilema": "List {id DILEMMAS, kelas R/B, judul, kategori, deskripsi, pilihan[3]{teks, efek, teks_hasil, mekanik_lain?, tertunda[{kunci, hari_tunda[min,max], peluang, efek_tertunda, teks_tertunda, mekanik_lain?, usulan_dokumen?}], hari_tunda, teks_tertunda}}; usulan_dokumen = akibat tertunda yang tidak ada di spec §3.3 (boleh diabaikan kode)",
+      "dilema_ui": "Teks kartu dilema, nama kategori, reaksi_sifat{senang, kecewa}",
+      "momen_kecil": "Dict id MOMEN_KECIL -> {judul, deskripsi, pilihan[{teks, teks_hasil}], catatan_efek}"
+    }
+  },
+  "tambah_key_meta": {
+    "status_cerita_tujuan": "mengikuti_riset",
+    "catatan_placeholder_v150": "{sifat} tetap placeholder yang sama sejak v1.2 (frasa sifat penduduk, mis. \"{nama} yang {sifat}\"). Untuk sifat v1.5 isi dengan sifat.<id>.kata; untuk penduduk lama boleh tetap penduduk[].sifat. Tidak ada placeholder sifat kedua.",
+    "peta_sifat_penduduk": {
+      "_catatan": "Pemetaan teks lama penduduk[].sifat (dibiarkan apa adanya) ke id sifat v1.5 (spec §1.1: mis. \"ceria\" -> periang). Kunci = penduduk[].nama.",
+      "Sari": [
+        "rajin",
+        "periang"
+      ],
+      "Budi": [
+        "sabar",
+        "rajin"
+      ],
+      "Wulan": [
+        "ramah",
+        "pandai_masak"
+      ],
+      "Joko": [
+        "suka_menolong"
+      ],
+      "Ayu": [
+        "cerdas"
+      ],
+      "Slamet": [
+        "sabar",
+        "rajin"
+      ],
+      "Rahayu": [
+        "suka_menolong"
+      ],
+      "Bambang": [
+        "periang",
+        "jahil"
+      ],
+      "Lestari": [
+        "ahli_tani"
+      ],
+      "Sugeng": [
+        "rajin"
+      ],
+      "Ningsih": [
+        "pemurung",
+        "suka_menolong"
+      ],
+      "Hartono": [
+        "cerdas",
+        "rajin"
+      ],
+      "Asep": [
+        "periang",
+        "cerdas"
+      ],
+      "Euis": [
+        "seniman"
+      ],
+      "Dadang": [
+        "rajin"
+      ],
+      "Neng Rina": [
+        "ramah"
+      ],
+      "Ujang": [
+        "cerdas"
+      ],
+      "Siti Nurhayati": [
+        "rajin"
+      ],
+      "Cecep": [
+        "sabar"
+      ],
+      "Iis": [
+        "periang",
+        "ramah"
+      ],
+      "Togar": [
+        "pemberani"
+      ],
+      "Rumondang": [
+        "jujur"
+      ],
+      "Parlindungan": [
+        "pemberani",
+        "suka_menolong"
+      ],
+      "Butet": [
+        "periang",
+        "rajin"
+      ],
+      "Sihol": [
+        "seniman",
+        "periang"
+      ],
+      "Tiur": [
+        "sabar"
+      ],
+      "Horas Simanjuntak": [
+        "pemberani",
+        "ramah"
+      ],
+      "Lamtiar": [
+        "cerdas"
+      ],
+      "Rangkayo": [
+        "ramah",
+        "cerdas"
+      ],
+      "Datuak Malin": [
+        "sabar",
+        "religius"
+      ],
+      "Upik": [
+        "rajin"
+      ],
+      "Buyung": [
+        "perantau"
+      ],
+      "Ranti": [
+        "seniman"
+      ],
+      "Fauzan": [
+        "pelit"
+      ],
+      "Nurhaliza": [
+        "ramah"
+      ],
+      "Zulkifli": [
+        "pandai_masak"
+      ],
+      "Andi Baso": [
+        "pemberani",
+        "perantau"
+      ],
+      "Daeng Tasi": [
+        "jujur"
+      ],
+      "La Upe": [
+        "rajin",
+        "cerdas"
+      ],
+      "Besse": [
+        "cerdas"
+      ],
+      "Daeng Rewa": [
+        "pemberani"
+      ],
+      "Hasnah": [
+        "pelit",
+        "rajin"
+      ],
+      "Made Wirawan": [
+        "rajin",
+        "suka_menolong"
+      ],
+      "Ni Luh Ayu": [
+        "seniman",
+        "periang"
+      ],
+      "Ketut Arsa": [
+        "ahli_tani",
+        "sabar"
+      ],
+      "Komang Sri": [
+        "cerdas"
+      ],
+      "Wayan Gede": [
+        "rajin"
+      ],
+      "Nyoman Dewi": [
+        "religius"
+      ],
+      "Mpok Ijah": [
+        "jahil",
+        "dermawan"
+      ],
+      "Bang Rojali": [
+        "pemberani"
+      ],
+      "Matrawi": [
+        "rajin",
+        "pemberani"
+      ],
+      "Halimah": [
+        "ramah",
+        "cerdas"
+      ],
+      "Galuh": [
+        "periang"
+      ],
+      "Utuh": [
+        "rajin"
+      ],
+      "Bujang Ilai": [
+        "pemberani",
+        "cerdas"
+      ],
+      "Dayang Lenggang": [
+        "ahli_tani",
+        "suka_menolong"
+      ],
+      "Teuku Rizal": [
+        "rajin",
+        "jujur"
+      ],
+      "Cut Meutia": [
+        "pemberani",
+        "jujur"
+      ],
+      "Jefri Lumentut": [
+        "periang"
+      ],
+      "Stevani Rondonuwu": [
+        "suka_menolong"
+      ],
+      "Yopi Pattinama": [
+        "pemberani"
+      ],
+      "Ona Latuconsina": [
+        "seniman"
+      ],
+      "Yakob Wenda": [
+        "pemberani",
+        "rajin"
+      ],
+      "Maria Kogoya": [
+        "suka_menolong",
+        "sabar"
+      ],
+      "Lalu Hamzah": [
+        "sabar"
+      ],
+      "Baiq Nurul": [
+        "seniman",
+        "rajin"
+      ],
+      "Liem Hok": [
+        "cerdas"
+      ],
+      "Mei Ling": [
+        "cerdas",
+        "rajin"
+      ]
+    },
+    "sumber_cerita_tujuan": "docs/RISET-CERITA-TUJUAN.md (§1 tokoh, §2 tujuan, §3 dilema & Juru Cerita, §7 Dokumen)",
+    "kunci_efek_dilema_lain": {
+      "_catatan": "Kunci efek dilema dari spec §4.2 yang belum ada di kunci_efek; ditulis di mekanik_lain (nama saja), angkanya di balance.js DILEMMAS.",
+      "kunci": [
+        "absen_acak",
+        "absen_aktor",
+        "ancaman_mult",
+        "aura_beringin_mult",
+        "bangun_gratis",
+        "banjir",
+        "banjir_mult",
+        "biaya_berkala",
+        "diskon_monumen",
+        "hamil_mult_aktor",
+        "hapus_beringin",
+        "hari_kerja_hilang_AB",
+        "hasil_harian",
+        "hasil_panen_add",
+        "hasil_panen_mult",
+        "ikan_mult",
+        "jati_regrow_mult",
+        "kekeringan_selesai",
+        "kerja_bakti_gratis",
+        "kerja_mult_A",
+        "kerja_mult_aktor",
+        "kesehatan_bangunan_dekat",
+        "kesehatan_jembatan",
+        "kontrak",
+        "ladang_gratis",
+        "longsor",
+        "longsor_add",
+        "mati_parah_mult",
+        "mood_A",
+        "mood_AB",
+        "mood_B",
+        "mood_aktor",
+        "mood_harian",
+        "node_jati",
+        "node_kayu",
+        "pamit_pendatang",
+        "pendatang_mult",
+        "pendatang_sifat",
+        "pentas_reog",
+        "pertumbuhan_ladang_sawah",
+        "rel_AB",
+        "rel_acak",
+        "rel_acak3",
+        "rel_jujur_kades",
+        "rel_semua",
+        "rel_tetangga",
+        "rel_yang_pergi",
+        "ronda",
+        "sakit_acak",
+        "sembuh_mult",
+        "skill_gain_aktor",
+        "suap",
+        "sumur_kemarau_add",
+        "tanam_mult",
+        "teladan_poin",
+        "ternak",
+        "tikus_mult",
+        "usir_mult",
+        "utang"
+      ]
+    },
+    "peta_spec_v150": {
+      "TRAITS": "sifat",
+      "RELATION": "hubungan",
+      "WISHES": "keinginan",
+      "STORY_CHAINS": "cerita",
+      "MONUMENTS": "monumen",
+      "KERJA_BAKTI": "kerja_bakti",
+      "TELADAN": "teladan",
+      "AGUSTUSAN": "agustusan",
+      "YEAR_GOALS": "rencana_tahun",
+      "DILEMMAS": "dilema",
+      "MOMEN_KECIL": "momen_kecil"
+    }
+  },
+  "tambah_key": {
+    "sifat": {
+      "_catatan": "Id = TRAITS.list (spec §1.1, revisi 12:12): 20 sifat. kata = bentuk kecil untuk placeholder {sifat} (makna sama seperti sejak v1.2: frasa sifat penduduk, mis. \"{nama} yang {sifat}\"). log_terlihat: {nama} = pemilik sifat. log_sifat = log khusus sifat (kejahilan, sambutan ramah, suap/timbangan untuk jujur). Sifat lama (humoris, pendiam, tukang_gosip, penyayang_anak, betah, kuat, ringkih, penggemar_kopi) dihapus spec; pemalas -> malas.",
+      "rajin": {
+        "nama": "Rajin",
+        "kata": "rajin",
+        "deskripsi": "Selalu mulai kerja paling awal dan jarang mengeluh. Paling senang saat kerja bakti.",
+        "tooltip": "Kerja lebih cepat; energi lebih cepat habis.",
+        "log_terlihat": [
+          "{nama} sudah di sawah sebelum ayam berkokok. Ternyata ia rajin sekali."
+        ]
+      },
+      "malas": {
+        "nama": "Malas",
+        "kata": "malas",
+        "deskripsi": "Tidak suka terburu-buru. Katanya, hidup itu dinikmati pelan-pelan di bale-bale.",
+        "tooltip": "Kerja lebih pelan, tapi suasana hatinya santai dan tidak mudah kecewa.",
+        "log_terlihat": [
+          "{nama} menguap lebar di tengah kerja. \"Istirahat sebentar ya,\" katanya untuk ketiga kalinya."
+        ]
+      },
+      "pemberani": {
+        "nama": "Pemberani",
+        "kata": "pemberani",
+        "deskripsi": "Paling depan saat babi hutan datang, membawa obor dan kentongan.",
+        "tooltip": "Lebih pandai mengusir ancaman dan suka ikut ronda; tidak mudah trauma.",
+        "log_terlihat": [
+          "{nama} berdiri paling depan saat semak bergoyang. Ia memang pemberani."
+        ]
+      },
+      "penakut": {
+        "nama": "Penakut",
+        "kata": "penakut",
+        "deskripsi": "Pulang lebih awal kalau ada jejak di tepi hutan. Tidak mau jaga malam.",
+        "tooltip": "Lebih jarang terluka, tapi mudah trauma dan kerja malam lebih pelan.",
+        "log_terlihat": [
+          "{nama} bergegas pulang begitu matahari turun. \"Lebih baik aman,\" bisiknya."
+        ]
+      },
+      "periang": {
+        "nama": "Periang",
+        "kata": "periang",
+        "deskripsi": "Senyumnya lebar dan tawanya menular ke siapa saja di dekatnya.",
+        "tooltip": "Suasana hati lebih baik dan menghibur warga di sekitarnya; jago lomba makan kerupuk.",
+        "log_terlihat": [
+          "{nama} bersenandung sepanjang jalan ke sawah. Yang mendengar ikut tersenyum."
+        ]
+      },
+      "pemurung": {
+        "nama": "Pemurung",
+        "kata": "pemurung",
+        "deskripsi": "Lebih banyak diam dan merenung, tapi kerjanya teliti saat sendirian.",
+        "tooltip": "Suasana hati mudah turun dan lambat berteman, tapi jarang bertengkar; kerja lebih cepat saat sendiri.",
+        "log_terlihat": [
+          "{nama} duduk sendirian di pematang sambil memandangi awan. Ia memang suka merenung."
+        ]
+      },
+      "ramah": {
+        "nama": "Ramah",
+        "kata": "ramah",
+        "deskripsi": "Selalu menyapa lebih dulu, bahkan kepada orang yang baru datang.",
+        "tooltip": "Cepat akrab dan jarang berselisih; pendatang baru merasa disambut olehnya.",
+        "log_terlihat": [
+          "{nama} menyapa setiap orang yang lewat di depan rumahnya. Tak ada yang lewat tanpa senyum."
+        ]
+      },
+      "pemarah": {
+        "nama": "Pemarah",
+        "kata": "pemarah",
+        "deskripsi": "Sumbunya pendek, tapi kerjanya cekatan kalau dibiarkan sendiri.",
+        "tooltip": "Lebih mudah bertengkar dan bisa punya rival; kerja lebih cepat saat sendirian.",
+        "log_terlihat": [
+          "{nama} menggerutu karena cangkulnya dipinjam tanpa izin. Hatinya baik, sumbunya saja yang pendek."
+        ]
+      },
+      "sabar": {
+        "nama": "Sabar",
+        "kata": "sabar",
+        "deskripsi": "Tidak mudah tersulut, dan paling bisa menenangkan orang yang sedang kesal.",
+        "tooltip": "Jarang bertengkar, duka lebih ringan, dan betah tinggal di desa.",
+        "log_terlihat": [
+          "{nama} hanya tersenyum saat temannya mengomel. \"Pelan-pelan saja, semua ada jalannya.\""
+        ]
+      },
+      "dermawan": {
+        "nama": "Dermawan",
+        "kata": "dermawan",
+        "deskripsi": "Suka berbagi bekal dan kopi, bahkan saat bekalnya sendiri sedikit.",
+        "tooltip": "Kadang memberi hadiah kecil kepada teman (memakai 1 makanan atau 1 kopi).",
+        "log_terlihat": [
+          "{nama} membagi bekal nasinya untuk teman yang lupa membawa. Ia memang dermawan."
+        ]
+      },
+      "pelit": {
+        "nama": "Pelit",
+        "kata": "pelit",
+        "deskripsi": "Menyimpan setiap butir gabah. Pandai menawar harga dengan tengkulak.",
+        "tooltip": "Makan sedikit lebih hemat, tapi kesal saat desa berbelanja besar dan tidak pernah memberi hadiah.",
+        "log_terlihat": [
+          "{nama} menghitung gabah dua kali sebelum tidur. Tidak ada yang terbuang sia-sia."
+        ]
+      },
+      "suka_menolong": {
+        "nama": "Suka menolong",
+        "kata": "suka menolong",
+        "deskripsi": "Ringan tangan untuk siapa saja: membangun, merawat yang sakit, atau menemani anak-anak.",
+        "tooltip": "Lebih cepat saat kerja bakti, merawat, dan membangun; anak serumah belajar lebih cepat.",
+        "log_terlihat": [
+          "{nama} langsung menyingsingkan lengan baju saat melihat tetangga kerepotan."
+        ]
+      },
+      "jujur": {
+        "nama": "Jujur",
+        "kata": "jujur",
+        "deskripsi": "Bicaranya lurus dan dipercaya semua orang. Tidak pernah mau menerima suap.",
+        "tooltip": "Mudah dipercaya warga; tengkulak tidak berani curang timbangan bila ada dia.",
+        "log_terlihat": [
+          "{nama} mengembalikan uang kembalian yang kelebihan ke pedagang. \"Ini bukan hak saya, Pak.\""
+        ]
+      },
+      "jahil": {
+        "nama": "Jahil",
+        "kata": "jahil",
+        "deskripsi": "Suka iseng dan bercanda, kadang kelewatan sedikit. Tapi tidak pernah berniat jahat.",
+        "tooltip": "Suka bergosip dan berbuat iseng yang menghibur, tapi kadang membuat orang kesal.",
+        "log_terlihat": [
+          "{nama} menyembunyikan caping temannya di atas pohon pisang. Semua tertawa, kecuali pemilik caping."
+        ]
+      },
+      "cerdas": {
+        "nama": "Cerdas",
+        "kata": "cerdas",
+        "deskripsi": "Cepat belajar hal baru dan suka bertanya \"kenapa begitu?\".",
+        "tooltip": "Riset lebih cepat dan semua keahlian tumbuh lebih cepat.",
+        "log_terlihat": [
+          "{nama} menghitung jumlah gabah di lumbung tanpa coretan sedikit pun. Semua kagum."
+        ]
+      },
+      "religius": {
+        "nama": "Religius",
+        "kata": "religius",
+        "deskripsi": "Tekun beribadah dan menenangkan orang lain saat berduka.",
+        "tooltip": "Senang bila ada Langgar atau Masjid; duka lebih cepat reda; istirahat sejenak tiap Jumat.",
+        "log_terlihat": [
+          "Suara {nama} mengaji terdengar lembut dari rumahnya setiap selepas magrib."
+        ]
+      },
+      "perantau": {
+        "nama": "Perantau",
+        "kata": "perantau",
+        "deskripsi": "Pernah merantau jauh dan membawa keahlian dari kota.",
+        "tooltip": "Datang dengan sedikit keahlian; keinginannya lebih sering muncul dan kadang rindu kampung.",
+        "log_terlihat": [
+          "{nama} bercerita tentang kota-kota yang pernah ia singgahi. Semua mendengarkan dengan kagum."
+        ]
+      },
+      "ahli_tani": {
+        "nama": "Ahli tani",
+        "kata": "ahli tani",
+        "deskripsi": "Hafal tanda-tanda alam dan tahu kapan harus menanam.",
+        "tooltip": "Bertani lebih cepat dan panennya lebih banyak.",
+        "log_terlihat": [
+          "{nama} meremas segenggam tanah lalu tersenyum. \"Tanah ini siap ditanami.\""
+        ]
+      },
+      "pandai_masak": {
+        "nama": "Pandai masak",
+        "kata": "pandai masak",
+        "deskripsi": "Sambalnya terkenal sampai ke desa sebelah.",
+        "tooltip": "Masakan Dapur lebih mengenyangkan; biaya kenduri dan hajatan lebih hemat.",
+        "log_terlihat": [
+          "Aroma sambal terasi dari dapur {nama} membuat semua orang tiba-tiba lapar."
+        ]
+      },
+      "seniman": {
+        "nama": "Seniman",
+        "kata": "seniman",
+        "deskripsi": "Menari, menabuh gamelan, dan mengukir. Malam di api unggun jadi lebih indah karenanya.",
+        "tooltip": "Membuat api unggun, festival, dan lomba lebih meriah; cepat membangun Pendopo Reog.",
+        "log_terlihat": [
+          "{nama} mengukir burung merak kecil dari sepotong kayu. Detailnya membuat semua orang terdiam."
+        ]
+      },
+      "log_sifat": {
+        "jahil_kejahilan": [
+          "Hari {hari}: {nama} menukar sandal {nama2} dengan sandal yang kebesaran. Semua yang melihat tertawa terpingkal-pingkal.",
+          "Hari {hari}: {nama} pura-pura jadi orang-orangan sawah. {nama2} kaget setengah mati, lalu ikut tertawa.",
+          "Hari {hari}: {nama} menaruh katak kecil di caping {nama2}. Pendopo jadi ramai oleh tawa.",
+          "Hari {hari}: Kejahilan {nama} kali ini kelewatan sedikit. {nama2} cemberut seharian."
+        ],
+        "jahil_minta_maaf": [
+          "Hari {hari}: {nama} membawakan pisang goreng untuk {nama2} sebagai tanda minta maaf atas kejahilannya."
+        ],
+        "ramah_sambutan": [
+          "Hari {hari}: {nama} menyambut {nama2} yang baru datang dengan teh hangat dan senyum lebar. \"Anggap saja rumah sendiri.\"",
+          "Hari {hari}: {nama} mengajak {nama2}, warga baru, berkeliling desa dan mengenalkannya pada semua tetangga.",
+          "Hari {hari}: Berkat sambutan hangat {nama}, {nama2} langsung merasa kerasan di desa."
+        ],
+        "jujur_tolak_suap": [
+          "Hari {hari}: {nama} menolak amplop \"uang rokok\" dari orang luar. \"Maaf, Pak. Desa kami tidak begitu caranya.\"",
+          "Hari {hari}: Kepala desa menolak suap. {nama} tersenyum bangga dan menepuk bahu warga di sebelahnya."
+        ],
+        "jujur_suap_diterima": [
+          "Hari {hari}: {nama} terdiam lama setelah tahu desa menerima \"uang rokok\". Ia kecewa, tapi tetap menghormati kepala desa.",
+          "Hari {hari}: \"Semoga ini yang terakhir,\" kata {nama} pelan soal amplop dari pengusaha luar."
+        ],
+        "jujur_timbangan": [
+          "Hari {hari}: {nama} memeriksa timbangan tengkulak dan menemukan batu kecil di bawahnya. Tengkulak itu tersipu dan menimbang ulang dengan benar.",
+          "Hari {hari}: Karena ada {nama} yang teliti dan jujur, tengkulak tidak berani bermain-main dengan timbangan."
+        ]
+      }
+    },
+    "hubungan": {
+      "_catatan": "RELATION (spec §1.2). tingkat = label panel; log = log interaksi antarpenduduk (naik/turun tingkat, konflik, berbaikan, dll.).",
+      "tingkat": {
+        "rival": "Rival",
+        "kenalan": "Kenalan",
+        "teman": "Teman",
+        "sahabat": "Sahabat",
+        "pasangan": "Pasangan",
+        "keluarga": "Keluarga",
+        "renggang": "Renggang"
+      },
+      "tooltip": {
+        "rival": "Sering berselisih. Suasana hati turun bila terlalu lama berdekatan.",
+        "teman": "Kerja sedikit lebih cepat bila berdekatan.",
+        "sahabat": "Kerja lebih cepat bersama dan enggan pergi dari desa selama sahabatnya ada.",
+        "pasangan": "Bahagia bila tinggal serumah.",
+        "keluarga": "Ikatan keluarga tidak mudah putus.",
+        "renggang": "Pasangan yang sedang renggang. Cerita bisa memperbaikinya."
+      },
+      "panel": {
+        "judul": "Hubungan",
+        "skor": "{jumlah}",
+        "kosong": "Belum ada"
+      },
+      "log": {
+        "_catatan": "Selaras dengan RELATION (spec §1.2) dan log_hubungan v1.3 (jatuh_cinta memakai {pasangan} seperti log_hubungan). {nama}/{nama2} = dua penduduk yang berinteraksi.",
+        "menjadi_teman": [
+          "Hari {hari}: {nama} dan {nama2} ternyata sama-sama suka sambal terasi. Sejak itu mereka berteman.",
+          "Hari {hari}: {nama} membantu {nama2} memikul kayu pulang. Mereka mengobrol sepanjang jalan dan tertawa bersama.",
+          "Hari {hari}: {nama} dan {nama2} duduk berdua di pos ronda sambil makan singkong rebus. Pertemanan baru dimulai.",
+          "Hari {hari}: {nama} mengajari {nama2} membuat layangan. Kini mereka sering terlihat bersama."
+        ],
+        "menjadi_sahabat": [
+          "Hari {hari}: {nama} dan {nama2} sudah seperti saudara. Mereka saling menyisihkan lauk terbaik.",
+          "Hari {hari}: {nama2} menjahit sarung {nama} yang sobek tanpa diminta. Begitulah sahabat.",
+          "Hari {hari}: {nama} dan {nama2} berjanji akan saling menjaga sampai tua. Mereka kini bersahabat."
+        ],
+        "menjadi_rival": [
+          "Hari {hari}: {nama} dan {nama2} saling buang muka di pematang. Sepertinya mereka sedang bersaing.",
+          "Hari {hari}: Setiap kali {nama} memuji panennya, {nama2} mendengus. Persaingan kecil dimulai."
+        ],
+        "bertengkar": [
+          "Hari {hari}: {nama} dan {nama2} berdebat soal siapa yang lupa menutup pintu Gudang. Suara mereka terdengar sampai sawah.",
+          "Hari {hari}: {nama} cemberut karena {nama2} memakan pisang goreng terakhir. Mereka saling diam seharian.",
+          "Hari {hari}: {nama} dan {nama2} berebut giliran air di saluran sawah. Wajah keduanya merah padam.",
+          "Hari {hari}: {nama2} menertawakan layangan {nama} yang tersangkut di pohon kelapa. {nama} tersinggung dan pergi."
+        ],
+        "berbaikan": [
+          "Hari {hari}: {nama} datang ke rumah {nama2} membawa sepiring pisang goreng. \"Maaf ya,\" katanya. Mereka berpelukan.",
+          "Hari {hari}: Setelah ditengahi para tetua di pendopo, {nama} dan {nama2} bersalaman dan tertawa canggung.",
+          "Hari {hari}: {nama} dan {nama2} terjebak hujan di gubuk yang sama. Lama-lama mereka mengobrol lagi seperti biasa.",
+          "Hari {hari}: {nama2} membantu {nama} memperbaiki atap tanpa banyak bicara. Pertengkaran kemarin terlupakan."
+        ],
+        "jatuh_cinta": [
+          "Hari {hari}: Jantung {nama} berdebar setiap kali {pasangan} lewat membawa kendi air. Wajahnya memerah seperti jambu.",
+          "Hari {hari}: {nama} memetik bunga melati dan menyelipkannya diam-diam di jendela {pasangan}.",
+          "Hari {hari}: {nama} pura-pura sibuk saat {pasangan} menyapa, padahal senyumnya tidak bisa disembunyikan.",
+          "Hari {hari}: Di bawah bulan purnama, {nama} memberanikan diri mengajak {pasangan} melihat kunang-kunang di sawah."
+        ],
+        "gosip": [
+          "Hari {hari}: Di dekat sumur, {nama} berbisik pada {nama2}. Keduanya tertawa cekikikan.",
+          "Hari {hari}: {nama} membawa kabar terbaru ke pendopo. {nama2} mendengarkan dengan mata membulat."
+        ],
+        "hadiah": [
+          "Hari {hari}: {nama} memberi {nama2} secangkir kopi hangat tanpa alasan. {nama2} tersenyum lebar.",
+          "Hari {hari}: {nama} menyelipkan sepotong gula aren ke tangan {nama2}. \"Untukmu,\" katanya."
+        ],
+        "menolong": [
+          "Hari {hari}: {nama} merawat {nama2} yang sakit seharian. {nama2} tidak akan melupakannya.",
+          "Hari {hari}: {nama} menarik {nama2} menjauh dari seruduk babi hutan. Sejak malam itu mereka sangat dekat."
+        ],
+        "ronda_bareng": [
+          "Hari {hari}: {nama} dan {nama2} ronda berdua semalaman, bergantian memukul kentongan dan bercerita.",
+          "Hari {hari}: Di pos ronda, {nama} mengajari {nama2} irama kentongan tanda aman. Malam terasa singkat."
+        ],
+        "renggang": [
+          "Hari {hari}: {nama} dan {pasangan} jarang bicara akhir-akhir ini. Para tetua berharap mereka segera akur lagi."
+        ],
+        "rindu_teman": [
+          "Hari {hari}: {nama} sudah lama tidak mengobrol dengan {nama2}. Ia jadi rindu."
+        ]
+      },
+      "duka_hubungan": {
+        "pasangan": [
+          "Hari {hari}: {nama2} kehilangan belahan jiwanya, {nama}. Rumah mereka terasa sangat sunyi."
+        ],
+        "sahabat": [
+          "Hari {hari}: {nama2} duduk lama di tempat ia biasa bercerita dengan {nama}. Sahabat terbaiknya telah tiada."
+        ],
+        "teman": [
+          "Hari {hari}: {nama2} mengenang tawa {nama} sambil menunduk."
+        ],
+        "rival": [
+          "Hari {hari}: {nama2} terdiam. \"Kami belum sempat berbaikan,\" bisiknya tentang {nama}."
+        ]
+      }
+    },
+    "keinginan": {
+      "_catatan": "Id = WISHES.list (spec §1.3). {nama} = pemilik keinginan. tombol = label tombol Penuhi (hanya keinginan cara 'tombol'/'cicil'). Biaya/hadiah di balance.js.",
+      "makan_rendang": {
+        "judul": "Ingin makan rendang",
+        "deskripsi": "Rendang daging bersantan, dimasak berjam-jam sampai hitam legit.",
+        "teks_muncul": [
+          "{nama} menelan ludah membayangkan rendang. \"Pakai santan kelapa, dimasak lama...\""
+        ],
+        "teks_terpenuhi": [
+          "Hari {hari}: {nama} makan rendang buatan dapur desa. Ia memejamkan mata, menikmati setiap gigitan."
+        ],
+        "teks_kecewa": [
+          "Hari {hari}: {nama} hanya bisa membayangkan rendang. Ia sedikit kecewa."
+        ],
+        "tombol": "Masakkan rendang"
+      },
+      "nasi_pecel": {
+        "judul": "Ingin nasi pecel",
+        "deskripsi": "Sayur rebus disiram sambal kacang, ditemani rempeyek.",
+        "teks_muncul": [
+          "{nama} rindu nasi pecel buatan ibunya dulu."
+        ],
+        "teks_terpenuhi": [
+          "Hari {hari}: {nama} makan nasi pecel beralas daun pisang. \"Pedasnya pas!\""
+        ],
+        "teks_kecewa": [
+          "Hari {hari}: Belum ada nasi pecel untuk {nama}. Ia makan seadanya."
+        ],
+        "tombol": "Buatkan nasi pecel"
+      },
+      "kopi_pagi": {
+        "judul": "Ngopi pagi di teras",
+        "deskripsi": "Secangkir kopi tubruk di teras sambil memandangi sawah berkabut.",
+        "teks_muncul": [
+          "{nama} duduk di teras pagi-pagi, memandang sawah. \"Andai ada kopi...\""
+        ],
+        "teks_terpenuhi": [
+          "Hari {hari}: {nama} menyeruput kopi tubruk di teras. Pagi terasa sempurna."
+        ],
+        "teks_kecewa": [
+          "Hari {hari}: Pagi berlalu tanpa kopi. {nama} menghela napas."
+        ],
+        "tombol": "Seduhkan kopi"
+      },
+      "rumah_panggung": {
+        "judul": "Punya rumah panggung",
+        "deskripsi": "Rumah bertiang bambu: sejuk, aman dari banjir dan ular.",
+        "teks_muncul": [
+          "{nama} sering memandangi lahan dekat sungai. Sepertinya ia memimpikan rumah panggung."
+        ],
+        "teks_terpenuhi": [
+          "Hari {hari}: {nama} menaiki tangga rumah panggung barunya. Matanya berkaca-kaca bahagia."
+        ],
+        "teks_kecewa": [
+          "Hari {hari}: Rumah panggung impian {nama} belum juga berdiri. Ia mulai murung."
+        ]
+      },
+      "nonton_reog": {
+        "judul": "Nonton reog",
+        "deskripsi": "Melihat dadak merak menari diiringi kendang dan terompet.",
+        "teks_muncul": [
+          "{nama} menirukan gerakan warok sambil tertawa. \"Kapan ya ada reog di desa ini?\""
+        ],
+        "teks_terpenuhi": [
+          "Hari {hari}: {nama} bersorak paling keras saat dadak merak berputar. Ia bahagia sekali."
+        ],
+        "teks_kecewa": [
+          "Hari {hari}: Pentas reog belum juga ada. {nama} menyimpan topeng mainannya dengan sedih."
+        ]
+      },
+      "tabungan_haji": {
+        "judul": "Menabung untuk naik haji",
+        "deskripsi": "Menabung sedikit demi sedikit di celengan bambu, berharap suatu hari berangkat ke Tanah Suci.",
+        "teks_muncul": [
+          "{nama} membuat celengan dari bambu. \"Sedikit-sedikit, lama-lama cukup,\" katanya penuh harap."
+        ],
+        "teks_terpenuhi": [
+          "Hari {hari}: Tabungan {nama} akhirnya cukup! Seluruh desa mengantar keberangkatannya dengan doa dan air mata haru."
+        ],
+        "teks_kecewa": [
+          "Hari {hari}: Tabungan {nama} belum cukup tahun ini. \"Masih ada tahun depan,\" katanya tabah."
+        ],
+        "tombol": "Setor ke celengan"
+      },
+      "mancing_sore": {
+        "judul": "Mancing sore di kali",
+        "deskripsi": "Duduk di tepi kali dengan joran bambu sampai matahari terbenam.",
+        "teks_muncul": [
+          "{nama} memandangi joran bambunya. \"Sore ini cocok untuk mancing.\""
+        ],
+        "teks_terpenuhi": [
+          "Hari {hari}: {nama} pulang dari kali membawa ikan dan senyum lebar."
+        ],
+        "teks_kecewa": [
+          "Hari {hari}: {nama} terlalu sibuk untuk mancing. Joran bambunya masih bersandar di dinding."
+        ]
+      },
+      "punya_ayam": {
+        "judul": "Punya ayam sendiri",
+        "deskripsi": "Beberapa ekor ayam kampung yang berkokok setiap pagi.",
+        "teks_muncul": [
+          "{nama} menirukan kokok ayam setiap pagi. Sepertinya ia ingin memelihara ayam."
+        ],
+        "teks_terpenuhi": [
+          "Hari {hari}: Ayam-ayam di kandang baru berkokok nyaring. {nama} menaburkan jagung sambil tertawa."
+        ],
+        "teks_kecewa": [
+          "Hari {hari}: Belum ada kandang ayam. Kokokan {nama} terdengar lesu."
+        ]
+      },
+      "baju_baru": {
+        "judul": "Baju baru untuk Agustusan",
+        "deskripsi": "Kemeja atau kebaya baru untuk hari besar.",
+        "teks_muncul": [
+          "{nama} memandangi kain-kain di gerobak pedagang. \"Bagus sekali untuk Agustusan...\""
+        ],
+        "teks_terpenuhi": [
+          "Hari {hari}: {nama} memakai baju barunya dan berputar-putar di depan pendopo. Semua memuji."
+        ],
+        "teks_kecewa": [
+          "Hari {hari}: {nama} memakai baju lamanya lagi. Tidak apa-apa, katanya, walau sedikit kecewa."
+        ],
+        "tombol": "Belikan baju"
+      },
+      "ziarah_makam": {
+        "judul": "Ziarah ke makam",
+        "deskripsi": "Membersihkan makam orang tersayang dan menaburkan bunga.",
+        "teks_muncul": [
+          "{nama} memetik bunga kamboja. Sepertinya ia ingin berziarah."
+        ],
+        "teks_terpenuhi": [
+          "Hari {hari}: {nama} menaburkan bunga dan berdoa di makam. Hatinya terasa lebih ringan."
+        ],
+        "teks_kecewa": [
+          "Hari {hari}: {nama} belum sempat berziarah. Rindunya belum terobati."
+        ]
+      },
+      "wayang_semalam": {
+        "judul": "Nonton wayang semalam suntuk",
+        "deskripsi": "Wayang kulit di bawah blencong, dari malam sampai subuh.",
+        "teks_muncul": [
+          "{nama} bercerita tentang Arjuna dan Semar. \"Sudah lama tidak nonton wayang,\" katanya."
+        ],
+        "teks_terpenuhi": [
+          "Hari {hari}: Desa menonton wayang semalam suntuk. {nama} tertawa paling keras saat punakawan muncul."
+        ],
+        "teks_kecewa": [
+          "Hari {hari}: Belum ada pertunjukan wayang. {nama} mendongengkannya sendiri untuk anak-anak."
+        ],
+        "tombol": "Undang dalang"
+      },
+      "tidur_siang": {
+        "judul": "Tidur siang di bale-bale",
+        "deskripsi": "Tidur sebentar di bale-bale bambu ditemani angin sepoi-sepoi.",
+        "teks_muncul": [
+          "{nama} melirik bale-bale bambu dengan penuh rindu."
+        ],
+        "teks_terpenuhi": [
+          "Hari {hari}: {nama} tidur siang di bale-bale sambil mendengkur halus. Bangunnya segar sekali."
+        ],
+        "teks_kecewa": [
+          "Hari {hari}: {nama} tidak sempat tidur siang. Ia menguap sepanjang sore."
+        ]
+      },
+      "kerja_bakti": {
+        "judul": "Ikut kerja bakti",
+        "deskripsi": "Membersihkan desa bersama-sama, lalu makan gorengan.",
+        "teks_muncul": [
+          "{nama} menyingsingkan lengan baju. \"Kapan kita kerja bakti lagi?\""
+        ],
+        "teks_terpenuhi": [
+          "Hari {hari}: {nama} bekerja bakti dengan semangat. Desa bersih, hatinya senang."
+        ],
+        "teks_kecewa": [
+          "Hari {hari}: Kerja bakti belum diadakan. {nama} membersihkan halamannya sendiri."
+        ]
+      },
+      "ngobrol_sahabat": {
+        "judul": "Ngobrol lama dengan sahabat",
+        "deskripsi": "Bercerita panjang dengan teman dekat di dekat api unggun.",
+        "teks_muncul": [
+          "{nama} melirik ke arah rumah sahabatnya. Sudah lama mereka tidak bercerita panjang."
+        ],
+        "teks_terpenuhi": [
+          "Hari {hari}: {nama} dan sahabatnya bercerita sampai larut di dekat api unggun."
+        ],
+        "teks_kecewa": [
+          "Hari {hari}: {nama} belum sempat bertemu sahabatnya. Ia sedikit kesepian."
+        ]
+      },
+      "punya_anak": {
+        "judul": "Ingin punya momongan",
+        "deskripsi": "Mendambakan tangis bayi di rumah kecilnya.",
+        "teks_muncul": [
+          "{nama} tersenyum melihat bayi tetangga. Sepertinya ia juga mendambakan momongan."
+        ],
+        "teks_terpenuhi": [
+          "Hari {hari}: Kabar bahagia! {nama} akan segera punya momongan."
+        ],
+        "teks_kecewa": [
+          "Hari {hari}: {nama} menatap bintang. \"Mungkin belum waktunya,\" bisiknya."
+        ]
+      },
+      "sawah_menguning": {
+        "judul": "Melihat sawah menguning",
+        "deskripsi": "Berdiri di pematang memandangi padi yang siap dipanen.",
+        "teks_muncul": [
+          "{nama} sering berjalan ke pematang sore-sore. Ia menunggu sawah menguning."
+        ],
+        "teks_terpenuhi": [
+          "Hari {hari}: {nama} berdiri di pematang memandangi sawah keemasan. \"Indahnya,\" bisiknya."
+        ],
+        "teks_kecewa": [
+          "Hari {hari}: Sawah belum menguning. {nama} pulang dengan langkah pelan."
+        ]
+      },
+      "jajan_pasar": {
+        "judul": "Jajan klepon & cenil",
+        "deskripsi": "Klepon berisi gula merah dan cenil warna-warni bertabur kelapa.",
+        "teks_muncul": [
+          "{nama} membayangkan klepon yang meletus manis di mulut."
+        ],
+        "teks_terpenuhi": [
+          "Hari {hari}: {nama} jajan klepon dan cenil di pasar. Gula merahnya meleleh di lidah!"
+        ],
+        "teks_kecewa": [
+          "Hari {hari}: {nama} belum sempat ke pasar. Bayangan klepon masih menghantuinya."
+        ],
+        "tombol": "Belikan jajan"
+      },
+      "belajar_gamelan": {
+        "judul": "Belajar gamelan",
+        "deskripsi": "Menabuh saron dan bonang di pendopo.",
+        "teks_muncul": [
+          "{nama} mengetuk-ngetuk ember mengikuti irama. Sepertinya ia ingin belajar gamelan."
+        ],
+        "teks_terpenuhi": [
+          "Hari {hari}: Tung-tung-gong! {nama} menabuh bonang untuk pertama kalinya di pendopo."
+        ],
+        "teks_kecewa": [
+          "Hari {hari}: {nama} masih menabuh ember. Iramanya terdengar sedikit sedih."
+        ]
+      },
+      "rujak_bareng": {
+        "judul": "Rujakan bareng tetangga",
+        "deskripsi": "Rujak buah dengan sambal gula merah, dimakan beramai-ramai saat siang terik.",
+        "teks_muncul": [
+          "Siang terik. {nama} membayangkan rujak pedas manis bersama tetangga."
+        ],
+        "teks_terpenuhi": [
+          "Hari {hari}: {nama} dan para tetangga rujakan di bawah pohon mangga. Pedas, segar, dan penuh tawa!"
+        ],
+        "teks_kecewa": [
+          "Hari {hari}: Belum ada rujakan. {nama} mengipasi diri dengan caping."
+        ],
+        "tombol": "Siapkan rujak"
+      },
+      "bancakan_weton": {
+        "judul": "Bancakan weton",
+        "deskripsi": "Syukuran kecil di hari lahir Jawa, berbagi nasi dan lauk dengan tetangga.",
+        "teks_muncul": [
+          "{nama} menghitung hari pasaran dengan jari. \"Sebentar lagi wetonku.\""
+        ],
+        "teks_terpenuhi": [
+          "Hari {hari}: Bancakan weton {nama}: nasi dan lauk dibagikan beralas daun pisang. Semua mendoakannya."
+        ],
+        "teks_kecewa": [
+          "Hari {hari}: Weton {nama} lewat tanpa bancakan. Ia berdoa sendiri di rumah."
+        ],
+        "tombol": "Adakan bancakan"
+      },
+      "pulang_kampung": {
+        "judul": "Pulang kampung sebentar",
+        "deskripsi": "Menjenguk keluarga di kampung asal selama beberapa hari.",
+        "teks_muncul": [
+          "{nama} sering memandang ke arah gunung. Ia rindu kampung halamannya."
+        ],
+        "teks_terpenuhi": [
+          "Hari {hari}: {nama} pamit pulang kampung sebentar dengan bekal di punggung. \"Aku pasti kembali!\""
+        ],
+        "teks_kecewa": [
+          "Hari {hari}: {nama} belum bisa pulang kampung. Rindunya makin berat."
+        ],
+        "tombol": "Izinkan pulang"
+      },
+      "ronda_malam": {
+        "judul": "Ikut ronda",
+        "deskripsi": "Berjaga malam di pos ronda sambil memukul kentongan.",
+        "teks_muncul": [
+          "{nama} memeriksa kentongan di pos ronda. \"Malam ini aku mau ikut jaga.\""
+        ],
+        "teks_terpenuhi": [
+          "Hari {hari}: {nama} ronda semalaman dengan bangga. Desa aman di bawah penjagaannya."
+        ],
+        "teks_kecewa": [
+          "Hari {hari}: {nama} tidak kebagian giliran ronda. Ia sedikit kecewa."
+        ]
+      },
+      "main_layangan": {
+        "judul": "Main layangan",
+        "deskripsi": "Menerbangkan layangan bambu di atas sawah saat angin bertiup.",
+        "teks_muncul": [
+          "{nama} kecil memandangi langit yang berangin. \"Ini cuaca layangan!\""
+        ],
+        "teks_terpenuhi": [
+          "Hari {hari}: Layangan {nama} terbang paling tinggi di langit desa. Orang tuanya ikut bersorak."
+        ],
+        "teks_kecewa": [
+          "Hari {hari}: Angin bagus terlewat lagi. {nama} menyimpan layangannya dengan sedih."
+        ],
+        "tombol": "Buatkan layangan"
+      },
+      "menang_lomba": {
+        "judul": "Menang lomba 17-an",
+        "deskripsi": "Juara salah satu lomba Agustusan.",
+        "teks_muncul": [
+          "{nama} berlatih balap karung di halaman. \"Tahun ini aku harus menang!\""
+        ],
+        "teks_terpenuhi": [
+          "Hari {hari}: {nama} juara lomba 17-an! Ia mengangkat hadiahnya tinggi-tinggi."
+        ],
+        "teks_kecewa": [
+          "Hari {hari}: {nama} belum menang tahun ini. \"Tahun depan!\" katanya sambil tertawa."
+        ]
+      },
+      "tumpeng_syukuran": {
+        "judul": "Tumpengan syukur panen",
+        "deskripsi": "Tumpeng nasi kuning dengan lauk lengkap untuk mensyukuri panen.",
+        "teks_muncul": [
+          "{nama} bercerita tentang tumpeng di desa asalnya. Matanya berbinar."
+        ],
+        "teks_terpenuhi": [
+          "Hari {hari}: {nama} memotong pucuk tumpeng syukuran dengan bangga. Seluruh desa bersyukur bersama."
+        ],
+        "teks_kecewa": [
+          "Hari {hari}: {nama} bertanya lagi kapan desa akan tumpengan."
+        ],
+        "tombol": "Siapkan tumpeng"
+      },
+      "mandi_kali": {
+        "judul": "Mandi di kali bareng",
+        "deskripsi": "Mandi dan berenang di kali bersama teman-teman.",
+        "teks_muncul": [
+          "{nama} memandang kali yang jernih setelah hujan. Ia ingin mandi bersama teman."
+        ],
+        "teks_terpenuhi": [
+          "Hari {hari}: {nama} berenang di kali bersama teman-teman. Segarnya sampai ke hati!"
+        ],
+        "teks_kecewa": [
+          "Hari {hari}: Kali terlalu deras hari ini. {nama} hanya mencelupkan kaki."
+        ]
+      },
+      "_ui": {
+        "judul_panel": "Keinginan Warga",
+        "baris": "{nama}: {keinginan}",
+        "terpenuhi": "Hari {hari}: Keinginan {nama} terwujud: {keinginan}!",
+        "kosong": "Belum ada warga yang punya keinginan."
+      }
+    },
+    "cerita": {
+      "_catatan": "Id & urutan langkah = STORY_CHAINS (spec §1.4). Teks saja; efek/peluang/jeda ada di balance.js. pilihan[i] sejajar dengan langkah[n].pilihan[i] di spec; hasil (per kunci) untuk cabang acak/cek. {nama} = tokoh utama, {nama2} = tokoh kedua, {pasangan} = tokoh C pada cinta_segitiga.",
+      "warok_muda": {
+        "judul": "Warok Muda",
+        "ringkasan": "{nama} menemukan dadak merak tua dan ingin menghidupkan reog di desa.",
+        "langkah": [
+          {
+            "teks": "Hari {hari}: Saat membersihkan Gudang, {nama} menemukan rangka dadak merak tua yang bulunya rontok. Matanya langsung berbinar.",
+            "pilihan": [
+              {
+                "teks": "Perbaiki dadak meraknya",
+                "teks_hasil": "{nama} merendam bambu dan menjahit kulit dengan telaten. Bulu-bulu merak dirapikan satu per satu."
+              },
+              {
+                "teks": "Simpan saja di Gudang",
+                "teks_hasil": "{nama} menyimpan dadak merak itu dengan berat hati. \"Mungkin lain kali,\" gumamnya."
+              }
+            ]
+          },
+          {
+            "teks": "Hari {hari}: Dadak merak sudah pulih. {nama} ingin berlatih menari setiap malam selama tiga malam.",
+            "pilihan": [
+              {
+                "teks": "Dukung latihannya",
+                "teks_hasil": "Teman-teman ikut menabuh kendang dan meniup terompet. Halaman pendopo ramai setiap malam."
+              },
+              {
+                "teks": "Larang dulu, nanti kecapekan",
+                "teks_hasil": "{nama} menurut dan menggantung dadak merak di dinding. Wajahnya murung."
+              }
+            ]
+          },
+          {
+            "teks": "Hari {hari}: Latihan makin berat. Dadak merak itu berat sekali untuk diangkat dengan gigi.",
+            "hasil": {
+              "jatuh": "Hari {hari}: {nama} terjatuh saat berputar! Lututnya lecet, tapi ia bangun lagi sambil tertawa. \"Warok tidak menyerah!\"",
+              "lancar": "Hari {hari}: Latihan {nama} lancar. Dadak merak berputar gagah di bawah cahaya obor."
+            }
+          },
+          {
+            "teks": "Hari {hari}: Pentas reog pertama desa! {nama} menari dengan dadak merak, diiringi kendang dan gong. Penonton bersorak tak henti-henti.",
+            "hasil": {
+              "selesai": "Sejak malam itu, {nama} dikenal sebagai warok muda yang pemberani. Pendopo Reog kini lebih mudah dibangun."
+            }
+          }
+        ],
+        "selesai": "{nama} kini warok muda kebanggaan desa."
+      },
+      "surat_kota": {
+        "judul": "Surat dari Kota",
+        "ringkasan": "Kabar dari kota membuat {nama} harus memilih antara keluarga dan desa.",
+        "langkah": [
+          {
+            "teks": "Hari {hari}: Pedagang membawa surat untuk {nama}. Ibunya di kota sedang sakit. Tangannya gemetar membaca kabar itu.",
+            "pilihan": [
+              {
+                "teks": "Izinkan pulang 5 hari",
+                "teks_hasil": "{nama} berangkat dengan bekal dari lumbung. \"Terima kasih, aku akan kembali,\" katanya sambil menyeka mata."
+              },
+              {
+                "teks": "Minta ditunda dulu",
+                "teks_hasil": "{nama} mengangguk pelan. Ia tetap bekerja, tapi pikirannya jauh di kota."
+              }
+            ]
+          },
+          {
+            "teks": "Hari {hari}: {nama} kembali dari kota! Ibunya sudah membaik, dan ia membawa oleh-oleh perkakas dan kopi.",
+            "hasil": {
+              "bawa_adik": "Hari {hari}: Ternyata {nama} juga membawa adiknya yang ingin tinggal di desa. Selamat datang, warga baru!"
+            }
+          },
+          {
+            "teks": "Hari {hari}: Para tetua bertanya pada {nama}: akan tetap tinggal di desa atau kembali ke kota?",
+            "hasil": {
+              "betah": "Hari {hari}: \"Di sini sahabat-sahabatku. Di sini rumahku,\" jawab {nama}. Ia kini benar-benar kerasan.",
+              "pamit": "Hari {hari}: {nama} pamit baik-baik untuk kembali ke kota merawat ibunya. Desa melepasnya dengan pelukan dan doa.",
+              "tetap": "Hari {hari}: {nama} memilih tetap tinggal untuk sementara. \"Kita lihat nanti,\" katanya sambil tersenyum."
+            }
+          }
+        ],
+        "selesai": "Kisah surat dari kota {nama} selesai."
+      },
+      "resep_nenek": {
+        "judul": "Resep Pecel Nenek",
+        "ringkasan": "{nama} ingin menghidupkan lagi resep pecel neneknya.",
+        "langkah": [
+          {
+            "teks": "Hari {hari}: {nama} teringat sambal pecel buatan neneknya: kacang sangrai, kencur, daun jeruk, dan gula merah.",
+            "pilihan": [
+              {
+                "teks": "Cari bahan-bahannya",
+                "teks_hasil": "{nama} mengumpulkan kacang, kelapa, dan kencur. Dapur mulai harum."
+              },
+              {
+                "teks": "Lain kali saja",
+                "teks_hasil": "{nama} menyimpan kenangan resep itu di hatinya untuk lain waktu."
+              }
+            ]
+          },
+          {
+            "teks": "Hari {hari}: {nama} mulai mengulek sambal pecel di cobek batu.",
+            "hasil": {
+              "sukses": "Hari {hari}: Sambal pecel {nama} jadi! Rasanya persis seperti buatan nenek. Penduduk antre mencicipi.",
+              "gagal": "Hari {hari}: Kepedasan! Semua yang mencicipi berkeringat dan tertawa sambil minum air. {nama} akan mencoba lagi."
+            }
+          },
+          {
+            "teks": "Hari {hari}: Pecel {nama} jadi pembicaraan desa. Apa yang sebaiknya ia lakukan?",
+            "pilihan": [
+              {
+                "teks": "Buka warung pecel di pasar",
+                "teks_hasil": "Warung kecil {nama} laris manis. Pembeli dari desa sebelah datang khusus untuk pecelnya."
+              },
+              {
+                "teks": "Untuk kenduri desa saja",
+                "teks_hasil": "Pecel {nama} disajikan di setiap kenduri. Semua orang menunggu-nunggu."
+              }
+            ]
+          }
+        ],
+        "selesai": "Resep pecel nenek {nama} kini milik seluruh desa."
+      },
+      "penakut_babi": {
+        "judul": "Nyali Kentongan",
+        "ringkasan": "Setelah serangan babi hutan, {nama} belajar mengatasi rasa takutnya.",
+        "langkah": [
+          {
+            "teks": "Hari {hari}: Sejak serangan babi hutan, {nama} gemetar setiap senja. Ia tidak berani keluar rumah setelah gelap.",
+            "pilihan": [
+              {
+                "teks": "Ajak ronda bersama sahabat",
+                "teks_hasil": "{nama} setuju ronda asal ditemani sahabatnya. \"Pelan-pelan saja,\" kata sahabatnya."
+              },
+              {
+                "teks": "Biarkan istirahat dulu",
+                "teks_hasil": "{nama} beristirahat di rumah. Hatinya sedikit lebih tenang."
+              }
+            ]
+          },
+          {
+            "teks": "Hari {hari}: Tiga malam {nama} ronda bersama {nama2}. Mereka bercerita sambil memukul kentongan tanda aman."
+          },
+          {
+            "teks": "Hari {hari}: Babi hutan datang lagi! Semak bergoyang di dekat sawah...",
+            "hasil": {
+              "berani": "Hari {hari}: {nama} memukul kentongan duluan dengan keras dan berirama! Babi hutan lari. Seluruh desa bersorak untuk keberanian {nama}.",
+              "lari": "Hari {hari}: {nama} lari ketakutan, tapi {nama2} menolongnya pulang dengan selamat. Ia butuh waktu untuk pulih."
+            }
+          }
+        ],
+        "selesai": "Kisah nyali kentongan {nama} selesai."
+      },
+      "kucing_belang": {
+        "judul": "Kucing Belang di Lumbung",
+        "ringkasan": "Seekor anak kucing tersesat menemukan rumah baru.",
+        "langkah": [
+          {
+            "teks": "Hari {hari}: {nama} menemukan anak kucing belang mengeong di sudut lumbung. Badannya kurus dan basah.",
+            "pilihan": [
+              {
+                "teks": "Pelihara di desa",
+                "teks_hasil": "Anak kucing itu diberi nama Si Belang. Ia langsung tidur di pangkuan {nama}."
+              },
+              {
+                "teks": "Antar ke desa sebelah",
+                "teks_hasil": "Si kucing diantar ke tetangga yang sedang mencari kucing. Mereka berterima kasih sekali."
+              }
+            ]
+          },
+          {
+            "teks": "Hari {hari}: Si Belang sudah besar. Tikus-tikus lumbung kini berpikir dua kali, dan ular jarang mendekati rumah."
+          },
+          {
+            "teks": "Hari {hari}: Si Belang melahirkan tiga anak kucing yang menggemaskan! Mau diapakan?",
+            "pilihan": [
+              {
+                "teks": "Bagi ke desa sebelah",
+                "teks_hasil": "Dua anak kucing dibagikan ke tetangga. Hubungan dengan desa sebelah makin hangat."
+              },
+              {
+                "teks": "Pelihara semuanya",
+                "teks_hasil": "Rumah {nama} kini penuh kucing. Setiap pagi ia tertawa melihat mereka bermain."
+              }
+            ]
+          }
+        ],
+        "selesai": "Si Belang dan keluarganya kini penjaga lumbung desa."
+      },
+      "cinta_segitiga": {
+        "judul": "Cinta Segitiga",
+        "ringkasan": "{nama} dan {nama2} sama-sama menaruh hati pada {pasangan}.",
+        "langkah": [
+          {
+            "teks": "Hari {hari}: Gosip ramai di sumur: {nama} dan {nama2} sama-sama naksir {pasangan}! Semua menunggu kelanjutannya.",
+            "pilihan": [
+              {
+                "teks": "Biarkan berjalan alami",
+                "teks_hasil": "Kepala desa memilih tidak ikut campur. Biar hati yang menentukan."
+              },
+              {
+                "teks": "Atur ronda {nama} bersama {pasangan}",
+                "teks_hasil": "Malam ini {nama} dan {pasangan} ronda berdua. {nama2} cemberut di rumah."
+              },
+              {
+                "teks": "Atur ronda {nama2} bersama {pasangan}",
+                "teks_hasil": "Malam ini {nama2} dan {pasangan} ronda berdua. {nama} menghela napas panjang."
+              }
+            ]
+          },
+          {
+            "teks": "Hari {hari}: {pasangan} sudah menentukan pilihan hatinya.",
+            "hasil": {
+              "pilih": "Hari {hari}: {pasangan} memilih dengan malu-malu. Yang terpilih tersenyum lebar, yang lain menunduk sedih.",
+              "renggang": "Hari {hari}: {nama} dan {nama2} kini saling menghindar. Persahabatan mereka retak."
+            }
+          },
+          {
+            "teks": "Hari {hari}: Waktu berlalu. Bagaimana kabar {nama} dan {nama2}?",
+            "hasil": {
+              "berbaikan": "Hari {hari}: Setelah bekerja satu tim, {nama} dan {nama2} tertawa bersama lagi. \"Ternyata kita lebih cocok jadi sahabat.\"",
+              "rival": "Hari {hari}: {nama} dan {nama2} masih saling buang muka. Mungkin butuh cerita lain untuk mendamaikan mereka."
+            }
+          }
+        ],
+        "selesai": "Kisah cinta segitiga selesai."
+      },
+      "bidan_desa": {
+        "judul": "Bidan Desa",
+        "ringkasan": "{nama} ingin belajar menjadi bidan untuk ibu-ibu di desa.",
+        "langkah": [
+          {
+            "teks": "Hari {hari}: Kehamilan pertama di desa membuat {nama} berpikir: siapa yang akan membantu persalinan? Ia ingin belajar dari bidan kecamatan.",
+            "pilihan": [
+              {
+                "teks": "Izinkan belajar 3 hari",
+                "teks_hasil": "{nama} berangkat membawa bekal dan buku catatan. \"Aku akan belajar sungguh-sungguh.\""
+              },
+              {
+                "teks": "Tidak sekarang",
+                "teks_hasil": "{nama} mengangguk. Ia membantu ibu hamil dengan cara yang ia tahu."
+              }
+            ]
+          },
+          {
+            "teks": "Hari {hari}: {nama} pulang dengan ilmu kebidanan dan tas kecil berisi peralatan bersih. Para ibu merasa lebih tenang."
+          },
+          {
+            "teks": "Hari {hari}: {nama} mengusulkan membangun Posyandu kecil untuk menimbang bayi dan memeriksa ibu hamil.",
+            "pilihan": [
+              {
+                "teks": "Bangun Posyandu",
+                "teks_hasil": "Posyandu berdiri! Setiap bulan bayi-bayi ditimbang dan para ibu bertukar cerita."
+              },
+              {
+                "teks": "Cukup di rumah masing-masing",
+                "teks_hasil": "{nama} tetap berkeliling dari rumah ke rumah dengan tas kecilnya."
+              }
+            ]
+          }
+        ],
+        "selesai": "{nama} kini bidan kepercayaan desa."
+      },
+      "kopi_pertama": {
+        "judul": "Kopi Pertama",
+        "ringkasan": "Segenggam bibit kopi mengubah pagi-pagi di desa.",
+        "langkah": [
+          {
+            "teks": "Hari {hari}: Seorang pedagang memberi {nama} bibit kopi. \"Tanamlah di lereng yang sejuk,\" pesannya.",
+            "pilihan": [
+              {
+                "teks": "Tanam percobaan",
+                "teks_hasil": "{nama} membuat peneduh dari bambu dan menanam bibit kopi berjajar di lereng."
+              },
+              {
+                "teks": "Jual bibitnya",
+                "teks_hasil": "Bibit kopi ditukar dengan perkakas. Lumayan untuk kerja di sawah."
+              }
+            ]
+          },
+          {
+            "teks": "Hari {hari}: Buah kopi pertama memerah! {nama} menjemur, menyangrai, dan menumbuknya sendiri. Aromanya memenuhi desa."
+          },
+          {
+            "teks": "Hari {hari}: Kini setiap pagi penduduk ngopi di teras sebelum ke sawah. Tradisi baru lahir di desa."
+          },
+          {
+            "teks": "Hari {hari}: Pedagang dari kota datang khusus mencari kopi desa. \"Kopi kalian terkenal sampai ke kecamatan!\""
+          }
+        ],
+        "selesai": "Kopi desa {nama} kini terkenal."
+      },
+      "rival_sawah": {
+        "judul": "Adu Panen",
+        "ringkasan": "{nama} dan {nama2} saling klaim petak sawah terbaik.",
+        "langkah": [
+          {
+            "teks": "Hari {hari}: {nama} dan {nama2} sama-sama mengaku petak dekat sungai adalah yang terbaik. Suasana memanas.",
+            "pilihan": [
+              {
+                "teks": "Adu panen musim ini",
+                "teks_hasil": "\"Kita buktikan saja!\" seru keduanya. Penduduk mulai bertaruh siapa yang menang."
+              },
+              {
+                "teks": "Bagi petak dengan adil",
+                "teks_hasil": "Petak dibagi dua dengan patok bambu. Keduanya bersalaman, walau masih sedikit kaku."
+              }
+            ]
+          },
+          {
+            "teks": "Hari {hari}: Musim berakhir. Hasil panen dihitung di depan pendopo...",
+            "hasil": {
+              "hasil": "Hari {hari}: Pemenangnya bersorak, yang kalah cemberut. Persaingan mereka makin panas."
+            }
+          },
+          {
+            "teks": "Hari {hari}: Para tetua prihatin melihat {nama} dan {nama2} terus bersaing.",
+            "pilihan": [
+              {
+                "teks": "Ajak kerja bakti bareng",
+                "teks_hasil": "Setelah seharian bekerja bersama, keduanya tertawa. \"Ternyata kau tidak seburuk itu.\""
+              },
+              {
+                "teks": "Biarkan saja",
+                "teks_hasil": "Persaingan mereka berlanjut, tapi sawah keduanya justru makin subur."
+              }
+            ],
+            "hasil": {
+              "duo_tani": "Hari {hari}: {nama} dan {nama2} kini dijuluki Duo Tani. Kalau bekerja bersama, sawah mana pun beres."
+            }
+          }
+        ],
+        "selesai": "Kisah adu panen selesai."
+      },
+      "mbah_pendongeng": {
+        "judul": "Mbah Pendongeng",
+        "ringkasan": "Sesepuh {nama} mendongeng setiap malam dan menyimpan satu keinginan terakhir.",
+        "langkah": [
+          {
+            "teks": "Hari {hari}: Setiap malam Mbah {nama} mendongeng tentang kancil dan buaya di dekat api unggun. Anak-anak duduk melingkar, tak berkedip."
+          },
+          {
+            "teks": "Hari {hari}: \"Mbah ingin nonton reog sekali lagi,\" kata {nama} pelan suatu malam. Semua orang terdiam."
+          },
+          {
+            "teks": "Hari {hari}: Keinginan terakhir Mbah {nama}...",
+            "hasil": {
+              "terpenuhi": "Hari {hari}: Mbah {nama} menonton reog dengan mata berbinar seperti anak kecil. \"Sekarang Mbah sudah lega,\" katanya.",
+              "tidak": "Hari {hari}: Dongeng-dongeng Mbah {nama} akan terus diceritakan, walau keinginan terakhirnya belum sempat terwujud."
+            }
+          }
+        ],
+        "selesai": "Dongeng Mbah {nama} hidup di hati anak-anak desa."
+      }
+    },
+    "monumen": {
+      "_catatan": "Id monumen & urutan tahap = MONUMENTS (spec §2.1). progres = 3 teks (25/50/75%). Biaya/work/fx di balance.js. {nama} = penduduk yang terlibat, {persen}/{jumlah}/{sumber_daya} untuk UI.",
+      "ui": {
+        "judul_panel": "Tujuan Desa",
+        "monumen": "Monumen",
+        "tombol_fondasi": "Taruh fondasi",
+        "tombol_mulai_tahap": "Mulai tahap {jumlah}",
+        "progres": "Tahap {jumlah}/{jumlah2} · {persen}%",
+        "butuh": "Butuh {jumlah} {sumber_daya} lagi",
+        "terkunci_hari": "Terbuka mulai hari ke-25",
+        "terkunci_era": "Terbuka di era {era}",
+        "satu_aktif": "Selesaikan dulu tahap monumen yang sedang dikerjakan.",
+        "tahap_selesai_banner": "Tahap selesai: {bangunan}!",
+        "progres_nama": "{monumen}: {tahap}",
+        "log_mulai_umum": "Hari {hari}: Pembangunan {monumen} memasuki tahap {tahap}. Warga bergotong royong.",
+        "log_selesai_umum": "Hari {hari}: Tahap {tahap} pada {monumen} selesai! Desa makin membanggakan.",
+        "pasaran": "Hari ini pasaran {pasaran}."
+      },
+      "masjid": {
+        "nama": "Masjid Jami'",
+        "deskripsi": "Dari langgar bambu sederhana tumbuh menjadi masjid jami' dengan menara dan bedug.",
+        "tahap": [
+          {
+            "nama": "Langgar Bambu",
+            "mulai": "Hari {hari}: Penduduk sepakat membangun langgar kecil dari bambu. {nama} menancapkan tiang pertama.",
+            "progres": [
+              "Tiang-tiang bambu berdiri. Anak-anak berlarian di antara tiangnya.",
+              "Dinding anyaman bambu mulai dipasang.",
+              "Atap rumbia hampir menutup. Tinggal tikar pandan untuk lantainya."
+            ],
+            "selesai": "Hari {hari}: Langgar Bambu selesai! Suara adzan subuh pertama terdengar lembut di seluruh desa.",
+            "bonus_ringkas": "Warga religius lebih tenang; adzan subuh membangunkan desa lebih awal; duka lebih cepat reda."
+          },
+          {
+            "nama": "Masjid Kayu",
+            "mulai": "Hari {hari}: Langgar diperbesar menjadi masjid kayu. {nama} mengukur fondasi batu dengan tali.",
+            "progres": [
+              "Fondasi batu tersusun rapi.",
+              "Tiang dan dinding papan berdiri kokoh.",
+              "Kubah kecil dari papan mulai dipasang."
+            ],
+            "selesai": "Hari {hari}: Masjid Kayu selesai! Seluruh desa berkumpul untuk syukuran. Halal bihalal kini jadi acara tahunan.",
+            "bonus_ringkas": "Semua warga lebih bahagia; duka desa lebih ringan; halal bihalal tahunan mendamaikan yang berselisih."
+          },
+          {
+            "nama": "Masjid Jami'",
+            "mulai": "Hari {hari}: Saatnya membangun menara dan bedug. {nama} memimpin pengangkutan batu bata.",
+            "progres": [
+              "Dinding bata merah mulai menjulang.",
+              "Menara berdiri setengah jadi. Burung-burung mulai bertengger.",
+              "Bedug besar dari kayu jati dan kulit dipasang di serambi."
+            ],
+            "selesai": "Hari {hari}: Masjid Jami' berdiri megah dengan menara dan bedug! Penduduk menangis haru. Desa ini kini benar-benar rumah.",
+            "bonus_ringkas": "Warga makin betah; keinginan bertahan lebih lama; membuka keinginan menabung untuk naik haji."
+          }
+        ]
+      },
+      "balai_megah": {
+        "nama": "Balai Desa Megah",
+        "deskripsi": "Balai desa diperluas menjadi pusat musyawarah dan kesenian desa.",
+        "tahap": [
+          {
+            "nama": "Serambi & Kentongan Besar",
+            "mulai": "Hari {hari}: Balai desa akan diperluas. {nama} memilih batang kayu terbaik untuk kentongan besar.",
+            "progres": [
+              "Serambi depan mulai dibangun.",
+              "Lantai papan serambi dipasang rapi.",
+              "Kentongan besar digantung di sudut serambi."
+            ],
+            "selesai": "Hari {hari}: Serambi & Kentongan Besar selesai! Dong-dong-dong! Semua warga datang untuk musyawarah pertama.",
+            "bonus_ringkas": "Dua monumen bisa dikerjakan bersamaan; dilema mendapat pilihan Musyawarah."
+          },
+          {
+            "nama": "Pendopo Joglo",
+            "mulai": "Hari {hari}: Tiang soko guru jati untuk pendopo joglo mulai didirikan.",
+            "progres": [
+              "Empat soko guru berdiri tegak.",
+              "Rangka atap joglo tersusun bertingkat.",
+              "Genteng tanah liat dipasang satu per satu."
+            ],
+            "selesai": "Hari {hari}: Pendopo Joglo selesai! Atapnya menjulang anggun, dan angin sepoi-sepoi berembus di bawahnya.",
+            "bonus_ringkas": "Semua warga lebih bahagia; pendatang lebih cepat datang; lomba 17-an bertambah; kerja bakti lebih sering."
+          },
+          {
+            "nama": "Balai Megah",
+            "mulai": "Hari {hari}: Tahap terakhir: ukiran dan seperangkat gamelan. {nama} mulai memahat tiang pertama.",
+            "progres": [
+              "Ukiran sulur dan bunga mulai menghiasi tiang.",
+              "Gamelan pertama tiba dari desa pengrajin.",
+              "Semua ukiran dicat dan dipernis. Pendopo berkilau."
+            ],
+            "selesai": "Hari {hari}: Balai Desa Megah selesai! Gamelan ditabuh semalam suntuk, dan seluruh desa menari bersama.",
+            "bonus_ringkas": "Festival dan Hari Jadi lebih meriah; kuota pasar bertambah."
+          }
+        ]
+      },
+      "bendungan": {
+        "nama": "Bendungan & Irigasi",
+        "deskripsi": "Bendung, saluran, dan pintu air di tepi sungai agar sawah tetap berair saat kemarau dan aman saat banjir.",
+        "tahap": [
+          {
+            "nama": "Bendung Bronjong Bambu",
+            "mulai": "Hari {hari}: {nama} mengukur arus sungai. Bronjong bambu berisi batu akan menahan air.",
+            "progres": [
+              "Bronjong bambu pertama diisi batu kali.",
+              "Bronjong disusun melintang sungai.",
+              "Celah-celah ditutup ijuk dan sabut."
+            ],
+            "selesai": "Hari {hari}: Bendung Bronjong Bambu selesai! Air sungai tertahan tenang, dan banjir lebih jarang datang.",
+            "bonus_ringkas": "Banjir di musim hujan lebih jarang."
+          },
+          {
+            "nama": "Saluran Induk",
+            "mulai": "Hari {hari}: Saluran induk mulai digali dari bendung ke sawah.",
+            "progres": [
+              "Parit selebar dua langkah sudah tergali.",
+              "Dinding saluran dilapisi batu.",
+              "Air pertama mengalir pelan ke petak terdekat."
+            ],
+            "selesai": "Hari {hari}: Saluran Induk selesai! Sawah di dekat saluran kini tetap tumbuh walau kemarau.",
+            "bonus_ringkas": "Sawah dekat saluran tetap tumbuh saat kemarau; sumur tidak menyusut."
+          },
+          {
+            "nama": "Pintu Air",
+            "mulai": "Hari {hari}: Pintu air papan akan mengatur kapan air dibuka dan ditutup.",
+            "progres": [
+              "Rangka pintu air dipasang.",
+              "Papan pintu air dihaluskan dan diberi engsel.",
+              "Roda pemutar pintu air diuji coba. Krek-krek!"
+            ],
+            "selesai": "Hari {hari}: Pintu Air selesai! Banjir dan longsor jauh berkurang, dan gagal panen makin jarang.",
+            "bonus_ringkas": "Banjir dan longsor jauh berkurang; gagal panen kemarau lebih jarang."
+          },
+          {
+            "nama": "Bendungan & Embung",
+            "mulai": "Hari {hari}: Proyek terbesar desa: bendungan dan embung penampung air.",
+            "progres": [
+              "Tanah embung digali bergotong royong.",
+              "Dinding bendungan bata merah mulai menjulang.",
+              "Air hujan mulai tertampung di embung yang luas."
+            ],
+            "selesai": "Hari {hari}: Bendungan & Embung selesai! Embung berkilau seperti cermin. Kemarau tidak lagi menakutkan.",
+            "bonus_ringkas": "Air kemarau lebih awet; kekeringan jarang; ikan tetap ada saat kemarau."
+          }
+        ]
+      },
+      "pendopo_reog": {
+        "nama": "Pendopo Reog",
+        "deskripsi": "Sanggar kesenian reog: tempat latihan jathil, bujang ganong, dan warok, sampai menjadi pendopo agung.",
+        "tahap": [
+          {
+            "nama": "Sanggar Latihan",
+            "mulai": "Hari {hari}: {nama} membersihkan lahan untuk sanggar latihan reog.",
+            "progres": [
+              "Lantai tanah dipadatkan dan diberi tikar.",
+              "Atap bambu sederhana dipasang.",
+              "Kendang dan terompet pertama digantung di dinding."
+            ],
+            "selesai": "Hari {hari}: Sanggar Latihan selesai! Suara kendang terdengar setiap malam, dan warga sekitar ikut bergoyang.",
+            "bonus_ringkas": "Malam di dekat sanggar lebih menyenangkan; tempat belajar gamelan."
+          },
+          {
+            "nama": "Dadak Merak & Gamelan",
+            "mulai": "Hari {hari}: Saatnya membuat dadak merak dan melengkapi gamelan.",
+            "progres": [
+              "Rangka bambu dadak merak dibentuk.",
+              "Ratusan bulu merak dirangkai satu per satu.",
+              "Topeng barongan dicat merah menyala."
+            ],
+            "selesai": "Hari {hari}: Dadak Merak & Gamelan selesai! Desa kini bisa mementaskan reog di Hari Jadi dan 17 Agustus.",
+            "bonus_ringkas": "Pentas reog di Hari Jadi & 17 Agustus; anak-anak ikut menari."
+          },
+          {
+            "nama": "Pendopo Agung",
+            "mulai": "Hari {hari}: Sanggar diperbesar menjadi pendopo agung untuk pentas besar.",
+            "progres": [
+              "Tiang-tiang jati berukir berdiri.",
+              "Atap joglo bertingkat mulai terpasang.",
+              "Panggung pentas dipoles sampai mengilap."
+            ],
+            "selesai": "Hari {hari}: Pendopo Agung selesai! Pentas reog pertama di sini membuat penonton dari desa sebelah berdatangan.",
+            "bonus_ringkas": "Harga jual pasar naik di hari festival; pendatang lebih tertarik."
+          }
+        ]
+      },
+      "pasar_legi": {
+        "nama": "Pasar Legi",
+        "deskripsi": "Pasar desa yang tumbuh dari los bambu menjadi pasar batu bata yang ramai setiap hari pasaran.",
+        "tahap": [
+          {
+            "nama": "Los Bambu",
+            "mulai": "Hari {hari}: Los bambu pertama didirikan di dekat pasar lama.",
+            "progres": [
+              "Tiang bambu los berdiri berjajar.",
+              "Atap rumbia los dipasang.",
+              "Meja-meja bambu untuk pedagang disusun."
+            ],
+            "selesai": "Hari {hari}: Los Bambu selesai! Pedagang betah berjualan, dan kuota pasar bertambah.",
+            "bonus_ringkas": "Kuota pasar bertambah."
+          },
+          {
+            "nama": "Hari Pasaran",
+            "mulai": "Hari {hari}: {nama} menghitung hari pasaran Jawa: Legi, Pahing, Pon, Wage, Kliwon.",
+            "progres": [
+              "Halaman pasar diratakan dengan batu.",
+              "Papan nama hari pasaran digantung.",
+              "Kelapa dan minyak disiapkan untuk pembukaan."
+            ],
+            "selesai": "Hari {hari}: Hari Pasaran resmi dimulai! Setiap Legi, pedagang pasti datang dan harga lebih bersahabat.",
+            "bonus_ringkas": "Setiap Legi pedagang pasti datang; harga beli lebih murah hari itu."
+          },
+          {
+            "nama": "Pasar Batu Bata",
+            "mulai": "Hari {hari}: Pasar diperkuat dengan dinding batu bata dan lantai batu.",
+            "progres": [
+              "Dinding batu bata mulai berdiri.",
+              "Lantai batu dipasang rapi.",
+              "Kios kopi dan kelapa dihias janur."
+            ],
+            "selesai": "Hari {hari}: Pasar Batu Bata selesai! Pasar Legi kini terkenal sampai kecamatan.",
+            "bonus_ringkas": "Tambah slot kontrak; kopi dan kelapa lebih laku."
+          }
+        ]
+      }
+    },
+    "kerja_bakti": {
+      "_catatan": "KERJA_BAKTI (spec §2.1). Tombol di panel monumen; dipakai juga oleh dilema & keinginan.",
+      "tombol": "Kerja bakti",
+      "tooltip": "Semua warga dewasa & remaja membantu monumen sampai sore. Kerja lebih cepat, hati senang, makin akrab. Butuh sedikit makanan untuk makan bersama.",
+      "tombol_kopi": "Sediakan kopi (+semangat)",
+      "terkunci_lapar": "Warga sedang kesusahan pangan. Kerja bakti ditunda dulu.",
+      "terkunci_malam": "Kerja bakti hanya bisa siang hari.",
+      "cooldown": "Kerja bakti berikutnya bisa {jumlah} hari lagi.",
+      "mulai": [
+        "Hari {hari}: Dong-dong-dong! Kentongan dipukul pagi-pagi. Seluruh desa berkumpul untuk kerja bakti.",
+        "Hari {hari}: {nama} memimpin kerja bakti hari ini. Semua membawa cangkul, pikulan, dan semangat."
+      ],
+      "selama": [
+        "Hari {hari}: Ibu-ibu membawa gorengan dan teh manis. Kerja bakti jadi terasa seperti pesta kecil.",
+        "Hari {hari}: {nama} dan {nama2} berlomba siapa yang paling banyak mengangkut batu, sambil tertawa."
+      ],
+      "selesai": [
+        "Hari {hari}: Kerja bakti selesai. Desa bersih, monumen makin tinggi, dan semua makin akrab.",
+        "Hari {hari}: Sore yang lelah tapi bahagia. Warga makan bersama di bawah pohon beringin."
+      ]
+    },
+    "teladan": {
+      "_catatan": "TELADAN (spec §2.2). Penilaian Lomba Desa oleh Pak Camat, hari ke-21 tiap tahun (mulai tahun 2).",
+      "gelar": {
+        "rintisan": "Desa Rintisan",
+        "swadaya": "Desa Swadaya",
+        "swakarya": "Desa Swakarya",
+        "swasembada": "Desa Swasembada",
+        "teladan": "Desa Teladan Nasional"
+      },
+      "deskripsi": {
+        "rintisan": "Desa baru yang sedang tumbuh.",
+        "swadaya": "Desa yang mampu berdiri dengan tenaga warganya sendiri.",
+        "swakarya": "Desa yang mulai berkarya dan membangun bersama.",
+        "swasembada": "Desa yang cukup pangan dan rukun warganya.",
+        "teladan": "Desa yang menjadi contoh bagi seluruh negeri."
+      },
+      "pratinjau_tahun1": [
+        "Hari {hari}: Pak Camat lewat naik sepeda dan berhenti sebentar. \"Desanya asri. Tahun depan saya datang menilai, ya!\""
+      ],
+      "kedatangan": [
+        "Hari {hari}: Pak Camat datang bersama rombongan untuk Penilaian Lomba Desa. Warga berbaris rapi di depan gapura.",
+        "Hari {hari}: Pak Camat berkeliling desa, mencatat di bukunya sambil mengangguk-angguk."
+      ],
+      "naik_gelar": [
+        "Hari {hari}: Selamat! Desa kita kini menyandang gelar {gelar}! Sorak-sorai membahana, dan piagam dipasang di Balai.",
+        "Hari {hari}: Pak Camat menyerahkan piagam {gelar}. {nama} menerimanya dengan tangan gemetar bahagia."
+      ],
+      "tetap": [
+        "Hari {hari}: Pak Camat tersenyum. \"Sudah bagus. Pertahankan, ya.\" Desa tetap menyandang gelarnya."
+      ],
+      "ditangguhkan": [
+        "Hari {hari}: Pak Camat menepuk bahu kepala desa. \"Tahun ini agak berat, ya. Saya berharap tahun depan lebih baik.\" Bonus gelar ditangguhkan sementara."
+      ],
+      "ending": [
+        "Hari {hari}: Desa Teladan Nasional! Piala kecil berkilau di Balai. Dari dua orang di tepi hutan, kini berdiri desa yang guyub dan mandiri. Terima kasih sudah membangunnya bersama. Cerita boleh terus berlanjut..."
+      ],
+      "panel": {
+        "judul": "Gelar Desa",
+        "poin": "Poin Teladan: {jumlah}",
+        "syarat": "Syarat {gelar}",
+        "penilaian_berikut": "Penilaian berikutnya: hari ke-{hari}"
+      }
+    },
+    "agustusan": {
+      "_catatan": "AGUSTUSAN (spec §2.3): hari ke-21 tiap tahun (kemarau hari ke-7). Tahun 1 gratis & 2 lomba. {nama} = peserta/juara, {nama2} = peserta lain.",
+      "panitia": {
+        "judul": "Panitia 17-an",
+        "teks": "Sebentar lagi 17 Agustus! Pilih lomba yang akan diadakan tahun ini.",
+        "slot": "Lomba dipilih: {jumlah}/{jumlah2}",
+        "umbul": "Pasang umbul-umbul (bambu)",
+        "tahun1": "Tahun pertama: warga patungan seadanya, lomba gratis.",
+        "tukar_peserta": "Tukar peserta",
+        "log": [
+          "Hari {hari}: Panitia 17-an dibentuk di pendopo. {nama} terpilih jadi ketua dan langsung sibuk mencatat."
+        ]
+      },
+      "umbul_umbul": [
+        "Hari {hari}: Umbul-umbul merah putih berkibar di sepanjang jalan desa. Semua jadi bersemangat."
+      ],
+      "malam_tirakatan": [
+        "Hari {hari}: Malam tirakatan. Warga duduk melingkar di dekat api unggun, mendengarkan para tetua bercerita tentang perjuangan para pahlawan.",
+        "Hari {hari}: Tumpeng tirakatan dipotong dan dibagi. Doa bersama untuk negeri mengalun pelan."
+      ],
+      "upacara": [
+        "Hari {hari}: Pagi-pagi seluruh desa berkumpul untuk upacara bendera. {nama} mengibarkan sang merah putih dengan khidmat.",
+        "Hari {hari}: Lagu Indonesia Raya berkumandang di lapangan desa. Anak-anak berdiri tegap, dan para tetua mengusap mata."
+      ],
+      "lomba": {
+        "balap_karung": {
+          "nama": "Balap karung",
+          "deskripsi": "Melompat dalam karung sampai garis akhir.",
+          "mulai": [
+            "Hari {hari}: Peserta balap karung berbaris di garis start, karung sampai pinggang."
+          ],
+          "lucu": [
+            "Hari {hari}: {nama} melompat terlalu semangat dan berguling sampai garis akhir. Tetap dihitung!"
+          ],
+          "rival_jatuh": [
+            "Hari {hari}: {nama} dan {nama2} jatuh bertumpuk di tengah lintasan. Mereka tertawa bersama sampai lupa sedang bermusuhan."
+          ],
+          "menang": [
+            "Hari {hari}: {nama} memenangkan balap karung dengan lompatan seperti kodok sawah!",
+            "Hari {hari}: {nama} melompat paling jauh dan menang balap karung! Karungnya sampai robek sedikit."
+          ],
+          "aturan": "Peserta masuk ke karung goni, lalu melompat sampai garis akhir. Yang jatuh boleh bangkit lagi.",
+          "kalah": [
+            "Hari {hari}: {nama} sudah hampir sampai garis akhir, tapi karungnya tersangkut kaki sendiri. \"Tahun depan!\"",
+            "Hari {hari}: {nama} kalah tipis di balap karung, tapi tertawa paling keras."
+          ]
+        },
+        "makan_kerupuk": {
+          "nama": "Makan kerupuk",
+          "deskripsi": "Menghabiskan kerupuk yang digantung tanpa memakai tangan.",
+          "mulai": [
+            "Hari {hari}: Kerupuk bergoyang di atas tali. Peserta berdiri dengan tangan di belakang."
+          ],
+          "lucu": [
+            "Hari {hari}: Setiap kali {nama} hampir menggigit, kerupuknya berayun menjauh. Penonton berteriak memberi semangat.",
+            "Hari {hari}: Kerupuk {nama} jatuh ke tanah. Ia memandanginya dengan sedih sampai panitia memberi kerupuk baru."
+          ],
+          "menang": [
+            "Hari {hari}: Kriuk-kriuk! {nama} menghabiskan kerupuknya paling cepat dan menang!",
+            "Hari {hari}: {nama} menghabiskan kerupuk dalam tiga gigitan besar! Penonton bersorak."
+          ],
+          "aturan": "Kerupuk digantung dengan tali. Tangan di belakang punggung, habiskan kerupuk paling cepat!",
+          "kalah": [
+            "Hari {hari}: Kerupuk {nama} terus berayun ke sana kemari. Ia kalah, tapi menghibur semua orang."
+          ]
+        },
+        "tarik_tambang": {
+          "nama": "Tarik tambang",
+          "deskripsi": "Dua regu beradu kuat menarik tambang tebal.",
+          "mulai": [
+            "Hari {hari}: Regu sawah melawan regu hutan! Tambang tebal terbentang di tengah lapangan."
+          ],
+          "salaman": [
+            "Hari {hari}: Setelah lomba, {nama} dan {nama2} yang berbeda regu bersalaman dan tertawa. Persaingan mencair."
+          ],
+          "menang": [
+            "Hari {hari}: Dengan aba-aba {nama}, regunya menarik serempak dan menang! Mereka berpelukan berlumur lumpur.",
+            "Hari {hari}: Regu {nama} menarik sekuat tenaga dan menang! Semua jatuh terduduk sambil tertawa."
+          ],
+          "aturan": "Dua regu menarik tambang. Regu yang menyeret pita merah melewati garis menang.",
+          "kalah": [
+            "Hari {hari}: Regu {nama} terseret pelan-pelan ke garis. Mereka kalah, tapi saling merangkul."
+          ]
+        },
+        "panjat_pinang": {
+          "nama": "Panjat pinang",
+          "deskripsi": "Memanjat batang pinang licin untuk meraih hadiah di puncak. Harus kerja sama!",
+          "mulai": [
+            "Hari {hari}: Batang pinang licin berdiri di lapangan. Hadiah bergantungan di puncaknya: perkakas, kopi, dan kain."
+          ],
+          "coba_gagal": [
+            "Hari {hari}: Tim {nama} merosot lagi! Semua belepotan, penonton tertawa sampai sakit perut."
+          ],
+          "menang": [
+            "Hari {hari}: Dengan bersusun bahu, tim {nama} meraih puncak pinang! Sorak-sorai membahana.",
+            "Hari {hari}: Dengan kaki di pundak teman, {nama} meraih bendera di puncak pinang! Sorak-sorai terdengar sampai sawah."
+          ],
+          "gagal_semua": [
+            "Hari {hari}: Tidak ada yang sampai puncak tahun ini, tapi semua pulang dengan tawa dan baju penuh lumpur."
+          ],
+          "aturan": "Batang pinang dilumuri oli. Satu regu saling menopang sampai ada yang mencapai hadiah di puncak.",
+          "kalah": [
+            "Hari {hari}: {nama} merosot untuk ketiga kalinya, belepotan oli dari kepala sampai kaki. Penonton tetap bertepuk tangan."
+          ]
+        },
+        "bakiak": {
+          "nama": "Bakiak",
+          "deskripsi": "Tiga orang melangkah bersama di atas terompah panjang.",
+          "mulai": [
+            "Hari {hari}: Bakiak panjang dibagikan. Setiap tim harus melangkah dengan irama yang sama."
+          ],
+          "lucu": [
+            "Hari {hari}: Tim {nama} terus berteriak \"kiri, kanan!\" tapi tetap jatuh bersama-sama."
+          ],
+          "menang": [
+            "Hari {hari}: Tim {nama} melangkah kompak seperti satu tubuh dan menang lomba bakiak!",
+            "Hari {hari}: Regu {nama} melangkah seirama dan menang lomba bakiak!"
+          ],
+          "aturan": "Tiga orang memakai satu bakiak panjang. Langkah harus kompak: kiri, kanan, kiri!",
+          "kalah": [
+            "Hari {hari}: Regu {nama} jatuh bertumpuk di tengah jalan. \"Kiri! Kiri!\" teriak mereka, terlambat."
+          ]
+        },
+        "kelereng_sendok": {
+          "nama": "Kelereng sendok",
+          "deskripsi": "Anak-anak membawa kelereng di atas sendok yang digigit.",
+          "mulai": [
+            "Hari {hari}: Anak-anak berbaris dengan sendok di mulut. Kelereng bergoyang-goyang."
+          ],
+          "lucu": [
+            "Hari {hari}: Kelereng {nama} jatuh tiga kali, tapi ia tetap tersenyum sambil menggigit sendok."
+          ],
+          "menang": [
+            "Hari {hari}: {nama} berjalan pelan tapi pasti dan menang lomba kelereng! Orang tuanya bersorak paling keras.",
+            "Hari {hari}: {nama} berjalan setenang air dan sampai pertama tanpa menjatuhkan kelereng!"
+          ],
+          "aturan": "Sendok digigit, kelereng di atasnya. Jalan pelan-pelan sampai garis akhir tanpa menjatuhkan kelereng.",
+          "kalah": [
+            "Hari {hari}: Kelereng {nama} menggelinding ke selokan. Anak-anak berebut mencarikannya."
+          ]
+        },
+        "hias_gapura": {
+          "nama": "Hias gapura & kampung",
+          "deskripsi": "Menghias gapura dan jalan desa dengan janur, bambu, dan bendera.",
+          "mulai": [
+            "Hari {hari}: Warga menganyam janur dan mengecat bambu merah putih."
+          ],
+          "selesai": [
+            "Hari {hari}: Gapura desa berhias janur dan bendera. Pak Camat pasti terkesan!"
+          ],
+          "aturan": "Setiap regu menghias gapura dengan janur, bambu, dan kain merah putih. Pak Kades menilai yang paling indah.",
+          "menang": [
+            "Hari {hari}: Gapura buatan regu {nama} dinilai paling indah! Janurnya melengkung cantik."
+          ],
+          "kalah": [
+            "Hari {hari}: Gapura regu {nama} sedikit miring, tapi tetap dipuji karena warnanya meriah."
+          ]
+        },
+        "pawai_reog": {
+          "nama": "Pawai reog",
+          "deskripsi": "Karnaval reog keliling desa diikuti seluruh warga.",
+          "mulai": [
+            "Hari {hari}: Kendang ditabuh, dan dadak merak memimpin pawai keliling desa!"
+          ],
+          "selesai": [
+            "Hari {hari}: Pawai reog membuat penonton dari desa sebelah berdatangan. Desa kita jadi buah bibir."
+          ],
+          "aturan": "Pawai keliling desa dengan reog, jathilan, dan anak-anak membawa bendera kecil.",
+          "menang": [
+            "Hari {hari}: Dadak merak yang dibawa {nama} menari paling gagah sepanjang pawai!"
+          ],
+          "kalah": [
+            "Hari {hari}: Pawai sempat berhenti karena kerbau lewat. Semua menunggu sambil menabuh kendang pelan-pelan."
+          ]
+        }
+      },
+      "panggung_hiburan": [
+        "Hari {hari}: Malamnya panggung hiburan digelar. Juara diumumkan, dan semua bertepuk tangan.",
+        "Hari {hari}: Lampu minyak kelapa menerangi panggung. Ada lagu, lawak, dan tawa sampai larut."
+      ],
+      "juara_umum": [
+        "Hari {hari}: {nama} menjadi juara umum 17-an tahun ini! Piala kecil dari bambu diserahkan dengan bangga."
+      ],
+      "pengumuman_lomba": [
+        "Hari {hari}: Juara lomba {lomba} tahun ini: {nama}! Hadiahnya sabun, buku tulis, dan tepuk tangan meriah."
+      ]
+    },
+    "rencana_tahun": {
+      "_catatan": "YEAR_GOALS (spec §2.4). Panel muncul di Hari Jadi. {tahun} = tahun ke-N.",
+      "panel": {
+        "judul": "Rencana Desa Tahun ke-{tahun}",
+        "utama": "Target utama",
+        "pilihan": "Target pilihan",
+        "syarat_piagam": "Selesaikan {jumlah} dari {jumlah2} untuk Piagam Tahunan",
+        "progres": "{jumlah}/{jumlah2} selesai",
+        "piagam_dapat": "Piagam Tahunan diraih!"
+      },
+      "pembuka": [
+        "Hari {hari}: Selamat Hari Jadi! Warga berkumpul di pendopo menyusun Rencana Desa Tahun ke-{tahun}.",
+        "Hari {hari}: Tahun ke-{tahun} dimulai. Kepala desa membacakan rencana tahun ini di depan warga."
+      ],
+      "piagam": [
+        "Hari {hari}: Piagam Tahunan diraih! Kerja keras tahun ini dipajang di dinding Balai.",
+        "Hari {hari}: Tahun ini berhasil! Piagam Tahunan dibingkai bambu dan digantung di pendopo."
+      ],
+      "tanpa_piagam": [
+        "Hari {hari}: Tahun ini belum semua target tercapai. Tidak apa-apa, tahun depan kita coba lagi bersama."
+      ],
+      "kenangan_tahun": [
+        "Tahun ke-{tahun}: desa tumbuh, tertawa, dan belajar bersama."
+      ],
+      "nama_target": {
+        "capai_era": "Capai era {era}",
+        "bangun": "Bangun {jumlah} {bangunan}",
+        "tanpa_jenjang": "Lewati kemarau tanpa krisis pangan",
+        "lomba_ikut": "Adakan lomba 17-an",
+        "keinginan_terpenuhi": "Penuhi {jumlah} keinginan warga",
+        "tahap_monumen": "Selesaikan {jumlah} tahap monumen",
+        "gelar_teladan": "Raih gelar {gelar}",
+        "pasangan": "{jumlah} pasangan baru",
+        "sahabat": "{jumlah} pasang sahabat",
+        "cerita_selesai": "Selesaikan {jumlah} cerita warga",
+        "monumen_selesai": "Selesaikan {jumlah} monumen",
+        "riset": "Selesaikan {jumlah} riset",
+        "kelahiran": "{jumlah} kelahiran",
+        "lomba_menang": "Menang {jumlah} lomba",
+        "anak_bekerja": "Anak desa mulai bekerja",
+        "keinginan_khusus": "Wujudkan keinginan menabung untuk naik haji",
+        "capai_penduduk": "Capai {jumlah} penduduk",
+        "generasi_berpasangan": "{jumlah} pasangan generasi kedua",
+        "penilaian_teladan": "Ikut penilaian Desa Teladan Nasional",
+        "tanpa_kematian_lapar": "Setahun tanpa kematian karena kelaparan",
+        "generasi": "Generasi ke-{jumlah} lahir"
+      },
+      "ending_mandiri": "Hari {hari}: Desa Mandiri. Delapan tahun berlalu sejak dua orang menyalakan api unggun pertama. Kini desa ini berdiri guyub, mandiri, dan penuh cerita. Terima kasih, Kepala Desa.",
+      "pembuka_tahun": {
+        "_catatan": "Pembuka khusus Rencana Desa tahun 1-8 (spec §2.4); tahun 9+ memakai pembuka umum di atas.",
+        "1": "Hari {hari}: Selamat datang di tanah baru! Tahun pertama ini sederhana saja: rumah untuk semua, menjadi dusun, dan bertahan melewati kemarau pertama bersama.",
+        "2": "Hari {hari}: Satu tahun sudah kita lewati. Tahun ini kita membangun langgar kecil dan berharap Pak Camat menyebut kita Desa Swadaya.",
+        "3": "Hari {hari}: Tahun ketiga. Desa makin ramai. Mari tumbuh menjadi kota kecil dan meraih gelar Desa Swakarya.",
+        "4": "Hari {hari}: Tahun keempat. Saatnya menyelesaikan monumen pertama dan menahan banjir dengan bendungan.",
+        "5": "Hari {hari}: Tahun kelima. Pendopo Reog menanti, lumbung harus cukup sampai kemarau usai. Kita bisa jadi Desa Swasembada!",
+        "6": "Hari {hari}: Tahun keenam. Desa ini sudah guyub. Mari selesaikan tiga monumen dan menyambut lebih banyak warga.",
+        "7": "Hari {hari}: Tahun ketujuh. Tujuh kemarau hampir terlewati. Bendungan kita sempurnakan dan gelar Teladan mulai kita kejar.",
+        "8": "Hari {hari}: Tahun kedelapan. Inilah puncaknya: semua monumen berdiri, tak seorang pun kelaparan, dan Desa Teladan Nasional di depan mata."
+      }
+    },
+    "dilema": [
+      {
+        "id": "buka_hutan",
+        "kelas": "B",
+        "judul": "Membuka Hutan",
+        "kategori": "alam",
+        "deskripsi": "Warga ingin sawah baru. Hutan di lereng dekat desa bisa dibuka, tapi para tetua mengingatkan: hutan menahan air dan tanah.",
+        "pilihan": [
+          {
+            "teks": "Biarkan hutan tetap rimbun",
+            "efek": {},
+            "teks_hasil": "Hutan tetap rimbun. Beberapa petani menghela napas, tapi para tetua tersenyum.",
+            "tertunda": [
+              {
+                "kunci": "hutan_berbuah",
+                "hari_tunda": [
+                  6,
+                  10
+                ],
+                "peluang": 0.3,
+                "efek_tertunda": {
+                  "makanan": 3
+                },
+                "teks_tertunda": "Hari {hari}: Hutan yang dijaga sejak hari {hari_keputusan} berbuah lebat. Warga pulang membawa sekeranjang buah liar."
+              }
+            ],
+            "hari_tunda": [
+              6,
+              10
+            ],
+            "teks_tertunda": "Hari {hari}: Hutan yang dijaga sejak hari {hari_keputusan} berbuah lebat. Warga pulang membawa sekeranjang buah liar."
+          },
+          {
+            "teks": "Buka 2 petak di pinggir hutan",
+            "efek": {
+              "kayu": 20
+            },
+            "teks_hasil": "Dua petak dibuka. Kayu menumpuk dan ladang baru siap ditanami.",
+            "mekanik_lain": [
+              "ladang_gratis"
+            ],
+            "tertunda": [
+              {
+                "kunci": "banjir_hulu",
+                "hari_tunda": [
+                  5,
+                  12
+                ],
+                "peluang": 0.25,
+                "efek_tertunda": {},
+                "teks_tertunda": "Hari {hari}: Air bah turun dari hulu. Hutan yang dibuka hari {hari_keputusan} tidak lagi menahan hujan.",
+                "mekanik_lain": [
+                  "banjir"
+                ]
+              }
+            ],
+            "hari_tunda": [
+              5,
+              12
+            ],
+            "teks_tertunda": "Hari {hari}: Air bah turun dari hulu. Hutan yang dibuka hari {hari_keputusan} tidak lagi menahan hujan."
+          },
+          {
+            "teks": "Buka lereng yang luas",
+            "efek": {
+              "kayu": 45
+            },
+            "teks_hasil": "Lereng terbuka lebar. Kayu melimpah dan tiga ladang baru siap, tapi babi hutan kehilangan rumahnya.",
+            "mekanik_lain": [
+              "ladang_gratis",
+              "ancaman_mult"
+            ],
+            "tertunda": [
+              {
+                "kunci": "longsor_lereng",
+                "hari_tunda": [
+                  6,
+                  14
+                ],
+                "peluang": 0.45,
+                "efek_tertunda": {
+                  "pertumbuhan_ladang": -1
+                },
+                "teks_tertunda": "Hari {hari}: Longsor! Lereng yang dibuka hari {hari_keputusan} tidak kuat menahan hujan deras.",
+                "mekanik_lain": [
+                  "longsor",
+                  "kesehatan_bangunan_dekat"
+                ]
+              }
+            ],
+            "hari_tunda": [
+              6,
+              14
+            ],
+            "teks_tertunda": "Hari {hari}: Longsor! Lereng yang dibuka hari {hari_keputusan} tidak kuat menahan hujan deras."
+          }
+        ]
+      },
+      {
+        "id": "rombongan_pendatang",
+        "kelas": "R",
+        "judul": "Rombongan Pendatang",
+        "kategori": "warga",
+        "deskripsi": "Serombongan keluarga dari desa yang kebanjiran tiba dengan wajah lelah. Mereka meminta tempat berteduh.",
+        "pilihan": [
+          {
+            "teks": "Beri singgah semalam",
+            "efek": {
+              "makanan": -2,
+              "suasana_hati": 2
+            },
+            "teks_hasil": "Rombongan menginap semalam di pendopo dan pamit pagi-pagi dengan penuh terima kasih.",
+            "tertunda": [
+              {
+                "kunci": "kiriman_terima_kasih",
+                "hari_tunda": [
+                  10,
+                  20
+                ],
+                "peluang": 0.5,
+                "efek_tertunda": {
+                  "kopi": 3,
+                  "alat": 1
+                },
+                "teks_tertunda": "Hari {hari}: Kiriman datang dari rombongan yang singgah hari {hari_keputusan}: sekantong kopi dan sebuah perkakas, dengan surat terima kasih."
+              }
+            ],
+            "hari_tunda": [
+              10,
+              20
+            ],
+            "teks_tertunda": "Hari {hari}: Kiriman datang dari rombongan yang singgah hari {hari_keputusan}: sekantong kopi dan sebuah perkakas, dengan surat terima kasih."
+          },
+          {
+            "teks": "Ajak 2 orang menetap",
+            "efek": {
+              "makanan": -4,
+              "penduduk": 2
+            },
+            "teks_hasil": "Dua orang memutuskan menetap. Mereka langsung membantu di sawah keesokan harinya.",
+            "mekanik_lain": [
+              "pendatang_sifat"
+            ],
+            "tertunda": [
+              {
+                "kunci": "kangen_kampung",
+                "hari_tunda": [
+                  7,
+                  14
+                ],
+                "peluang": 0.25,
+                "efek_tertunda": {},
+                "teks_tertunda": "Hari {hari}: Salah satu pendatang yang menetap hari {hari_keputusan} kangen kampung dan pamit baik-baik.",
+                "mekanik_lain": [
+                  "pamit_pendatang"
+                ]
+              }
+            ],
+            "hari_tunda": [
+              7,
+              14
+            ],
+            "teks_tertunda": "Hari {hari}: Salah satu pendatang yang menetap hari {hari_keputusan} kangen kampung dan pamit baik-baik."
+          },
+          {
+            "teks": "Tolak dengan sopan",
+            "efek": {},
+            "teks_hasil": "Rombongan melanjutkan perjalanan. Beberapa warga menunduk, merasa tidak enak.",
+            "tertunda": [
+              {
+                "kunci": "gosip_penolakan",
+                "hari_tunda": [
+                  5,
+                  10
+                ],
+                "peluang": 0.2,
+                "efek_tertunda": {},
+                "teks_tertunda": "Hari {hari}: Gosip soal penolakan hari {hari_keputusan} menyebar di sumur. Suasana jadi sedikit canggung.",
+                "mekanik_lain": [
+                  "rel_acak"
+                ]
+              }
+            ],
+            "hari_tunda": [
+              5,
+              10
+            ],
+            "teks_tertunda": "Hari {hari}: Gosip soal penolakan hari {hari_keputusan} menyebar di sumur. Suasana jadi sedikit canggung."
+          }
+        ]
+      },
+      {
+        "id": "pencuri_singkong",
+        "kelas": "R",
+        "judul": "Pencuri Singkong",
+        "kategori": "keamanan",
+        "deskripsi": "Seorang pemuda dari desa sebelah tertangkap mencabut singkong di tegalan. Badannya kurus, wajahnya ketakutan.",
+        "pilihan": [
+          {
+            "teks": "Maafkan dan beri bekal",
+            "efek": {
+              "makanan": -2
+            },
+            "teks_hasil": "Pemuda itu menangis dan berterima kasih. Ia pulang membawa sekantong singkong.",
+            "tertunda": [
+              {
+                "kunci": "pemuda_balas_budi",
+                "hari_tunda": [
+                  7,
+                  14
+                ],
+                "peluang": 0.4,
+                "efek_tertunda": {
+                  "kayu": 10,
+                  "batu": 5
+                },
+                "teks_tertunda": "Hari {hari}: Pemuda yang dimaafkan hari {hari_keputusan} datang lagi, kali ini membawa kayu dan batu untuk membalas budi."
+              },
+              {
+                "kunci": "mencuri_lagi",
+                "hari_tunda": [
+                  10,
+                  20
+                ],
+                "peluang": 0.15,
+                "efek_tertunda": {
+                  "makanan": -4
+                },
+                "teks_tertunda": "Hari {hari}: Singkong hilang lagi dari tegalan. Sepertinya kebaikan hari {hari_keputusan} belum cukup."
+              }
+            ],
+            "hari_tunda": [
+              7,
+              14
+            ],
+            "teks_tertunda": "Hari {hari}: Pemuda yang dimaafkan hari {hari_keputusan} datang lagi, kali ini membawa kayu dan batu untuk membalas budi."
+          },
+          {
+            "teks": "Hukum kerja bakti 3 hari",
+            "efek": {
+              "kayu": 12,
+              "batu": 6
+            },
+            "teks_hasil": "Pemuda itu bekerja tiga hari mengangkut kayu dan batu. Ia belajar, desa pun terbantu.",
+            "tertunda": [
+              {
+                "kunci": "tetangga_tersinggung",
+                "hari_tunda": [
+                  3,
+                  8
+                ],
+                "peluang": 0.3,
+                "efek_tertunda": {
+                  "harga_beli_pangan": 10
+                },
+                "teks_tertunda": "Hari {hari}: Desa sebelah tersinggung dengan hukuman hari {hari_keputusan}. Pedagang dari sana menaikkan harga."
+              }
+            ],
+            "hari_tunda": [
+              3,
+              8
+            ],
+            "teks_tertunda": "Hari {hari}: Desa sebelah tersinggung dengan hukuman hari {hari_keputusan}. Pedagang dari sana menaikkan harga."
+          },
+          {
+            "teks": "Lapor ke polisi kecamatan",
+            "efek": {
+              "suasana_hati": -2
+            },
+            "teks_hasil": "Polisi datang dan membawa pemuda itu. Desa terasa sedikit muram.",
+            "tertunda": [
+              {
+                "kunci": "ganti_rugi_polisi",
+                "hari_tunda": [
+                  3,
+                  3
+                ],
+                "peluang": 1.0,
+                "efek_tertunda": {
+                  "makanan": 2
+                },
+                "teks_tertunda": "Hari {hari}: Keluarga pemuda itu datang membayar ganti rugi atas kejadian hari {hari_keputusan}, sambil meminta maaf."
+              }
+            ],
+            "hari_tunda": [
+              3,
+              3
+            ],
+            "teks_tertunda": "Hari {hari}: Keluarga pemuda itu datang membayar ganti rugi atas kejadian hari {hari_keputusan}, sambil meminta maaf."
+          }
+        ]
+      },
+      {
+        "id": "tengkulak_padi",
+        "kelas": "B",
+        "judul": "Tengkulak Datang",
+        "kategori": "ekonomi",
+        "deskripsi": "Seorang tengkulak menawar padi desa dengan harga lumayan. \"Bayar kontan, Pak Kepala Desa!\"",
+        "pilihan": [
+          {
+            "teks": "Simpan padi untuk kemarau",
+            "efek": {},
+            "teks_hasil": "Tengkulak pergi dengan kecewa. Lumbung tetap penuh.",
+            "tertunda": [
+              {
+                "kunci": "lumbung_aman",
+                "hari_tunda": [
+                  5,
+                  12
+                ],
+                "peluang": 1.0,
+                "efek_tertunda": {
+                  "suasana_hati": 3
+                },
+                "teks_tertunda": "Hari {hari}: Kemarau datang, dan lumbung yang disimpan sejak hari {hari_keputusan} membuat warga tenang."
+              }
+            ],
+            "hari_tunda": [
+              5,
+              12
+            ],
+            "teks_tertunda": "Hari {hari}: Kemarau datang, dan lumbung yang disimpan sejak hari {hari_keputusan} membuat warga tenang."
+          },
+          {
+            "teks": "Jual 20 padi",
+            "efek": {
+              "gandum": -20,
+              "alat": 2,
+              "papan": 6
+            },
+            "teks_hasil": "Padi ditukar perkakas dan papan. Gudang jadi lebih lengkap.",
+            "tertunda": [
+              {
+                "kunci": "harga_beras_naik",
+                "hari_tunda": [
+                  9,
+                  14
+                ],
+                "peluang": 0.35,
+                "efek_tertunda": {
+                  "harga_beli_pangan": 30
+                },
+                "teks_tertunda": "Hari {hari}: Harga beras naik di kemarau. Padi yang dijual hari {hari_keputusan} kini terasa mahal untuk dibeli kembali."
+              },
+              {
+                "kunci": "timbangan_curang",
+                "hari_tunda": [
+                  1,
+                  2
+                ],
+                "peluang": 0.3,
+                "efek_tertunda": {
+                  "alat": -1
+                },
+                "teks_tertunda": "Hari {hari}: Ketahuan, timbangan tengkulak hari {hari_keputusan} ternyata tidak pas. Satu perkakas yang dijanjikan tidak pernah datang. Lain kali, ajak warga yang jujur ikut menimbang."
+              }
+            ],
+            "hari_tunda": [
+              9,
+              14
+            ],
+            "teks_tertunda": "Hari {hari}: Harga beras naik di kemarau. Padi yang dijual hari {hari_keputusan} kini terasa mahal untuk dibeli kembali."
+          },
+          {
+            "teks": "Jual 40 padi borongan",
+            "efek": {
+              "gandum": -40,
+              "alat": 4,
+              "papan": 12,
+              "kopi": 3
+            },
+            "teks_hasil": "Gerobak tengkulak penuh. Desa mendapat perkakas, papan, dan kopi.",
+            "tertunda": [
+              {
+                "kunci": "harga_beras_naik",
+                "hari_tunda": [
+                  9,
+                  14
+                ],
+                "peluang": 0.5,
+                "efek_tertunda": {
+                  "harga_beli_pangan": 30,
+                  "suasana_hati": -3
+                },
+                "teks_tertunda": "Hari {hari}: Harga beras melonjak di kemarau. Warga mulai menyesali borongan hari {hari_keputusan}."
+              },
+              {
+                "kunci": "timbangan_curang",
+                "hari_tunda": [
+                  1,
+                  2
+                ],
+                "peluang": 0.3,
+                "efek_tertunda": {
+                  "alat": -2
+                },
+                "teks_tertunda": "Hari {hari}: Borongan hari {hari_keputusan} ternyata ditimbang dengan timbangan yang tidak pas. Dua perkakas kurang dari janji. Warga menghela napas."
+              }
+            ],
+            "hari_tunda": [
+              9,
+              14
+            ],
+            "teks_tertunda": "Hari {hari}: Harga beras melonjak di kemarau. Warga mulai menyesali borongan hari {hari_keputusan}."
+          }
+        ]
+      },
+      {
+        "id": "rentenir",
+        "kelas": "B",
+        "judul": "Rentenir Menawarkan Pinjaman",
+        "kategori": "ekonomi",
+        "deskripsi": "Seorang rentenir berpeci datang menawarkan pinjaman kayu dan batu. \"Bayarnya nanti saja, bunganya kecil,\" katanya sambil tersenyum lebar.",
+        "pilihan": [
+          {
+            "teks": "Tolak, kita kerja bakti saja",
+            "efek": {},
+            "teks_hasil": "Rentenir pergi. Warga kerja bakti mengumpulkan bahan sendiri, dan hati terasa lega.",
+            "mekanik_lain": [
+              "kerja_bakti_gratis"
+            ]
+          },
+          {
+            "teks": "Pinjam sedikit",
+            "efek": {
+              "kayu": 30,
+              "batu": 20
+            },
+            "teks_hasil": "Kayu dan batu datang. Tapi ada catatan utang yang harus dibayar dalam 14 hari.",
+            "mekanik_lain": [
+              "utang"
+            ],
+            "tertunda": [
+              {
+                "kunci": "tagihan_rentenir",
+                "hari_tunda": [
+                  14,
+                  14
+                ],
+                "peluang": 1.0,
+                "efek_tertunda": {},
+                "teks_tertunda": "Hari {hari}: Rentenir datang menagih utang hari {hari_keputusan}. Jumlahnya ternyata lebih besar dari pinjaman.",
+                "usulan_dokumen": true
+              }
+            ],
+            "hari_tunda": [
+              14,
+              14
+            ],
+            "teks_tertunda": "Hari {hari}: Rentenir datang menagih utang hari {hari_keputusan}. Jumlahnya ternyata lebih besar dari pinjaman."
+          },
+          {
+            "teks": "Pinjam banyak",
+            "efek": {
+              "kayu": 60,
+              "batu": 40,
+              "papan": 10
+            },
+            "teks_hasil": "Bahan bangunan melimpah. Utang besar harus dibayar dalam 21 hari.",
+            "mekanik_lain": [
+              "utang"
+            ],
+            "tertunda": [
+              {
+                "kunci": "tagihan_rentenir",
+                "hari_tunda": [
+                  21,
+                  21
+                ],
+                "peluang": 1.0,
+                "efek_tertunda": {},
+                "teks_tertunda": "Hari {hari}: Rentenir datang menagih pinjaman besar hari {hari_keputusan}. Warga saling pandang dengan cemas.",
+                "usulan_dokumen": true
+              }
+            ],
+            "hari_tunda": [
+              21,
+              21
+            ],
+            "teks_tertunda": "Hari {hari}: Rentenir datang menagih pinjaman besar hari {hari_keputusan}. Warga saling pandang dengan cemas."
+          }
+        ]
+      },
+      {
+        "id": "tambang_pasir",
+        "kelas": "B",
+        "judul": "Tambang Pasir Kali",
+        "kategori": "alam",
+        "deskripsi": "Pasir kali bisa ditambang untuk bangunan. Seorang pengusaha dari luar juga menawarkan kerja sama.",
+        "pilihan": [
+          {
+            "teks": "Tolak, biarkan kali tetap jernih",
+            "efek": {
+              "suasana_hati": 1
+            },
+            "teks_hasil": "Kali tetap jernih. Anak-anak masih bisa mandi dan menangkap ikan."
+          },
+          {
+            "teks": "Tambang kecil oleh warga",
+            "efek": {},
+            "teks_hasil": "Warga menambang pasir sedikit demi sedikit selama seminggu.",
+            "mekanik_lain": [
+              "hasil_harian"
+            ],
+            "tertunda": [
+              {
+                "kunci": "tebing_kali_gerus",
+                "hari_tunda": [
+                  8,
+                  20
+                ],
+                "peluang": 0.3,
+                "efek_tertunda": {},
+                "teks_tertunda": "Hari {hari}: Tebing kali tergerus sejak penambangan hari {hari_keputusan}. Air lebih cepat meluap, ikan makin sedikit.",
+                "mekanik_lain": [
+                  "banjir_mult",
+                  "ikan_mult"
+                ]
+              }
+            ],
+            "hari_tunda": [
+              8,
+              20
+            ],
+            "teks_tertunda": "Hari {hari}: Tebing kali tergerus sejak penambangan hari {hari_keputusan}. Air lebih cepat meluap, ikan makin sedikit."
+          },
+          {
+            "teks": "Serahkan ke pengusaha luar",
+            "efek": {
+              "batu": 80,
+              "alat": 3,
+              "suasana_hati": -4
+            },
+            "teks_hasil": "Truk pengusaha datang dan pergi, dan sebuah amplop \"uang rokok\" terselip di meja balai. Batu dan perkakas menumpuk, tapi kali jadi keruh.",
+            "mekanik_lain": [
+              "teladan_poin",
+              "suap"
+            ],
+            "tertunda": [
+              {
+                "kunci": "kali_rusak",
+                "hari_tunda": [
+                  8,
+                  20
+                ],
+                "peluang": 0.6,
+                "efek_tertunda": {},
+                "teks_tertunda": "Hari {hari}: Kali yang ditambang sejak hari {hari_keputusan} meluap dan merusak jembatan. Ikan hampir hilang.",
+                "mekanik_lain": [
+                  "banjir",
+                  "kesehatan_jembatan",
+                  "ikan_mult"
+                ]
+              },
+              {
+                "kunci": "suap_bocor",
+                "hari_tunda": [
+                  2,
+                  6
+                ],
+                "peluang": 0.4,
+                "efek_tertunda": {
+                  "suasana_hati": -3
+                },
+                "teks_tertunda": "Hari {hari}: Kabar soal amplop dari pengusaha hari {hari_keputusan} sampai ke telinga warga yang jujur. Mereka kecewa, dan suasana desa jadi canggung.",
+                "mekanik_lain": [
+                  "rel_jujur_kades"
+                ]
+              }
+            ],
+            "hari_tunda": [
+              8,
+              20
+            ],
+            "teks_tertunda": "Hari {hari}: Kali yang ditambang sejak hari {hari_keputusan} meluap dan merusak jembatan. Ikan hampir hilang."
+          }
+        ]
+      },
+      {
+        "id": "hajatan",
+        "kelas": "B",
+        "judul": "Hajatan",
+        "kategori": "adat",
+        "deskripsi": "{nama} ingin mengadakan hajatan. Keluarganya bertanya: sederhana saja, atau besar-besaran?",
+        "pilihan": [
+          {
+            "teks": "Syukuran sederhana",
+            "efek": {
+              "makanan": -4,
+              "suasana_hati": 3
+            },
+            "teks_hasil": "Syukuran sederhana di pendopo terasa khidmat dan hangat.",
+            "mekanik_lain": [
+              "mood_aktor"
+            ]
+          },
+          {
+            "teks": "Tumpeng dan gamelan",
+            "efek": {
+              "makanan": -12,
+              "kelapa": -4,
+              "kopi": -2,
+              "suasana_hati": 10
+            },
+            "teks_hasil": "Tumpeng tinggi dan gamelan mengalun. Semua warga makan dan tertawa bersama.",
+            "mekanik_lain": [
+              "rel_semua"
+            ],
+            "tertunda": [
+              {
+                "kunci": "doa_restu",
+                "hari_tunda": [
+                  20,
+                  35
+                ],
+                "peluang": 0.3,
+                "efek_tertunda": {},
+                "teks_tertunda": "Hari {hari}: Doa restu dari hajatan hari {hari_keputusan} seolah terkabul. Keluarga {nama} sangat bahagia.",
+                "mekanik_lain": [
+                  "hamil_mult_aktor"
+                ]
+              }
+            ],
+            "hari_tunda": [
+              20,
+              35
+            ],
+            "teks_tertunda": "Hari {hari}: Doa restu dari hajatan hari {hari_keputusan} seolah terkabul. Keluarga {nama} sangat bahagia."
+          },
+          {
+            "teks": "Hajatan besar dengan reog",
+            "efek": {
+              "makanan": -20,
+              "kayu": -10,
+              "minyak": -4,
+              "suasana_hati": 18
+            },
+            "teks_hasil": "Hajatan paling meriah yang pernah ada! Penonton dari desa sebelah berdatangan.",
+            "mekanik_lain": [
+              "pendatang_mult"
+            ],
+            "tertunda": [
+              {
+                "kunci": "dapur_kosong_setelah_pesta",
+                "hari_tunda": [
+                  3,
+                  5
+                ],
+                "peluang": 0.4,
+                "efek_tertunda": {
+                  "suasana_hati": -5
+                },
+                "teks_tertunda": "Hari {hari}: Dapur terasa kosong setelah pesta hari {hari_keputusan}. Warga mulai mengencangkan ikat pinggang."
+              }
+            ],
+            "hari_tunda": [
+              3,
+              5
+            ],
+            "teks_tertunda": "Hari {hari}: Dapur terasa kosong setelah pesta hari {hari_keputusan}. Warga mulai mengencangkan ikat pinggang."
+          }
+        ]
+      },
+      {
+        "id": "tanah_warisan",
+        "kelas": "B",
+        "judul": "Tanah Warisan",
+        "kategori": "warga",
+        "deskripsi": "{nama} dan {nama2} sama-sama merasa berhak atas sepetak sawah. Keduanya datang ke kepala desa.",
+        "pilihan": [
+          {
+            "teks": "Bagi rata",
+            "efek": {},
+            "teks_hasil": "Sawah dibagi dua dengan patok bambu. Keduanya kurang puas, tapi menerima.",
+            "mekanik_lain": [
+              "rel_AB",
+              "mood_AB"
+            ]
+          },
+          {
+            "teks": "Berikan kepada yang menggarap",
+            "efek": {},
+            "teks_hasil": "{nama} mendapat sawahnya. {nama2} pulang dengan wajah merah.",
+            "mekanik_lain": [
+              "mood_A",
+              "mood_B",
+              "rel_AB",
+              "kerja_mult_A"
+            ],
+            "tertunda": [
+              {
+                "kunci": "jadi_rival",
+                "hari_tunda": [
+                  3,
+                  10
+                ],
+                "peluang": 0.5,
+                "efek_tertunda": {},
+                "teks_tertunda": "Hari {hari}: Sejak keputusan hari {hari_keputusan}, {nama} dan {nama2} saling buang muka.",
+                "mekanik_lain": [
+                  "rel_AB"
+                ]
+              }
+            ],
+            "hari_tunda": [
+              3,
+              10
+            ],
+            "teks_tertunda": "Hari {hari}: Sejak keputusan hari {hari_keputusan}, {nama} dan {nama2} saling buang muka."
+          },
+          {
+            "teks": "Musyawarah di Balai",
+            "efek": {},
+            "teks_hasil": "Musyawarah panjang di Balai, ditemani teh dan pisang goreng.",
+            "mekanik_lain": [
+              "hari_kerja_hilang_AB"
+            ],
+            "tertunda": [
+              {
+                "kunci": "musyawarah_rukun",
+                "hari_tunda": [
+                  1,
+                  1
+                ],
+                "peluang": 1.0,
+                "efek_tertunda": {
+                  "suasana_hati": 3
+                },
+                "teks_tertunda": "Hari {hari}: Musyawarah hari {hari_keputusan} membuahkan hasil. {nama} dan {nama2} bersalaman dan tertawa.",
+                "mekanik_lain": [
+                  "rel_AB",
+                  "mood_AB"
+                ]
+              }
+            ],
+            "hari_tunda": [
+              1,
+              1
+            ],
+            "teks_tertunda": "Hari {hari}: Musyawarah hari {hari_keputusan} membuahkan hasil. {nama} dan {nama2} bersalaman dan tertawa."
+          }
+        ]
+      },
+      {
+        "id": "rebutan_air",
+        "kelas": "B",
+        "judul": "Rebutan Air",
+        "kategori": "alam",
+        "deskripsi": "Air tinggal sedikit di puncak kemarau. Warga berselisih: air untuk minum atau untuk sawah?",
+        "pilihan": [
+          {
+            "teks": "Utamakan air minum",
+            "efek": {},
+            "teks_hasil": "Air minum aman. Sebagian padi terpaksa layu.",
+            "mekanik_lain": [
+              "pertumbuhan_ladang_sawah"
+            ]
+          },
+          {
+            "teks": "Giliran seperti ulu-ulu",
+            "efek": {
+              "suasana_hati": -1
+            },
+            "teks_hasil": "Ulu-ulu desa membagi giliran air dengan adil. Tidak ada yang puas sepenuhnya, tapi semua rukun.",
+            "mekanik_lain": [
+              "pertumbuhan_ladang_sawah",
+              "rel_acak3"
+            ]
+          },
+          {
+            "teks": "Utamakan sawah",
+            "efek": {
+              "air": -10
+            },
+            "teks_hasil": "Air dialirkan ke sawah. Padi selamat, tapi kendi di rumah-rumah hampir kosong.",
+            "tertunda": [
+              {
+                "kunci": "diare_kemarau",
+                "hari_tunda": [
+                  2,
+                  4
+                ],
+                "peluang": 0.4,
+                "efek_tertunda": {},
+                "teks_tertunda": "Hari {hari}: Beberapa warga minum air keruh sejak air dialirkan ke sawah hari {hari_keputusan}. Diare menyerang. Ingat, rebus air minum!",
+                "mekanik_lain": [
+                  "sakit_acak"
+                ]
+              }
+            ],
+            "hari_tunda": [
+              2,
+              4
+            ],
+            "teks_tertunda": "Hari {hari}: Beberapa warga minum air keruh sejak air dialirkan ke sawah hari {hari_keputusan}. Diare menyerang. Ingat, rebus air minum!"
+          }
+        ]
+      },
+      {
+        "id": "beringin_keramat",
+        "kelas": "B",
+        "judul": "Beringin Keramat",
+        "kategori": "adat",
+        "deskripsi": "Pohon beringin tua di tengah desa menghalangi lahan baru. Pedagang kayu sudah menawar. Para tetua menggeleng.",
+        "pilihan": [
+          {
+            "teks": "Rawat dan adakan selamatan",
+            "efek": {
+              "makanan": -3,
+              "suasana_hati": 4
+            },
+            "teks_hasil": "Selamatan kecil di bawah beringin. Akar-akarnya dibersihkan, dan anak-anak kembali berayun di sana.",
+            "mekanik_lain": [
+              "aura_beringin_mult"
+            ]
+          },
+          {
+            "teks": "Pangkas dahannya saja",
+            "efek": {
+              "kayu": 15
+            },
+            "teks_hasil": "Dahan-dahan besar dipangkas. Beringin masih berdiri, walau tidak serimbun dulu.",
+            "tertunda": [
+              {
+                "kunci": "ular_turun",
+                "hari_tunda": [
+                  2,
+                  4
+                ],
+                "peluang": 0.2,
+                "efek_tertunda": {},
+                "teks_tertunda": "Hari {hari}: Ular-ular yang dulu tinggal di dahan beringin turun ke rumah warga sejak pemangkasan hari {hari_keputusan}.",
+                "mekanik_lain": [
+                  "ancaman_mult"
+                ]
+              }
+            ],
+            "hari_tunda": [
+              2,
+              4
+            ],
+            "teks_tertunda": "Hari {hari}: Ular-ular yang dulu tinggal di dahan beringin turun ke rumah warga sejak pemangkasan hari {hari_keputusan}."
+          },
+          {
+            "teks": "Tebang beringinnya",
+            "efek": {
+              "kayu": 60,
+              "suasana_hati": -6
+            },
+            "teks_hasil": "Beringin tumbang dengan suara berdebum. Kayu melimpah, tapi tengah desa terasa gersang.",
+            "mekanik_lain": [
+              "hapus_beringin",
+              "teladan_poin"
+            ],
+            "tertunda": [
+              {
+                "kunci": "mimpi_buruk",
+                "hari_tunda": [
+                  7,
+                  14
+                ],
+                "peluang": 0.5,
+                "efek_tertunda": {},
+                "teks_tertunda": "Hari {hari}: Beberapa warga bermimpi buruk sejak beringin ditebang hari {hari_keputusan}. Desa terasa kehilangan sesuatu.",
+                "mekanik_lain": [
+                  "mood_harian"
+                ]
+              }
+            ],
+            "hari_tunda": [
+              7,
+              14
+            ],
+            "teks_tertunda": "Hari {hari}: Beberapa warga bermimpi buruk sejak beringin ditebang hari {hari_keputusan}. Desa terasa kehilangan sesuatu."
+          }
+        ]
+      },
+      {
+        "id": "obat_sakit",
+        "kelas": "R",
+        "judul": "Mengobati yang Sakit",
+        "kategori": "kesehatan",
+        "deskripsi": "Ada warga yang sakit dan belum juga membaik. Bagaimana sebaiknya mereka diobati?",
+        "pilihan": [
+          {
+            "teks": "Jamu kunyit-temulawak",
+            "efek": {
+              "makanan": -2
+            },
+            "teks_hasil": "Jamu hangat diminum pagi dan sore. Pelan-pelan yang sakit mulai pulih.",
+            "mekanik_lain": [
+              "sembuh_mult"
+            ]
+          },
+          {
+            "teks": "Panggil mantri kesehatan",
+            "efek": {
+              "alat": -1
+            },
+            "teks_hasil": "Mantri datang membawa obat dan nasihat: rebus air minum, istirahat cukup.",
+            "mekanik_lain": [
+              "sembuh_mult",
+              "mati_parah_mult"
+            ]
+          },
+          {
+            "teks": "Pijat dan suwuk Mbah Dukun",
+            "efek": {
+              "makanan": -1
+            },
+            "teks_hasil": "Mbah Dukun memijat dan berdoa. Yang sakit merasa lebih tenang.",
+            "mekanik_lain": [
+              "mood_aktor"
+            ],
+            "tertunda": [
+              {
+                "kunci": "suwuk_manjur",
+                "hari_tunda": [
+                  1,
+                  1
+                ],
+                "peluang": 0.5,
+                "efek_tertunda": {},
+                "teks_tertunda": "Hari {hari}: Yang dipijat Mbah Dukun hari {hari_keputusan} bangun lebih segar dari dugaan semua orang.",
+                "mekanik_lain": [
+                  "sembuh_mult"
+                ]
+              }
+            ],
+            "hari_tunda": [
+              1,
+              1
+            ],
+            "teks_tertunda": "Hari {hari}: Yang dipijat Mbah Dukun hari {hari_keputusan} bangun lebih segar dari dugaan semua orang."
+          }
+        ]
+      },
+      {
+        "id": "pupuk_penyuluh",
+        "kelas": "B",
+        "judul": "Penyuluh Pertanian",
+        "kategori": "pertanian",
+        "deskripsi": "Penyuluh dari kecamatan datang menawarkan pupuk kimia gratis. \"Panen pasti melimpah!\" katanya.",
+        "pilihan": [
+          {
+            "teks": "Pakai kompos sendiri",
+            "efek": {
+              "makanan": -3
+            },
+            "teks_hasil": "Warga membuat kompos dari daun dan kotoran ternak. Tanah tetap gembur.",
+            "mekanik_lain": [
+              "hasil_panen_add"
+            ]
+          },
+          {
+            "teks": "Terima pupuk kimia",
+            "efek": {},
+            "teks_hasil": "Padi tumbuh hijau pekat. Panen berikutnya terlihat menjanjikan.",
+            "mekanik_lain": [
+              "hasil_panen_mult"
+            ],
+            "tertunda": [
+              {
+                "kunci": "tanah_keras",
+                "hari_tunda": [
+                  30,
+                  45
+                ],
+                "peluang": 0.5,
+                "efek_tertunda": {},
+                "teks_tertunda": "Hari {hari}: Tanah sawah mengeras sejak pupuk kimia hari {hari_keputusan}. Kompos bisa memulihkannya pelan-pelan.",
+                "mekanik_lain": [
+                  "hasil_panen_mult"
+                ]
+              }
+            ],
+            "hari_tunda": [
+              30,
+              45
+            ],
+            "teks_tertunda": "Hari {hari}: Tanah sawah mengeras sejak pupuk kimia hari {hari_keputusan}. Kompos bisa memulihkannya pelan-pelan."
+          },
+          {
+            "teks": "Tolak dengan sopan",
+            "efek": {},
+            "teks_hasil": "Penyuluh mengangguk dan pergi. Sawah tetap seperti biasa."
+          }
+        ]
+      },
+      {
+        "id": "sekolah_kota",
+        "kelas": "B",
+        "judul": "Sekolah di Kota",
+        "kategori": "warga",
+        "deskripsi": "{nama} masih muda dan haus ilmu. Ada tawaran sekolah atau bekerja di kota.",
+        "pilihan": [
+          {
+            "teks": "Belajar di desa saja",
+            "efek": {},
+            "teks_hasil": "{nama} belajar dari para tetua dan pengrajin desa. Ilmunya bertambah setiap hari.",
+            "mekanik_lain": [
+              "skill_gain_aktor"
+            ]
+          },
+          {
+            "teks": "Sekolah di kota 28 hari",
+            "efek": {
+              "makanan": -4
+            },
+            "teks_hasil": "{nama} berangkat dengan bekal dan buku. Desa melambai mengantarnya.",
+            "mekanik_lain": [
+              "kerja_mult_aktor"
+            ],
+            "tertunda": [
+              {
+                "kunci": "pulang_sekolah",
+                "hari_tunda": [
+                  28,
+                  28
+                ],
+                "peluang": 1.0,
+                "efek_tertunda": {
+                  "progres_riset": 15
+                },
+                "teks_tertunda": "Hari {hari}: {nama} pulang dari sekolah yang dimulai hari {hari_keputusan}, membawa ilmu baru dan cerita tentang kota."
+              }
+            ],
+            "hari_tunda": [
+              28,
+              28
+            ],
+            "teks_tertunda": "Hari {hari}: {nama} pulang dari sekolah yang dimulai hari {hari_keputusan}, membawa ilmu baru dan cerita tentang kota."
+          },
+          {
+            "teks": "Merantau kerja 21 hari",
+            "efek": {},
+            "teks_hasil": "{nama} merantau ke kota untuk bekerja. Rumahnya terasa sepi.",
+            "mekanik_lain": [
+              "absen_aktor"
+            ],
+            "tertunda": [
+              {
+                "kunci": "pulang_merantau",
+                "hari_tunda": [
+                  21,
+                  21
+                ],
+                "peluang": 1.0,
+                "efek_tertunda": {
+                  "alat": 3,
+                  "kopi": 5
+                },
+                "teks_tertunda": "Hari {hari}: {nama} pulang dari rantau yang dimulai hari {hari_keputusan}, membawa perkakas dan kopi untuk desa."
+              },
+              {
+                "kunci": "betah_di_kota",
+                "hari_tunda": [
+                  21,
+                  21
+                ],
+                "peluang": 0.25,
+                "efek_tertunda": {},
+                "teks_tertunda": "Hari {hari}: Surat dari {nama}: ia betah di kota dan akan pulang seminggu lagi."
+              },
+              {
+                "kunci": "pulang_bawa_jodoh",
+                "hari_tunda": [
+                  21,
+                  28
+                ],
+                "peluang": 0.1,
+                "efek_tertunda": {
+                  "penduduk": 1
+                },
+                "teks_tertunda": "Hari {hari}: {nama} pulang dari kota bersama calon pendamping hidupnya! Desa heboh dan bahagia."
+              }
+            ],
+            "hari_tunda": [
+              21,
+              21
+            ],
+            "teks_tertunda": "Hari {hari}: {nama} pulang dari rantau yang dimulai hari {hari_keputusan}, membawa perkakas dan kopi untuk desa."
+          }
+        ]
+      },
+      {
+        "id": "kerbau_tetangga",
+        "kelas": "R",
+        "judul": "Kerbau Tetangga",
+        "kategori": "pertanian",
+        "deskripsi": "Kerbau milik desa sebelah lepas dan menginjak-injak ladang yang sedang tumbuh.",
+        "pilihan": [
+          {
+            "teks": "Selesaikan dengan damai",
+            "efek": {
+              "pertumbuhan_ladang": -0.5
+            },
+            "teks_hasil": "Kerbau dikembalikan baik-baik. Pemiliknya membungkuk berkali-kali minta maaf.",
+            "mekanik_lain": [
+              "rel_tetangga"
+            ],
+            "tertunda": [
+              {
+                "kunci": "bibit_kiriman",
+                "hari_tunda": [
+                  7,
+                  14
+                ],
+                "peluang": 0.4,
+                "efek_tertunda": {
+                  "makanan": 3
+                },
+                "teks_tertunda": "Hari {hari}: Pemilik kerbau yang lepas hari {hari_keputusan} mengirim bibit dan sekeranjang jagung."
+              }
+            ],
+            "hari_tunda": [
+              7,
+              14
+            ],
+            "teks_tertunda": "Hari {hari}: Pemilik kerbau yang lepas hari {hari_keputusan} mengirim bibit dan sekeranjang jagung."
+          },
+          {
+            "teks": "Minta ganti rugi",
+            "efek": {
+              "pertumbuhan_ladang": -0.5,
+              "makanan": 3
+            },
+            "teks_hasil": "Ganti rugi dibayar dengan jagung, tapi suasana jadi agak canggung.",
+            "tertunda": [
+              {
+                "kunci": "tetangga_marah",
+                "hari_tunda": [
+                  3,
+                  8
+                ],
+                "peluang": 0.3,
+                "efek_tertunda": {
+                  "harga_beli_pangan": 10
+                },
+                "teks_tertunda": "Hari {hari}: Desa sebelah masih kesal soal ganti rugi hari {hari_keputusan}. Harga dari pedagang mereka naik."
+              }
+            ],
+            "hari_tunda": [
+              3,
+              8
+            ],
+            "teks_tertunda": "Hari {hari}: Desa sebelah masih kesal soal ganti rugi hari {hari_keputusan}. Harga dari pedagang mereka naik."
+          },
+          {
+            "teks": "Tahan kerbaunya 3 hari untuk membajak",
+            "efek": {
+              "pertumbuhan_ladang": -0.5
+            },
+            "teks_hasil": "Kerbau itu membantu membajak sawah tiga hari. Pekerjaan jadi cepat.",
+            "mekanik_lain": [
+              "tanam_mult"
+            ],
+            "tertunda": [
+              {
+                "kunci": "pemilik_kerbau_datang",
+                "hari_tunda": [
+                  3,
+                  3
+                ],
+                "peluang": 0.5,
+                "efek_tertunda": {
+                  "suasana_hati": -3
+                },
+                "teks_tertunda": "Hari {hari}: Pemilik kerbau datang dengan wajah masam soal kerbau yang ditahan sejak hari {hari_keputusan}.",
+                "mekanik_lain": [
+                  "rel_tetangga"
+                ]
+              }
+            ],
+            "hari_tunda": [
+              3,
+              3
+            ],
+            "teks_tertunda": "Hari {hari}: Pemilik kerbau datang dengan wajah masam soal kerbau yang ditahan sejak hari {hari_keputusan}."
+          }
+        ]
+      },
+      {
+        "id": "monyet_kebun",
+        "kelas": "R",
+        "judul": "Monyet di Kebun",
+        "kategori": "pertanian",
+        "deskripsi": "Kawanan monyet sudah berkali-kali mencuri pisang dan jagung. Warga mulai kesal.",
+        "pilihan": [
+          {
+            "teks": "Pasang orang-orangan sawah",
+            "efek": {
+              "bambu": -2,
+              "sabut": -1
+            },
+            "teks_hasil": "Orang-orangan bertopi caping berdiri gagah. Monyet-monyet ragu mendekat.",
+            "mekanik_lain": [
+              "bangun_gratis"
+            ]
+          },
+          {
+            "teks": "Sisihkan pisang di tepi hutan",
+            "efek": {},
+            "teks_hasil": "Sesisir pisang diletakkan di tepi hutan. Monyet-monyet kenyang dan jarang masuk desa.",
+            "mekanik_lain": [
+              "biaya_berkala",
+              "ancaman_mult"
+            ]
+          },
+          {
+            "teks": "Pasang jerat",
+            "efek": {},
+            "teks_hasil": "Jerat dipasang di sekitar kebun. Monyet tidak datang lagi.",
+            "mekanik_lain": [
+              "ancaman_mult",
+              "teladan_poin"
+            ],
+            "tertunda": [
+              {
+                "kunci": "monyet_terluka",
+                "hari_tunda": [
+                  2,
+                  6
+                ],
+                "peluang": 0.3,
+                "efek_tertunda": {
+                  "suasana_hati": -4
+                },
+                "teks_tertunda": "Hari {hari}: Seekor anak monyet terkilir kena jerat yang dipasang hari {hari_keputusan}, lalu berhasil lepas ke hutan. Anak-anak desa sedih melihatnya."
+              }
+            ],
+            "hari_tunda": [
+              2,
+              6
+            ],
+            "teks_tertunda": "Hari {hari}: Seekor anak monyet terkilir kena jerat yang dipasang hari {hari_keputusan}, lalu berhasil lepas ke hutan. Anak-anak desa sedih melihatnya."
+          }
+        ]
+      },
+      {
+        "id": "tanggap_reog",
+        "kelas": "B",
+        "judul": "Tanggap Reog",
+        "kategori": "adat",
+        "deskripsi": "Rombongan reog keliling menawarkan pentas di desa. Warga sudah tidak sabar.",
+        "pilihan": [
+          {
+            "teks": "Tonton dari jauh saja",
+            "efek": {
+              "suasana_hati": 2
+            },
+            "teks_hasil": "Warga menonton reog yang lewat di jalan desa sebelah. Lumayan seru!"
+          },
+          {
+            "teks": "Tanggap reog di desa",
+            "efek": {
+              "makanan": -8,
+              "kopi": -2,
+              "suasana_hati": 12
+            },
+            "teks_hasil": "Dadak merak berputar di halaman pendopo! Seluruh desa bersorak dan menari.",
+            "mekanik_lain": [
+              "rel_semua",
+              "pentas_reog"
+            ]
+          },
+          {
+            "teks": "Tanggap sekalian minta diajari",
+            "efek": {
+              "makanan": -12,
+              "suasana_hati": 10
+            },
+            "teks_hasil": "Setelah pentas, para warok mengajari warga menari. Ada yang mulai bermimpi punya sanggar sendiri.",
+            "mekanik_lain": [
+              "pentas_reog",
+              "diskon_monumen"
+            ],
+            "tertunda": [
+              {
+                "kunci": "anak_belajar_menari",
+                "hari_tunda": [
+                  5,
+                  10
+                ],
+                "peluang": 0.5,
+                "efek_tertunda": {
+                  "suasana_hati": 2
+                },
+                "teks_tertunda": "Hari {hari}: Sejak pentas hari {hari_keputusan}, anak-anak berlatih menari jathil di halaman setiap sore. Para orang tua menonton sambil tersenyum.",
+                "usulan_dokumen": true
+              }
+            ],
+            "hari_tunda": [
+              5,
+              10
+            ],
+            "teks_tertunda": "Hari {hari}: Sejak pentas hari {hari_keputusan}, anak-anak berlatih menari jathil di halaman setiap sore. Para orang tua menonton sambil tersenyum."
+          }
+        ]
+      },
+      {
+        "id": "ronda_wajib",
+        "kelas": "R",
+        "judul": "Ronda Wajib",
+        "kategori": "keamanan",
+        "deskripsi": "Setelah serangan semalam, warga cemas. Perlukah ronda bergilir setiap malam?",
+        "pilihan": [
+          {
+            "teks": "Ronda bergilir 7 malam",
+            "efek": {},
+            "teks_hasil": "Jadwal ronda ditempel di pos. Kentongan terdengar setiap malam.",
+            "mekanik_lain": [
+              "ronda",
+              "ancaman_mult"
+            ]
+          },
+          {
+            "teks": "Pasang oncor di sekeliling desa",
+            "efek": {
+              "minyak": -3
+            },
+            "teks_hasil": "Oncor menyala di sekeliling desa. Malam terasa lebih terang dan aman.",
+            "mekanik_lain": [
+              "ancaman_mult"
+            ]
+          },
+          {
+            "teks": "Biarkan saja",
+            "efek": {},
+            "teks_hasil": "Semua tidur seperti biasa. Semoga malam tetap tenang.",
+            "tertunda": [
+              {
+                "kunci": "ladang_diacak",
+                "hari_tunda": [
+                  1,
+                  4
+                ],
+                "peluang": 0.3,
+                "efek_tertunda": {
+                  "pertumbuhan_ladang": -0.5
+                },
+                "teks_tertunda": "Hari {hari}: Tanpa ronda sejak hari {hari_keputusan}, babi hutan sempat mengacak-acak ladang semalam. Untung tidak ada yang terluka.",
+                "usulan_dokumen": true
+              }
+            ],
+            "hari_tunda": [
+              1,
+              4
+            ],
+            "teks_tertunda": "Hari {hari}: Tanpa ronda sejak hari {hari_keputusan}, babi hutan sempat mengacak-acak ladang semalam. Untung tidak ada yang terluka."
+          }
+        ]
+      },
+      {
+        "id": "bantu_tetangga",
+        "kelas": "B",
+        "judul": "Bantu Desa Tetangga",
+        "kategori": "warga",
+        "deskripsi": "Desa tetangga baru saja dilanda bencana. Mereka butuh bantuan.",
+        "pilihan": [
+          {
+            "teks": "Kirim bantuan makanan dan kayu",
+            "efek": {
+              "makanan": -6,
+              "kayu": -10,
+              "suasana_hati": 6
+            },
+            "teks_hasil": "Gerobak bantuan berangkat. Warga desa tetangga menyambut dengan haru.",
+            "mekanik_lain": [
+              "teladan_poin"
+            ],
+            "tertunda": [
+              {
+                "kunci": "balas_budi_tetangga",
+                "hari_tunda": [
+                  14,
+                  28
+                ],
+                "peluang": 0.6,
+                "efek_tertunda": {
+                  "alat": 2
+                },
+                "teks_tertunda": "Hari {hari}: Desa tetangga yang dibantu hari {hari_keputusan} datang membalas budi dengan perkakas dan bibit unggul.",
+                "mekanik_lain": [
+                  "hasil_panen_add"
+                ]
+              }
+            ],
+            "hari_tunda": [
+              14,
+              28
+            ],
+            "teks_tertunda": "Hari {hari}: Desa tetangga yang dibantu hari {hari_keputusan} datang membalas budi dengan perkakas dan bibit unggul."
+          },
+          {
+            "teks": "Kirim 2 tenaga selama 2 hari",
+            "efek": {},
+            "teks_hasil": "Dua warga berangkat membantu. Mereka pulang dengan cerita dan sahabat baru.",
+            "mekanik_lain": [
+              "absen_acak",
+              "rel_yang_pergi",
+              "teladan_poin"
+            ],
+            "tertunda": [
+              {
+                "kunci": "balas_budi_tetangga",
+                "hari_tunda": [
+                  14,
+                  28
+                ],
+                "peluang": 0.6,
+                "efek_tertunda": {
+                  "alat": 1
+                },
+                "teks_tertunda": "Hari {hari}: Desa tetangga mengirim perkakas sebagai ucapan terima kasih atas tenaga yang dikirim hari {hari_keputusan}."
+              }
+            ],
+            "hari_tunda": [
+              14,
+              28
+            ],
+            "teks_tertunda": "Hari {hari}: Desa tetangga mengirim perkakas sebagai ucapan terima kasih atas tenaga yang dikirim hari {hari_keputusan}."
+          },
+          {
+            "teks": "Maaf, belum bisa membantu",
+            "efek": {},
+            "teks_hasil": "Utusan desa tetangga mengangguk mengerti, lalu pulang."
+          }
+        ]
+      },
+      {
+        "id": "jalan_desa",
+        "kelas": "B",
+        "judul": "Jalan Desa",
+        "kategori": "pembangunan",
+        "deskripsi": "Jalan desa becek dan berlubang. Ada tawaran membangunnya bersama, atau membayar orang luar.",
+        "pilihan": [
+          {
+            "teks": "Nanti saja",
+            "efek": {},
+            "teks_hasil": "Jalan tetap becek. Mungkin lain waktu.",
+            "tertunda": [
+              {
+                "kunci": "tawaran_lagi",
+                "hari_tunda": [
+                  28,
+                  42
+                ],
+                "peluang": 1.0,
+                "efek_tertunda": {},
+                "teks_tertunda": "Hari {hari}: Tawaran membangun jalan desa yang ditunda hari {hari_keputusan} datang lagi."
+              }
+            ],
+            "hari_tunda": [
+              28,
+              42
+            ],
+            "teks_tertunda": "Hari {hari}: Tawaran membangun jalan desa yang ditunda hari {hari_keputusan} datang lagi."
+          },
+          {
+            "teks": "Kerja bakti sehari penuh",
+            "efek": {
+              "hari_kerja_hilang": 1,
+              "suasana_hati": 3
+            },
+            "teks_hasil": "Seluruh desa meratakan jalan dengan cangkul dan batu. Lelah, tapi bangga.",
+            "mekanik_lain": [
+              "rel_semua"
+            ],
+            "tertunda": [
+              {
+                "kunci": "aspal_datang",
+                "hari_tunda": [
+                  3,
+                  5
+                ],
+                "peluang": 1.0,
+                "efek_tertunda": {
+                  "batu": 40,
+                  "papan": 10
+                },
+                "teks_tertunda": "Hari {hari}: Kabupaten terkesan dengan kerja bakti hari {hari_keputusan} dan mengirim bahan untuk jalan desa!"
+              }
+            ],
+            "hari_tunda": [
+              3,
+              5
+            ],
+            "teks_tertunda": "Hari {hari}: Kabupaten terkesan dengan kerja bakti hari {hari_keputusan} dan mengirim bahan untuk jalan desa!"
+          },
+          {
+            "teks": "Bayar orang luar",
+            "efek": {
+              "kayu": -40,
+              "batu": -20
+            },
+            "teks_hasil": "Tukang dari luar datang dan membangun jalan dengan rapi.",
+            "tertunda": [
+              {
+                "kunci": "aspal_datang",
+                "hari_tunda": [
+                  3,
+                  5
+                ],
+                "peluang": 1.0,
+                "efek_tertunda": {},
+                "teks_tertunda": "Hari {hari}: Jalan desa yang dikerjakan sejak hari {hari_keputusan} selesai. Pedagang lebih cepat datang."
+              }
+            ],
+            "hari_tunda": [
+              3,
+              5
+            ],
+            "teks_tertunda": "Hari {hari}: Jalan desa yang dikerjakan sejak hari {hari_keputusan} selesai. Pedagang lebih cepat datang."
+          }
+        ]
+      },
+      {
+        "id": "kontrak_kopi",
+        "kelas": "B",
+        "judul": "Kontrak Kopi",
+        "kategori": "ekonomi",
+        "deskripsi": "Pedagang dari kota ingin membeli kopi desa secara rutin dengan kontrak.",
+        "pilihan": [
+          {
+            "teks": "Jual eceran seperti biasa",
+            "efek": {},
+            "teks_hasil": "Kopi tetap dijual sedikit-sedikit di pasar."
+          },
+          {
+            "teks": "Kontrak 20 kopi dalam 14 hari",
+            "efek": {},
+            "teks_hasil": "Kontrak ditandatangani. Kebun kopi harus bekerja keras.",
+            "mekanik_lain": [
+              "kontrak"
+            ],
+            "tertunda": [
+              {
+                "kunci": "kontrak_selesai",
+                "hari_tunda": [
+                  14,
+                  14
+                ],
+                "peluang": 1.0,
+                "efek_tertunda": {},
+                "teks_tertunda": "Hari {hari}: Tenggat kontrak kopi hari {hari_keputusan} tiba. Pedagang datang menagih janji.",
+                "usulan_dokumen": true
+              }
+            ],
+            "hari_tunda": [
+              14,
+              14
+            ],
+            "teks_tertunda": "Hari {hari}: Tenggat kontrak kopi hari {hari_keputusan} tiba. Pedagang datang menagih janji."
+          },
+          {
+            "teks": "Koperasi bagi hasil",
+            "efek": {},
+            "teks_hasil": "Warga membentuk koperasi kopi kecil. Hasil dibagi rata setiap dua minggu.",
+            "mekanik_lain": [
+              "kontrak"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "tikus_lumbung",
+        "kelas": "R",
+        "judul": "Tikus di Lumbung",
+        "kategori": "pertanian",
+        "deskripsi": "Tikus sawah berpesta di lumbung. Karung gabah berlubang di mana-mana!",
+        "pilihan": [
+          {
+            "teks": "Cari kucing penjaga",
+            "efek": {
+              "makanan": -2
+            },
+            "teks_hasil": "Seekor kucing belang dibawa dari desa sebelah. Tikus-tikus langsung kabur.",
+            "mekanik_lain": [
+              "tikus_mult"
+            ]
+          },
+          {
+            "teks": "Pasang racun tikus",
+            "efek": {},
+            "teks_hasil": "Racun disebar di sudut lumbung. Tikus menghilang.",
+            "mekanik_lain": [
+              "tikus_mult"
+            ],
+            "tertunda": [
+              {
+                "kunci": "keracunan",
+                "hari_tunda": [
+                  2,
+                  6
+                ],
+                "peluang": 0.25,
+                "efek_tertunda": {},
+                "teks_tertunda": "Hari {hari}: Racun tikus yang dipasang hari {hari_keputusan} termakan ayam, dan seorang warga ikut sakit perut.",
+                "mekanik_lain": [
+                  "sakit_acak",
+                  "ternak"
+                ]
+              }
+            ],
+            "hari_tunda": [
+              2,
+              6
+            ],
+            "teks_tertunda": "Hari {hari}: Racun tikus yang dipasang hari {hari_keputusan} termakan ayam, dan seorang warga ikut sakit perut."
+          },
+          {
+            "teks": "Gropyokan bareng",
+            "efek": {
+              "hari_kerja_hilang": 0.5
+            },
+            "teks_hasil": "Warga beramai-ramai memburu tikus di pematang sambil tertawa dan berteriak.",
+            "mekanik_lain": [
+              "rel_semua",
+              "tikus_mult"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "ketua_ronda",
+        "kelas": "B",
+        "judul": "Memilih Ketua Ronda",
+        "kategori": "keamanan",
+        "deskripsi": "Pos ronda butuh ketua. {nama} dan {nama2} sama-sama ingin memimpin.",
+        "pilihan": [
+          {
+            "teks": "Musyawarah, ketua bergilir",
+            "efek": {},
+            "teks_hasil": "Ketua ronda bergilir setiap minggu. Keduanya setuju dan bersalaman.",
+            "mekanik_lain": [
+              "mood_AB",
+              "rel_AB"
+            ]
+          },
+          {
+            "teks": "Pilih {nama}",
+            "efek": {},
+            "teks_hasil": "{nama} menjadi ketua ronda. {nama2} menyalami dengan senyum tipis.",
+            "mekanik_lain": [
+              "mood_A",
+              "mood_B",
+              "rel_AB",
+              "usir_mult"
+            ],
+            "tertunda": [
+              {
+                "kunci": "iri_jabatan",
+                "hari_tunda": [
+                  5,
+                  10
+                ],
+                "peluang": 0.4,
+                "efek_tertunda": {},
+                "teks_tertunda": "Hari {hari}: {nama2} masih iri sejak {nama} dipilih jadi ketua ronda hari {hari_keputusan}.",
+                "mekanik_lain": [
+                  "rel_AB"
+                ]
+              }
+            ],
+            "hari_tunda": [
+              5,
+              10
+            ],
+            "teks_tertunda": "Hari {hari}: {nama2} masih iri sejak {nama} dipilih jadi ketua ronda hari {hari_keputusan}."
+          },
+          {
+            "teks": "Pilih {nama2}",
+            "efek": {},
+            "teks_hasil": "{nama2} menjadi ketua ronda. Pos ronda jadi ramai canda.",
+            "mekanik_lain": [
+              "mood_B",
+              "mood_A",
+              "rel_AB",
+              "mood_harian"
+            ],
+            "tertunda": [
+              {
+                "kunci": "iri_jabatan",
+                "hari_tunda": [
+                  5,
+                  10
+                ],
+                "peluang": 0.4,
+                "efek_tertunda": {},
+                "teks_tertunda": "Hari {hari}: {nama} masih iri sejak {nama2} dipilih jadi ketua ronda hari {hari_keputusan}.",
+                "mekanik_lain": [
+                  "rel_AB"
+                ]
+              }
+            ],
+            "hari_tunda": [
+              5,
+              10
+            ],
+            "teks_tertunda": "Hari {hari}: {nama} masih iri sejak {nama2} dipilih jadi ketua ronda hari {hari_keputusan}."
+          }
+        ]
+      },
+      {
+        "id": "penebang_liar",
+        "kelas": "B",
+        "judul": "Penebang Liar",
+        "kategori": "alam",
+        "deskripsi": "Malam-malam terdengar suara gergaji dari hutan jati. Ada penebang liar!",
+        "pilihan": [
+          {
+            "teks": "Tegur baik-baik",
+            "efek": {},
+            "teks_hasil": "Para penebang minta maaf dan pergi.",
+            "tertunda": [
+              {
+                "kunci": "penebang_kembali",
+                "hari_tunda": [
+                  7,
+                  14
+                ],
+                "peluang": 0.3,
+                "efek_tertunda": {},
+                "teks_tertunda": "Hari {hari}: Penebang yang ditegur hari {hari_keputusan} kembali lagi diam-diam.",
+                "mekanik_lain": [
+                  "node_kayu"
+                ]
+              }
+            ],
+            "hari_tunda": [
+              7,
+              14
+            ],
+            "teks_tertunda": "Hari {hari}: Penebang yang ditegur hari {hari_keputusan} kembali lagi diam-diam."
+          },
+          {
+            "teks": "Lapor ke Perhutani",
+            "efek": {},
+            "teks_hasil": "Laporan dikirim ke Perhutani.",
+            "tertunda": [
+              {
+                "kunci": "perhutani_datang",
+                "hari_tunda": [
+                  5,
+                  7
+                ],
+                "peluang": 1.0,
+                "efek_tertunda": {
+                  "kayu": 10
+                },
+                "teks_tertunda": "Hari {hari}: Petugas Perhutani datang menindaklanjuti laporan hari {hari_keputusan} dan berterima kasih dengan sedikit kayu.",
+                "mekanik_lain": [
+                  "jati_regrow_mult"
+                ]
+              }
+            ],
+            "hari_tunda": [
+              5,
+              7
+            ],
+            "teks_tertunda": "Hari {hari}: Petugas Perhutani datang menindaklanjuti laporan hari {hari_keputusan} dan berterima kasih dengan sedikit kayu."
+          },
+          {
+            "teks": "Beli kayu murah dari mereka",
+            "efek": {
+              "kayu": 30,
+              "makanan": -6
+            },
+            "teks_hasil": "Kayu murah didapat, tapi hati warga tidak tenang.",
+            "tertunda": [
+              {
+                "kunci": "hutan_gundul",
+                "hari_tunda": [
+                  14,
+                  21
+                ],
+                "peluang": 0.5,
+                "efek_tertunda": {},
+                "teks_tertunda": "Hari {hari}: Hutan jati makin gundul sejak hari {hari_keputusan}. Lereng jadi rawan longsor.",
+                "mekanik_lain": [
+                  "node_jati",
+                  "longsor_add",
+                  "teladan_poin"
+                ]
+              }
+            ],
+            "hari_tunda": [
+              14,
+              21
+            ],
+            "teks_tertunda": "Hari {hari}: Hutan jati makin gundul sejak hari {hari_keputusan}. Lereng jadi rawan longsor."
+          }
+        ]
+      },
+      {
+        "id": "minta_hujan",
+        "kelas": "R",
+        "judul": "Memohon Hujan",
+        "kategori": "alam",
+        "deskripsi": "Kemarau panjang. Sumur hampir kering. Warga berkumpul menunggu keputusan.",
+        "pilihan": [
+          {
+            "teks": "Sholat istisqa dan doa bersama",
+            "efek": {
+              "suasana_hati": 5,
+              "hari_kerja_hilang": 0.1
+            },
+            "teks_hasil": "Seluruh desa berdoa bersama di lapangan. Hati terasa lebih ringan.",
+            "mekanik_lain": [
+              "rel_semua"
+            ],
+            "tertunda": [
+              {
+                "kunci": "gerimis_doa",
+                "hari_tunda": [
+                  1,
+                  3
+                ],
+                "peluang": 0.35,
+                "efek_tertunda": {
+                  "air": 10
+                },
+                "teks_tertunda": "Hari {hari}: Gerimis turun, seolah menjawab doa bersama hari {hari_keputusan}. Warga menengadah sambil tersenyum.",
+                "mekanik_lain": [
+                  "kekeringan_selesai"
+                ]
+              }
+            ],
+            "hari_tunda": [
+              1,
+              3
+            ],
+            "teks_tertunda": "Hari {hari}: Gerimis turun, seolah menjawab doa bersama hari {hari_keputusan}. Warga menengadah sambil tersenyum."
+          },
+          {
+            "teks": "Gali sumur lebih dalam",
+            "efek": {
+              "kayu": -10,
+              "batu": -15,
+              "energi": -10
+            },
+            "teks_hasil": "Sumur digali lebih dalam seharian. Mata air baru memancar!",
+            "mekanik_lain": [
+              "sumur_kemarau_add"
+            ]
+          },
+          {
+            "teks": "Beli air dari desa sebelah",
+            "efek": {
+              "makanan": -4,
+              "air": 25
+            },
+            "teks_hasil": "Gerobak tong air datang dari desa sebelah. Kendi-kendi kembali penuh."
+          }
+        ]
+      }
+    ],
+    "dilema_ui": {
+      "judul": "Keputusan Kepala Desa",
+      "petunjuk_tertunda": "⏳ Mungkin ada akibatnya nanti",
+      "tombol_musyawarah": "Musyawarah",
+      "musyawarah_tooltip": "Tunda keputusan sehari untuk bermusyawarah di Balai. Warga makin akrab, tapi hasil terbaik sedikit berkurang.",
+      "musyawarah_log": [
+        "Hari {hari}: Warga bermusyawarah di Balai sampai larut. Keputusan akan diambil besok pagi."
+      ],
+      "riwayat": "Riwayat keputusan",
+      "riwayat_hari": "Hari {hari_keputusan}",
+      "kategori": {
+        "alam": "Alam & Lingkungan",
+        "warga": "Urusan Warga",
+        "keamanan": "Keamanan",
+        "ekonomi": "Ekonomi",
+        "adat": "Adat & Budaya",
+        "kesehatan": "Kesehatan",
+        "pertanian": "Pertanian",
+        "pembangunan": "Pembangunan"
+      },
+      "reaksi_sifat": {
+        "_catatan": "Log reaksi sifat pada dilema (spec §3.1 reaksi). {nama} = penduduk bersifat itu, {sifat} = nama sifat (meta/sifat).",
+        "senang": [
+          "Hari {hari}: {nama} yang {sifat} tersenyum puas dengan keputusan kepala desa.",
+          "Hari {hari}: \"Keputusan yang bagus,\" kata {nama} yang {sifat}."
+        ],
+        "kecewa": [
+          "Hari {hari}: {nama} yang {sifat} terlihat kecewa dengan keputusan itu.",
+          "Hari {hari}: {nama} yang {sifat} menghela napas panjang. Ia kurang setuju."
+        ]
+      }
+    },
+    "momen_kecil": {
+      "_catatan": "MOMEN_KECIL (spec §3.4): pilihan cepat tanpa biaya sumber daya (hanya mood/hubungan); opsi pertama selalu netral. Angka di balance.js; catatan_efek = ringkasan spec.",
+      "nama_api": {
+        "judul": "Nama untuk Api Unggun",
+        "deskripsi": "Warga ingin memberi nama untuk api unggun tempat mereka berkumpul setiap malam.",
+        "pilihan": [
+          {
+            "teks": "\"Geni Rukun\"",
+            "teks_hasil": "Mulai malam ini, api unggun itu bernama Geni Rukun. Semua bertepuk tangan."
+          },
+          {
+            "teks": "\"Api Mbah Buyut\"",
+            "teks_hasil": "Api itu dinamai untuk mengenang para leluhur. Warga yang religius tersenyum haru."
+          },
+          {
+            "teks": "Biarkan tanpa nama",
+            "teks_hasil": "\"Api ya api,\" kata seseorang sambil tertawa. Malam berlanjut seperti biasa."
+          }
+        ],
+        "catatan_efek": "Geni Rukun +1 semua / Api Mbah Buyut religius +2 / biarkan 0"
+      },
+      "lagu_malam": {
+        "judul": "Lagu Malam Ini",
+        "deskripsi": "Di dekat api unggun, warga bertanya: lagu apa yang dinyanyikan malam ini?",
+        "pilihan": [
+          {
+            "teks": "Campursari",
+            "teks_hasil": "Lagu campursari mengalun, dan beberapa orang mulai bergoyang pelan."
+          },
+          {
+            "teks": "Lagu dolanan anak",
+            "teks_hasil": "\"Cublak-cublak suweng...\" Anak-anak tertawa riang dan orang tua ikut bernyanyi."
+          },
+          {
+            "teks": "Tembang macapat",
+            "teks_hasil": "Suara tembang macapat yang lembut membuat malam terasa syahdu."
+          }
+        ],
+        "catatan_efek": "campursari +1 / dolanan anak: anak & suka_menolong +3 / macapat seniman +3"
+      },
+      "gubuk_pertama": {
+        "judul": "Siapa Tidur di Gubuk Baru?",
+        "deskripsi": "Gubuk baru sudah jadi. Siapa yang boleh tidur di sana duluan?",
+        "pilihan": [
+          {
+            "teks": "Yang paling lelah",
+            "teks_hasil": "Yang paling capek tidur nyenyak sekali malam ini. Besok ia bangun segar bugar."
+          },
+          {
+            "teks": "Yang paling tua",
+            "teks_hasil": "Warga tertua tersenyum malu-malu dan berterima kasih."
+          },
+          {
+            "teks": "Diundi saja",
+            "teks_hasil": "Undian pakai lidi pendek-panjang. Semua tertawa melihat hasilnya."
+          }
+        ],
+        "catatan_efek": "paling lelah energi +10 / tertua +3 / undian rel +1 semua"
+      },
+      "ayam_jago": {
+        "judul": "Ayam Jago Pukul Tiga",
+        "deskripsi": "Ayam jago tetangga berkokok tiap jam tiga pagi. Ada yang kesal, ada yang tidak terganggu.",
+        "pilihan": [
+          {
+            "teks": "Biarkan saja",
+            "teks_hasil": "Ayam jago tetap berkokok. Lama-lama warga terbiasa."
+          },
+          {
+            "teks": "Tegur pemiliknya dengan halus",
+            "teks_hasil": "Pemiliknya minta maaf dan memindahkan kandang. Yang pemarah lega, yang sabar merasa sedikit tidak enak."
+          },
+          {
+            "teks": "Jadikan alarm subuh",
+            "teks_hasil": "\"Lumayan, jadi tidak kesiangan!\" Warga bangun sedikit lebih pagi beberapa hari."
+          }
+        ],
+        "catatan_efek": "biarkan 0 / tegur pemarah +2, sabar -1 / alarm bangun lebih awal 3 hari"
+      },
+      "jenang_suro": {
+        "judul": "Bikin Jenang",
+        "deskripsi": "Ada yang ingin membuat jenang bersama-sama di dapur.",
+        "pilihan": [
+          {
+            "teks": "Nanti saja",
+            "teks_hasil": "Rencana membuat jenang ditunda. Mungkin lain waktu."
+          },
+          {
+            "teks": "Bikin bareng-bareng",
+            "teks_hasil": "Jenang diaduk bergantian sampai kental dan legit. Semua yang membantu makin akrab."
+          }
+        ],
+        "catatan_efek": "nanti 0 / bikin bareng rel +2 peserta (makanan -1 hanya mulai hari 25)"
+      },
+      "cerita_hantu": {
+        "judul": "Cerita Genderuwo",
+        "deskripsi": "Malam Jumat. Anak-anak muda ingin bercerita tentang genderuwo di dekat api unggun.",
+        "pilihan": [
+          {
+            "teks": "Larang dulu",
+            "teks_hasil": "\"Sudah malam, tidur saja,\" kata para tetua. Anak-anak muda menggerutu kecil."
+          },
+          {
+            "teks": "Boleh, asal jangan terlalu seram",
+            "teks_hasil": "Yang jahil dan periang tertawa terbahak-bahak, yang penakut menempel ke temannya sepanjang malam."
+          },
+          {
+            "teks": "Ganti dongeng Kancil",
+            "teks_hasil": "Dongeng Kancil mencuri timun membuat anak-anak tertawa sampai tertidur."
+          }
+        ],
+        "catatan_efek": "larang 0 / boleh jahil +3, periang +2, penakut -3 / Kancil anak +2"
+      },
+      "burung_perkutut": {
+        "judul": "Perkutut di Pos Ronda",
+        "deskripsi": "Seekor burung perkutut liar hinggap di pos ronda dan bersuara merdu.",
+        "pilihan": [
+          {
+            "teks": "Biarkan terbang",
+            "teks_hasil": "Perkutut bersenandung sebentar, lalu terbang ke pohon beringin."
+          },
+          {
+            "teks": "Pelihara di sangkar bambu",
+            "teks_hasil": "Suara perkutut kini menemani pagi. Warga yang sabar senang mendengarkannya berlama-lama."
+          },
+          {
+            "teks": "Lepaskan sambil berdoa",
+            "teks_hasil": "Burung dilepas dengan doa kecil. Warga yang religius merasa tenteram."
+          }
+        ],
+        "catatan_efek": "biarkan 0 / pelihara sabar +3 / lepas religius +2"
+      },
+      "hujan_main": {
+        "judul": "Main Lumpur Saat Hujan Pertama",
+        "deskripsi": "Hujan pertama turun. Anak-anak ingin main lumpur di halaman.",
+        "pilihan": [
+          {
+            "teks": "Larang, nanti masuk angin",
+            "teks_hasil": "Anak-anak menonton hujan dari teras dengan wajah cemberut."
+          },
+          {
+            "teks": "Biarkan mereka bermain",
+            "teks_hasil": "Anak-anak berguling di lumpur sambil tertawa. Orang tua ikut tersenyum, lalu menyiapkan air hangat."
+          }
+        ],
+        "catatan_efek": "larang 0 / biarkan anak +4, orang tua suka_menolong +2, peluang masuk angin 0.03"
+      },
+      "gosip_pagi": {
+        "judul": "Gosip Pagi",
+        "deskripsi": "Di dekat sumur, {nama} sedang menggosipkan {nama2}.",
+        "pilihan": [
+          {
+            "teks": "Diamkan saja",
+            "teks_hasil": "Gosip pagi berlalu seperti angin."
+          },
+          {
+            "teks": "Tegur dengan halus",
+            "teks_hasil": "{nama} tersipu malu dan minta maaf. Hubungannya dengan {nama2} malah membaik."
+          },
+          {
+            "teks": "Ikut tertawa",
+            "teks_hasil": "Semua tertawa bersama {nama}, tapi {nama2} sedikit tersinggung."
+          }
+        ],
+        "catatan_efek": "diamkan 0 / tegur jahil -3, rel nama-nama2 +2 / ikut tertawa rel penggosip +2, sasaran -3"
+      },
+      "teh_tubruk": {
+        "judul": "Teh untuk Pekerja",
+        "deskripsi": "Siang terik. Siapa yang mau menyeduh teh tubruk untuk para pekerja?",
+        "pilihan": [
+          {
+            "teks": "Tidak usah",
+            "teks_hasil": "Para pekerja minum air kendi saja. Cukup menyegarkan."
+          },
+          {
+            "teks": "{nama} saja",
+            "teks_hasil": "{nama} menyeduh teh tubruk manis. Rekan-rekan kerjanya berterima kasih."
+          }
+        ],
+        "catatan_efek": "tidak usah 0 / nama rel +2 dengan rekan kerja"
+      },
+      "mimpi_panen": {
+        "judul": "Mimpi Panen Besar",
+        "deskripsi": "{nama} bermimpi sawah desa menguning sampai ke kaki gunung.",
+        "pilihan": [
+          {
+            "teks": "Tertawakan saja",
+            "teks_hasil": "\"Mimpi kok dipercaya,\" kata yang lain sambil tertawa."
+          },
+          {
+            "teks": "Anggap pertanda baik",
+            "teks_hasil": "Para petani bersemangat. \"Semoga panen kita melimpah!\""
+          }
+        ],
+        "catatan_efek": "tertawakan 0 / pertanda ahli_tani +3"
+      },
+      "kentongan_iseng": {
+        "judul": "Kentongan Iseng",
+        "deskripsi": "Anak-anak memukul kentongan pos ronda iseng-iseng. Warga sempat panik!",
+        "pilihan": [
+          {
+            "teks": "Maafkan saja",
+            "teks_hasil": "Anak-anak minta maaf sambil menunduk. Warga tertawa lega."
+          },
+          {
+            "teks": "Ajari kode kentongan",
+            "teks_hasil": "Para peronda mengajari arti setiap irama: aman, waspada, bahaya. Anak-anak mendengarkan dengan serius."
+          }
+        ],
+        "catatan_efek": "maafkan 0 / ajari: peringatan ancaman berikutnya sedikit lebih awal (sekali)"
+      }
+    }
+  },
+  "set_meta": {
+    "versi": "1.5.0"
+  }
+}

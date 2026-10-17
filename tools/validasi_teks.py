@@ -1,7 +1,8 @@
-"""Validasi TEKS-GAME.json v1.4.0 terhadap backup v1.0.0 (+allowlist tuning), v1.1.0, v1.2.0, v1.3.0.
+"""Validasi TEKS-GAME.json v1.5.0 terhadap backup v1.0.0 (+allowlist tuning), v1.1.0, v1.2.0, v1.3.0, v1.4.0.
 Sejak v1.4.0 (lokalisasi Indonesia) teks tampilan boleh berubah, tetapi semua key/struktur, semua angka/boolean, dan semua
 string berjenis id (id, tipe, target, era, musim, prasyarat, event_terkait, ...) harus tetap sama; placeholder teks yang berubah
-tidak boleh bertambah. Ditambah: cek kata terlarang (salju, serigala, harimau, ...) di semua teks tampilan, dan bagian baru v1.4."""
+tidak boleh bertambah. Ditambah: cek kata terlarang (salju, serigala, harimau, ...) di semua teks tampilan, dan bagian baru v1.4/v1.5.
+v1.5.0 (tokoh, cerita, tujuan) hanya menambah: bagian baru, entri meta, dan pencapaian A25-A32 (satu-satunya list lama yang boleh bertambah)."""
 import json, re, sys
 ROOT = "/workspace/village-game/"
 new = json.load(open(ROOT + "TEKS-GAME.json", encoding="utf-8"))
@@ -18,6 +19,7 @@ for (sec, id_, fld, i, key), val in TUNING_V10.items():
 ID_KEYS = {"id", "tipe", "target", "era", "cabang", "id_bangunan", "kategori", "musim", "prasyarat", "event_terkait", "syarat_tambahan",
            "syarat", "tujuan", "hasil", "id_kode", "urutan", "pilihan_index", "rahasia", "status_tech", "status_musim_ancaman",
            "status_jadwal_keluarga", "bahasa", "encoding"}
+LIST_BOLEH_TAMBAH = {"/pencapaian"}  # v1.5: A25-A32 ditambahkan di akhir (item lama tetap dibandingkan)
 PH = lambda t: set(re.findall(r"\{(\w+)\}", t))
 teks_diubah = []
 def sub(a, b, p, idk=False):
@@ -29,7 +31,7 @@ def sub(a, b, p, idk=False):
             elif p + "/" + k != "/meta/versi": sub(a[k], b[k], p + "/" + k, idk or (k in ID_KEYS and not (isinstance(a[k], list) and a[k] and isinstance(a[k][0], dict))))
     elif isinstance(a, list):
         if not isinstance(b, list) or len(b) < len(a): err.append(f"list dipendekkan/berubah tipe: {p}"); return
-        if len(b) > len(a) and not p.startswith("/meta/"): err.append(f"list lama bertambah di luar meta: {p}")
+        if len(b) > len(a) and not p.startswith("/meta/") and p not in LIST_BOLEH_TAMBAH: err.append(f"list lama bertambah di luar meta: {p}")
         for i, x in enumerate(a): sub(x, b[i], f"{p}[{i}]", idk)
     elif isinstance(a, str) and isinstance(b, str) and not idk:
         if a != b:
@@ -37,7 +39,7 @@ def sub(a, b, p, idk=False):
             teks_diubah.append(p)
     elif type(a) != type(b) or a != b: err.append(f"nilai/id berubah: {p} ({a!r} -> {b!r})")
 sub(old, new, "")
-if new["meta"]["versi"] != "1.4.0": err.append("meta.versi bukan 1.4.0")
+if new["meta"]["versi"] != "1.5.0": err.append("meta.versi bukan 1.5.0")
 for k in old:
     if list(new).index(k) != list(old).index(k): err.append(f"urutan key top-level berubah: {k}")
 m = new["meta"]
@@ -61,7 +63,10 @@ def cek_tujuan(g, src):
         return
     ok = {"bangun": tg in BID and tg in m["bangunan"], "kumpulkan": tg in m["sumber_daya"], "simpan": tg in m["sumber_daya"],
           "capai_era": tg in m["era"], "panen": tg in m["bangunan"], "riset": tg == "semua" or tg in tech_ids, "lewati_musim": tg in musim,
-          "pilih_event": tg in ev_ids, "alami_event": tg in ev_ids}.get(t, tg in khusus)
+          "pilih_event": tg in ev_ids, "alami_event": tg in ev_ids,
+          "cerita_selesai": tg in new.get("cerita", {}), "lomba_menang": tg in new.get("agustusan", {}).get("lomba", {}),
+          "keinginan_khusus": tg in new.get("keinginan", {}), "gelar_teladan": tg in new.get("teladan", {}).get("gelar", {}),
+          "monumen_selesai": tg == "semua" or tg in new.get("monumen", {})}.get(t, tg in khusus)
     if not ok: err.append(f"target {tg} tidak valid untuk {t} @ {src}")
     if not isinstance(g.get("jumlah"), int) or g["jumlah"] < 1: err.append(f"jumlah tidak valid @ {src}")
     if t == "pilih_event":
@@ -276,6 +281,151 @@ for old_id in al.get("event", {}):
     if old_id not in ev_ids: err.append(f"alias event lama {old_id} tidak ada (id lama tidak boleh dihapus)")
 for old_id in al.get("musim", {}):
     if old_id not in musim: err.append(f"alias musim lama {old_id} tidak ada")
+# ---------- struktur & angka v1.4.0 utuh ----------
+old14 = json.load(open(ROOT + "tools/TEKS-GAME.v1.4.0.json", encoding="utf-8"))
+teks_diubah.clear(); _n = len(err); sub(old14, new, "")
+if len(err) > _n: err.insert(_n, "^ perbedaan struktur/angka terhadap v1.4.0:")
+if teks_diubah: err.append(f"v1.5 hanya penambahan, tetapi {len(teks_diubah)} teks v1.4 berubah, mis. {teks_diubah[:3]}")
+for k in old14:
+    if list(new).index(k) != list(old14).index(k): err.append(f"urutan key top-level v1.4 berubah: {k}")
+for sec in old14["meta"]:
+    if isinstance(old14["meta"][sec], dict) and list(new["meta"][sec])[:len(old14["meta"][sec])] != list(old14["meta"][sec]): err.append(f"urutan meta.{sec} berubah (v1.4)")
+if aids[len(old14["pencapaian"]):] != ["A%02d" % i for i in range(25, 35)]: err.append("pencapaian baru v1.5 harus A25-A34 di akhir")
+# ---------- v1.5.0: tokoh, cerita & tujuan (spec docs/RISET-CERITA-TUJUAN.md) ----------
+V15 = ["sifat", "hubungan", "keinginan", "cerita", "monumen", "kerja_bakti", "teladan", "agustusan", "rencana_tahun", "dilema", "dilema_ui", "momen_kecil"]
+for k in V15:
+    if k not in new: err.append(f"bagian v1.5 hilang: {k}")
+if m.get("status_cerita_tujuan") != "mengikuti_riset": err.append("meta.status_cerita_tujuan harus 'mengikuti_riset'")
+for k in ("sumber_cerita_tujuan", "kunci_efek_dilema_lain", "peta_spec_v150"):
+    if k not in m: err.append(f"meta.{k} hilang")
+for k in ("{hari_keputusan}", "{gelar}", "{monumen}", "{tahap}", "{lomba}", "{keinginan}", "{pasaran}", "{sifat}", "{pasangan}"):
+    if k not in m["placeholder"]: err.append(f"placeholder v1.5 tidak terdaftar: {k}")
+ids = lambda d: [k for k in d if not k.startswith("_") and k not in ("log_sifat", "_ui")]
+SPEC_SIFAT = ["rajin", "malas", "pemberani", "penakut", "periang", "pemurung", "ramah", "pemarah", "sabar", "dermawan", "pelit", "suka_menolong",
+              "jujur", "jahil", "cerdas", "religius", "perantau", "ahli_tani", "pandai_masak", "seniman"]  # spec §1.1 revisi 12:12
+SIFAT_BENTROK = [("rajin", "malas"), ("pemberani", "penakut"), ("periang", "pemurung"), ("sabar", "pemarah"), ("dermawan", "pelit"), ("jujur", "jahil")]
+SPEC_KEINGINAN = ["makan_rendang", "nasi_pecel", "kopi_pagi", "rumah_panggung", "nonton_reog", "tabungan_haji", "mancing_sore", "punya_ayam",
+                  "baju_baru", "ziarah_makam", "wayang_semalam", "tidur_siang", "kerja_bakti", "ngobrol_sahabat", "punya_anak", "sawah_menguning",
+                  "jajan_pasar", "belajar_gamelan", "rujak_bareng", "bancakan_weton", "pulang_kampung", "ronda_malam", "main_layangan",
+                  "menang_lomba", "tumpeng_syukuran", "mandi_kali"]
+SPEC_CERITA = ["warok_muda", "surat_kota", "resep_nenek", "penakut_babi", "kucing_belang", "cinta_segitiga", "bidan_desa", "kopi_pertama",
+               "rival_sawah", "mbah_pendongeng"]
+SPEC_MONUMEN = {"masjid": 3, "balai_megah": 3, "bendungan": 4, "pendopo_reog": 3, "pasar_legi": 3}
+SPEC_LOMBA = ["balap_karung", "makan_kerupuk", "tarik_tambang", "panjat_pinang", "bakiak", "kelereng_sendok", "hias_gapura", "pawai_reog"]
+SPEC_DILEMA = ["buka_hutan", "rombongan_pendatang", "pencuri_singkong", "tengkulak_padi", "rentenir", "tambang_pasir", "hajatan", "tanah_warisan",
+               "rebutan_air", "beringin_keramat", "obat_sakit", "pupuk_penyuluh", "sekolah_kota", "kerbau_tetangga", "monyet_kebun", "tanggap_reog",
+               "ronda_wajib", "bantu_tetangga", "jalan_desa", "kontrak_kopi", "tikus_lumbung", "ketua_ronda", "penebang_liar", "minta_hujan"]
+SPEC_MOMEN = ["nama_api", "lagu_malam", "gubuk_pertama", "ayam_jago", "jenang_suro", "cerita_hantu", "burung_perkutut", "hujan_main",
+              "gosip_pagi", "teh_tubruk", "mimpi_panen", "kentongan_iseng"]
+PANGAN = ("makanan", "gandum", "buah", "ikan", "daging")
+if all(k in new for k in V15):
+    S5 = new["sifat"]
+    if ids(S5) != SPEC_SIFAT: err.append("sifat != TRAITS spec (20 id, urutan spec)")
+    for k in ids(S5):
+        if not (S5[k].get("nama") and S5[k].get("kata") and S5[k].get("deskripsi") and S5[k].get("tooltip") and S5[k].get("log_terlihat")): err.append(f"sifat.{k} tidak lengkap")
+    for need in ("jahil_kejahilan", "ramah_sambutan", "jujur_tolak_suap", "jujur_suap_diterima", "jujur_timbangan"):
+        if not S5.get("log_sifat", {}).get(need): err.append(f"sifat.log_sifat.{need} kosong")
+    PS = m.get("peta_sifat_penduduk", {})
+    for pd in new["penduduk"]:
+        tr = PS.get(pd["nama"])
+        if not tr: err.append(f"peta_sifat_penduduk tidak memuat {pd['nama']}"); continue
+        if not set(tr) <= set(SPEC_SIFAT) or not 1 <= len(tr) <= 3: err.append(f"peta_sifat_penduduk.{pd['nama']} id tidak valid")
+        if any(a in tr and b in tr for a, b in SIFAT_BENTROK): err.append(f"peta_sifat_penduduk.{pd['nama']} sifat bentrok")
+    if sum(1 for k in m["placeholder"] if "sifat" in k) != 1: err.append("placeholder sifat harus satu saja ({sifat}, sejak v1.2)")
+    H5 = new["hubungan"]
+    if not {"rival", "kenalan", "teman", "sahabat", "pasangan"} <= set(H5["tingkat"]): err.append("hubungan.tingkat kurang tingkat RELATION")
+    for need in ("menjadi_teman", "menjadi_sahabat", "menjadi_rival", "bertengkar", "berbaikan", "jatuh_cinta", "gosip", "hadiah", "ronda_bareng"):
+        if len(H5["log"].get(need, [])) < 2: err.append(f"hubungan.log.{need} kurang dari 2 variasi")
+    for t in H5["log"].get("jatuh_cinta", []):
+        if "{pasangan}" not in t: err.append("hubungan.log.jatuh_cinta harus memakai {pasangan} (selaras log_hubungan v1.3)")
+    for need in ("menjadi_teman", "bertengkar", "berbaikan"):
+        for t in H5["log"].get(need, []):
+            if "{nama}" not in t or "{nama2}" not in t: err.append(f"hubungan.log.{need} harus memakai {{nama}} & {{nama2}}")
+    K5 = new["keinginan"]
+    if ids(K5) != SPEC_KEINGINAN: err.append("keinginan != WISHES spec (26 id)")
+    for k in ids(K5):
+        for f in ("judul", "deskripsi", "teks_muncul", "teks_terpenuhi", "teks_kecewa"):
+            if not K5[k].get(f): err.append(f"keinginan.{k}.{f} kosong")
+    C5 = new["cerita"]
+    if ids(C5) != SPEC_CERITA: err.append("cerita != STORY_CHAINS spec (10 id)")
+    for k in ids(C5):
+        L = C5[k]["langkah"]
+        if not 3 <= len(L) <= 4: err.append(f"cerita.{k} harus 3-4 langkah")
+        if not C5[k].get("judul") or not C5[k].get("selesai"): err.append(f"cerita.{k} judul/selesai kosong")
+        for i, st in enumerate(L):
+            if not st.get("teks"): err.append(f"cerita.{k}.langkah[{i}] teks kosong")
+            for j, pl in enumerate(st.get("pilihan", [])):
+                if set(pl) != {"teks", "teks_hasil"}: err.append(f"cerita.{k}.langkah[{i}].pilihan[{j}] struktur")
+    M5 = new["monumen"]
+    if {k for k in ids(M5) if k != "ui"} != set(SPEC_MONUMEN): err.append("monumen != MONUMENTS spec (5 id)")
+    for k, n in SPEC_MONUMEN.items():
+        tp = M5.get(k, {}).get("tahap", [])
+        if len(tp) != n: err.append(f"monumen.{k} harus {n} tahap")
+        for i, t in enumerate(tp):
+            if set(t) != {"nama", "mulai", "progres", "selesai", "bonus_ringkas"} or len(t["progres"]) != 3: err.append(f"monumen.{k}.tahap[{i}] struktur")
+    T5 = new["teladan"]
+    if list(T5["gelar"]) != ["rintisan", "swadaya", "swakarya", "swasembada", "teladan"]: err.append("teladan.gelar != TELADAN spec")
+    for need in ("kedatangan", "naik_gelar", "tetap", "ditangguhkan", "ending"):
+        if not T5.get(need): err.append(f"teladan.{need} kosong")
+    A5 = new["agustusan"]
+    if ids(A5["lomba"]) != SPEC_LOMBA: err.append("agustusan.lomba != AGUSTUSAN spec (8 id)")
+    for k in ids(A5["lomba"]):
+        lb = A5["lomba"][k]
+        if not (lb.get("nama") and lb.get("aturan") and lb.get("mulai") and (lb.get("menang") or lb.get("selesai"))): err.append(f"agustusan.lomba.{k} tidak lengkap")
+    for need in ("panitia", "malam_tirakatan", "upacara", "juara_umum"):
+        if not A5.get(need): err.append(f"agustusan.{need} kosong")
+    Y5 = new["rencana_tahun"]
+    if [k for k in ids(Y5["pembuka_tahun"])] != [str(i) for i in range(1, 9)]: err.append("rencana_tahun.pembuka_tahun harus tahun 1-8")
+    for need in ("piagam", "tanpa_piagam", "ending_mandiri"):
+        if not Y5.get(need): err.append(f"rencana_tahun.{need} kosong")
+    MK = new["momen_kecil"]
+    if ids(MK) != SPEC_MOMEN: err.append("momen_kecil != MOMEN_KECIL spec (12 id)")
+    D5 = new["dilema"]
+    if [d["id"] for d in D5] != SPEC_DILEMA: err.append("dilema != DILEMMAS spec (24 id, urutan D01-D24)")
+    if len(D5) < 15: err.append("dilema kurang dari 15")
+    kat_ok = set(new["dilema_ui"]["kategori"])
+    lain_ok = set(m.get("kunci_efek_dilema_lain", {}).get("kunci", []))
+    for d in D5:
+        src = "dilema." + d["id"]
+        if set(d) != {"id", "kelas", "judul", "kategori", "deskripsi", "pilihan"}: err.append(f"{src} struktur")
+        if d["kelas"] not in ("R", "B"): err.append(f"{src} kelas bukan R/B")
+        if d["kategori"] not in kat_ok: err.append(f"{src} kategori tak terdaftar")
+        if len(d["pilihan"]) != 3: err.append(f"{src} harus 3 pilihan")
+        ada_tunda = False
+        for j, pl in enumerate(d["pilihan"]):
+            s2 = f"{src}[{j}]"
+            if not {"teks", "efek", "teks_hasil"} <= set(pl) or not set(pl) <= {"teks", "efek", "teks_hasil", "mekanik_lain", "tertunda", "hari_tunda", "teks_tertunda"}: err.append(f"{s2} struktur")
+            cek_efek(pl["efek"], s2)
+            if any(abs(v) > 80 for v in pl["efek"].values()): err.append(f"{s2} efek di luar skala (|x|>80, maks spec = batu 80)")
+            for x in pl.get("mekanik_lain", []):
+                if x not in lain_ok: err.append(f"{s2} mekanik_lain {x} tidak tercatat di meta.kunci_efek_dilema_lain")
+            td = pl.get("tertunda", [])
+            if td:
+                ada_tunda = True
+                if pl.get("hari_tunda") != td[0].get("hari_tunda") or pl.get("teks_tertunda") != td[0].get("teks_tertunda"): err.append(f"{s2} hari_tunda/teks_tertunda != tertunda[0]")
+            elif "hari_tunda" in pl or "teks_tertunda" in pl: err.append(f"{s2} hari_tunda tanpa tertunda")
+            for t in td:
+                h = t.get("hari_tunda")
+                if not (isinstance(h, list) and len(h) == 2 and all(isinstance(x, int) for x in h) and 1 <= h[0] <= h[1] <= 60): err.append(f"{s2} hari_tunda harus [min,max] 1-60")
+                if not (isinstance(t.get("peluang"), (int, float)) and 0 < t["peluang"] <= 1): err.append(f"{s2} peluang 0-1")
+                if not t.get("teks_tertunda") or "{hari}" not in t["teks_tertunda"]: err.append(f"{s2} teks_tertunda harus ada & memakai {{hari}}")
+                if not t.get("kunci"): err.append(f"{s2} kunci tertunda kosong")
+                cek_efek(t.get("efek_tertunda", {}), s2 + ".tertunda")
+                for x in t.get("mekanik_lain", []):
+                    if x not in lain_ok: err.append(f"{s2}.tertunda mekanik_lain {x} tidak tercatat")
+        if not ada_tunda: err.append(f"{src} tanpa akibat tertunda")
+        if d["kelas"] == "R":  # spec §3.2: R boleh sebelum hari 25 -> opsi 1 pangan >= -2, opsi lain >= -4, hadiah pangan <= +3
+            if any(d["pilihan"][0]["efek"].get(f, 0) < -2 for f in PANGAN): err.append(f"{src} (R) opsi pertama harus aman (pangan >= -2)")
+            if any(pl["efek"].get(f, 0) < -4 or pl["efek"].get(f, 0) > 3 for pl in d["pilihan"] for f in PANGAN): err.append(f"{src} (R) pangan di luar -4..+3")
+        elif any(d["pilihan"][0]["efek"].get(f, 0) < -6 for f in PANGAN): err.append(f"{src} (B) opsi pertama terlalu mahal (pangan < -6)")
+    kunci_t = [t["kunci"] for d in D5 for pl in d["pilihan"] for t in pl.get("tertunda", [])]
+    asal = {}
+    for d in D5:
+        for pl in d["pilihan"]:
+            for t in pl.get("tertunda", []):
+                if asal.setdefault(t["kunci"], d["id"]) != d["id"]: err.append(f"kunci akibat tertunda {t['kunci']} dipakai dua dilema")
+    for need in ("banjir_hulu", "kiriman_terima_kasih", "harga_beras_naik", "suap_bocor", "timbangan_curang"):
+        if need not in kunci_t: err.append(f"akibat tertunda spec {need} hilang")
 # kata terlarang di SEMUA teks tampilan (bukan key, bukan string id, bukan meta teknis)
 META_TAMPIL = ("sumber_daya", "bangunan", "musim", "era", "hewan", "penyebab_kondisi", "bangunan_pertahanan", "tahap_usia", "status_hubungan",
                "cabang_teknologi", "skill", "kebutuhan", "milestone_anak", "judul_game", "nuansa")
@@ -319,5 +469,11 @@ if all(k in new for k in V13):
           f"| nama_bayi L{len(new['kelahiran']['nama_bayi']['laki_laki'])}/P{len(new['kelahiran']['nama_bayi']['perempuan'])}")
 print(f"v1.4.0: teks tampilan diubah {len(diubah_v13)} (dibanding v1.3.0) | " + " | ".join(f"{k} {len(new[k])}" for k in V14 if k in new)
       + f" | alias event {len(al.get('event', {}))} | kata terlarang {len(KT)} kata, temuan {len(kt_hit)}")
+if all(k in new for k in V15):
+    _nt = sum(len(pl.get("tertunda", [])) for d in new["dilema"] for pl in d["pilihan"])
+    print("v1.5.0: " + " | ".join(f"{k} {len(ids(new[k])) if isinstance(new[k], dict) else len(new[k])}" for k in ("sifat", "keinginan", "cerita", "momen_kecil"))
+          + f" | monumen {len(SPEC_MONUMEN)} ({sum(SPEC_MONUMEN.values())} tahap) | lomba {len(ids(new['agustusan']['lomba']))} | dilema {len(new['dilema'])}"
+          + f" ({sum(d['kelas']=='R' for d in new['dilema'])} R / {sum(d['kelas']=='B' for d in new['dilema'])} B), akibat tertunda {_nt}"
+          + f" | pencapaian baru {len(aids) - 24} | teks v1.5 {sum(1 for k in V15 for _ in daftar(new[k]))}")
 if err: print("GAGAL:"); [print(" -", e) for e in err]; sys.exit(1)
-print("OK: JSON valid, struktur/id/angka lama utuh (TUNING_V10 + 14 retuning), kata terlarang bersih, semua efek/tipe/target/placeholder terdaftar.")
+print("OK: JSON valid, struktur/id/angka lama utuh (TUNING_V10 + 14 retuning, v1.0-v1.4), kata terlarang bersih, semua efek/tipe/target/placeholder terdaftar.")
