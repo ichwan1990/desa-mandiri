@@ -52,6 +52,10 @@ window.THEMES = {
       ekstrem_reda: ['peringatan_dini.ancaman_dingin_ekstrem.tingkat.reda.teks', 'Angin beku sudah reda.'],
     },
     TEXT_PATCH: {},
+    // cerita P0 (cerita.js): TEKS-TEMA-sedang.json belum punya dilema/momen_kecil/agustusan -> hanya yang netral-budaya dipakai; Agustusan & monyet mati
+    STORY_DISABLE: ['pencuri_singkong', 'tengkulak_padi', 'kerbau_tetangga', 'monyet_kebun', 'tanggap_reog', 'minta_hujan', 'jenang_suro', 'burung_perkutut', 'teh_tubruk', 'kentongan_iseng'],
+    STORY_SEASON_ALIAS: { semi: 'hujan', panas: 'labuh', gugur: 'mareng', dingin: 'kemarau' },
+    STORY_PATCH: { AGUSTUSAN: { enabled: false }, MONKEY: { enabled: false } },
     TRAITS_PATCH: { founderNeedOneOf: null }, // aturan pengaman RISET-CERITA-TUJUAN §5.1: median d24 > 48 setelah efek sifat (55) -> hapus syarat sifat kerja pendiri
     SCHEDULE_PATCH: { dayWorkMult: 1.12, daySpeedMult: 1.2 }, // kompensasi jam tidur per tema (sim d24: 1.35 -> ~56; 1.2 + efek sifat -> 51-55; 1.12 -> lihat README)
     // TEKS-GAME.json (v1.5) dipakai semua tema. Teks lama yang di v1.4+ ditulis ulang bernuansa Nusantara ditimpa dengan teks empat musim
@@ -146,6 +150,8 @@ CONFIG.THREAT.wolf.hardMult = CONFIG.THREAT.wolf.winterMult;
     'SEASON_FX', 'NIGHT_THREAT', 'ART_SUFFIX', 'WINTER_ART', 'WEATHER', 'EVENT_DISABLE', 'EVENT_SEASON_ALIAS', 'TXT', 'TEXT_PATCH', 'TERMS', 'FIELD_ROTATION', 'ASSET_SWAP', 'RES_ICON', 'TEXT_FILE', 'TEXT_OVERLAY']) CONFIG[k] = T[k];
   for (const [b, n] of Object.entries(T.BUILDING_NAMES || {})) if (CONFIG.BUILDINGS[b]) CONFIG.BUILDINGS[b] = Object.assign({}, CONFIG.BUILDINGS[b], { nama: n });
   CONFIG.YEAR_SCALE = Object.assign({}, CONFIG.YEAR_SCALE, T.YEAR_SCALE);
+  CONFIG.STORY_DISABLE = T.STORY_DISABLE || []; CONFIG.STORY_SEASON_ALIAS = T.STORY_SEASON_ALIAS || null;
+  for (const [k, v] of Object.entries(T.STORY_PATCH || {})) if (CONFIG[k]) CONFIG[k] = Object.assign({}, CONFIG[k], v); // cerita.js dimuat sebelum tema.js
   if (T.TRAITS_PATCH && CONFIG.TRAITS) CONFIG.TRAITS = Object.assign({}, CONFIG.TRAITS, T.TRAITS_PATCH);
   if (T.SCHEDULE_PATCH && CONFIG.SCHEDULE) CONFIG.SCHEDULE = Object.assign({}, CONFIG.SCHEDULE, T.SCHEDULE_PATCH);
   CONFIG.FIELD = Object.assign({}, CONFIG.FIELD, { crops: T.FIELD_CROPS });

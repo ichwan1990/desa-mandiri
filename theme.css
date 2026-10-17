@@ -118,3 +118,25 @@ body.compact #buildbar button{flex:none}
 body.compact #res small{display:none}
 body.compact #top{gap:5px}
 #top button .lbl{pointer-events:none} /* klik pada label tetap mengenai tombol (handler memakai e.target.id) */
+/* ---- cerita P0: kartu dilema / momen kecil / panitia 17-an (aset tahap 8b ui/dilemma) ---- */
+#modal.story{max-width:460px;width:460px;top:18%;padding:0;background:none;border:none;box-shadow:none}
+#modal.story .dcard{position:relative;padding:10px 14px 10px 100px;min-height:120px;color:#3a2a18;background:#f1e2bf;border-style:solid;border-width:20px 8px 8px 8px;border-image:url(assets/ui/dilemma/kartu_dilema_ringan.png) 20 8 8 8 fill stretch;image-rendering:pixelated;font-size:13px}
+#modal.story .dcard.kB{border-image-source:url(assets/ui/dilemma/kartu_dilema_berat.png)}
+
+#modal.story .por{position:absolute;left:10px;top:4px;width:80px;height:80px;image-rendering:pixelated}
+#modal.story .dhead small{color:#7a5a30;font-size:11px;letter-spacing:.3px}
+#modal.story .dhead h3{margin:2px 0 6px;color:#5a2a10;font-size:16px}
+#modal.story p{margin:6px 0;line-height:1.35}
+#modal.story .opts{display:flex;flex-direction:column;gap:5px;margin:8px 0 4px -86px}
+#modal.story .opt{display:flex;justify-content:space-between;align-items:center;gap:8px;text-align:left;width:100%;min-height:30px;padding:3px 10px;color:#3a2a18;background:none;font-size:12.5px;cursor:pointer;border-style:solid;border-width:4px 10px 6px 10px;border-image:url(assets/ui/dilemma/button_choice_normal.png) 4 10 6 10 fill stretch;image-rendering:pixelated}
+#modal.story .opt:hover:not([disabled]){border-image-source:url(assets/ui/dilemma/button_choice_hover.png)}
+#modal.story .opt:active:not([disabled]){border-image-source:url(assets/ui/dilemma/button_choice_pressed.png)}
+#modal.story .opt[disabled]{border-image-source:url(assets/ui/dilemma/button_choice_disabled.png);opacity:.6;cursor:not-allowed}
+#modal.story .oc{display:inline-flex;align-items:center;gap:3px;white-space:nowrap;font-size:11px;color:#6a4a20}
+#modal.story .oc img{width:16px;height:16px;image-rendering:pixelated;vertical-align:middle}
+#modal.story .rchip{display:inline-flex;align-items:center;padding:1px 2px;background:url(assets/ui/dilemma/reaksi_chip.png) center/100% 100%}
+#modal.story .rchip img+img{width:12px;height:12px;margin-left:-4px;margin-top:-8px}
+#modal.story .hint{display:flex;align-items:center;gap:4px;margin-left:-86px;color:#7a5a30;font-size:11px}
+#modal.story .hint img{width:16px;height:16px}
+#modal.story .lomba{display:block;margin:3px 0 3px -86px;font-size:12px}
+body.mobile #modal.story{width:auto}

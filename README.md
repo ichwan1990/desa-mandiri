@@ -77,17 +77,30 @@ Tema bawaan sekarang **Nusantara**; tema empat musim lama tetap ada (buka `index
 - **Rawat melewati malam**: pasien yang sedang dirawat mendapat `sick.underCareUntil` (berlaku sampai fajar berikutnya) dan progres rawat (`careWork`) disimpan, jadi lemparan maut fajar tidak bergantung pada perawat yang masih memegang tugas saat tidur.
 - **Hujan labuh** (Nusantara): `SEASON_FX.labuh` tidak punya `rainBushRegrowMult`/`chopTimeMultRain`, jadi saat hujan labuh regrow semak dan waktu tebang menjadi NaN (semak mati permanen, penebang macet). Kunci ditambahkan, dan kode memakai cadangan `|| 1` (juga `extremeHungerMult`, `extremeMoodDecayMult`).
 - **Tumbuh tanaman** tidak pernah negatif (kekeringan/banjir/event dijepit ≥ 0); jagung tetap tumbuh di kemarau (×1.25 lebih lambat).
-- **Tata letak**: tinggi kanvas = tinggi jendela − bilah atas (min `VIEW_MIN_H` 360, maks 800), panel samping ikut; halaman tidak bergulir. Di bawah `TOPBAR_COMPACT_W` (1500px) bilah atas ringkas: label disembunyikan (ikon + tooltip), daftar bangun satu baris yang bisa digulir; maks 2 baris di lebar 900. Panel penduduk ditaruh di bawah bilah atas (`--topH`), bilah atas di atas panel (z-index), jadi Pasar/Pencapaian/Simpan/Muat tetap bisa diklik.
+- **Tata letak**: tinggi kanvas = tinggi jendela − bilah atas (min `VIEW_MIN_H` 360, maks 800), panel samping ikut; halaman tidak bergulir. Di bawah `TOPBAR_COMPACT_W` (1500px) bilah atas ringkas: label disembunyikan (ikon + tooltip), tombol bangun membungkus ke baris baru; juga otomatis ringkas bila bilah penuh > `TOPBAR_MAX_H` (80px, mis. 1500–1599px); maks 2 baris di lebar 900. Panel penduduk ditaruh di bawah bilah atas (`--topH`), bilah atas di atas panel (z-index), jadi Pasar/Pencapaian/Simpan/Muat tetap bisa diklik.
 - **Aset 8c**: ikon Padi `icon_padi_ikat.png`, sawah kering `sawah_kering_autotile.png` (menggantikan sawah kering prosedural, tanpa kilau air), padi layu `crop_padi_kering.png` di sawah kering kemarau.
 - **Tema empat musim**: `TRAITS_PATCH.founderNeedOneOf = null` (aturan pengaman §5.1, d24 > 48) dan `dayWorkMult` 1.2 → 1.12.
 - Tes: `tests/perbaikan-a.test.js` (rawat lintas malam, jepit tumbuh, efek sifat, syarat hamil, tata letak 768/860/900, panel penduduk vs tombol bilah atas, teks ancaman).
 - Sim lama (sebelum perbaikan NaN semak labuh): lahir pertama median hari 51. Sim milestone A (`node balance-sim.test.js 20 140`): lahir pertama median hari 34 (rentang 28–94), pop median d40 5, d80 10, d140 17, 0 mati selain tua, 0 pergi, 0 kolaps. Pembanding aturan Dusun + pangan 5 hari (10 run, cooldown 21): median 42, pop d140 18. Hari 120 (10 run): pangan median 875, air 480. Hari 24 (31 run): pangan median Nusantara 45, empat musim 38.
 - Tes: `tests/siklus-hidup.test.js` (screenshot `v6-night.png`, `v6-family.png`).
 
+## Cerita & tujuan P0 (`docs/RISET-CERITA-TUJUAN.md`, TEKS v1.5.0)
+- **Data di `cerita.js`** (dimuat sesudah `balance.js`, sebelum `tema.js`): `DIRECTOR`, `MOMEN_KECIL`, 12 `DILEMMAS` P0, `AGUSTUSAN`, `STORY_SINK`, `MONKEY`. Mesin di `game.js` (blok "CERITA P0").
+- **Juru Cerita**: cek sekali sehari jam 09:00; hari yang sudah bermakna (event, bangunan/riset selesai, lahir, wafat, naik hubungan, akibat tertunda, Agustusan) dibiarkan. Peluang isi menurut hari kosong beruntun (`fill` 0.75/0.95/1.0; spes 0.60/0.90/1.0, dinaikkan karena keinginan/rantai P1 belum ada). Maks 1 dilema & 2 popup per hari, jeda ≥ 6 jam.
+- **Dilema**: kartu `ui/dilemma` (ringan/berat, potret ekspresi, chip reaksi sifat, ⏳ akibat tertunda). Opsi pertama selalu aman. Akibat tertunda di `S.pending` (diundi pagi saat jatuh tempo; bila syarat belum terpenuhi menunggu ≤ 28 hari). Utang rentenir: tagihan, bunga 20%/7 hari, sita setelah 2× telat.
+- **Momen kecil**: 12 momen tanpa biaya (mood/hubungan), ulang ≥ 21 hari (≥ 10 bila stok habis).
+- **Agustusan** (hari 18/20/21 tiap tahun): kartu panitia (pilih lomba, umbul-umbul ×3/×6), malam tirakatan (tumpeng tahun 2+), upacara, 4 lomba (balap karung, makan kerupuk, tarik tambang, panjat pinang) di lapangan dekat api unggun dengan dekorasi 8b, juara umum + ikon piala 14 hari. Tahun 1 gratis 2 lomba.
+- **Penyerap pangan** (arahan Ketua: cerita P0 tidak menambah pangan bersih): kenduri tiap 2 hari bila stok > 8 hari (35% kelebihan), tasyakuran panen akhir mareng, syukuran lahir, pesta 17-an tahun 2+, tikus lumbung (~1% gandum/hari), monyet pencuri (Nusantara), biaya dilema. Musim tanpa panen (empat musim: dingin) dicadangkan dulu. Kait `monumenFoodPerWorkerDay` untuk monumen P1.
+- **Sifat & duka**: reaksi sifat atas keputusan, pelit −1 mood tiap pengeluaran ≥ 10, pandai_masak pesta ×0.9, seniman mood festival ×1.25, duka pribadi (keluarga +3 hari ×1.5, sahabat +2 hari, pasangan ×1.5), suka_menolong duka anak ×1.3.
+- **Tema empat musim**: Agustusan & monyet mati, dilema/momen khas Nusantara dimatikan (`STORY_DISABLE`), musim dipetakan (`STORY_SEASON_ALIAS`).
+- Sim (`balance-sim`): d24 median Nusantara 38, empat musim 42 (31 run). Hari 120 (10 run) Nusantara: pangan 875 → 472, pop 16, 0 mati selain tua; empat musim 381. Hari 140 (20 run): pop 17, lahir pertama 35. Cakupan hari bermakna sejak hari 15: median 93%, maks 2 hari kosong beruntun.
+- Tes: `tests/cerita.test.js` (screenshot `v8-dilema.png`, `v8-agustusan.png`).
+
 ## Struktur file
 ```
 index.html          Tata letak & UI
 balance.js          SEMUA angka balancing (CONFIG) — ubah di sini untuk tuning
+cerita.js           Data cerita P0: Juru Cerita, dilema, momen kecil, Agustusan, penyerap pangan (CONFIG)
 tema.js             Tema/bioma: musim (nama, panjang, SEASON_FX), tanaman, ancaman malam, sprite & teks per tema (bawaan: indonesia)
 assets.js           Peta aset tunggal (ASSETS): path sprite, ukuran frame, animasi, warna placeholder
 audio.js            Musik ambien & SFX (WebAudio, tanpa file suara)

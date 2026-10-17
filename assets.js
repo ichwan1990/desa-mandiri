@@ -189,6 +189,16 @@ window.ASSETS = {
   sawah_undakan: { img: 'assets/tiles/tropis/sawah_terrace_riser.png', frames: 3 },
   tanaman_padi: { color: '#9fbf4a', img: 'assets/nature/crops/crop_padi.png', frames: 6, overSawah: true },
   tanaman_padi_kering: { color: '#b8a050', img: 'assets/nature/crops/crop_padi_kering.png', frames: 6 }, // tahap 8c: padi layu di sawah kering (kemarau, tanpa irigasi)
+  // tahap 8b: Agustusan (cerita P0) — dekorasi lapangan 17-an
+  agus_umbul:    { img: 'assets/decor/agustus/umbul_umbul.png', fw: 32, fh: 96, frames: 4, ms: 180, color: '#d03030' },
+  agus_bendera:  { img: 'assets/decor/agustus/bendera_merah_putih.png', fw: 32, fh: 96, frames: 4, ms: 160, color: '#e03030' },
+  agus_pinang:   { img: 'assets/decor/agustus/panjat_pinang.png', fw: 64, fh: 128, color: '#a07040' },
+  agus_kerupuk:  { img: 'assets/decor/agustus/kerupuk_gantung.png', fw: 32, fh: 64, frames: 2, ms: 400, color: '#e8d090' },
+  agus_karung:   { img: 'assets/decor/agustus/karung_tergeletak.png', color: '#c0a070' },
+  agus_karung_v: { img: [1, 2, 3, 4].map(i => `assets/decor/agustus/balap_karung_villager_${i}.png`), color: '#c0a070' },
+  agus_tambang:  { img: 'assets/decor/agustus/tambang_segmen.png', fw: 32, fh: 16, frames: 2, color: '#b09060' },
+  agus_bunting:  { img: 'assets/decor/agustus/bunting_merah_putih.png', fw: 32, fh: 16, frames: 2, ms: 300, color: '#e03030' },
+  ikon_piala16:  { img: 'assets/icons/status/icon_piala_16.png', color: '#e0b030' },
   sawah_kering: { img: 'assets/tiles/tropis/sawah_kering_autotile.png', color: '#b08c5e' }, // tahap 8c: tata letak 4-bit sama dengan sawah_autotile
   tanaman_jagung: { color: '#d9c04a', img: 'assets/nature/crops/crop_jagung.png', frames: 6 },
   tanaman_singkong: { color: '#6f9a3a', img: 'assets/nature/crops/crop_singkong.png', frames: 6 },
