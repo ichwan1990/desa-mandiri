@@ -1,0 +1,404 @@
+{
+  "_patch": {
+    "versi_dari": "1.2.0",
+    "versi_ke": "1.3.0",
+    "sumber": "Belum ada spec jadwal/reproduksi di docs/ (cek 17 Okt 2026); struktur usulan Asisten Dokumen",
+    "catatan": "Patch aditif seperti v1.2.0. Diterapkan oleh buat_teks.py atau tools/merge_v130.py."
+  },
+  "set_meta": {
+    "versi": "1.3.0"
+  },
+  "tambah_entri_meta": {
+    "placeholder": {
+      "{pasangan}": "Nama pasangan penduduk {nama}",
+      "{bayi}": "Nama bayi yang baru lahir (lihat kelahiran.nama_bayi)",
+      "{ayah}": "Nama ayah (orang tua laki-laki)",
+      "{ibu}": "Nama ibu (orang tua perempuan)"
+    },
+    "struktur_tambahan": {
+      "log_jadwal": "Dict kategori -> log (\"Hari {hari}:\"): pulang, tidur, bangun_pagi, berpasangan{pulang,tidur,bangun_pagi}, tidur_di_luar, tidur_di_luar_dingin, tidak_bisa_tidur",
+      "log_hubungan": "menjadi_dekat, menjadi_pasangan, lamaran, menikah, menikah_rumah_baru, butuh_rumah (tanpa prefix hari: banner/peringatan)",
+      "kehamilan": "kabar[], masa_kehamilan[], menjelang_lahir[], status_panel",
+      "kelahiran": "log[], notifikasi{judul,teks,tombol}, syukuran[], nama_bayi{laki_laki[], perempuan[]} (tidak bentrok dengan penduduk/CONFIG.NAMES/pedagang)",
+      "tumbuh_kembang": "milestone{id: []}, menjadi_anak[], menjadi_remaja[], menjadi_dewasa[], menjadi_lansia[], ulang_tahun_anak[]",
+      "lansia_berpulang": "meninggal[], meninggal_berpasangan[], notifikasi, kenangan[], pemakaman{upacara,warisan,nisan}, duka{duka_mulai,duka_harian(5),duka_berakhir,tooltip}",
+      "panel_keluarga": "Label panel penduduk: label{}, format{}, kosong{}, kosong_pendiri, tahap_usia{}, status_hubungan{}, tooltip{}"
+    }
+  },
+  "tambah_key_meta": {
+    "status_jadwal_keluarga": "struktur_usulan",
+    "catatan_placeholder_keluarga": "{nama}, {pasangan}, {bayi}, {ayah}, {ibu}, dan {umur} untuk teks jadwal/keluarga WAJIB diisi lewat argumen extra fill(tpl, {nama, pasangan, bayi, ayah, ibu, umur}). Bawaan fill() memilih penduduk acak untuk {nama} dan umur penduduk acak untuk {umur}, jadi tidak boleh diandalkan. Varian ber-{pasangan} hanya dipakai jika penduduk punya pasangan. {nama} pada tumbuh_kembang = si anak.",
+    "tahap_usia": {
+      "bayi": "Bayi",
+      "anak": "Anak",
+      "remaja": "Remaja",
+      "dewasa": "Dewasa",
+      "lansia": "Lansia"
+    },
+    "status_hubungan": {
+      "lajang": "Lajang",
+      "dekat": "Sedang dekat",
+      "berpasangan": "Berpasangan",
+      "menikah": "Menikah",
+      "ditinggal": "Ditinggal pasangan",
+      "menanti_bayi": "Menanti buah hati"
+    },
+    "milestone_anak": {
+      "senyum_pertama": "Senyum pertama (bayi)",
+      "langkah_pertama": "Langkah pertama (bayi)",
+      "kata_pertama": "Kata pertama (bayi)",
+      "bermain": "Bermain (anak)",
+      "mulai_membantu": "Mulai membantu (anak)",
+      "belajar_keahlian": "Belajar keahlian (remaja)"
+    }
+  },
+  "tambah_key": {
+    "log_jadwal": {
+      "pulang": [
+        "Hari {hari}: Matahari mulai turun. {nama} membereskan pekerjaannya dan pulang ke rumah.",
+        "Hari {hari}: {nama} berjalan pulang sambil bersenandung, membawa sisa kayu untuk tungku rumah.",
+        "Hari {hari}: Lampu-lampu rumah mulai menyala. {nama} melambai pada {nama2} lalu pulang.",
+        "Hari {hari}: Senja yang jingga. {nama} pulang dengan langkah pelan, capek tapi senang."
+      ],
+      "tidur": [
+        "Hari {hari}: {nama} meringkuk di bawah selimut dan langsung terlelap.",
+        "Hari {hari}: {nama} mendengkur pelan. Hari ini memang melelahkan.",
+        "Hari {hari}: {nama} tertidur sambil memeluk bantal kesayangannya.",
+        "Hari {hari}: Desa sunyi. Hanya suara jangkrik dan dengkuran {nama} yang terdengar."
+      ],
+      "bangun_pagi": [
+        "Hari {hari}: Ayam berkokok. {nama} bangun, meregangkan badan, dan menghirup udara pagi.",
+        "Hari {hari}: {nama} bangun paling pagi dan menyalakan api unggun untuk semua orang.",
+        "Hari {hari}: {nama} bangun dengan rambut berantakan, tapi senyumnya cerah.",
+        "Hari {hari}: Embun masih menempel di daun saat {nama} keluar rumah untuk bekerja."
+      ],
+      "berpasangan": {
+        "_catatan": "Varian untuk penduduk yang punya pasangan; pakai bersama kategori di atas.",
+        "pulang": [
+          "Hari {hari}: {nama} pulang lebih awal untuk menemani {pasangan} makan malam.",
+          "Hari {hari}: {pasangan} menunggu {nama} di depan pintu dengan teh hangat."
+        ],
+        "tidur": [
+          "Hari {hari}: {nama} dan {pasangan} bercerita sebentar sebelum tidur, lalu lampu dipadamkan.",
+          "Hari {hari}: {nama} menyelimuti {pasangan} yang sudah tertidur lebih dulu."
+        ],
+        "bangun_pagi": [
+          "Hari {hari}: {nama} sarapan sebentar bersama {pasangan}, lalu berangkat bekerja.",
+          "Hari {hari}: {pasangan} membangunkan {nama} dengan bau nasi hangat dari tungku."
+        ]
+      },
+      "tidur_di_luar": [
+        "Hari {hari}: Tidak ada tempat di rumah untuk {nama}. Ia tidur beralas daun di dekat api unggun.",
+        "Hari {hari}: {nama} tidur di bawah pohon besar malam ini. Semoga segera ada Gubuk baru.",
+        "Hari {hari}: {nama} menatap bintang dari tempat tidurnya di rumput. Indah, tapi punggungnya pegal.",
+        "Hari {hari}: {nama} belum punya rumah. Ia tidur meringkuk di samping Gudang."
+      ],
+      "tidur_di_luar_dingin": [
+        "Hari {hari}: {nama} tidur di luar dan menggigil sepanjang malam. Ia sangat butuh rumah.",
+        "Hari {hari}: Angin malam menusuk. {nama} yang tidur di luar bangun dengan hidung merah dan suasana hati buruk.",
+        "Hari {hari}: {nama} tidak bisa tidur karena kedinginan di luar. Bangun Gubuk agar ia bisa beristirahat hangat."
+      ],
+      "tidak_bisa_tidur": [
+        "Hari {hari}: {nama} sulit tidur karena memikirkan stok makanan. Ia duduk sebentar di dekat api.",
+        "Hari {hari}: {nama} terbangun tengah malam karena perutnya keroncongan."
+      ]
+    },
+    "log_hubungan": {
+      "menjadi_dekat": [
+        "Hari {hari}: {nama} dan {pasangan} sering terlihat bekerja berdampingan. Mereka mulai akrab.",
+        "Hari {hari}: {nama} menyisihkan buah paling manis untuk {pasangan}. Penduduk lain saling melirik sambil tersenyum.",
+        "Hari {hari}: {nama} dan {pasangan} duduk bersebelahan di dekat api unggun, tertawa pelan berdua.",
+        "Hari {hari}: {pasangan} membantu {nama} mengangkat kayu tanpa diminta. Sepertinya ada yang sedang tersipu."
+      ],
+      "menjadi_pasangan": [
+        "Hari {hari}: {nama} dan {pasangan} kini resmi berpasangan. Desa ikut senang melihat mereka.",
+        "Hari {hari}: Di tepi sungai, {nama} memberikan seikat bunga liar kepada {pasangan}. Jawabannya: senyum malu-malu dan anggukan.",
+        "Hari {hari}: {nama} dan {pasangan} saling berjanji untuk saling menjaga. Anak-anak desa bersorak menggoda."
+      ],
+      "lamaran": [
+        "Hari {hari}: {nama} datang ke keluarga {pasangan} membawa hantaran sederhana. Lamarannya diterima dengan hangat!",
+        "Hari {hari}: Dengan suara bergetar, {nama} bertanya apakah {pasangan} mau menikah dengannya. Jawabannya \"ya\"!"
+      ],
+      "menikah": [
+        "Hari {hari}: {nama} dan {pasangan} menikah dalam upacara kecil di dekat api unggun. Seluruh desa datang membawa makanan dan doa.",
+        "Hari {hari}: Pesta pernikahan sederhana untuk {nama} dan {pasangan}. Ada musik, tarian, dan nasi tumpeng kecil buatan Dapur.",
+        "Hari {hari}: Di bawah lengkung janur, {nama} dan {pasangan} resmi menjadi suami istri. Para tetua memberi restu sambil tersenyum haru.",
+        "Hari {hari}: {nama} dan {pasangan} menikah di Balai desa. Malam itu desa bernyanyi sampai bintang bermunculan."
+      ],
+      "menikah_rumah_baru": [
+        "Hari {hari}: {nama} dan {pasangan} pindah ke rumah yang sama. Mereka menggantung tirai baru di jendela.",
+        "Hari {hari}: Pengantin baru {nama} dan {pasangan} menanam pohon kecil di depan rumah mereka."
+      ],
+      "butuh_rumah": [
+        "{nama} dan {pasangan} ingin tinggal bersama, tapi belum ada rumah kosong. Bangun Gubuk baru untuk mereka.",
+        "Pasangan {nama} dan {pasangan} masih menunggu rumah sendiri. Mereka sabar, tapi berharap tidak terlalu lama."
+      ]
+    },
+    "kehamilan": {
+      "kabar": [
+        "Hari {hari}: Kabar bahagia! {ibu} dan {ayah} sedang menanti buah hati pertama mereka.",
+        "Hari {hari}: {ibu} berbisik pada {ayah}, lalu {ayah} melompat kegirangan. Keluarga kecil mereka akan bertambah!",
+        "Hari {hari}: Seluruh desa bersuka cita. {ibu} sedang mengandung, dan {ayah} sudah mulai membuat ayunan kayu."
+      ],
+      "masa_kehamilan": [
+        "Hari {hari}: {ibu} mengidam mangga muda. {ayah} mencarinya sampai ke ujung hutan.",
+        "Hari {hari}: Para ibu di desa bergantian membawakan sup hangat untuk {ibu}.",
+        "Hari {hari}: {ayah} menyelesaikan ayunan bayi dari kayu. Ukirannya berbentuk bintang kecil.",
+        "Hari {hari}: {ibu} menyenandungkan lagu pengantar tidur sambil merajut baju mungil.",
+        "Hari {hari}: {ibu} bekerja lebih santai sekarang. Teman-teman dengan senang hati menggantikan tugas beratnya.",
+        "Hari {hari}: {ayah} dan {ibu} duduk di depan rumah, berdebat lucu soal nama untuk si kecil."
+      ],
+      "menjelang_lahir": [
+        "Hari {hari}: Sebentar lagi si kecil akan lahir. {ibu} beristirahat di rumah, ditemani {ayah}.",
+        "Hari {hari}: Kain-kain bersih dan air hangat sudah disiapkan. Desa menunggu dengan berdebar."
+      ],
+      "status_panel": "Sedang menanti buah hati"
+    },
+    "kelahiran": {
+      "log": [
+        "Hari {hari}: Tangisan kecil terdengar dari rumah {ibu} dan {ayah}. Selamat datang ke dunia, {bayi}!",
+        "Hari {hari}: {bayi} lahir saat fajar. {ibu} tersenyum lelah, dan {ayah} tidak berhenti menangis bahagia.",
+        "Hari {hari}: Seorang bayi mungil bernama {bayi} lahir hari ini. Seluruh desa datang mengintip dari jendela.",
+        "Hari {hari}: {bayi} lahir sehat dan montok. {ayah} langsung mengangkatnya tinggi-tinggi agar semua bisa melihat.",
+        "Hari {hari}: Desa bertambah satu penduduk paling kecil: {bayi}, anak {ibu} dan {ayah}. Selamat datang, si kecil!"
+      ],
+      "notifikasi": {
+        "judul": "Bayi Lahir!",
+        "teks": "{bayi} lahir dari keluarga {ibu} dan {ayah}. Desa bertambah satu senyum mungil.",
+        "tombol": "Selamat datang!"
+      },
+      "syukuran": [
+        "Hari {hari}: Desa mengadakan syukuran kecil untuk {bayi}. Ada bubur merah putih dan doa bersama.",
+        "Hari {hari}: Setiap keluarga membawa hadiah kecil untuk {bayi}: selimut rajut, mainan kayu, dan sekeranjang buah."
+      ],
+      "nama_bayi": {
+        "laki_laki": [
+          "Arya",
+          "Bima",
+          "Damar",
+          "Galih",
+          "Gilang",
+          "Raka",
+          "Satria",
+          "Danu",
+          "Fajar",
+          "Ilham",
+          "Rizky",
+          "Bagas",
+          "Dimas",
+          "Rafi",
+          "Fikri",
+          "Haikal",
+          "Panji",
+          "Wira",
+          "Yoga",
+          "Arjuna",
+          "Bintang",
+          "Aditya",
+          "Guntur",
+          "Restu",
+          "Aldi",
+          "Farhan",
+          "Naufal",
+          "Ikhsan",
+          "Tegar",
+          "Banyu",
+          "Elang",
+          "Samudra",
+          "Rangga",
+          "Tama"
+        ],
+        "perempuan": [
+          "Anisa",
+          "Bunga",
+          "Citra",
+          "Dinda",
+          "Embun",
+          "Fitri",
+          "Gita",
+          "Indah",
+          "Kirana",
+          "Laras",
+          "Melati",
+          "Nadia",
+          "Puspa",
+          "Putri",
+          "Ratna",
+          "Salsa",
+          "Tiara",
+          "Vina",
+          "Yasmin",
+          "Zahra",
+          "Intan",
+          "Kemuning",
+          "Mawar",
+          "Lintang",
+          "Nayla",
+          "Aulia",
+          "Cahya",
+          "Dara",
+          "Kinanti",
+          "Rania",
+          "Sekar",
+          "Wening",
+          "Asih",
+          "Rinjani",
+          "Senja"
+        ]
+      }
+    },
+    "tumbuh_kembang": {
+      "milestone": {
+        "senyum_pertama": [
+          "Hari {hari}: {nama} tersenyum untuk pertama kalinya. {ibu} memanggil semua orang untuk melihat."
+        ],
+        "langkah_pertama": [
+          "Hari {hari}: {nama} melangkah pertama kali, lalu jatuh terduduk dan tertawa. {ayah} bertepuk tangan paling keras.",
+          "Hari {hari}: {nama} berjalan tertatih mengejar ayam. Ayamnya menang, tapi {nama} tidak menyerah."
+        ],
+        "kata_pertama": [
+          "Hari {hari}: Kata pertama {nama} adalah \"api\"! Sepertinya ia sering diajak duduk di dekat api unggun.",
+          "Hari {hari}: {nama} memanggil \"Ibu!\" untuk pertama kalinya. {ibu} langsung memeluknya erat."
+        ],
+        "bermain": [
+          "Hari {hari}: {nama} bermain petak umpet di antara tumpukan kayu bersama anak-anak lain.",
+          "Hari {hari}: {nama} membuat istana dari lumpur di tepi sungai. Megah sekali, sampai hujan datang."
+        ],
+        "mulai_membantu": [
+          "Hari {hari}: {nama} mulai membantu memetik buah. Keranjangnya kecil, tapi semangatnya besar.",
+          "Hari {hari}: {nama} ikut {ayah} ke ladang dan menanam benih pertamanya sendiri."
+        ],
+        "belajar_keahlian": [
+          "Hari {hari}: {nama} belajar {skill} dari {nama2}. Tangannya masih kaku, tapi matanya berbinar.",
+          "Hari {hari}: {nama} berhasil {skill} tanpa bantuan untuk pertama kali. Ia pamer ke seluruh desa."
+        ]
+      },
+      "menjadi_anak": [
+        "Hari {hari}: {nama} bukan bayi lagi. Kini ia sudah berlarian ke mana-mana dan banyak bertanya \"kenapa?\"."
+      ],
+      "menjadi_remaja": [
+        "Hari {hari}: {nama} kini remaja. Ia mulai ingin membantu pekerjaan desa seperti orang dewasa.",
+        "Hari {hari}: {nama} tumbuh tinggi sekali, hampir setinggi {ayah}. Suaranya pun mulai berubah."
+      ],
+      "menjadi_dewasa": [
+        "Hari {hari}: {nama} kini dewasa dan siap bekerja penuh untuk desa. {ibu} dan {ayah} sangat bangga.",
+        "Hari {hari}: Desa mengadakan syukuran kecil karena {nama} telah dewasa. Ia memilih menekuni {skill}.",
+        "Hari {hari}: {nama} yang dulu bayi mungil kini sudah dewasa. Waktu berjalan begitu cepat."
+      ],
+      "menjadi_lansia": [
+        "Hari {hari}: {nama} kini berusia {umur} tahun dan menjadi sesepuh desa. Ia lebih banyak bekerja santai dan berbagi cerita.",
+        "Hari {hari}: Rambut {nama} mulai memutih. Anak-anak suka duduk di dekatnya untuk mendengar dongeng.",
+        "Hari {hari}: {nama} menjadi tetua desa. Nasihatnya kini sering ditanyakan saat ada masalah."
+      ],
+      "ulang_tahun_anak": [
+        "Hari {hari}: {nama} berulang tahun ke-{umur}! {ibu} membuat kue kecil dari madu dan gandum."
+      ]
+    },
+    "lansia_berpulang": {
+      "meninggal": [
+        "Hari {hari}: {nama} berpulang dengan tenang di usia {umur} tahun, setelah sore yang hangat di depan rumahnya.",
+        "Hari {hari}: Di usia {umur}, {nama} tertidur untuk terakhir kalinya, ditemani cucu-cucu yang memegang tangannya.",
+        "Hari {hari}: {nama} menutup mata dengan senyum kecil. Hidupnya panjang, penuh tawa, kerja keras, dan cerita.",
+        "Hari {hari}: Sesepuh desa, {nama}, berpulang hari ini. Pagi tadi ia masih sempat menyiram tanamannya."
+      ],
+      "meninggal_berpasangan": [
+        "Hari {hari}: {nama} berpulang di usia {umur} tahun. {pasangan} duduk lama di sampingnya, menggenggam tangannya untuk terakhir kali.",
+        "Hari {hari}: {nama} pergi dengan damai setelah bertahun-tahun hidup bersama {pasangan}. \"Terima kasih untuk semuanya,\" bisiknya."
+      ],
+      "notifikasi": {
+        "judul": "Selamat Jalan, Sesepuh {nama}",
+        "teks": "{nama} berpulang di usia {umur} tahun setelah hidup panjang yang penuh kebaikan.",
+        "tombol": "Kenang bersama"
+      },
+      "kenangan": [
+        "{nama} ({umur} tahun). Sesepuh desa yang selalu punya cerita untuk anak-anak.",
+        "{nama}, yang mengajari separuh desa cara {skill}. Hidup {lama_tinggal} hari di desa ini.",
+        "{nama} ({umur}). Nasihatnya akan terus terdengar di dekat api unggun."
+      ],
+      "pemakaman": {
+        "upacara": [
+          "Hari {hari}: Seluruh desa berkumpul mengantar {nama}. Para cucu meletakkan bunga, dan para tetua bergantian bercerita.",
+          "Hari {hari}: Pemakaman {nama} terasa seperti syukuran. Semua orang mengenang masa mudanya yang konon sangat jahil.",
+          "Hari {hari}: Lagu kesukaan {nama} dinyanyikan bersama. Bahkan {pasangan} ikut tersenyum di sela air matanya."
+        ],
+        "warisan": [
+          "{nama} meninggalkan buku catatan kecil berisi resep, petuah, dan gambar-gambar lucu. Kini disimpan di Balai desa.",
+          "Tongkat kayu {nama} digantung di dekat api unggun. Siapa pun yang lewat menyentuhnya untuk memberi salam.",
+          "Pohon yang ditanam {nama} saat muda kini besar dan rindang. Anak-anak bermain di bawahnya setiap sore.",
+          "Dongeng-dongeng {nama} kini diceritakan ulang oleh para orang tua kepada anak-anak mereka."
+        ],
+        "nisan": [
+          "Di sini beristirahat {nama}, sesepuh desa ({umur} tahun). Terima kasih telah menjaga kami.",
+          "{nama}, {umur} tahun. Hidup panjang, hati lapang, tawa yang tak terlupakan."
+        ]
+      },
+      "duka": {
+        "duka_mulai": [
+          "Desa berduka atas kepergian sesepuh {nama}. Tetapi semua sepakat: hidupnya adalah hidup yang indah.",
+          "Hari ini desa lebih sunyi tanpa cerita {nama}. Anak-anak duduk diam di tempat ia biasa mendongeng."
+        ],
+        "duka_harian": [
+          "Hari {hari}: Kursi goyang {nama} masih di depan rumah. Tak ada yang tega memindahkannya.",
+          "Hari {hari}: {pasangan} memasak resep kesukaan {nama} dan membaginya ke tetangga.",
+          "Hari {hari}: Anak-anak menceritakan ulang dongeng {nama}, lengkap dengan bagian lucunya.",
+          "Hari {hari}: Penduduk menanam bunga di Makam {nama}. Rasanya seperti menyiram kenangan.",
+          "Hari {hari}: Desa kembali bekerja dengan semangat. {nama} pasti ingin semua tetap rajin dan rukun."
+        ],
+        "duka_berakhir": [
+          "Masa berkabung untuk {nama} usai. Petuah-petuahnya tetap tinggal di hati seluruh desa.",
+          "Desa melepas {nama} dengan lapang. Setiap kali ada yang bercerita di dekat api, rasanya ia ikut mendengarkan."
+        ],
+        "tooltip": "Desa berduka untuk sesepuhnya. Kesedihan karena usia tua terasa lebih lembut, dan kenangan membantu desa pulih."
+      }
+    },
+    "panel_keluarga": {
+      "judul": "Keluarga",
+      "label": {
+        "pasangan": "Pasangan",
+        "orang_tua": "Orang tua",
+        "ayah": "Ayah",
+        "ibu": "Ibu",
+        "anak": "Anak",
+        "umur": "Umur",
+        "tahap_usia": "Tahap usia",
+        "status_hubungan": "Status"
+      },
+      "format": {
+        "umur": "{umur} tahun",
+        "orang_tua": "{ayah} & {ibu}",
+        "anak_jumlah": "{jumlah} anak",
+        "pasangan_berduka": "{pasangan} (telah berpulang)"
+      },
+      "kosong": {
+        "pasangan": "Belum ada",
+        "orang_tua": "Belum ada",
+        "ayah": "Belum ada",
+        "ibu": "Belum ada",
+        "anak": "Belum ada"
+      },
+      "kosong_pendiri": "Pendatang pertama desa",
+      "tahap_usia": {
+        "bayi": "Bayi",
+        "anak": "Anak",
+        "remaja": "Remaja",
+        "dewasa": "Dewasa",
+        "lansia": "Lansia"
+      },
+      "status_hubungan": {
+        "lajang": "Lajang",
+        "dekat": "Sedang dekat dengan {pasangan}",
+        "berpasangan": "Berpasangan dengan {pasangan}",
+        "menikah": "Menikah dengan {pasangan}",
+        "ditinggal": "Ditinggal pasangan",
+        "menanti_bayi": "Menanti buah hati"
+      },
+      "tooltip": {
+        "bayi": "Bayi belum bisa bekerja dan butuh orang tua di dekatnya.",
+        "anak": "Anak-anak bermain dan sesekali membantu pekerjaan ringan.",
+        "remaja": "Remaja mulai belajar keahlian dari orang dewasa.",
+        "dewasa": "Penduduk dewasa bekerja penuh untuk desa.",
+        "lansia": "Lansia bekerja lebih santai, tapi nasihatnya membuat desa lebih tenang."
+      }
+    }
+  }
+}

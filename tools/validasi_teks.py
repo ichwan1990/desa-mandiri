@@ -1,4 +1,4 @@
-"""Validasi TEKS-GAME.json v1.2.0 terhadap backup v1.0.0 (+allowlist tuning) dan v1.1.0 (identik): JSON valid, entri lama tak berubah,
+"""Validasi TEKS-GAME.json v1.3.0 terhadap backup v1.0.0 (+allowlist tuning), v1.1.0 dan v1.2.0 (identik): JSON valid, entri lama tak berubah,
 semua key efek, tipe/target tujuan, dan placeholder terdaftar di meta."""
 import json, re, sys
 ROOT = "/workspace/village-game/"
@@ -23,7 +23,7 @@ def sub(a, b, p):
         if a != b: err.append(f"list berubah: {p}")
     elif a != b: err.append(f"nilai berubah: {p}")
 sub(old, new, "")
-if new["meta"]["versi"] != "1.2.0": err.append("meta.versi bukan 1.2.0")
+if new["meta"]["versi"] != "1.3.0": err.append("meta.versi bukan 1.3.0")
 for k in old:
     if list(new).index(k) != list(old).index(k): err.append(f"urutan key top-level berubah: {k}")
 m = new["meta"]
@@ -145,6 +145,66 @@ if all(k in new for k in V12):
         if not k.startswith("bangunan_") or k != "bangunan_" + v["id_bangunan"] or v["id_bangunan"] not in m["bangunan_pertahanan"]: err.append(f"bangunan_ancaman {k}")
     if set(new["prioritas_darurat"]) != {"jaga","padam","rawat","makam"}: err.append("prioritas_darurat")
     if not {"waspada","bahaya"} <= set(new["penduduk_pergi"]["peringatan"]) or not new["penduduk_pergi"]["surat_perpisahan"]: err.append("penduduk_pergi")
+# ---------- v1.3.0: entri v1.2.0 harus identik ----------
+old12 = json.load(open(ROOT + "tools/TEKS-GAME.v1.2.0.json", encoding="utf-8"))
+_n = len(err); sub(old12, new, "")
+if len(err) > _n: err.insert(_n, "^ perbedaan terhadap v1.2.0:")
+for k in old12:
+    if list(new).index(k) != list(old12).index(k): err.append(f"urutan key top-level v1.2 berubah: {k}")
+for sec in old12["meta"]:
+    if isinstance(old12["meta"][sec], dict) and list(new["meta"][sec])[:len(old12["meta"][sec])] != list(old12["meta"][sec]): err.append(f"urutan meta.{sec} berubah (v1.2)")
+# ---------- v1.3.0: jadwal harian & reproduksi ----------
+V13 = ["log_jadwal","log_hubungan","kehamilan","kelahiran","tumbuh_kembang","lansia_berpulang","panel_keluarga"]
+for k in V13:
+    if k not in new: err.append(f"bagian v1.3 hilang: {k}")
+for k in ("{nama}","{pasangan}","{bayi}","{ayah}","{ibu}","{umur}"):
+    if k not in m["placeholder"]: err.append(f"placeholder wajib v1.3 tidak terdaftar: {k}")
+for k in ("status_jadwal_keluarga","catatan_placeholder_keluarga","tahap_usia","status_hubungan","milestone_anak"):
+    if k not in m: err.append(f"meta.{k} hilang")
+def daftar(x):  # semua string di dalam x
+    if isinstance(x, str): yield x
+    elif isinstance(x, dict):
+        for k, v in x.items():
+            if not k.startswith("_"): yield from daftar(v)
+    elif isinstance(x, list):
+        for v in x: yield from daftar(v)
+if all(k in new for k in V13):
+    J = new["log_jadwal"]
+    for need in ("pulang","tidur","bangun_pagi","tidur_di_luar","tidur_di_luar_dingin"):
+        if len(J.get(need, [])) < 3: err.append(f"log_jadwal.{need} kurang dari 3 variasi")
+    for k, v in J.items():  # varian umum tidak boleh butuh {pasangan}
+        if k != "berpasangan" and any("{pasangan}" in t for t in daftar(v)): err.append(f"log_jadwal.{k} memakai {{pasangan}}; pindahkan ke berpasangan")
+    for k, v in J["berpasangan"].items():
+        if not k.startswith("_") and not all("{pasangan}" in t for t in v): err.append(f"log_jadwal.berpasangan.{k} tanpa {{pasangan}}")
+    H = new["log_hubungan"]
+    for need in ("menjadi_dekat","menjadi_pasangan","menikah"):
+        if len(H.get(need, [])) < 2 or not all("{pasangan}" in t for t in H[need]): err.append(f"log_hubungan.{need}")
+    K = new["kehamilan"]
+    if len(K["kabar"]) < 2 or len(K["masa_kehamilan"]) < 3: err.append("kehamilan kurang variasi")
+    L = new["kelahiran"]
+    if len(L["log"]) < 3 or not all("{bayi}" in t for t in L["log"]): err.append("kelahiran.log harus >= 3 dan memakai {bayi}")
+    nb = L["nama_bayi"]; semua_nb = nb["laki_laki"] + nb["perempuan"]
+    if len(nb["laki_laki"]) < 30 or len(nb["perempuan"]) < 30: err.append("nama_bayi < 30 per jenis kelamin")
+    if len({x.lower() for x in semua_nb}) != len(semua_nb): err.append("nama_bayi duplikat")
+    cfg = re.search(r"NAMES:\s*\[([^\]]*)\]", open(ROOT + "balance.js", encoding="utf-8").read())
+    lama = [p["nama"] for p in new["penduduk"]] + new["dialog_pedagang"]["nama_pedagang"] + (re.findall(r"'([^']+)'", cfg.group(1)) if cfg else [])
+    token = {t.lower() for n in lama for t in n.split()}
+    for x in semua_nb:
+        if x.lower() in token: err.append(f"nama_bayi bentrok dengan nama yang sudah ada: {x}")
+    T = new["tumbuh_kembang"]
+    if set(T["milestone"]) != set(m["milestone_anak"]): err.append("tumbuh_kembang.milestone != meta.milestone_anak")
+    for need in ("menjadi_dewasa","menjadi_lansia"):
+        if not T.get(need): err.append(f"tumbuh_kembang.{need} kosong")
+    B = new["lansia_berpulang"]
+    if len(B["meninggal"]) < 3 or len(B["duka"]["duka_harian"]) != 5 or not B["pemakaman"]["upacara"]: err.append("lansia_berpulang struktur")
+    if not all(k.startswith("duka_") for k in B["duka"] if k != "tooltip"): err.append("lansia_berpulang.duka key harus duka_*")
+    Pk = new["panel_keluarga"]
+    for need in ("pasangan","orang_tua","ayah","ibu","anak","umur","tahap_usia","status_hubungan"):
+        if need not in Pk["label"]: err.append(f"panel_keluarga.label.{need} hilang")
+    for need in ("pasangan","orang_tua","anak"):
+        if Pk["kosong"].get(need, "").lower() != "belum ada": err.append(f"panel_keluarga.kosong.{need} harus 'Belum ada'")
+    if set(Pk["tahap_usia"]) != set(m["tahap_usia"]) or set(Pk["status_hubungan"]) != set(m["status_hubungan"]): err.append("panel_keluarga vs meta tahap/status")
+    if set(Pk["tahap_usia"]) != {"bayi","anak","remaja","dewasa","lansia"}: err.append("tahap_usia harus bayi/anak/remaja/dewasa/lansia")
 # placeholder di seluruh bagian baru
 baru = [k for k in new if k not in old]
 ph_ok = {k.strip("{}") for k in m["placeholder"]}
@@ -162,5 +222,8 @@ print("Entri: teknologi", len(new["teknologi"]), "| pencapaian", len(aids), f"(r
 if all(k in new for k in V12):
     print("v1.2.0: musim_pembuka", len(new["musim_pembuka"]), "| peringatan_dini", len(new["peringatan_dini"]),
           "| event_musiman", len(new["event_musiman"]), "| log_ancaman", len(new["log_ancaman"]), "kategori")
+if all(k in new for k in V13):
+    print("v1.3.0: " + " | ".join(f"{k} {sum(1 for _ in daftar(new[k]))} teks" for k in V13),
+          f"| nama_bayi L{len(new['kelahiran']['nama_bayi']['laki_laki'])}/P{len(new['kelahiran']['nama_bayi']['perempuan'])}")
 if err: print("GAGAL:"); [print(" -", e) for e in err]; sys.exit(1)
 print("OK: JSON valid, entri lama utuh, semua efek/tipe/target/placeholder terdaftar.")
