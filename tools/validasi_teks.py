@@ -1,4 +1,4 @@
-"""Validasi TEKS-GAME.json v1.1.0 terhadap backup v1.0.0: JSON valid, entri lama tak berubah,
+"""Validasi TEKS-GAME.json v1.2.0 terhadap backup v1.0.0 (+allowlist tuning) dan v1.1.0 (identik): JSON valid, entri lama tak berubah,
 semua key efek, tipe/target tujuan, dan placeholder terdaftar di meta."""
 import json, re, sys
 ROOT = "/workspace/village-game/"
@@ -23,14 +23,14 @@ def sub(a, b, p):
         if a != b: err.append(f"list berubah: {p}")
     elif a != b: err.append(f"nilai berubah: {p}")
 sub(old, new, "")
-if new["meta"]["versi"] != "1.1.0": err.append("meta.versi bukan 1.1.0")
+if new["meta"]["versi"] != "1.2.0": err.append("meta.versi bukan 1.2.0")
 for k in old:
     if list(new).index(k) != list(old).index(k): err.append(f"urutan key top-level berubah: {k}")
 m = new["meta"]
 efek_ok = set(m["sumber_daya"]) | {k for k in m["kunci_efek"] if not k.startswith("_")}
 tipe_ok = set(m["tipe_tujuan_quest"])
 tech_ids = [t["id"] for t in new["teknologi"]]
-ev_ids = {e["id"] for e in new["event_acak"] + new["event_era_lanjut"]}
+ev_ids = {e["id"] for e in new["event_acak"] + new["event_era_lanjut"] + new.get("event_musiman", [])}
 BID = {"api_unggun","gubuk","gudang","ladang","sumur","dapur","bengkel_alat","lumbung","pasar","balai_desa"}  # dipetakan game.js
 musim = {x["id"] for x in m["musim"]}
 khusus = {k for k in m["target_khusus"] if not k.startswith("_")}
@@ -50,7 +50,7 @@ def cek_tujuan(g, src):
     if not ok: err.append(f"target {tg} tidak valid untuk {t} @ {src}")
     if not isinstance(g.get("jumlah"), int) or g["jumlah"] < 1: err.append(f"jumlah tidak valid @ {src}")
     if t == "pilih_event":
-        e = next(e for e in new["event_acak"] + new["event_era_lanjut"] if e["id"] == tg)
+        e = next(e for e in new["event_acak"] + new["event_era_lanjut"] + new.get("event_musiman", []) if e["id"] == tg)
         if not 0 <= g.get("pilihan", -1) < len(e["pilihan"]): err.append(f"indeks pilihan salah @ {src}")
     if t == "beruntun_hari_pangan" and "ambang" not in g: err.append(f"ambang hilang @ {src}")
 for i, e in enumerate(new["event_era_lanjut"]):
@@ -60,7 +60,7 @@ for i, e in enumerate(new["event_era_lanjut"]):
         if set(p) != {"teks","efek","teks_hasil"}: err.append(f"struktur pilihan {e['id']}[{j}]")
         cek_efek(p["efek"], f"{e['id']}[{j}]")
     if any(v < 0 and k in m["sumber_daya"] for k, v in e["pilihan"][-1]["efek"].items()): err.append(f"pilihan terakhir berbiaya {e['id']}")
-if len(ev_ids) != len(new["event_acak"]) + len(new["event_era_lanjut"]): err.append("id event duplikat")
+if len(ev_ids) != len(new["event_acak"]) + len(new["event_era_lanjut"]) + len(new.get("event_musiman", [])): err.append("id event duplikat")
 qids = [q["id"] for q in new["quest_awal"] + new["quest_lanjutan"]]
 if len(set(qids)) != len(qids): err.append("id quest duplikat")
 for q in new["quest_lanjutan"]:
@@ -82,6 +82,69 @@ for a in new["pencapaian"]:
     hk = a.get("hadiah_khusus")
     if hk and hk["tipe"] not in m["tipe_hadiah_khusus"]: err.append(f"tipe hadiah_khusus {a['id']}")
     if hk and hk["tipe"] == "diskon_teknologi" and hk["target"] not in tech_ids: err.append(f"target diskon {a['id']}")
+# ---------- v1.2.0: entri v1.1.0 harus identik (mengunci 14 angka retuning 88f8d97) ----------
+old11 = json.load(open(ROOT + "tools/TEKS-GAME.v1.1.0.json", encoding="utf-8"))
+_n = len(err); sub(old11, new, "")
+if len(err) > _n: err.insert(_n, "^ perbedaan terhadap v1.1.0:")
+for k in old11:
+    if list(new).index(k) != list(old11).index(k): err.append(f"urutan key top-level v1.1 berubah: {k}")
+for sec in old11["meta"]:
+    if isinstance(old11["meta"][sec], dict) and list(new["meta"][sec])[:len(old11["meta"][sec])] != list(old11["meta"][sec]): err.append(f"urutan meta.{sec} berubah")
+RETUNING_88F8D97 = [("quest_awal","q02_kayu_bakar",None,"makanan",6), ("quest_awal","q07_ladang_pertama",None,"makanan",10),
+  ("event_acak","pedagang_keliling",0,"makanan",6), ("event_acak","panen_raya",0,"gandum",8), ("event_acak","panen_raya",0,"makanan",5),
+  ("event_acak","panen_raya",1,"makanan",5), ("event_acak","panen_raya",2,"gandum",4), ("event_acak","hewan_buas",0,"daging",8),
+  ("event_era_lanjut","embun_beku",0,"gandum",6), ("quest_lanjutan","q11_dapur_mengepul",None,"makanan",5),
+  ("quest_lanjutan","q12_hamparan_ladang",None,"gandum",3), ("quest_lanjutan","q15_ilmu_pertama",None,"makanan",8),
+  ("pencapaian","A06",None,"gandum",3), ("pencapaian","A14",None,"makanan",10)]
+for sec, id_, i, key, val in RETUNING_88F8D97:
+    e = next(x for x in new[sec] if x["id"] == id_); got = (e["hadiah"] if i is None else e["pilihan"][i]["efek"]).get(key)
+    if got != val: err.append(f"angka retuning berubah: {sec}/{id_}/{key} = {got}, harus {val}")
+# ---------- v1.2.0: bagian musim & ancaman ----------
+V12 = ["musim_pembuka","peringatan_dini","jenjang_kelaparan","event_musiman","log_ancaman","penduduk_sakit",
+       "penduduk_meninggal","pemakaman","duka","penduduk_pergi","bangunan_ancaman","prioritas_darurat"]
+for k in V12:
+    if k not in new: err.append(f"bagian v1.2 hilang: {k}")
+for k in ("status_musim_ancaman","tingkat_peringatan","tingkat_kelaparan","penyebab_kondisi","hewan","bangunan_pertahanan"):
+    if k not in m: err.append(f"meta.{k} hilang")
+if all(k in new for k in V12):
+    for k, v in new["musim_pembuka"].items():
+        if not k.startswith("musim_") or v["musim"] not in musim or len(v["variasi"]) < 2: err.append(f"musim_pembuka {k}")
+    for need in ["musim_" + x for x in musim] + ["musim_gugur_menuju_dingin"]:
+        if need not in new["musim_pembuka"]: err.append(f"musim_pembuka kurang {need}")
+    tp = set(m["tingkat_peringatan"])
+    for need in ("banjir","kekeringan","kebakaran","serigala","dingin_ekstrem","badai","kelaparan"):
+        if "ancaman_" + need not in new["peringatan_dini"]: err.append(f"peringatan_dini kurang ancaman_{need}")
+    for k, v in new["peringatan_dini"].items():
+        if not k.startswith("ancaman_") or not set(v["tingkat"]) <= tp or not {"waspada","bahaya"} <= set(v["tingkat"]): err.append(f"peringatan_dini {k}")
+        if not set(v["musim"]) <= musim: err.append(f"musim peringatan {k}")
+        for t in v["tingkat"].values():
+            if not t["teks"]: err.append(f"teks peringatan kosong {k}")
+        for ev in v["event_terkait"]:
+            if ev not in ev_ids: err.append(f"event_terkait {ev} @ {k}")
+    if set(new["jenjang_kelaparan"]["tingkat"]) != set(m["tingkat_kelaparan"]): err.append("jenjang_kelaparan != meta.tingkat_kelaparan")
+    per_musim = {x: 0 for x in musim}
+    for e in new["event_musiman"]:
+        if set(e) != {"id","judul","kategori","deskripsi","pilihan","musim"}: err.append(f"struktur event_musiman {e['id']}")
+        if e["musim"] not in musim: err.append(f"musim event {e['id']}")
+        else: per_musim[e["musim"]] += 1
+        for j, p in enumerate(e["pilihan"]):
+            if set(p) != {"teks","efek","teks_hasil"}: err.append(f"struktur pilihan {e['id']}[{j}]")
+            cek_efek(p["efek"], f"{e['id']}[{j}]")
+            for f in ("makanan","gandum","buah","ikan","daging"):
+                if p["efek"].get(f, 0) > 5: err.append(f"hadiah pangan > 5 (nerf §7) {e['id']}[{j}].{f}")
+        if any(v < 0 and k in m["sumber_daya"] for k, v in e["pilihan"][-1]["efek"].items()): err.append(f"pilihan terakhir berbiaya {e['id']}")
+    for x, n in per_musim.items():
+        if n < 2: err.append(f"event_musiman musim {x} hanya {n}")
+    for need in ("banjir_kecil", "dingin_ekstrem"):
+        if need not in {e["id"] for e in new["event_musiman"]}: err.append(f"event_musiman kurang {need}")
+    pk = set(m["penyebab_kondisi"]); lima = {"sakit","tua","kelaparan","dingin","serangan"}
+    if set(new["penduduk_meninggal"]["per_penyebab"]) != lima: err.append("penduduk_meninggal.per_penyebab harus 5 penyebab")
+    if not set(new["pemakaman"]["per_penyebab"]) <= pk or not set(new["penduduk_sakit"]["per_penyebab"]) <= pk: err.append("penyebab tak terdaftar")
+    if not all(k.startswith("duka_") for k in new["duka"] if k != "tooltip") or len(new["duka"]["duka_harian"]) != 5: err.append("struktur duka")
+    for k, v in new["bangunan_ancaman"].items():
+        if not k.startswith("bangunan_") or k != "bangunan_" + v["id_bangunan"] or v["id_bangunan"] not in m["bangunan_pertahanan"]: err.append(f"bangunan_ancaman {k}")
+    if set(new["prioritas_darurat"]) != {"jaga","padam","rawat","makam"}: err.append("prioritas_darurat")
+    if not {"waspada","bahaya"} <= set(new["penduduk_pergi"]["peringatan"]) or not new["penduduk_pergi"]["surat_perpisahan"]: err.append("penduduk_pergi")
 # placeholder di seluruh bagian baru
 baru = [k for k in new if k not in old]
 ph_ok = {k.strip("{}") for k in m["placeholder"]}
@@ -96,5 +159,8 @@ print("Bagian baru:", ", ".join(f"{k}={len(new[k])}" for k in baru))
 print("Entri: teknologi", len(new["teknologi"]), "| pencapaian", len(aids), f"(rahasia {sum(1 for a in new['pencapaian'] if a.get('rahasia'))})",
       "| event_era_lanjut", len(new["event_era_lanjut"]), "| quest_lanjutan", len(new["quest_lanjutan"]),
       "| pesan_fluktuasi", len(new["pasar"]["pesan_fluktuasi"]))
+if all(k in new for k in V12):
+    print("v1.2.0: musim_pembuka", len(new["musim_pembuka"]), "| peringatan_dini", len(new["peringatan_dini"]),
+          "| event_musiman", len(new["event_musiman"]), "| log_ancaman", len(new["log_ancaman"]), "kategori")
 if err: print("GAGAL:"); [print(" -", e) for e in err]; sys.exit(1)
 print("OK: JSON valid, entri lama utuh, semua efek/tipe/target/placeholder terdaftar.")
