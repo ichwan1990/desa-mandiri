@@ -52,6 +52,39 @@ window.ASSETS = {
   // Kerja: 12 baris (0-3 menebang, 4-7 menambang, 8-11 membawa), arah b/ki/ka/at
   penduduk_kerja: { img: ['assets/characters/villager_1_work.png','assets/characters/villager_2_work.png','assets/characters/villager_3_work.png','assets/characters/villager_4_work.png'],
               fw: 32, fh: 32, frames: 4, fpsWork: 7, fpsCarry: 8, rows: { tebang: 0, tambang: 4, bawa: 8 } },
+  // ---- Tahap 3 ----
+  gubuk_dingin: { color: '#e8eef2', img: 'assets/buildings/winter/hut_winter.png', fw: 64, fh: 64 },
+  gubuk_malam_dingin: { color: '#e8eef2', img: 'assets/buildings/winter/hut_night_winter.png', fw: 64, fh: 64 },
+  gudang_dingin: { color: '#e8eef2', img: 'assets/buildings/winter/warehouse_winter.png', fw: 96, fh: 64 },
+  sumur_dingin: { color: '#e8eef2', img: 'assets/buildings/winter/well_winter.png', fw: 32, fh: 64 },
+  apiunggun_dingin: { color: '#ff9a2a', img: 'assets/buildings/winter/campfire_winter.png', frames: 4, fps: 8 },
+  dapur_dingin: { color: '#e8eef2', img: 'assets/buildings/winter/kitchen_winter.png', fw: 64, fh: 64 },
+  dapur_malam_dingin: { color: '#e8eef2', img: 'assets/buildings/winter/kitchen_night_winter.png', fw: 64, fh: 64 },
+  bengkel_dingin: { color: '#e8eef2', img: 'assets/buildings/winter/workshop_winter.png', fw: 96, fh: 64 },
+  lumbung_dingin: { color: '#e8eef2', img: 'assets/buildings/winter/granary_winter.png', fw: 64, fh: 96 },
+  lumbung_malam_dingin: { color: '#e8eef2', img: 'assets/buildings/winter/granary_night_winter.png', fw: 64, fh: 96 },
+  pasar_dingin: { color: '#e8eef2', img: 'assets/buildings/winter/market_winter.png', fw: 96, fh: 64 },
+  balai_dingin: { color: '#e8eef2', img: 'assets/buildings/winter/town_hall_winter.png', fw: 128, fh: 96 },
+  balai_malam_dingin: { color: '#e8eef2', img: 'assets/buildings/winter/town_hall_night_winter.png', fw: 128, fh: 96 },
+  // Pagar jembatan: belakang digambar sebelum karakter, depan sesudahnya (frame: ujung kiri, tengah, ujung kanan)
+  rel_belakang: { img: 'assets/buildings/bridge_rail_h_back.png', frames: 3 },
+  rel_depan:    { img: 'assets/buildings/bridge_rail_h_front.png', frames: 3 },
+  rel_v:        { img: 'assets/buildings/bridge_rail_v.png', frames: 3 },
+  // Senja/fajar (warna = dusk_overlay.png / dawn_overlay.png), di-tween sebelum & sesudah malam
+  senja_overlay: { color: 'rgba(150,70,120,0.35)' },
+  fajar_overlay: { color: 'rgba(250,186,140,0.27)' },
+  // Membawa per jenis: baris = tipe*4 + arah; tipe kayu 0, batu 1, makanan 2, air 3
+  penduduk_bawa: { img: ['assets/characters/villager_1_carry.png','assets/characters/villager_2_carry.png','assets/characters/villager_3_carry.png','assets/characters/villager_4_carry.png'],
+              fw: 32, fh: 32, frames: 4, fps: 8, tipe: { kayu: 0, batu: 1, makanan: 2, gandum: 2, air: 3 } },
+  // Ikon UI (dipakai lewat path di HTML; tidak perlu dimuat ke canvas)
+  ikon_need_hunger: { ui: 'assets/icons/needs/need_hunger.png' }, ikon_need_energy: { ui: 'assets/icons/needs/need_energy.png' },
+  ikon_need_mood: { ui: 'assets/icons/needs/need_mood.png' }, ikon_need_health: { ui: 'assets/icons/needs/need_health.png' },
+  ikon_skill_menebang: { ui: 'assets/icons/skills/skill_chop.png' }, ikon_skill_menambang: { ui: 'assets/icons/skills/skill_mine.png' },
+  ikon_skill_meramu: { ui: 'assets/icons/skills/skill_gather.png' }, ikon_skill_membangun: { ui: 'assets/icons/skills/skill_build.png' },
+  ikon_skill_bertani: { ui: 'assets/icons/skills/skill_farm.png' }, ikon_skill_meneliti: { ui: 'assets/icons/tech/tech_tools.png' },
+  ikon_tech_era_camp: { ui: 'assets/icons/tech/tech_era_camp.png' }, ikon_tech_storage: { ui: 'assets/icons/tech/tech_storage.png' },
+  ikon_tech_farming: { ui: 'assets/icons/tech/tech_farming.png' }, ikon_tech_well: { ui: 'assets/icons/tech/tech_well.png' },
+  ikon_tech_bread: { ui: 'assets/icons/tech/tech_bread.png' }, ikon_tech_tools: { ui: 'assets/icons/tech/tech_tools.png' },
   blob47:   { json: 'assets/tiles/autotile_blob47.json' },
 };
 window.loadAssets = function (done) {

@@ -27,6 +27,6 @@ const path = require('path');
   await p.evaluate(() => { const v = DESA.state.villagers[0]; DESA.centerCam(v.x, v.y); }); await p.waitForTimeout(400);
   await p.screenshot({ path: path.join(__dirname, '..', 'docs', 'screenshots', 'v4-villager.png') });
   await p.click('#vpClose'); r.closed = !(await p.isVisible('#vpanel'));
-  const ok = r.panel && r.content.bars === 4 && r.content.skills === 5 && r.fav === 'batu' && r.stats.vb > r.stats.ob && r.stats.critOk && r.closed;
+  const ok = r.panel && r.content.bars === 4 && r.content.skills === 6 && r.fav === 'batu' && r.stats.vb > r.stats.ob && r.stats.critOk && r.closed;
   console.log(JSON.stringify({ r, ok, errs })); if (!ok || errs.length) process.exitCode = 1; await b.close();
 })();

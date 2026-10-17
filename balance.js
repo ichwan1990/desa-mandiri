@@ -81,7 +81,7 @@ window.CONFIG = {
   VILLAGER_HISTORY: 10, // panjang riwayat per penduduk
   MAX_LOG: 40, MAX_NOTES: 6,
   FOOD_SURPLUS_FACTOR: 1.2, FOOD_SURPLUS_PENALTY: 25, // jika stok makanan melimpah, kerja makanan turun prioritas
-  DEFAULT_PRIO: { bangun: 3, makanan: 3, bertani: 2, air: 2, kayu: 2, batu: 2 }, // 0=mati .. 3=tinggi
+  DEFAULT_PRIO: { bangun: 3, makanan: 3, bertani: 2, air: 2, kayu: 2, batu: 2, riset: 1 }, // 0=mati .. 3=tinggi
   EVENT_MIN_DAY: 3, EVENT_CHANCE_PER_DAY: 0.18, FLAVOR_LOG_PER_DAY: 1,
   START_BUILDINGS: [], // contoh: [['gudang', 16, 10]]  (quest awal meminta pemain membangun Api Unggun/Gudang sendiri)
 };

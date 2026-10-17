@@ -1,7 +1,7 @@
 {
   "meta": {
     "judul_game": "Desa Mandiri",
-    "versi": "1.0.0",
+    "versi": "1.1.0",
     "bahasa": "id-ID",
     "encoding": "UTF-8",
     "nuansa": "Hangat, santai, dan menggemaskan. Pemain menjaga penduduk kecil yang hidup mandiri. Ancaman nyata tapi ringan (badai, babi hutan, wabah, kekurangan makanan), dengan kehangatan kebersamaan sebagai penyeimbang.",
@@ -16,7 +16,16 @@
       "{musim}": "Nama musim, lihat meta.musim",
       "{pesan_musim}": "Pesan pembuka musim, lihat meta.musim[].pesan",
       "{era}": "Nama era, lihat meta.era",
-      "{umur}": "Umur penduduk (angka)"
+      "{umur}": "Umur penduduk (angka)",
+      "{jumlah2}": "Jumlah kedua (mis. imbalan dagang, atau total/target pada teks progres)",
+      "{sumber_daya2}": "Nama sumber daya kedua (mis. barang imbalan), lihat meta.sumber_daya",
+      "{persen}": "Persentase (angka tanpa tanda %), mis. perubahan harga atau progres riset",
+      "{nilai}": "Nilai dagang satu unit barang di pasar (angka)",
+      "{kuota}": "Kuota nilai dagang pasar per hari (angka)",
+      "{hari_sisa}": "Sisa hari sebelum tenggat kontrak (angka)",
+      "{teknologi}": "Nama teknologi, lihat teknologi[].nama",
+      "{pencapaian}": "Nama pencapaian, lihat pencapaian[].nama",
+      "{pedagang}": "Nama pedagang, ambil dari dialog_pedagang.nama_pedagang"
     },
     "sumber_daya": {
       "kayu": "Kayu",
@@ -95,14 +104,73 @@
       "kesehatan": "Perubahan kesehatan seluruh penduduk (poin)",
       "penduduk": "Perubahan jumlah penduduk (orang)",
       "hari_kerja_hilang": "Jumlah hari penduduk tidak bekerja",
-      "kesehatan_bangunan": "Perubahan kondisi bangunan (persen)"
+      "kesehatan_bangunan": "Perubahan kondisi bangunan (persen)",
+      "progres_riset": "Tambahan progres riset teknologi yang sedang berjalan (persen dari total work node itu). Diabaikan bila tidak ada riset aktif.",
+      "harga_jual_pangan": "Perubahan harga jual makanan & gandum di pasar (persen) selama 5 hari",
+      "harga_beli_pangan": "Perubahan harga beli makanan & gandum di pasar (persen) selama 5 hari"
     },
     "tipe_tujuan_quest": {
       "bangun": "Selesaikan bangunan dengan id target sebanyak jumlah",
       "kumpulkan": "Kumpulkan sumber daya target secara kumulatif sebanyak jumlah",
       "simpan": "Miliki stok sumber daya target minimal jumlah pada satu waktu",
       "capai_penduduk": "Capai jumlah penduduk minimal jumlah",
-      "capai_era": "Capai era dengan id target"
+      "capai_era": "Capai era dengan id target",
+      "riset": "Selesaikan riset: target \"semua\" = jumlah teknologi apa saja yang selesai; target id teknologi (mis. \"T18\") = teknologi itu selesai (jumlah 1)",
+      "transaksi_pasar": "Selesaikan transaksi jual/beli di Pasar sebanyak jumlah (kumulatif), target \"pasar\"",
+      "kontrak_selesai": "Selesaikan kontrak pasar tepat waktu sebanyak jumlah (kumulatif), target \"pasar\"",
+      "panen": "Panen petak bangunan target (\"ladang\") sebanyak jumlah kali (kumulatif)",
+      "simpan_pangan": "Miliki stok makanan + gandum gabungan minimal jumlah pada satu waktu, target \"pangan\"",
+      "hari_pangan": "Stok pangan cukup untuk minimal jumlah hari (foodDays) saat ini, target \"hari\"",
+      "beruntun_hari_pangan": "foodDays >= syarat.ambang selama jumlah hari berturut-turut, target \"hari\"",
+      "lewati_musim": "Lewati musim target (id meta.musim) sampai selesai sebanyak jumlah; jika syarat.tanpa_kelaparan true, tidak boleh ada penduduk dengan lapar kritis sepanjang musim itu",
+      "tanpa_kematian": "Tidak ada penduduk yang meninggal selama jumlah hari berturut-turut, target \"hari\"",
+      "capai_hari": "Capai hari ke-jumlah, target \"hari\"",
+      "adakan_festival": "Adakan festival sebanyak jumlah (efek T20 Festival Adat atau event festival_desa), target \"semua\"",
+      "pilih_event": "Pilih opsi syarat.pilihan (indeks 0-based) pada event dengan id target sebanyak jumlah",
+      "alami_event": "Alami event dengan id target sebanyak jumlah (kumulatif, apa pun pilihannya)",
+      "gabungan": "Semua syarat di syarat.semua (daftar tipe/target/jumlah) terpenuhi bersamaan; target = id pencapaian/kondisi"
+    },
+    "status_tech": "mengikuti_riset",
+    "sumber_tech": "docs/RISET-TAHAP3.md (bagian 1 teknologi, 2 pasar, 3 pencapaian, 6 catatan teks)",
+    "cabang_teknologi": {
+      "bertahan": "Bertahan",
+      "produksi": "Produksi",
+      "masyarakat": "Masyarakat",
+      "perdagangan": "Perdagangan"
+    },
+    "target_khusus": {
+      "_catatan": "Target tujuan yang bukan id sumber daya/bangunan/era/musim/event/teknologi.",
+      "semua": "Hitung semua (dipakai tipe riset, adakan_festival, dan hadiah bonus_harga_jual)",
+      "pangan": "Makanan + gandum (tipe simpan_pangan)",
+      "hari": "Satuan hari (tipe hari_pangan, beruntun_hari_pangan, tanpa_kematian, capai_hari)",
+      "pasar": "Kegiatan di Pasar (tipe transaksi_pasar, kontrak_selesai)",
+      "penduduk": "Jumlah penduduk (tipe capai_penduduk, sudah dipakai v1.0.0)",
+      "desa_mandiri": "Kondisi akhir lembut pencapaian A18 (tipe gabungan)"
+    },
+    "field_syarat_opsional": {
+      "ambang": "Angka ambang untuk tipe beruntun_hari_pangan",
+      "tanpa_kelaparan": "Boolean untuk tipe lewati_musim",
+      "pilihan": "Indeks pilihan event (0-based) untuk tipe pilih_event",
+      "semua": "Daftar syarat untuk tipe gabungan"
+    },
+    "tipe_hadiah_khusus": {
+      "_catatan": "pencapaian[].hadiah_khusus = {tipe, target, jumlah, ...}. hadiah biasa tetap memakai kunci_efek/sumber_daya.",
+      "bonus_harga_jual": "Harga jual target (\"semua\" atau id sumber daya) naik jumlah persen selama field hari",
+      "diskon_teknologi": "Biaya riset teknologi target (id) turun jumlah persen, sekali, jika belum diriset",
+      "bonus_angkut": "CARRY sumber daya target naik jumlah secara permanen",
+      "gelar": "Gelar kosmetik kepala desa; field teks = nama gelar",
+      "lencana": "Lencana kosmetik; field teks = nama lencana, teks_akhir = teks ending lembut (boleh terus bermain)"
+    },
+    "struktur_tambahan": {
+      "teknologi": "Daftar node {id, nama, cabang, era, prasyarat[id teknologi], syarat_tambahan[tipe/target/jumlah], deskripsi, efek_ringkas, teks_terbuka, teks_selesai}. Biaya & work ada di balance.js.",
+      "pencapaian": "Daftar {id, nama, deskripsi, syarat{tipe,target,jumlah,+field opsional}, hadiah, teks_terbuka, hadiah_khusus?, rahasia?}",
+      "event_era_lanjut": "Sama dengan event_acak + era (era minimum, id meta.era)",
+      "quest_lanjutan": "Sama dengan quest_awal; urutan melanjutkan quest_awal (11-20)",
+      "pasar": "Teks UI pasar, tooltip harga, pesan_fluktuasi[id,teks], kuota, transaksi, kontrak",
+      "dialog_pedagang": "Daftar variasi teks per kategori; tawar_menawar berisi sub-kategori",
+      "menu": "Menu utama, konfirmasi, kredit",
+      "pengaturan": "Label & deskripsi opsi pengaturan",
+      "ui_progres": "Label panel pohon teknologi dan pencapaian"
     }
   },
   "penduduk": [
@@ -1036,6 +1104,1750 @@
         "suasana_hati": 20
       },
       "teks_selesai": "Perkemahan kecil kini menjadi Dusun yang ramai. Perjalanan desa baru saja dimulai!"
+    }
+  ],
+  "menu": {
+    "judul": "Desa Mandiri",
+    "subjudul": "Sebuah desa mungil yang tumbuh pelan-pelan, bersama penduduk yang punya pikiran sendiri.",
+    "slogan_acak": [
+      "Api unggun sudah menyala. Penduduk menunggumu.",
+      "Hari ini cerah. Cocok untuk menanam sesuatu.",
+      "Ada bau roti hangat dari arah dapur...",
+      "Penduduk sedang bersenandung sambil bekerja.",
+      "Gudang belum penuh, tapi hati sudah hangat."
+    ],
+    "tombol": {
+      "mulai": "Mulai Desa Baru",
+      "lanjut": "Lanjutkan",
+      "muat": "Muat Simpanan",
+      "simpan": "Simpan Sekarang",
+      "pengaturan": "Pengaturan",
+      "kredit": "Kredit",
+      "keluar": "Keluar",
+      "kembali": "Kembali",
+      "ya": "Ya",
+      "tidak": "Tidak",
+      "batal": "Batal",
+      "tutup": "Tutup"
+    },
+    "keterangan_tombol": {
+      "mulai": "Mulai dari dua penduduk dan sebuah tanah kecil yang masih sepi.",
+      "lanjut": "Kembali ke desamu tepat di hari terakhir kamu bermain.",
+      "muat": "Buka desa yang pernah disimpan di peramban ini.",
+      "pengaturan": "Atur suara, kecepatan, tampilan, dan simpanan otomatis.",
+      "kredit": "Orang-orang baik di balik desa kecil ini.",
+      "keluar": "Istirahat dulu. Penduduk akan menunggu dengan sabar."
+    },
+    "konfirmasi": {
+      "mulai_baru": {
+        "judul": "Mulai Desa Baru?",
+        "teks": "Desa yang sedang berjalan akan diganti dengan desa baru. Penduduk lama akan melambaikan tangan untuk terakhir kali. Lanjutkan?",
+        "ya": "Mulai dari awal",
+        "tidak": "Tetap di desa ini"
+      },
+      "muat": {
+        "judul": "Muat Simpanan?",
+        "teks": "Kemajuan yang belum disimpan akan hilang. Yakin ingin memuat simpanan Hari {hari}?",
+        "ya": "Muat",
+        "tidak": "Batal"
+      },
+      "keluar": {
+        "judul": "Mau Istirahat Dulu?",
+        "teks": "Desa akan disimpan dulu sebelum kamu pergi. Sampai jumpa lagi, Kepala Desa!",
+        "ya": "Simpan dan keluar",
+        "tidak": "Main sebentar lagi"
+      },
+      "kembali_ke_menu": {
+        "judul": "Kembali ke Menu Utama?",
+        "teks": "Permainan akan dijeda dan disimpan. Penduduk akan tetap di tempatnya.",
+        "ya": "Ke menu utama",
+        "tidak": "Tetap bermain"
+      }
+    },
+    "pesan": {
+      "tidak_ada_simpanan": "Belum ada desa yang tersimpan. Yuk, mulai desa baru!",
+      "simpanan_rusak": "Simpanan ini tidak bisa dibuka. Mungkin dibuat dengan versi lama.",
+      "memuat": "Membangunkan penduduk...",
+      "tersimpan": "Desa tersimpan. Hari {hari}, era {era}.",
+      "info_simpanan": "Hari {hari} · {era} · {jumlah} penduduk",
+      "keluar_web": "Kamu bisa menutup tab ini dengan aman. Desa sudah tersimpan."
+    },
+    "kredit": {
+      "judul": "Kredit",
+      "baris": [
+        "Desa Mandiri",
+        "Ide dan arahan: Ichwan El Hamdani",
+        "Desain, kode, teks, dan pixel art dikerjakan bersama tim asisten",
+        "Terinspirasi oleh kehangatan game desa kecil seperti The Little Land",
+        "Terima kasih sudah menjaga penduduk kecil ini!"
+      ],
+      "penutup": "Dibuat dengan secangkir teh dan banyak kesabaran."
+    }
+  },
+  "pengaturan": {
+    "judul": "Pengaturan",
+    "grup": {
+      "suara": "Suara",
+      "permainan": "Permainan",
+      "tampilan": "Tampilan",
+      "data": "Data"
+    },
+    "tombol": {
+      "simpan": "Simpan",
+      "batal": "Batal",
+      "bawaan": "Kembalikan ke bawaan",
+      "tutup": "Tutup"
+    },
+    "pesan_tersimpan": "Pengaturan disimpan.",
+    "opsi": {
+      "volume_musik": {
+        "grup": "suara",
+        "label": "Volume Musik",
+        "deskripsi": "Seberapa keras alunan musik desa terdengar. Geser ke 0 untuk sunyi.",
+        "nilai_nol": "Senyap"
+      },
+      "volume_efek": {
+        "grup": "suara",
+        "label": "Volume Efek",
+        "deskripsi": "Bunyi kapak, palu, kicau burung, dan lonceng pedagang.",
+        "nilai_nol": "Senyap"
+      },
+      "kecepatan_game": {
+        "grup": "permainan",
+        "label": "Kecepatan Awal",
+        "deskripsi": "Kecepatan waktu saat permainan dimulai atau dimuat. Bisa diganti kapan saja lewat tombol di layar.",
+        "nilai": {
+          "jeda": "Jeda",
+          "1x": "Santai (1x)",
+          "2x": "Cepat (2x)",
+          "4x": "Sangat cepat (4x)"
+        }
+      },
+      "jeda_saat_event": {
+        "grup": "permainan",
+        "label": "Jeda Saat Ada Kejadian",
+        "deskripsi": "Waktu berhenti otomatis saat ada kejadian penting, supaya kamu bisa memilih dengan tenang."
+      },
+      "bahasa": {
+        "grup": "permainan",
+        "label": "Bahasa",
+        "deskripsi": "Bahasa teks di dalam permainan.",
+        "nilai": {
+          "id-ID": "Bahasa Indonesia"
+        }
+      },
+      "autosave": {
+        "grup": "data",
+        "label": "Simpan Otomatis",
+        "deskripsi": "Seberapa sering desa disimpan sendiri di peramban ini.",
+        "nilai": {
+          "mati": "Mati",
+          "tiap_hari": "Setiap pagi",
+          "tiap_musim": "Setiap pergantian musim"
+        },
+        "pesan": "Desa tersimpan otomatis."
+      },
+      "tampilan": {
+        "grup": "tampilan",
+        "label": "Tampilan",
+        "deskripsi": "Atur apa saja yang terlihat di peta.",
+        "sub": {
+          "tampilkan_nama": {
+            "label": "Nama Penduduk",
+            "deskripsi": "Tampilkan nama di atas kepala setiap penduduk."
+          },
+          "tampilkan_kebutuhan": {
+            "label": "Bar Kebutuhan",
+            "deskripsi": "Tampilkan bar lapar, energi, dan kesehatan di dekat penduduk."
+          },
+          "efek_cuaca": {
+            "label": "Efek Cuaca",
+            "deskripsi": "Hujan, salju, dan kilau kecil. Matikan jika peramban terasa berat."
+          },
+          "zoom_awal": {
+            "label": "Zoom Awal",
+            "deskripsi": "Seberapa dekat kamera saat permainan dimulai."
+          },
+          "layar_penuh": {
+            "label": "Layar Penuh",
+            "deskripsi": "Isi seluruh layar supaya desa terlihat lebih luas."
+          }
+        }
+      },
+      "reset_data": {
+        "grup": "data",
+        "label": "Hapus Semua Data",
+        "deskripsi": "Menghapus desa tersimpan, pencapaian, dan pengaturan dari peramban ini.",
+        "konfirmasi": {
+          "judul": "Hapus Semua Data?",
+          "teks": "Semua desa, pencapaian, dan pengaturan akan hilang dan tidak bisa dikembalikan. Penduduk akan sangat merindukanmu.",
+          "ya": "Ya, hapus semuanya",
+          "tidak": "Jangan, simpan saja"
+        },
+        "konfirmasi_kedua": {
+          "judul": "Benar-benar yakin?",
+          "teks": "Ini langkah terakhir. Tekan tombol di bawah sekali lagi untuk menghapus.",
+          "ya": "Hapus sekarang",
+          "tidak": "Batal"
+        },
+        "berhasil": "Semua data sudah dihapus. Tanah kecil itu kembali sepi, menunggu desa baru."
+      }
+    }
+  },
+  "teknologi": [
+    {
+      "id": "T01",
+      "nama": "Api Terjaga",
+      "cabang": "bertahan",
+      "era": "perkemahan",
+      "prasyarat": [],
+      "syarat_tambahan": [],
+      "deskripsi": "Cara menata kayu bakar agar api unggun menyala lebih lama dan lebih hangat.",
+      "efek_ringkas": "Kehangatan api unggun terasa lebih jauh, dan kayu bakarnya lebih awet.",
+      "teks_terbuka": "Penduduk mulai memperhatikan cara api menari. Mungkin ada cara membuatnya lebih awet?",
+      "teks_selesai": "{nama} menyelesaikan riset Api Terjaga. Api unggun kini menyala tenang semalaman, dan semua orang ingin duduk di dekatnya."
+    },
+    {
+      "id": "T02",
+      "nama": "Keranjang Anyam",
+      "cabang": "produksi",
+      "era": "perkemahan",
+      "prasyarat": [],
+      "syarat_tambahan": [],
+      "deskripsi": "Anyaman daun dan rotan untuk membawa lebih banyak barang sekali jalan.",
+      "efek_ringkas": "Penduduk bisa membawa lebih banyak kayu dan makanan setiap kali mengangkut.",
+      "teks_terbuka": "{nama} melihat daun-daun panjang di tepi sungai dan mulai berpikir untuk menganyam sesuatu.",
+      "teks_selesai": "{nama} menyelesaikan riset Keranjang Anyam. Kini tak ada lagi buah yang jatuh menggelinding di jalan pulang."
+    },
+    {
+      "id": "T03",
+      "nama": "Cangkul Kayu",
+      "cabang": "produksi",
+      "era": "dusun",
+      "prasyarat": [
+        "T02"
+      ],
+      "syarat_tambahan": [],
+      "deskripsi": "Cangkul sederhana dari kayu keras supaya tanah lebih mudah digemburkan.",
+      "efek_ringkas": "Menanam dan memanen di ladang jadi lebih cepat.",
+      "teks_terbuka": "Tanah ladang ternyata keras sekali. Penduduk butuh alat yang lebih baik dari tangan kosong.",
+      "teks_selesai": "{nama} menyelesaikan riset Cangkul Kayu. Tanah ladang kini gembur dan wangi."
+    },
+    {
+      "id": "T04",
+      "nama": "Irigasi Sederhana",
+      "cabang": "produksi",
+      "era": "dusun",
+      "prasyarat": [
+        "T03"
+      ],
+      "syarat_tambahan": [],
+      "deskripsi": "Saluran kecil dari sumur ke ladang agar tanaman tak pernah kehausan.",
+      "efek_ringkas": "Tanaman di dekat sumur tumbuh lebih cepat.",
+      "teks_terbuka": "Air sumur dan ladang letaknya berdekatan. Bagaimana kalau keduanya dihubungkan?",
+      "teks_selesai": "{nama} menyelesaikan riset Irigasi Sederhana. Air mengalir pelan di antara petak, dan tunas-tunas tampak berseri."
+    },
+    {
+      "id": "T05",
+      "nama": "Pengawetan",
+      "cabang": "bertahan",
+      "era": "dusun",
+      "prasyarat": [
+        "T01"
+      ],
+      "syarat_tambahan": [],
+      "deskripsi": "Teknik mengasap dan mengeringkan makanan supaya tahan lama.",
+      "efek_ringkas": "Makanan lebih awet, dan penduduk tidak cepat lapar saat musim dingin.",
+      "teks_terbuka": "Ada sisa ikan yang tergantung di dekat api dan ternyata tidak basi. Menarik sekali!",
+      "teks_selesai": "{nama} menyelesaikan riset Pengawetan. Ikan asap dan buah kering tersusun rapi menunggu musim dingin."
+    },
+    {
+      "id": "T06",
+      "nama": "Dapur Hemat",
+      "cabang": "masyarakat",
+      "era": "dusun",
+      "prasyarat": [
+        "T05"
+      ],
+      "syarat_tambahan": [],
+      "deskripsi": "Resep dan tungku yang membuat setiap porsi lebih mengenyangkan.",
+      "efek_ringkas": "Makan di Dapur memberi rasa kenyang yang lebih lama.",
+      "teks_terbuka": "Para juru masak desa mulai bertukar resep rahasia di dekat tungku.",
+      "teks_selesai": "{nama} menyelesaikan riset Dapur Hemat. Porsinya sama, tapi perut terasa jauh lebih puas."
+    },
+    {
+      "id": "T07",
+      "nama": "Bajak Besi",
+      "cabang": "produksi",
+      "era": "desa_pertanian",
+      "prasyarat": [
+        "T03"
+      ],
+      "syarat_tambahan": [
+        {
+          "tipe": "simpan",
+          "target": "alat",
+          "jumlah": 3
+        }
+      ],
+      "deskripsi": "Mata bajak dari besi yang membelah tanah lebih dalam.",
+      "efek_ringkas": "Setiap petak ladang menghasilkan panen lebih banyak.",
+      "teks_terbuka": "Batu besi dan perkakas sudah cukup. Saatnya ladang mendapat alat yang lebih kuat.",
+      "teks_selesai": "{nama} menyelesaikan riset Bajak Besi. Alur tanah kini lurus dan dalam, siap menampung panen besar."
+    },
+    {
+      "id": "T08",
+      "nama": "Lumbung Bertingkat",
+      "cabang": "bertahan",
+      "era": "desa_pertanian",
+      "prasyarat": [
+        "T05"
+      ],
+      "syarat_tambahan": [],
+      "deskripsi": "Rak bertingkat di lumbung agar lebih banyak pangan muat tanpa berdesakan.",
+      "efek_ringkas": "Desa bisa menyimpan lebih banyak makanan, dan peringatan stok muncul lebih awal.",
+      "teks_terbuka": "Lumbung mulai sesak. Karung gandum bertumpuk sampai ke pintu.",
+      "teks_selesai": "{nama} menyelesaikan riset Lumbung Bertingkat. Karung-karung kini berbaris rapi dari lantai sampai atap."
+    },
+    {
+      "id": "T09",
+      "nama": "Bibit Unggul",
+      "cabang": "produksi",
+      "era": "desa_pertanian",
+      "prasyarat": [
+        "T04",
+        "T07"
+      ],
+      "syarat_tambahan": [],
+      "deskripsi": "Memilih biji terbaik dari panen sebelumnya untuk ditanam lagi.",
+      "efek_ringkas": "Kadang-kadang satu petak memberi panen bagus yang jauh lebih banyak.",
+      "teks_terbuka": "{nama} menyimpan segenggam biji gandum paling gemuk. \"Yang ini jangan dimakan dulu!\"",
+      "teks_selesai": "{nama} menyelesaikan riset Bibit Unggul. Bulir gandum kini lebih besar dan lebih berkilau."
+    },
+    {
+      "id": "T10",
+      "nama": "Parit Air",
+      "cabang": "bertahan",
+      "era": "desa_pertanian",
+      "prasyarat": [
+        "T04"
+      ],
+      "syarat_tambahan": [],
+      "deskripsi": "Parit berlapis batu yang menyimpan dan menyalurkan air bersih ke seluruh desa.",
+      "efek_ringkas": "Penduduk butuh lebih sedikit air, dan sumur memberi lebih banyak.",
+      "teks_terbuka": "Penduduk bolak-balik membawa ember setiap hari. Pasti ada cara yang lebih santai.",
+      "teks_selesai": "{nama} menyelesaikan riset Parit Air. Gemericik air kini terdengar di setiap sudut desa."
+    },
+    {
+      "id": "T11",
+      "nama": "Gerobak",
+      "cabang": "produksi",
+      "era": "desa_pertanian",
+      "prasyarat": [
+        "T02"
+      ],
+      "syarat_tambahan": [],
+      "deskripsi": "Gerobak beroda kayu untuk mengangkut barang lebih cepat dan lebih jauh.",
+      "efek_ringkas": "Penduduk mengangkut barang lebih cepat dan mau bekerja sedikit lebih jauh.",
+      "teks_terbuka": "{nama} melihat batang kayu bundar menggelinding di bukit, lalu tersenyum lebar.",
+      "teks_selesai": "{nama} menyelesaikan riset Gerobak. Roda pertama berderit gembira menyusuri jalan desa."
+    },
+    {
+      "id": "T12",
+      "nama": "Tempa Baja",
+      "cabang": "produksi",
+      "era": "desa_pertanian",
+      "prasyarat": [],
+      "syarat_tambahan": [
+        {
+          "tipe": "bangun",
+          "target": "bengkel_alat",
+          "jumlah": 1
+        }
+      ],
+      "deskripsi": "Seni menempa besi berulang-ulang hingga menjadi baja yang kuat.",
+      "efek_ringkas": "Perkakas bekerja lebih baik dan jauh lebih awet.",
+      "teks_terbuka": "Bengkel alat sudah berdiri. Denting palunya mengundang ide-ide baru.",
+      "teks_selesai": "{nama} menyelesaikan riset Tempa Baja. Perkakas baru berkilau dan tidak mudah tumpul."
+    },
+    {
+      "id": "T13",
+      "nama": "Pakaian Hangat",
+      "cabang": "bertahan",
+      "era": "desa_pertanian",
+      "prasyarat": [
+        "T05"
+      ],
+      "syarat_tambahan": [
+        {
+          "tipe": "simpan",
+          "target": "kulit",
+          "jumlah": 5
+        }
+      ],
+      "deskripsi": "Menjahit kulit dan bulu menjadi baju tebal untuk musim dingin.",
+      "efek_ringkas": "Penduduk tidak cepat lapar dan tetap ceria saat musim dingin.",
+      "teks_terbuka": "Kulit hewan menumpuk di gudang. {nama} membayangkan jaket yang hangat dan lembut.",
+      "teks_selesai": "{nama} menyelesaikan riset Pakaian Hangat. Semua orang kini terlihat bulat dan menggemaskan dalam baju tebal."
+    },
+    {
+      "id": "T14",
+      "nama": "Pasar Resmi",
+      "cabang": "perdagangan",
+      "era": "desa_pertanian",
+      "prasyarat": [],
+      "syarat_tambahan": [
+        {
+          "tipe": "bangun",
+          "target": "pasar",
+          "jumlah": 1
+        }
+      ],
+      "deskripsi": "Aturan, lapak, dan jadwal dagang yang membuat pedagang betah datang.",
+      "efek_ringkas": "Membuka panel perdagangan, harga yang naik-turun, dan satu slot kontrak.",
+      "teks_terbuka": "Pasar sudah ramai, tapi tawar-menawarnya masih berantakan. Perlu sedikit aturan.",
+      "teks_selesai": "{nama} menyelesaikan riset Pasar Resmi. Lapak-lapak kini berjajar rapi dan pedagang datang sambil bersiul."
+    },
+    {
+      "id": "T15",
+      "nama": "Timbangan",
+      "cabang": "perdagangan",
+      "era": "desa_pertanian",
+      "prasyarat": [
+        "T14"
+      ],
+      "syarat_tambahan": [],
+      "deskripsi": "Timbangan jujur supaya setiap barang dihargai dengan adil.",
+      "efek_ringkas": "Barang yang dijual mendapat harga sedikit lebih baik.",
+      "teks_terbuka": "Pedagang sering bilang karung gandum desa \"kurang berat\". Benarkah?",
+      "teks_selesai": "{nama} menyelesaikan riset Timbangan. Sekarang tak ada lagi yang bisa mengakali desa soal berat."
+    },
+    {
+      "id": "T16",
+      "nama": "Papan Pengumuman",
+      "cabang": "masyarakat",
+      "era": "kota_kecil",
+      "prasyarat": [],
+      "syarat_tambahan": [
+        {
+          "tipe": "bangun",
+          "target": "balai_desa",
+          "jumlah": 1
+        }
+      ],
+      "deskripsi": "Papan kayu di depan balai tempat kabar dan permintaan warga ditempel.",
+      "efek_ringkas": "Menambah satu misi harian dan lebih banyak cerita kecil di log.",
+      "teks_terbuka": "Balai desa sudah berdiri, tapi kabar masih menyebar dari mulut ke mulut.",
+      "teks_selesai": "{nama} menyelesaikan riset Papan Pengumuman. Kertas pertama yang ditempel berbunyi: \"Dicari: kucing hilang, warna oranye.\""
+    },
+    {
+      "id": "T17",
+      "nama": "Sekolah Desa",
+      "cabang": "masyarakat",
+      "era": "kota_kecil",
+      "prasyarat": [
+        "T16"
+      ],
+      "syarat_tambahan": [
+        {
+          "tipe": "capai_penduduk",
+          "target": "penduduk",
+          "jumlah": 10
+        }
+      ],
+      "deskripsi": "Ruang belajar kecil tempat yang tua mengajari yang muda.",
+      "efek_ringkas": "Penduduk belajar keterampilan lebih cepat, dan pendatang datang dengan sedikit bekal ilmu.",
+      "teks_terbuka": "Anak-anak desa terus bertanya \"kenapa?\". Saatnya ada tempat untuk menjawabnya.",
+      "teks_selesai": "{nama} menyelesaikan riset Sekolah Desa. Suara anak-anak mengeja terdengar setiap pagi."
+    },
+    {
+      "id": "T18",
+      "nama": "Dinding Bata",
+      "cabang": "bertahan",
+      "era": "kota_kecil",
+      "prasyarat": [
+        "T12"
+      ],
+      "syarat_tambahan": [
+        {
+          "tipe": "simpan",
+          "target": "batu_bata",
+          "jumlah": 40
+        }
+      ],
+      "deskripsi": "Dinding bata kokoh yang melindungi bangunan dari badai dan hewan nakal.",
+      "efek_ringkas": "Bangunan lebih sedikit rusak karena kejadian, dan penduduk merasa lebih aman.",
+      "teks_terbuka": "Batu bata sudah banyak. Bagaimana kalau dipakai untuk melindungi desa?",
+      "teks_selesai": "{nama} menyelesaikan riset Dinding Bata. Desa kini dipeluk dinding hangat berwarna tanah liat."
+    },
+    {
+      "id": "T19",
+      "nama": "Gudang Bea",
+      "cabang": "perdagangan",
+      "era": "kota_kecil",
+      "prasyarat": [
+        "T14",
+        "T15"
+      ],
+      "syarat_tambahan": [],
+      "deskripsi": "Gudang khusus barang dagangan, lengkap dengan catatan keluar-masuk yang rapi.",
+      "efek_ringkas": "Menambah satu slot kontrak dan memperbesar kuota dagang mingguan.",
+      "teks_terbuka": "Barang dagangan bercampur dengan stok desa. Pedagang mulai bingung mana yang dijual.",
+      "teks_selesai": "{nama} menyelesaikan riset Gudang Bea. Setiap karung kini punya label dan tempatnya sendiri."
+    },
+    {
+      "id": "T20",
+      "nama": "Festival Adat",
+      "cabang": "masyarakat",
+      "era": "kota_kecil",
+      "prasyarat": [
+        "T16",
+        "T13"
+      ],
+      "syarat_tambahan": [],
+      "deskripsi": "Hari raya tahunan dengan musik, tarian, dan makanan dari setiap keluarga.",
+      "efek_ringkas": "Sekali setahun desa berpesta: suasana hati melonjak dan pendatang lebih cepat tertarik.",
+      "teks_terbuka": "Penduduk datang dari banyak daerah. Masing-masing punya lagu dan tarian yang ingin dibagi.",
+      "teks_selesai": "{nama} menyelesaikan riset Festival Adat. Kalender desa kini punya satu hari yang ditunggu semua orang."
+    }
+  ],
+  "ui_progres": {
+    "teknologi": {
+      "judul_panel": "Pohon Teknologi",
+      "subjudul": "Pilih satu ilmu untuk diteliti. Penduduk dengan prioritas riset akan mengerjakannya.",
+      "cabang": {
+        "bertahan": "Bertahan",
+        "produksi": "Produksi",
+        "masyarakat": "Masyarakat",
+        "perdagangan": "Perdagangan"
+      },
+      "label": {
+        "prasyarat": "Butuh",
+        "biaya": "Biaya",
+        "durasi": "Lama riset",
+        "efek": "Manfaat",
+        "era": "Era"
+      },
+      "status": {
+        "terkunci": "Terkunci",
+        "tersedia": "Bisa diteliti",
+        "sedang": "Sedang diteliti",
+        "selesai": "Sudah dikuasai"
+      },
+      "tombol": {
+        "mulai": "Mulai Riset",
+        "batal": "Hentikan Riset",
+        "tutup": "Tutup"
+      },
+      "pesan": {
+        "mulai": "Desa mulai meneliti {teknologi}. Semoga cepat ketemu jawabannya!",
+        "progres": "Riset {teknologi}: {persen}% selesai.",
+        "tertunda": "Riset {teknologi} tertunda. Tidak ada penduduk yang sempat meneliti.",
+        "kurang_biaya": "Belum bisa meneliti {teknologi}. {sumber_daya} masih kurang {jumlah}.",
+        "terkunci_prasyarat": "Kuasai dulu ilmu sebelumnya sebelum meneliti {teknologi}.",
+        "terkunci_era": "{teknologi} baru bisa diteliti di era {era}.",
+        "baru_terbuka": "Ilmu baru bisa diteliti: {teknologi}!"
+      }
+    },
+    "pencapaian": {
+      "judul_panel": "Pencapaian",
+      "subjudul": "Cerita-cerita kecil yang sudah ditulis desamu.",
+      "notifikasi": "🏅 Pencapaian terbuka: {pencapaian}!",
+      "rahasia_nama": "???",
+      "rahasia_deskripsi": "Pencapaian rahasia. Terus jalani hari-hari di desa dan lihat apa yang terjadi.",
+      "progres": "{jumlah} dari {jumlah2} pencapaian",
+      "kosong": "Belum ada pencapaian. Setiap desa besar dimulai dari satu api kecil."
+    }
+  },
+  "pencapaian": [
+    {
+      "id": "A01",
+      "nama": "Api Pertama",
+      "deskripsi": "Bangun Api unggun pertama desa.",
+      "syarat": {
+        "tipe": "bangun",
+        "target": "api_unggun",
+        "jumlah": 1
+      },
+      "hadiah": {
+        "suasana_hati": 5
+      },
+      "teks_terbuka": "Percikan pertama menyala. Di sinilah semuanya dimulai."
+    },
+    {
+      "id": "A02",
+      "nama": "Atap di Kepala",
+      "deskripsi": "Bangun Gubuk pertama.",
+      "syarat": {
+        "tipe": "bangun",
+        "target": "gubuk",
+        "jumlah": 1
+      },
+      "hadiah": {},
+      "teks_terbuka": "Tidak ada lagi tidur beralas daun. Hore untuk atap!"
+    },
+    {
+      "id": "A03",
+      "nama": "Lumbung Bukan Impian",
+      "deskripsi": "Miliki stok makanan dan gandum gabungan minimal 40.",
+      "syarat": {
+        "tipe": "simpan_pangan",
+        "target": "pangan",
+        "jumlah": 40
+      },
+      "hadiah": {
+        "kayu": 10
+      },
+      "teks_terbuka": "Persediaan menumpuk. Perut desa bisa tenang untuk sementara."
+    },
+    {
+      "id": "A04",
+      "nama": "Musim Dingin Pertama",
+      "deskripsi": "Lewati musim dingin tahun pertama tanpa ada yang kelaparan parah.",
+      "syarat": {
+        "tipe": "lewati_musim",
+        "target": "dingin",
+        "jumlah": 1,
+        "tanpa_kelaparan": true
+      },
+      "hadiah": {
+        "suasana_hati": 10
+      },
+      "teks_terbuka": "Salju mencair, dan semua orang masih tersenyum. Kalian berhasil!"
+    },
+    {
+      "id": "A05",
+      "nama": "Tetangga Baru",
+      "deskripsi": "Capai 3 penduduk.",
+      "syarat": {
+        "tipe": "capai_penduduk",
+        "target": "penduduk",
+        "jumlah": 3
+      },
+      "hadiah": {},
+      "teks_terbuka": "Ada wajah baru di sekitar api unggun. Selamat datang, tetangga!"
+    },
+    {
+      "id": "A06",
+      "nama": "Petani Sejati",
+      "deskripsi": "Panen Ladang untuk pertama kalinya.",
+      "syarat": {
+        "tipe": "panen",
+        "target": "ladang",
+        "jumlah": 1
+      },
+      "hadiah": {
+        "gandum": 5
+      },
+      "teks_terbuka": "Panen pertama! Gandumnya mungkin sedikit, tapi rasanya istimewa."
+    },
+    {
+      "id": "A07",
+      "nama": "Air Jernih",
+      "deskripsi": "Bangun Sumur.",
+      "syarat": {
+        "tipe": "bangun",
+        "target": "sumur",
+        "jumlah": 1
+      },
+      "hadiah": {},
+      "teks_terbuka": "Tak perlu lagi berjalan jauh ke sungai. Airnya dingin dan segar."
+    },
+    {
+      "id": "A08",
+      "nama": "Dusun Raya",
+      "deskripsi": "Capai era Dusun.",
+      "syarat": {
+        "tipe": "capai_era",
+        "target": "dusun",
+        "jumlah": 1
+      },
+      "hadiah": {
+        "kayu": 15
+      },
+      "teks_terbuka": "Perkemahan kecil kini resmi menjadi Dusun. Jalan setapak pun mulai terbentuk."
+    },
+    {
+      "id": "A09",
+      "nama": "Desa Menguning",
+      "deskripsi": "Capai era Desa Pertanian.",
+      "syarat": {
+        "tipe": "capai_era",
+        "target": "desa_pertanian",
+        "jumlah": 1
+      },
+      "hadiah": {
+        "alat": 1
+      },
+      "teks_terbuka": "Ladang menguning sejauh mata memandang. Desa ini benar-benar hidup dari tanahnya."
+    },
+    {
+      "id": "A10",
+      "nama": "Kota Kecil",
+      "deskripsi": "Capai era Kota Kecil.",
+      "syarat": {
+        "tipe": "capai_era",
+        "target": "kota_kecil",
+        "jumlah": 1
+      },
+      "hadiah": {
+        "batu_bata": 10
+      },
+      "teks_terbuka": "Dari dua orang di tanah kosong menjadi kota kecil yang ramai. Luar biasa!"
+    },
+    {
+      "id": "A11",
+      "nama": "Pedagang Datang",
+      "deskripsi": "Selesaikan 5 transaksi di Pasar.",
+      "syarat": {
+        "tipe": "transaksi_pasar",
+        "target": "pasar",
+        "jumlah": 5
+      },
+      "hadiah": {},
+      "teks_terbuka": "Pedagang mulai hafal jalan ke desamu. Hari ini semua barang dihargai sedikit lebih tinggi.",
+      "hadiah_khusus": {
+        "tipe": "bonus_harga_jual",
+        "target": "semua",
+        "jumlah": 10,
+        "hari": 1
+      }
+    },
+    {
+      "id": "A12",
+      "nama": "Tanpa Lapar 30 Hari",
+      "deskripsi": "Jaga stok pangan cukup untuk minimal 5 hari, 30 hari berturut-turut.",
+      "syarat": {
+        "tipe": "beruntun_hari_pangan",
+        "target": "hari",
+        "jumlah": 30,
+        "ambang": 5
+      },
+      "hadiah": {},
+      "teks_terbuka": "Sebulan penuh tanpa perut keroncongan. Para ibu dapur pantas mendapat pelukan.",
+      "hadiah_khusus": {
+        "tipe": "diskon_teknologi",
+        "target": "T05",
+        "jumlah": 25
+      }
+    },
+    {
+      "id": "A13",
+      "nama": "Ahli Batu",
+      "deskripsi": "Tambang 200 batu secara kumulatif.",
+      "syarat": {
+        "tipe": "kumpulkan",
+        "target": "batu",
+        "jumlah": 200
+      },
+      "hadiah": {},
+      "teks_terbuka": "Tangan para penambang kini kuat seperti batu itu sendiri. Mereka bisa membawa sedikit lebih banyak.",
+      "hadiah_khusus": {
+        "tipe": "bonus_angkut",
+        "target": "batu",
+        "jumlah": 1
+      }
+    },
+    {
+      "id": "A14",
+      "nama": "Peneliti Desa",
+      "deskripsi": "Selesaikan riset 5 teknologi.",
+      "syarat": {
+        "tipe": "riset",
+        "target": "semua",
+        "jumlah": 5
+      },
+      "hadiah": {
+        "makanan": 20
+      },
+      "teks_terbuka": "Lima ilmu sudah dikuasai. Desa ini ternyata penuh orang pintar!"
+    },
+    {
+      "id": "A15",
+      "nama": "Dinding Tegak",
+      "deskripsi": "Selesaikan riset Dinding Bata.",
+      "syarat": {
+        "tipe": "riset",
+        "target": "T18",
+        "jumlah": 1
+      },
+      "hadiah": {
+        "suasana_hati": 10
+      },
+      "teks_terbuka": "Dinding bata berdiri kokoh. Badai boleh datang, desa tetap tenang."
+    },
+    {
+      "id": "A16",
+      "nama": "Festival Pertama",
+      "deskripsi": "Adakan festival pertama desa.",
+      "syarat": {
+        "tipe": "adakan_festival",
+        "target": "semua",
+        "jumlah": 1
+      },
+      "hadiah": {},
+      "teks_terbuka": "Musik, tarian, dan tawa sampai larut malam. Inilah desa yang bahagia."
+    },
+    {
+      "id": "A17",
+      "nama": "Seratus Hari",
+      "deskripsi": "Capai Hari 100.",
+      "syarat": {
+        "tipe": "capai_hari",
+        "target": "hari",
+        "jumlah": 100
+      },
+      "hadiah": {},
+      "teks_terbuka": "Seratus hari berlalu. Kepala desa kini dikenal sebagai Sesepuh Desa.",
+      "hadiah_khusus": {
+        "tipe": "gelar",
+        "target": "sesepuh_desa",
+        "jumlah": 1,
+        "teks": "Sesepuh Desa"
+      }
+    },
+    {
+      "id": "A18",
+      "nama": "Desa Mandiri",
+      "deskripsi": "Capai 12 penduduk, stok pangan 14 hari, kuasai 10 teknologi, dan tanpa kematian selama 50 hari.",
+      "syarat": {
+        "tipe": "gabungan",
+        "target": "desa_mandiri",
+        "jumlah": 1,
+        "semua": [
+          {
+            "tipe": "capai_penduduk",
+            "target": "penduduk",
+            "jumlah": 12
+          },
+          {
+            "tipe": "hari_pangan",
+            "target": "hari",
+            "jumlah": 14
+          },
+          {
+            "tipe": "riset",
+            "target": "semua",
+            "jumlah": 10
+          },
+          {
+            "tipe": "tanpa_kematian",
+            "target": "hari",
+            "jumlah": 50
+          }
+        ]
+      },
+      "hadiah": {},
+      "teks_terbuka": "Desa ini kini berdiri di atas kakinya sendiri. Penduduk bekerja, tertawa, dan saling menjaga, persis seperti yang selalu kamu harapkan.",
+      "hadiah_khusus": {
+        "tipe": "lencana",
+        "target": "desa_mandiri",
+        "jumlah": 1,
+        "teks": "Lencana Desa Mandiri",
+        "teks_akhir": "Matahari terbenam di atas atap-atap kecil. Dari sini, desa bisa terus tumbuh tanpa akhir. Terima kasih sudah menjaga mereka, Kepala Desa. Kamu boleh terus bermain selama yang kamu mau."
+      }
+    },
+    {
+      "id": "A19",
+      "nama": "Sahabat Pedagang",
+      "deskripsi": "Selesaikan 3 kontrak pasar.",
+      "syarat": {
+        "tipe": "kontrak_selesai",
+        "target": "pasar",
+        "jumlah": 3
+      },
+      "hadiah": {
+        "alat": 1
+      },
+      "teks_terbuka": "Tiga janji ditepati. Nama desamu kini disebut dengan senyum di kota-kota seberang."
+    },
+    {
+      "id": "A20",
+      "nama": "Rumah Bersama",
+      "deskripsi": "Bangun Balai desa.",
+      "syarat": {
+        "tipe": "bangun",
+        "target": "balai_desa",
+        "jumlah": 1
+      },
+      "hadiah": {
+        "suasana_hati": 5
+      },
+      "teks_terbuka": "Balai desa berdiri. Sekarang ada tempat untuk rapat, pesta, dan berteduh bersama."
+    },
+    {
+      "id": "A21",
+      "nama": "Penebang Legendaris",
+      "deskripsi": "Kumpulkan 500 kayu secara kumulatif.",
+      "syarat": {
+        "tipe": "kumpulkan",
+        "target": "kayu",
+        "jumlah": 500
+      },
+      "hadiah": {},
+      "teks_terbuka": "Lima ratus batang kayu! Hutan di sekitar desa memberi banyak, dan penduduk menanam kembali dengan senang hati."
+    },
+    {
+      "id": "A22",
+      "nama": "Pemohon Bintang",
+      "deskripsi": "Begadang menikmati bintang jatuh bersama seluruh desa.",
+      "syarat": {
+        "tipe": "pilih_event",
+        "target": "hujan_meteor",
+        "jumlah": 1,
+        "pilihan": 0
+      },
+      "hadiah": {
+        "suasana_hati": 5
+      },
+      "teks_terbuka": "Semua orang membuat permohonan. Diam-diam, banyak yang memohon hal yang sama: semoga desa ini selalu hangat.",
+      "rahasia": true
+    },
+    {
+      "id": "A23",
+      "nama": "Pengusir Babi Hutan",
+      "deskripsi": "Hadapi babi hutan sebanyak 3 kali.",
+      "syarat": {
+        "tipe": "alami_event",
+        "target": "hewan_buas",
+        "jumlah": 3
+      },
+      "hadiah": {},
+      "teks_terbuka": "Babi hutan itu sepertinya datang lagi hanya untuk menyapa. Penduduk mulai memberinya nama.",
+      "rahasia": true
+    },
+    {
+      "id": "A24",
+      "nama": "Kawan Berbulu Oranye",
+      "deskripsi": "Pelihara kucing gudang saat tikus menyerbu lumbung.",
+      "syarat": {
+        "tipe": "pilih_event",
+        "target": "hama_gudang",
+        "jumlah": 1,
+        "pilihan": 1
+      },
+      "hadiah": {
+        "suasana_hati": 5
+      },
+      "teks_terbuka": "Si Oranye kini resmi menjadi penduduk kehormatan. Ia tidur di karung gandum paling empuk.",
+      "rahasia": true
+    }
+  ],
+  "pasar": {
+    "judul": "Pasar Desa",
+    "deskripsi": "Tukar hasil desa dengan barang yang dibutuhkan. Harga naik-turun setiap pagi, jadi pilih waktu yang tepat.",
+    "belum_dibuka": "Pasar belum berdiri. Bangun Pasar dulu supaya pedagang mau mampir.",
+    "perlu_teknologi": "Perdagangan penuh terbuka setelah riset Pasar Resmi. Untuk sementara, pasar berdagang sendiri setiap hari.",
+    "label": {
+      "jual": "Jual",
+      "beli": "Beli",
+      "barang": "Barang",
+      "stok": "Stok desa",
+      "harga_jual": "Harga jual",
+      "harga_beli": "Harga beli",
+      "nilai": "Nilai",
+      "jumlah": "Jumlah",
+      "total": "Total",
+      "konfirmasi": "Sepakat!",
+      "batal": "Batal",
+      "kuota": "Kuota hari ini",
+      "kontrak": "Kontrak"
+    },
+    "tooltip_harga": {
+      "naik": "Harga {sumber_daya} sedang naik {persen}%. Saat yang bagus untuk menjual!",
+      "turun": "Harga {sumber_daya} sedang turun {persen}%. Lebih hemat untuk membeli sekarang.",
+      "stabil": "Harga {sumber_daya} sedang biasa saja. Tidak ada yang perlu diburu-buru.",
+      "tertinggi": "Harga {sumber_daya} sedang di puncaknya. Pedagang sampai geleng-geleng kepala.",
+      "terendah": "Harga {sumber_daya} sedang paling murah. Pedagang menjualnya sambil menghela napas.",
+      "nilai_jual": "Pasar membayar {nilai} nilai untuk setiap {sumber_daya}.",
+      "nilai_beli": "Butuh {nilai} nilai untuk membeli satu {sumber_daya}."
+    },
+    "pesan_fluktuasi": [
+      {
+        "id": "musim_dingin_pangan",
+        "teks": "Musim dingin tiba. Harga makanan dan gandum naik karena ladang berhenti tumbuh."
+      },
+      {
+        "id": "musim_dingin_gandum",
+        "teks": "Harga gandum naik karena musim dingin. Lumbung yang penuh kini terasa seperti harta karun."
+      },
+      {
+        "id": "semi_kayu",
+        "teks": "Musim semi! Semua orang menebang pohon, jadi harga jual kayu sedikit turun."
+      },
+      {
+        "id": "panas_makanan",
+        "teks": "Buah dan ikan melimpah di musim panas. Harga jual makanan turun."
+      },
+      {
+        "id": "setelah_panen_raya",
+        "teks": "Setelah panen raya, gandum ada di mana-mana. Harga jualnya turun untuk beberapa hari."
+      },
+      {
+        "id": "setelah_badai",
+        "teks": "Badai merusak ladang di desa-desa tetangga. Harga beli makanan naik untuk beberapa hari."
+      },
+      {
+        "id": "setelah_kekeringan",
+        "teks": "Kemarau membuat pangan sulit dicari. Harga beli makanan ikut naik."
+      },
+      {
+        "id": "pedagang_diskon",
+        "teks": "Pedagang keliling sedang murah hati. Hari ini semua barang lebih murah dibeli!"
+      },
+      {
+        "id": "pangan_melimpah",
+        "teks": "Lumbung desa sangat penuh. Pedagang mulai enggan membeli makanan dengan harga tinggi."
+      },
+      {
+        "id": "acak_naik",
+        "teks": "Kabar dari kota seberang: {sumber_daya} sedang dicari. Harganya naik {persen}%."
+      },
+      {
+        "id": "acak_turun",
+        "teks": "Pedagang membawa banyak {sumber_daya} hari ini. Harganya turun {persen}%."
+      },
+      {
+        "id": "kembali_normal",
+        "teks": "Harga {sumber_daya} kembali seperti biasa."
+      }
+    ],
+    "musim_dingin": {
+      "peringatan": "Musim dingin sebentar lagi. Harga makanan biasanya melonjak, jadi sebaiknya stok dibeli atau disimpan sekarang.",
+      "tooltip": "Musim dingin: makanan dan gandum lebih mahal dibeli, tapi juga lebih berharga dijual.",
+      "log": "Hari {hari}: Pedagang menggosok tangan yang kedinginan. \"Makanan sedang mahal, Kepala Desa. Maaf ya.\""
+    },
+    "kuota": {
+      "label": "Kuota hari ini",
+      "tooltip": "Pasar hanya sanggup menampung {kuota} nilai dagangan per hari. Kuota terisi ulang setiap pagi.",
+      "sisa": "Sisa kuota jual {jumlah} · beli {jumlah2}",
+      "habis_jual": "Pasar sudah kenyang menerima barang hari ini. Coba lagi besok pagi.",
+      "habis_beli": "Pedagang sudah kehabisan barang untuk hari ini. Besok mereka kembali dengan karung penuh.",
+      "reset": "Pagi telah tiba. Kuota pasar terisi kembali.",
+      "naik": "Pasar makin ramai! Kuota dagang harian bertambah."
+    },
+    "transaksi": {
+      "jual_berhasil": "Terjual {jumlah} {sumber_daya}. Desa mendapat {jumlah2} {sumber_daya2}.",
+      "beli_berhasil": "Dibeli {jumlah} {sumber_daya} dengan {jumlah2} {sumber_daya2}.",
+      "kurang_stok": "Stok {sumber_daya} tidak cukup. Masih kurang {jumlah}.",
+      "nilai_kurang": "Barang yang ditawarkan belum cukup untuk membeli {sumber_daya}.",
+      "kuota_tidak_cukup": "Transaksi ini melebihi kuota hari ini. Kurangi jumlahnya sedikit, ya.",
+      "log": "Hari {hari}: {nama} menukar {jumlah} {sumber_daya} di Pasar dengan {jumlah2} {sumber_daya2}."
+    },
+    "kontrak": {
+      "judul": "Kontrak Dagang",
+      "deskripsi": "Janji pengiriman barang dalam waktu tertentu. Tepati, dan hadiahnya lumayan!",
+      "slot_kosong": "Slot kontrak kosong. Tunggu tawaran dari pedagang berikutnya.",
+      "slot_baru": "Slot kontrak baru terbuka! Pasar siap menerima lebih banyak janji.",
+      "tawaran": [
+        "{pedagang} meminta {jumlah} {sumber_daya} dalam {hari_sisa} hari. Imbalannya {jumlah2} {sumber_daya2}.",
+        "Kota seberang butuh {jumlah} {sumber_daya} sebelum {hari_sisa} hari. Mereka menjanjikan {jumlah2} {sumber_daya2}.",
+        "\"Desa kalian terkenal dengan {sumber_daya}-nya,\" kata {pedagang}. \"Kirim {jumlah} dalam {hari_sisa} hari, nanti kubayar {jumlah2} {sumber_daya2}.\""
+      ],
+      "tombol_terima": "Terima Kontrak",
+      "tombol_tolak": "Lain kali",
+      "diterima": "Kontrak diterima. Kirim {jumlah} {sumber_daya} dalam {hari_sisa} hari.",
+      "progres": "Kontrak {sumber_daya}: {jumlah} dari {jumlah2} terkirim.",
+      "pengingat": "Kontrak {sumber_daya} tinggal {hari_sisa} hari lagi. Masih kurang {jumlah}.",
+      "berhasil": [
+        "Kontrak selesai! {pedagang} menyerahkan {jumlah2} {sumber_daya2} sambil tersenyum lebar.",
+        "Semua {sumber_daya} terkirim tepat waktu. Kota seberang mengirim {jumlah2} {sumber_daya2} dan sepucuk surat terima kasih.",
+        "Janji ditepati! Penduduk bangga desanya bisa diandalkan."
+      ],
+      "gagal": [
+        "Kontrak {sumber_daya} tidak terpenuhi tepat waktu. {pedagang} kecewa, dan penduduk ikut murung.",
+        "Waktu kontrak habis. Pedagang pulang dengan gerobak setengah kosong. Lain kali pasti bisa.",
+        "Kontrak gagal. Tidak apa-apa, desa belajar menghitung stok lebih cermat."
+      ],
+      "dibatalkan": "Kontrak dibatalkan. Pedagang mengangguk pelan, sedikit kecewa."
+    }
+  },
+  "dialog_pedagang": {
+    "nama_pedagang": [
+      "Pak Darto",
+      "Bu Minah",
+      "Koh Aseng",
+      "Uda Rasyid",
+      "Mbok Sumi",
+      "Daeng Sikki",
+      "Om Robert",
+      "Ibu Wayan"
+    ],
+    "sapaan": [
+      "Kling-klong! {pedagang} datang membawa pikulan penuh. \"Selamat pagi, desa kecil yang rajin!\"",
+      "\"Wah, desa ini makin ramai saja sejak terakhir aku mampir,\" kata {pedagang} sambil menurunkan keranjang.",
+      "{pedagang} melambai dari ujung jalan. \"Ada teh hangat? Aku bawa kabar dan barang bagus!\"",
+      "\"Brrr, musim {musim} begini enaknya berdagang sambil duduk dekat api,\" kata {pedagang}.",
+      "\"Halo, {nama}! Masih ingat aku? Aku yang dulu menukar ikan asin dengan kayumu.\""
+    ],
+    "penawaran": [
+      "\"Aku bisa beri {jumlah2} {sumber_daya2} untuk {jumlah} {sumber_daya}. Adil, kan?\"",
+      "\"Lihat {sumber_daya2} ini, masih segar! {jumlah2} buatmu, cukup tukar dengan {jumlah} {sumber_daya}.\"",
+      "\"Desa sebelah sedang butuh {sumber_daya}. Kalau kamu punya {jumlah}, aku tukar dengan {jumlah2} {sumber_daya2}.\"",
+      "\"Penawaran khusus hari ini saja: {jumlah2} {sumber_daya2} untuk {jumlah} {sumber_daya}. Jangan bilang yang lain, ya!\""
+    ],
+    "tawar_menawar": {
+      "pemain_menawar": [
+        "Bagaimana kalau sedikit lebih banyak?",
+        "Ayolah, kami sudah langganan, kan?",
+        "Kurangi sedikit, nanti kami beri teh madu."
+      ],
+      "pedagang_setuju": [
+        "\"Hmm... baiklah, baiklah. Demi senyum penduduk di sini. {jumlah2} {sumber_daya2}, jadi!\"",
+        "{pedagang} tertawa. \"Kamu pintar menawar! Oke, kutambah sedikit.\"",
+        "\"Ya sudah, anggap saja hadiah karena desamu selalu ramah.\""
+      ],
+      "pedagang_menolak": [
+        "{pedagang} menggeleng sambil tersenyum. \"Kalau lebih murah lagi, keledaiku tak bisa makan.\"",
+        "\"Aduh, itu sudah harga teman. Tidak bisa turun lagi, maaf ya.\"",
+        "\"Hmm, tidak bisa. Tapi aku janji besok bawa barang yang lebih bagus.\""
+      ],
+      "pedagang_kesal": [
+        "{pedagang} memijat kening. \"Sudah tiga kali menawar! Ini tawaran terakhirku, ya.\"",
+        "\"Kalau terus ditawar, aku jadi lupa harga aslinya,\" gerutu {pedagang}, tapi tetap tersenyum."
+      ]
+    },
+    "berhasil": [
+      "\"Senang berbisnis denganmu!\" {pedagang} menyerahkan {jumlah2} {sumber_daya2} dengan kedua tangan.",
+      "Tukar-menukar selesai. {pedagang} bersiul gembira sambil mengikat karungnya.",
+      "\"Barangmu bagus sekali. Aku pasti mampir lagi!\"",
+      "{nama} membawa pulang {jumlah2} {sumber_daya2}. Penduduk lain menyambutnya seperti pahlawan kecil."
+    ],
+    "gagal_kurang_sumber_daya": [
+      "\"Eh, sepertinya {sumber_daya} kalian masih kurang {jumlah}. Tidak apa-apa, aku tunggu lain kali.\"",
+      "{pedagang} melirik gudang yang setengah kosong. \"Simpan dulu saja untuk kalian sendiri.\"",
+      "\"Wah, belum cukup ya? Jangan sedih. Kumpulkan {sumber_daya} lagi, nanti kita bicara.\"",
+      "\"Lumbungmu masih tipis. Aku tidak mau desamu kelaparan gara-gara aku.\""
+    ],
+    "ditolak_pemain": [
+      "\"Tidak jadi? Tidak apa-apa. Setidaknya tehnya enak.\"",
+      "{pedagang} mengangkat bahu. \"Mungkin lain kali, kalau kamu berubah pikiran.\"",
+      "\"Baiklah, kusimpan barang ini untukmu. Siapa tahu nanti kamu butuh.\""
+    ],
+    "perpisahan": [
+      "{pedagang} mengangkat pikulannya. \"Sampai jumpa! Jaga desa kecil ini baik-baik.\"",
+      "Lonceng kecil {pedagang} berbunyi makin pelan saat ia menjauh di jalan setapak.",
+      "\"Aku ke desa seberang dulu. Mungkin sepuluh hari lagi aku kembali!\"",
+      "{pedagang} melambai dari atas bukit. Anak-anak desa membalas lambaiannya sampai ia hilang dari pandangan."
+    ]
+  },
+  "event_era_lanjut": [
+    {
+      "id": "hama_gudang",
+      "judul": "Tikus Berpesta di Lumbung",
+      "kategori": "bahaya",
+      "deskripsi": "Malam-malam terdengar cicit kecil dari Lumbung. Sekeluarga tikus gemuk ternyata sedang berpesta gandum!",
+      "pilihan": [
+        {
+          "teks": "Pasang perangkap kayu",
+          "efek": {
+            "kayu": -10,
+            "energi": -5
+          },
+          "teks_hasil": "Perangkap dipasang di setiap sudut. Esok paginya, para tikus pindah ke hutan sambil menggerutu."
+        },
+        {
+          "teks": "Pelihara kucing gudang",
+          "efek": {
+            "makanan": -5,
+            "suasana_hati": 8
+          },
+          "teks_hasil": "Seekor kucing oranye gendut datang dan langsung bertugas. Tikus kabur, dan semua orang ingin mengelusnya."
+        },
+        {
+          "teks": "Biarkan, nanti juga kenyang",
+          "efek": {
+            "suasana_hati": -5,
+            "kesehatan_bangunan": -5
+          },
+          "teks_hasil": "Tikus-tikus makin berani dan menggerogoti dinding lumbung. Penduduk sedikit kesal."
+        }
+      ],
+      "era": "desa_pertanian"
+    },
+    {
+      "id": "kerbau_nyasar",
+      "judul": "Kerbau Nyasar",
+      "kategori": "penduduk",
+      "deskripsi": "Seekor kerbau besar berjalan santai ke tengah desa, lalu berbaring di depan Gudang. Sepertinya ia tersesat.",
+      "pilihan": [
+        {
+          "teks": "Beri makan dan rawat",
+          "efek": {
+            "makanan": -10,
+            "suasana_hati": 10,
+            "energi": 5
+          },
+          "teks_hasil": "Si kerbau betah dan mau membantu menarik kayu. Ia dinamai \"Mbok Besar\" oleh anak-anak."
+        },
+        {
+          "teks": "Antar pulang ke padang rumput",
+          "efek": {
+            "energi": -10,
+            "kulit": 2
+          },
+          "teks_hasil": "Pemiliknya, seorang penggembala, berterima kasih dan memberi sedikit kulit sebagai tanda terima kasih."
+        },
+        {
+          "teks": "Tunggu ia pergi sendiri",
+          "efek": {
+            "hari_kerja_hilang": 1
+          },
+          "teks_hasil": "Kerbau itu tidur seharian di depan Gudang. Tak ada yang tega membangunkannya."
+        }
+      ],
+      "era": "desa_pertanian"
+    },
+    {
+      "id": "alat_patah",
+      "judul": "Gagang Cangkul Patah",
+      "kategori": "umum",
+      "deskripsi": "Pagi ini tiga gagang cangkul patah bersamaan. {nama} menatap potongan kayu di tangannya dengan wajah sedih.",
+      "pilihan": [
+        {
+          "teks": "Perbaiki di Bengkel alat",
+          "efek": {
+            "kayu": -10,
+            "batu": -5,
+            "alat": 1
+          },
+          "teks_hasil": "Bengkel berdentang sepanjang hari. Perkakas baru malah lebih kuat dari sebelumnya."
+        },
+        {
+          "teks": "Beli perkakas dari pedagang",
+          "efek": {
+            "gandum": -15,
+            "alat": 2
+          },
+          "teks_hasil": "Pedagang yang kebetulan lewat punya perkakas cadangan. Kerja ladang pun lancar lagi."
+        },
+        {
+          "teks": "Bekerja dengan tangan dulu",
+          "efek": {
+            "energi": -10,
+            "suasana_hati": -5
+          },
+          "teks_hasil": "Penduduk mencangkul pakai tongkat. Lambat dan pegal, tapi ladang tetap terurus."
+        }
+      ],
+      "era": "desa_pertanian"
+    },
+    {
+      "id": "percikan_dapur",
+      "judul": "Percikan di Dapur",
+      "kategori": "bahaya",
+      "deskripsi": "{nama} lupa mengecilkan api tungku. Asap mengepul dari jendela Dapur!",
+      "pilihan": [
+        {
+          "teks": "Padamkan dengan air sumur",
+          "efek": {
+            "air": -15,
+            "energi": -5
+          },
+          "teks_hasil": "Ember-ember berpindah tangan dengan cepat. Api padam, dan hanya panci yang sedikit gosong."
+        },
+        {
+          "teks": "Tutup dengan tanah dan pasir",
+          "efek": {
+            "energi": -10,
+            "kesehatan_bangunan": -5
+          },
+          "teks_hasil": "Api padam, tapi Dapur penuh pasir. Butuh waktu untuk membersihkannya."
+        },
+        {
+          "teks": "Teriak minta tolong",
+          "efek": {
+            "kesehatan_bangunan": -15,
+            "suasana_hati": -5
+          },
+          "teks_hasil": "Semua orang berlari datang. Api padam, tapi dinding Dapur menghitam."
+        }
+      ],
+      "era": "desa_pertanian"
+    },
+    {
+      "id": "ilmuwan_pengembara",
+      "judul": "Pengembara Berkacamata",
+      "kategori": "langka",
+      "deskripsi": "Seorang pengembara berkacamata bulat datang membawa setumpuk catatan. Ia ingin menginap dan bertukar ilmu.",
+      "pilihan": [
+        {
+          "teks": "Jamu dengan makan malam",
+          "efek": {
+            "makanan": -10,
+            "progres_riset": 25
+          },
+          "teks_hasil": "Sambil makan, pengembara menjelaskan banyak hal. Riset desa maju pesat!"
+        },
+        {
+          "teks": "Tukar catatan dengan papan",
+          "efek": {
+            "papan": -5,
+            "progres_riset": 15,
+            "suasana_hati": 5
+          },
+          "teks_hasil": "Pengembara meninggalkan catatan berharga. Penduduk membacanya bergantian di dekat api."
+        },
+        {
+          "teks": "Dengarkan ceritanya saja",
+          "efek": {
+            "suasana_hati": 5
+          },
+          "teks_hasil": "Cerita tentang negeri-negeri jauh membuat penduduk tertidur dengan mimpi indah."
+        }
+      ],
+      "era": "desa_pertanian"
+    },
+    {
+      "id": "kunang_kunang",
+      "judul": "Malam Seribu Kunang-kunang",
+      "kategori": "langka",
+      "deskripsi": "Malam ini ladang dipenuhi kunang-kunang. Cahayanya berkelip seperti bintang yang turun ke bumi.",
+      "pilihan": [
+        {
+          "teks": "Ajak semua berjalan-jalan",
+          "efek": {
+            "energi": -5,
+            "suasana_hati": 15
+          },
+          "teks_hasil": "Penduduk berjalan pelan di antara cahaya kecil. Tak ada yang ingin malam ini berakhir."
+        },
+        {
+          "teks": "Tidur lebih awal saja",
+          "efek": {
+            "energi": 10
+          },
+          "teks_hasil": "Penduduk tidur sambil melihat kelip dari jendela. Esok paginya mereka bangun segar."
+        }
+      ],
+      "era": "desa_pertanian"
+    },
+    {
+      "id": "embun_beku",
+      "judul": "Embun Beku Datang Lebih Awal",
+      "kategori": "musim",
+      "deskripsi": "Pagi ini rumput berlapis es tipis, padahal musim dingin belum tiba. Udara terasa menggigit.",
+      "pilihan": [
+        {
+          "teks": "Panen lebih awal",
+          "efek": {
+            "gandum": 10,
+            "energi": -10
+          },
+          "teks_hasil": "Semua tangan turun ke ladang. Gandum diselamatkan sebelum beku, walau belum terlalu besar."
+        },
+        {
+          "teks": "Tutupi ladang dengan jerami",
+          "efek": {
+            "kayu": -15,
+            "suasana_hati": 5
+          },
+          "teks_hasil": "Selimut jerami melindungi tanaman. Mereka tetap tumbuh pelan-pelan di bawahnya."
+        },
+        {
+          "teks": "Berkumpul di dekat api",
+          "efek": {
+            "suasana_hati": -5,
+            "kesehatan": -5
+          },
+          "teks_hasil": "Penduduk berhangat bersama, tapi sebagian tanaman di ladang layu kedinginan."
+        }
+      ],
+      "era": "desa_pertanian"
+    },
+    {
+      "id": "harga_pangan_melambung",
+      "judul": "Harga Pangan Melambung",
+      "kategori": "perdagangan",
+      "deskripsi": "Kabar dari kota seberang: panen di sana gagal. Pedagang membeli makanan dengan harga tinggi.",
+      "pilihan": [
+        {
+          "teks": "Jual sebagian stok pangan",
+          "efek": {
+            "makanan": -20,
+            "alat": 2,
+            "papan": 5
+          },
+          "teks_hasil": "Gerobak penuh makanan berangkat ke kota. Desa mendapat perkakas dan papan yang berharga."
+        },
+        {
+          "teks": "Kirim bantuan pangan",
+          "efek": {
+            "makanan": -15,
+            "suasana_hati": 15
+          },
+          "teks_hasil": "Kota seberang sangat berterima kasih. Penduduk merasa bangga bisa menolong."
+        },
+        {
+          "teks": "Simpan untuk musim dingin",
+          "efek": {
+            "harga_beli_pangan": 20
+          },
+          "teks_hasil": "Lumbung tetap penuh. Tapi untuk sementara, membeli makanan di pasar jadi lebih mahal."
+        }
+      ],
+      "era": "kota_kecil"
+    },
+    {
+      "id": "rombongan_seniman",
+      "judul": "Rombongan Seniman Keliling",
+      "kategori": "perayaan",
+      "deskripsi": "Gerobak warna-warni berhenti di depan Balai desa. Ada pemain gamelan, penari, dan seekor monyet kecil berpeci.",
+      "pilihan": [
+        {
+          "teks": "Undang mereka tampil",
+          "efek": {
+            "makanan": -15,
+            "suasana_hati": 20
+          },
+          "teks_hasil": "Malam pertunjukan yang meriah! Bahkan kakek tertua desa ikut bergoyang."
+        },
+        {
+          "teks": "Ajak mereka bertukar lagu",
+          "efek": {
+            "suasana_hati": 10,
+            "energi": -5
+          },
+          "teks_hasil": "Penduduk mengajarkan lagu daerah mereka, dan seniman membalas dengan lagu baru."
+        },
+        {
+          "teks": "Ucapkan terima kasih saja",
+          "efek": {
+            "suasana_hati": -2
+          },
+          "teks_hasil": "Rombongan melanjutkan perjalanan. Anak-anak memandangi gerobak itu sampai hilang di tikungan."
+        }
+      ],
+      "era": "kota_kecil"
+    },
+    {
+      "id": "undangan_kota",
+      "judul": "Undangan dari Kota Seberang",
+      "kategori": "perdagangan",
+      "deskripsi": "Seorang kurir membawa surat bersegel lilin: kota seberang ingin menjalin dagang tetap dengan desamu.",
+      "pilihan": [
+        {
+          "teks": "Kirim contoh barang terbaik",
+          "efek": {
+            "papan": -10,
+            "batu_bata": -5,
+            "alat": 2,
+            "suasana_hati": 5
+          },
+          "teks_hasil": "Kota seberang terkesan. Mereka mengirim perkakas sebagai tanda persahabatan."
+        },
+        {
+          "teks": "Kirim surat balasan yang ramah",
+          "efek": {
+            "suasana_hati": 5,
+            "harga_jual_pangan": 10
+          },
+          "teks_hasil": "Surat balasan membuat pedagang kota senang. Untuk sementara, makanan desa dihargai lebih tinggi."
+        },
+        {
+          "teks": "Belum siap, tunda dulu",
+          "efek": {
+            "suasana_hati": -2
+          },
+          "teks_hasil": "Kurir mengangguk paham. \"Pintu kami selalu terbuka,\" katanya sebelum pergi."
+        }
+      ],
+      "era": "kota_kecil"
+    },
+    {
+      "id": "pilek_musim_gugur",
+      "judul": "Pilek Musim Gugur",
+      "kategori": "bahaya",
+      "deskripsi": "Hujan gerimis berhari-hari. Satu per satu penduduk mulai bersin dan hidungnya memerah.",
+      "pilihan": [
+        {
+          "teks": "Seduh jahe dan madu",
+          "efek": {
+            "makanan": -10,
+            "kesehatan": 10
+          },
+          "teks_hasil": "Wedang jahe mengepul di setiap rumah. Bersin-bersin cepat mereda."
+        },
+        {
+          "teks": "Liburkan yang sakit",
+          "efek": {
+            "hari_kerja_hilang": 1,
+            "kesehatan": 8,
+            "suasana_hati": 5
+          },
+          "teks_hasil": "Sehari penuh selimutan dan cerita. Semua kembali segar keesokan harinya."
+        },
+        {
+          "teks": "Bekerja sambil pakai syal",
+          "efek": {
+            "kesehatan": -10,
+            "energi": -5
+          },
+          "teks_hasil": "Kerja tetap jalan, tapi bersin terdengar di mana-mana dan semua tampak lesu."
+        }
+      ],
+      "era": "kota_kecil"
+    },
+    {
+      "id": "tetangga_berselisih",
+      "judul": "Dua Tetangga Berselisih",
+      "kategori": "penduduk",
+      "deskripsi": "{nama} dan {nama2} bertengkar soal pagar. Katanya, pagar {nama2} bergeser satu jengkal ke kebun {nama}.",
+      "pilihan": [
+        {
+          "teks": "Damaikan di Balai desa",
+          "efek": {
+            "energi": -5,
+            "suasana_hati": 10
+          },
+          "teks_hasil": "Setelah musyawarah dan secangkir teh, mereka berjabat tangan. Pagar dipasang ulang bersama-sama."
+        },
+        {
+          "teks": "Bangun pagar baru yang adil",
+          "efek": {
+            "kayu": -15,
+            "suasana_hati": 8
+          },
+          "teks_hasil": "Pagar baru berdiri tepat di tengah. Kini keduanya malah saling menitipkan tanaman."
+        },
+        {
+          "teks": "Biarkan mereka berdamai sendiri",
+          "efek": {
+            "suasana_hati": -5
+          },
+          "teks_hasil": "Beberapa hari mereka saling cemberut, sampai akhirnya lupa sendiri apa yang diperdebatkan."
+        }
+      ],
+      "era": "kota_kecil"
+    },
+    {
+      "id": "bangau_balai",
+      "judul": "Bangau di Atap Balai",
+      "kategori": "langka",
+      "deskripsi": "Sepasang bangau putih membangun sarang besar di atap Balai desa. Konon, ini pertanda baik!",
+      "pilihan": [
+        {
+          "teks": "Biarkan mereka bersarang",
+          "efek": {
+            "suasana_hati": 12,
+            "kesehatan_bangunan": -5
+          },
+          "teks_hasil": "Atap sedikit berantakan, tapi penduduk senang. Setiap pagi bangau-bangau itu bersahutan."
+        },
+        {
+          "teks": "Buatkan tiang sarang khusus",
+          "efek": {
+            "kayu": -10,
+            "papan": -5,
+            "suasana_hati": 15
+          },
+          "teks_hasil": "Tiang sarang berdiri di samping Balai. Bangau pindah dengan anggun, dan jadi ikon desa."
+        },
+        {
+          "teks": "Usir pelan-pelan",
+          "efek": {
+            "suasana_hati": -5
+          },
+          "teks_hasil": "Bangau terbang ke arah sungai. Beberapa anak menangis kecil melihatnya pergi."
+        }
+      ],
+      "era": "kota_kecil"
+    },
+    {
+      "id": "tanah_bukit_bergeser",
+      "judul": "Tanah Bukit Bergeser",
+      "kategori": "cuaca",
+      "deskripsi": "Setelah hujan deras, tanah di lereng bukit dekat Tambang sedikit longsor. Untung tidak ada yang terluka.",
+      "pilihan": [
+        {
+          "teks": "Bersihkan dan ambil batunya",
+          "efek": {
+            "energi": -15,
+            "batu": 20
+          },
+          "teks_hasil": "Longsoran ternyata penuh batu bagus. Desa mendapat bahan bangunan gratis!"
+        },
+        {
+          "teks": "Tanam pohon penahan tanah",
+          "efek": {
+            "kayu": -10,
+            "suasana_hati": 5
+          },
+          "teks_hasil": "Bibit-bibit pohon ditanam berjajar. Beberapa tahun lagi, lereng ini akan hijau dan kokoh."
+        },
+        {
+          "teks": "Jauhi lereng untuk sementara",
+          "efek": {
+            "hari_kerja_hilang": 1
+          },
+          "teks_hasil": "Penduduk bekerja di dekat desa saja sampai tanah kering. Aman, walau agak lambat."
+        }
+      ],
+      "era": "kota_kecil"
+    }
+  ],
+  "quest_lanjutan": [
+    {
+      "id": "q11_dapur_mengepul",
+      "urutan": 11,
+      "judul": "Dapur Mengepul",
+      "deskripsi": "Bangun Dapur supaya bahan mentah bisa diolah menjadi masakan yang lebih mengenyangkan.",
+      "tujuan": {
+        "tipe": "bangun",
+        "target": "dapur",
+        "jumlah": 1
+      },
+      "hadiah": {
+        "makanan": 10,
+        "suasana_hati": 5
+      },
+      "teks_selesai": "Asap tipis mengepul dari cerobong Dapur. Aroma masakan membuat semua orang pulang lebih cepat."
+    },
+    {
+      "id": "q12_hamparan_ladang",
+      "urutan": 12,
+      "judul": "Hamparan Ladang",
+      "deskripsi": "Bangun total 3 petak Ladang agar desa tidak bergantung pada buah liar.",
+      "tujuan": {
+        "tipe": "bangun",
+        "target": "ladang",
+        "jumlah": 3
+      },
+      "hadiah": {
+        "kayu": 15,
+        "gandum": 5
+      },
+      "teks_selesai": "Tiga petak ladang berjajar rapi. Dari kejauhan, desa mulai tampak seperti kain bermotif kotak-kotak."
+    },
+    {
+      "id": "q13_desa_pertanian",
+      "urutan": 13,
+      "judul": "Desa yang Menguning",
+      "deskripsi": "Penuhi syarat era Desa Pertanian: penduduk, ladang, sumur, dapur, dan stok pangan yang cukup.",
+      "tujuan": {
+        "tipe": "capai_era",
+        "target": "desa_pertanian",
+        "jumlah": 1
+      },
+      "hadiah": {
+        "papan": 10,
+        "alat": 1,
+        "suasana_hati": 10
+      },
+      "teks_selesai": "Desa kini resmi menjadi Desa Pertanian. Setiap musim panen terasa seperti pesta kecil."
+    },
+    {
+      "id": "q14_dentang_palu",
+      "urutan": 14,
+      "judul": "Dentang Palu",
+      "deskripsi": "Bangun Bengkel alat agar desa bisa membuat perkakas, papan, dan batu bata sendiri.",
+      "tujuan": {
+        "tipe": "bangun",
+        "target": "bengkel_alat",
+        "jumlah": 1
+      },
+      "hadiah": {
+        "batu": 15,
+        "kayu": 15
+      },
+      "teks_selesai": "Denting palu pertama terdengar sampai ke sungai. Kini desa bisa membuat alatnya sendiri."
+    },
+    {
+      "id": "q15_ilmu_pertama",
+      "urutan": 15,
+      "judul": "Ilmu dari Pengalaman",
+      "deskripsi": "Selesaikan riset 3 teknologi. Pilih yang paling dibutuhkan desa saat ini.",
+      "tujuan": {
+        "tipe": "riset",
+        "target": "semua",
+        "jumlah": 3
+      },
+      "hadiah": {
+        "makanan": 15,
+        "suasana_hati": 5
+      },
+      "teks_selesai": "Tiga ilmu baru dikuasai. Penduduk mulai suka berdiskusi di dekat api sebelum tidur."
+    },
+    {
+      "id": "q16_perkakas_cadangan",
+      "urutan": 16,
+      "judul": "Perkakas Cadangan",
+      "deskripsi": "Simpan minimal 5 perkakas supaya kerja tidak terhenti saat alat aus.",
+      "tujuan": {
+        "tipe": "simpan",
+        "target": "alat",
+        "jumlah": 5
+      },
+      "hadiah": {
+        "papan": 10,
+        "batu_bata": 5
+      },
+      "teks_selesai": "Rak perkakas penuh dan berkilau. Tidak ada lagi yang harus bekerja dengan tangan kosong."
+    },
+    {
+      "id": "q17_lapak_pertama",
+      "urutan": 17,
+      "judul": "Lapak Pertama",
+      "deskripsi": "Bangun Pasar agar pedagang punya tempat untuk menggelar dagangan.",
+      "tujuan": {
+        "tipe": "bangun",
+        "target": "pasar",
+        "jumlah": 1
+      },
+      "hadiah": {
+        "suasana_hati": 10,
+        "alat": 1
+      },
+      "teks_selesai": "Lapak-lapak kayu berdiri. Lonceng pedagang kini terdengar lebih sering di desa."
+    },
+    {
+      "id": "q18_pandai_berdagang",
+      "urutan": 18,
+      "judul": "Pandai Berdagang",
+      "deskripsi": "Selesaikan 5 transaksi di Pasar. Jual saat harga naik, beli saat harga turun.",
+      "tujuan": {
+        "tipe": "transaksi_pasar",
+        "target": "pasar",
+        "jumlah": 5
+      },
+      "hadiah": {
+        "papan": 15,
+        "suasana_hati": 5
+      },
+      "teks_selesai": "Pedagang mulai memanggil desamu \"langganan tetap\". Tawar-menawar pun jadi lebih seru."
+    },
+    {
+      "id": "q19_kota_kecil",
+      "urutan": 19,
+      "judul": "Menjadi Kota Kecil",
+      "deskripsi": "Penuhi syarat era Kota Kecil: penduduk, Lumbung, Bengkel alat, Pasar, perkakas, dan stok pangan yang aman.",
+      "tujuan": {
+        "tipe": "capai_era",
+        "target": "kota_kecil",
+        "jumlah": 1
+      },
+      "hadiah": {
+        "batu_bata": 15,
+        "papan": 15,
+        "suasana_hati": 15
+      },
+      "teks_selesai": "Desa kecil itu kini menjadi Kota Kecil yang ramai. Tapi bagi penduduknya, ini tetap rumah yang sama hangatnya."
+    },
+    {
+      "id": "q20_rumah_bersama",
+      "urutan": 20,
+      "judul": "Rumah Bersama",
+      "deskripsi": "Bangun Balai desa sebagai tempat musyawarah, pesta, dan pusat ilmu desa.",
+      "tujuan": {
+        "tipe": "bangun",
+        "target": "balai_desa",
+        "jumlah": 1
+      },
+      "hadiah": {
+        "suasana_hati": 20,
+        "alat": 2
+      },
+      "teks_selesai": "Balai desa berdiri megah di tengah kota. Malam ini, seluruh penduduk berkumpul di bawah satu atap."
     }
   ]
 }

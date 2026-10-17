@@ -4,8 +4,8 @@ const C = CONFIG, T = C.TILE;
 const cv = document.getElementById('c'), ctx = cv.getContext('2d');
 cv.width = C.VIEW_W; cv.height = C.VIEW_H; ctx.imageSmoothingEnabled = false;
 const RES_OF = { pohon: 'kayu', batu: 'batu', semak: 'makanan' };
-const SKILL_OF = { kayu: 'menebang', batu: 'menambang', makanan: 'meramu', bangun: 'membangun', bertani: 'bertani', air: 'meramu' };
-const JOB_LABEL = { bangun: 'Membangun', makanan: 'Makanan', bertani: 'Bertani', air: 'Air', kayu: 'Kayu', batu: 'Batu' };
+const SKILL_OF = { kayu: 'menebang', batu: 'menambang', makanan: 'meramu', bangun: 'membangun', bertani: 'bertani', air: 'meramu', riset: 'meneliti' };
+const JOB_LABEL = { bangun: 'Membangun', makanan: 'Makanan', bertani: 'Bertani', air: 'Air', kayu: 'Kayu', batu: 'Batu', riset: 'Riset' };
 const RES_LABEL = { kayu: 'Kayu', batu: 'Batu', makanan: 'Makanan', gandum: 'Gandum', air: 'Air', alat: 'Alat', kulit: 'Kulit', papan: 'Papan', batu_bata: 'Batu bata' };
 const CAMP = C.CAMP;
 let menuOpen = true;
@@ -30,7 +30,7 @@ function newGame() {
   place('pohon', 110); place('batu', 32); place('semak', 30);
   computeBanks();
   (C.START_BUILDINGS || []).forEach(([t, x, y]) => addBuilding(t, x, y, true));
-  S.gathered = {}; S.era = 0; S.questIdx = 0; S.tutorialStep = 0; S.restUntil = 0; S.event = null;
+  S.gathered = {}; S.era = 0; S.techDone = []; S.research = null; S.questIdx = 0; S.tutorialStep = 0; S.restUntil = 0; S.event = null;
   for (let i = 0; i < C.START_VILLAGERS; i++) spawnVillager(cx - 1 + i, cy + 1, true);
   log('Dua penduduk mendirikan perkemahan. Desa Mandiri dimulai!');
 }
@@ -46,7 +46,7 @@ function freshName() { const names = TEXT && TEXT.penduduk ? TEXT.penduduk.map(p
 function spawnVillager(x, y, initial, forcedName) {
   const name = forcedName || freshName();
   S.villagers.push({ id: S.nextId++, name, age: 16 + Math.floor(Math.random() * 25), x, y, hunger: 80, energy: 90, mood: 70,
-    health: 100, skills: { menebang: 0, menambang: 0, meramu: 0, membangun: 0, bertani: 0 }, task: null, carry: null, color: S.villagers.length });
+    health: 100, skills: { menebang: 0, menambang: 0, meramu: 0, membangun: 0, bertani: 0, meneliti: 0 }, task: null, carry: null, color: S.villagers.length });
   if (!initial) log(`${name} bergabung dengan desa!`);
 }
 function log(msg) { S.log.unshift(`Hari ${S.day}: ${msg}`); S.log.length = Math.min(S.log.length, C.MAX_LOG); }
@@ -65,7 +65,34 @@ const foodTotal = () => S.res.makanan + (S.res.gandum || 0);
 const season = () => C.SEASONS[Math.floor((S.day - 1) / C.SEASON_DAYS) % C.SEASONS.length];
 const isWinter = () => season() === 'dingin';
 const eraIndex = id => C.ERAS.findIndex(e => e.id === id);
-const unlocked = type => eraIndex(C.BUILDINGS[type].era || 'perkemahan') <= (S.era | 0);
+const unlocked = type => eraIndex(C.BUILDINGS[type].era || 'perkemahan') <= (S.era | 0) &&
+  techNodes().every(n => !n.efek.some(e => e.kunci === 'buka_bangunan' && e.nilai === type) || (S.techDone || []).includes(n.id));
+// ---------- teknologi (data dari tech.js) ----------
+let _techCache = null;
+function techNodes() { if (_techCache) return _techCache; const T = window.TECH || { nodes: [] }, over = (TEXT && TEXT.teknologi) || [];
+  _techCache = T.nodes.map(n => ({ ...n, ...(over.find(o => o.id === n.id) || {}), efek: n.efek || [], prasyarat: n.prasyarat || [] }));
+  _techCache.forEach(n => n.efek.forEach(e => { if (!(e.kunci in (T.kunci || {}))) console.info(`[tech] kunci efek "${e.kunci}" (${n.id}) belum didukung, diabaikan.`); }));
+  return _techCache; }
+// nilai setelah efek tech selesai; ctx.b = bangunan (untuk kondisi seperti sumurDalam)
+function techVal(kunci, base, ctx = {}) { let v = base;
+  for (const n of techNodes()) { if (!(S.techDone || []).includes(n.id)) continue;
+    for (const e of n.efek) { if (e.kunci !== kunci) continue;
+      if (e.kondisi && e.kondisi.sumurDalam && !(ctx.b && done('sumur').some(w => dist(w, ctx.b) <= e.kondisi.sumurDalam))) continue;
+      v = e.op === 'mult' ? v * e.nilai : e.op === 'set' ? e.nilai : v + e.nilai; } }
+  return v; }
+function techStatus(n) { const D = S.techDone || [];
+  if (D.includes(n.id)) return { st: 'done' }; if (S.research && S.research.id === n.id) return { st: 'active' };
+  const why = []; if (eraIndex(n.era || 'perkemahan') > (S.era | 0)) why.push(`Era ${C.ERAS[eraIndex(n.era)].nama}`);
+  n.prasyarat.filter(id => !D.includes(id)).forEach(id => why.push(`Riset ${(techNodes().find(x => x.id === id) || {}).nama || id}`));
+  const sy = n.syarat || {}; for (const [k, q] of Object.entries(sy.res || {})) if ((S.res[k] || 0) < q) why.push(`${RES_LABEL[k]} ≥ ${q}`);
+  for (const [b, q] of Object.entries(sy.bangunan || {})) if (done(b).length < q) why.push(`${C.BUILDINGS[b].nama} ×${q}`);
+  if (sy.pop && S.villagers.length < sy.pop) why.push(`Penduduk ≥ ${sy.pop}`);
+  if (why.length) return { st: 'locked', why }; if (S.research) return { st: 'busy' };
+  return { st: canAfford(n.biaya || {}) ? 'available' : 'poor' }; }
+function startResearch(id) { const n = techNodes().find(x => x.id === id); if (!n || techStatus(n).st !== 'available') return false;
+  for (const [k, q] of Object.entries(n.biaya || {})) S.res[k] -= q; S.research = { id, progress: 0 };
+  log(`🔬 Riset dimulai: ${n.nama}. Penduduk berprioritas Riset akan mengerjakannya.`); techPanelUI(); return true; }
+function researchTask(v) { if (!S.research) return null; const st = storage(v); return { kind: 'riset', target: stPos(st), techName: (techNodes().find(n => n.id === S.research.id) || {}).nama }; }
 const foodPerDay = () => Math.max(1, S.villagers.length * C.SPAWN.foodPerDayPerPop * (isWinter() ? C.WINTER_HUNGER_MULT : 1));
 const workMult = (v, sk) => 1 + (v.skills[sk] || 0) * 0.5 + (S.res.alat >= 1 ? C.TOOLS.bonus : 0);
 function computeBanks() { S.banks = [];
@@ -91,8 +118,8 @@ function chooseTask(v) {
   // 4. Prioritas kerja (utility: prioritas, jarak, skill)
   let best = null, bs = -1e9;
   for (const job of Object.keys(S.prio)) { const p = S.prio[job]; if (!p) continue;
-    const t = job === 'bangun' ? buildTask(v) : job === 'bertani' ? farmTask(v) : job === 'air' ? waterTask(v) : gatherTask(v, job); if (!t) continue;
-    const full = job === 'air' ? S.res.air >= S.villagers.length * C.WATER.perDayPerPop * C.WATER_SURPLUS_DAYS : job === 'makanan' && foodTotal() >= S.villagers.length * C.SPAWN.foodDaysPerPop * C.SPAWN.foodPerDayPerPop * C.FOOD_SURPLUS_FACTOR;
+    const t = job === 'bangun' ? buildTask(v) : job === 'bertani' ? farmTask(v) : job === 'air' ? waterTask(v) : job === 'riset' ? researchTask(v) : gatherTask(v, job); if (!t) continue;
+    const full = job === 'air' ? S.res.air >= S.villagers.length * C.WATER.perDayPerPop * C.WATER_SURPLUS_DAYS : job === 'makanan' && foodTotal() >= S.villagers.length * C.SPAWN.foodDaysPerPop * C.SPAWN.foodPerDayPerPop * (C.FOOD_SURPLUS_FACTOR + techVal('surplus_makanan', 0));
     const capped = C.RES_SOFT_CAP[job] && S.res[job] >= C.RES_SOFT_CAP[job] * Math.max(1, S.villagers.length / 2);
     const sc = (v.fav === job ? C.FAV_TASK_BONUS : 0) + p * 10 - (full || capped ? C.FOOD_SURPLUS_PENALTY : 0) + (S.villagers.filter(o => o.task && o.task.res === job).length ? -4 : 0) - dist(v, t.target) * 0.3 + v.skills[SKILL_OF[job]] * 5;
     if (sc > bs) { bs = sc; best = t; } }
@@ -157,13 +184,13 @@ function moveTo(v, tg, dt) {
 
 function updateVillager(v, dt) {
   const perSec = 1 / C.DAY_LENGTH_SEC;
-  const hm = isWinter() ? (done('lumbung').length ? C.GRANARY_WINTER_HUNGER_MULT : C.WINTER_HUNGER_MULT) : 1;
+  const hm = isWinter() ? Math.max(1, (done('lumbung').length ? C.GRANARY_WINTER_HUNGER_MULT : C.WINTER_HUNGER_MULT) + techVal('lapar_dingin', 0)) : 1;
   v.hunger = Math.max(0, v.hunger - C.HUNGER_PER_DAY * hm * perSec * dt);
   if (v.health == null) v.health = 100;
   if (v.hunger <= 0) v.health -= C.HEALTH.starvePerDay * perSec * dt; else if (v.hunger > 50) v.health = Math.min(100, v.health + C.HEALTH.regenPerDay * perSec * dt);
   if (!(v.task && v.task.kind === 'tidur' && v.task.asleep)) v.energy = Math.max(0, v.energy - C.ENERGY_PER_DAY * perSec * dt);
   const fire = nearest(done('apiunggun'), v, center);
-  if (fire && dist(center(fire), v) < 4) v.mood = Math.min(100, v.mood + C.MOOD_CAMPFIRE_BONUS * dt); else v.mood -= C.MOOD_DECAY * dt * (isWinter() && S.res.kulit < S.villagers.length ? C.WINTER_MOOD_DECAY_MULT_NO_HIDE : 1);
+  if (fire && dist(center(fire), v) < 4 * techVal('api_radius', 1)) v.mood = Math.min(100, v.mood + C.MOOD_CAMPFIRE_BONUS * dt); else v.mood -= C.MOOD_DECAY * dt * (isWinter() && S.res.kulit < S.villagers.length ? C.WINTER_MOOD_DECAY_MULT_NO_HIDE : 1);
   if (v.hunger < C.HUNGER_CRIT || v.energy < C.ENERGY_CRIT) v.mood -= C.MOOD_HUNGRY_PENALTY * dt;
   v.mood = Math.max(0, Math.min(100, v.mood));
   // interupsi kebutuhan kritis
@@ -177,7 +204,7 @@ function updateVillager(v, dt) {
   if (mv === null) { if (t.node) t.node.unreachable = S.t + 60; v.task = null; v.pathKey = null; return; }
   if (!mv) { v.working = false; return; }
   switch (t.kind) {
-    case 'makan': { const per = C.EAT_RESTORE_PER_FOOD * (done('dapur').length ? 1 + C.KITCHEN_EAT_BONUS : 1);
+    case 'makan': { const per = C.EAT_RESTORE_PER_FOOD * (done('dapur').length ? 1 + techVal('dapur_bonus', C.KITCHEN_EAT_BONUS) : 1);
       let need = Math.ceil((100 - v.hunger) / per); const a = Math.min(need, S.res.makanan); S.res.makanan -= a; need -= a;
       const g = Math.min(need, S.res.gandum || 0); S.res.gandum -= g;
       v.hunger = Math.min(100, v.hunger + (a + g) * per); v.task = null; break; }
@@ -185,7 +212,7 @@ function updateVillager(v, dt) {
       if (v.energy >= 100 && !isNight() || v.hunger <= C.HUNGER_CRIT && foodTotal() > 0) v.task = null; break;
     case 'kumpul': { const n = t.node; if (n.amount <= 0) { v.task = null; break; }
       v.dir = 2; v.working = true; t.work += dt * workMult(v, SKILL_OF[t.res]);
-      if (t.work >= C.GATHER_TIME[t.res]) { v.working = false; if (S.res.alat > 0) S.res.alat = Math.max(0, S.res.alat - C.TOOLS.wearPerHaul); const amt = Math.min(C.CARRY[t.res], n.amount); n.amount -= amt;
+      if (t.work >= C.GATHER_TIME[t.res]) { v.working = false; if (S.res.alat > 0) S.res.alat = Math.max(0, S.res.alat - C.TOOLS.wearPerHaul); const amt = Math.min(C.CARRY[t.res] + Math.round(techVal('carry_' + t.res, 0)), n.amount); n.amount -= amt;
         if (n.amount <= 0) n.regrow = n.type === 'semak' ? C.BUSH_REGROW_SEC : 0;
         v.skills[SKILL_OF[t.res]] += C.SKILL_GAIN; v.carry = { res: t.res, n: amt };
         const st = storage(v); v.task = st ? { kind: 'setor', target: stPos(st) } : null; } break; }
@@ -197,8 +224,8 @@ function updateVillager(v, dt) {
         log(`${v.name} selesai membangun ${C.BUILDINGS[b.type].nama}.`); vhist(v, `Selesai membangun ${C.BUILDINGS[b.type].nama}`); v.working = false; v.task = null; } break; }
     case 'tani': { const b = t.b; if (!S.buildings.includes(b) || (t.harvest ? b.stage !== 'siap' : b.stage !== 'kosong')) { v.task = null; break; }
       v.working = true; t.work += dt * workMult(v, 'bertani');
-      if (t.work >= (t.harvest ? C.FIELD.harvestTime : C.FIELD.plantTime)) { v.working = false; v.skills.bertani += C.SKILL_GAIN;
-        if (t.harvest) { const F = C.FIELD, res = F.crops[b.crop].res, n = Math.round(F.yieldMin + Math.random() * (F.yieldMax - F.yieldMin));
+      if (t.work >= (t.harvest ? C.FIELD.harvestTime : C.FIELD.plantTime) * techVal('tani_waktu', 1)) { v.working = false; v.skills.bertani += C.SKILL_GAIN;
+        if (t.harvest) { const F = C.FIELD, res = F.crops[b.crop].res, n = Math.round(F.yieldMin + Math.random() * (F.yieldMax - F.yieldMin) + techVal('ladang_hasil', 0));
           b.stage = 'kosong'; b.grow = 0; b.harvested = true; v.carry = { res, n }; vhist(v, `Memanen ${n} ${RES_LABEL[res].toLowerCase()}`); log(`${v.name} memanen ${n} ${RES_LABEL[res].toLowerCase()} dari ladang ${b.crop}.`);
           const st = storage(v); v.task = { kind: 'setor', target: stPos(st) }; }
         else { b.stage = 'tumbuh'; b.grow = 0; b.harvested = false; v.task = null; } } break; }
@@ -206,6 +233,11 @@ function updateVillager(v, dt) {
       if (t.work >= (t.src === 'sumur' ? C.WATER.wellTime : C.WATER.riverTime)) { v.working = false;
         v.carry = { res: 'air', n: t.src === 'sumur' ? C.WATER.wellYield : C.WATER.riverYield }; v.task = { kind: 'setor', target: stPos(storage(v)) }; } break; }
     case 'diam': t.timer -= dt; if (t.timer <= 0) v.task = null; break;
+    case 'riset': { const R = S.research; if (!R) { v.working = false; v.task = null; break; } const n = techNodes().find(x => x.id === R.id);
+      v.working = true; R.progress += dt * workMult(v, 'meneliti');
+      if (!t.t0) t.t0 = S.t; if (S.t - t.t0 > 20) { v.working = false; v.task = null; } // pilih ulang tiap 20 dtk
+      if (R.progress >= n.work) { S.techDone.push(n.id); S.research = null; v.skills.meneliti = (v.skills.meneliti || 0) + C.SKILL_GAIN * 5;
+        log(`🎓 ${v.name} menyelesaikan riset ${n.nama}!`); vhist(v, `Menyelesaikan riset ${n.nama}`); v.working = false; v.task = null; techPanelUI(); } break; }
   }
 }
 function deposit(v, drop) { if (v.carry) { if (!drop) { S.res[v.carry.res] += v.carry.n; S.gathered[v.carry.res] = (S.gathered[v.carry.res] || 0) + v.carry.n; notify(v.carry.res, v.carry.n, v); } v.carry = null; } }
@@ -215,7 +247,7 @@ const notes = [];
 function notify(res, n, v) { const near = notes.find(o => o.res === res && Math.abs(o.x - v.x) < 3 && Math.abs(o.y - v.y) < 3 && o.life > 1);
   if (near) { near.n += n; near.life = 2; return; }
   if (notes.length >= (C.MAX_NOTES || 6)) notes.shift(); notes.push({ res, n, x: v.x, y: v.y, life: 2 }); }
-const ROLE = { menebang: 'Penebang', menambang: 'Penambang', meramu: 'Peramu', membangun: 'Tukang', bertani: 'Petani' };
+const ROLE = { menebang: 'Penebang', menambang: 'Penambang', meramu: 'Peramu', membangun: 'Tukang', bertani: 'Petani', meneliti: 'Peneliti' };
 function role(v) { const [k, n] = Object.entries(v.skills).sort((a, b) => b[1] - a[1])[0]; return n > 0 ? ROLE[k] : 'Pendatang'; }
 // ---------- konten (TEKS-GAME.json) ----------
 const BID = { api_unggun: 'apiunggun', gubuk: 'gubuk', gudang: 'gudang', ladang: 'ladang', sumur: 'sumur', dapur: 'dapur', bengkel_alat: 'bengkel', lumbung: 'lumbung', pasar: 'pasar', balai_desa: 'balai' }; // id JSON -> id internal
@@ -319,11 +351,12 @@ function openVillager(id) { const v = S.villagers.find(x => x.id === id); if (!v
   delete _html.vpDyn; villagerPanelUI(); }
 function closeVillager() { selVid = null; $('vpanel').style.display = 'none'; }
 function villagerPanelUI() { if (selVid == null) return; const v = S.villagers.find(x => x.id === selVid); if (!v) { closeVillager(); return; }
-  const bar = (label, val, col) => `${label} <b>${val | 0}</b><div class="bar"><i style="width:${Math.max(0, Math.min(100, val))}%;background:var(${col})"></i></div>`;
-  const SK = { menebang: 'Menebang', menambang: 'Menambang', meramu: 'Meramu', membangun: 'Membangun', bertani: 'Bertani' };
+  const uiIco = k => ASSETS[k] && ASSETS[k].ui ? `<img class="ico" src="${ASSETS[k].ui}">` : '';
+  const bar = (label, val, col, fill, ik) => `${uiIco(ik)}${label} <b>${val | 0}</b><div class="bar"><i class="${fill}" style="width:${Math.max(0, Math.min(100, val))}%;background:var(${col})"></i></div>`;
+  const SK = { menebang: 'Menebang', menambang: 'Menambang', meramu: 'Meramu', membangun: 'Membangun', bertani: 'Bertani', meneliti: 'Meneliti' };
   setHTML('vpDyn', `<div style="font-size:12px;margin:6px 0">${v.age} th · ${role(v)}<br>Sedang: <b>${TASK_TEXT(v.task)}</b>${v.carry ? ` (membawa ${v.carry.n} ${RES_LABEL[v.carry.res].toLowerCase()})` : ''}</div>
-    ${bar('Lapar', v.hunger, '--bar-hunger')}${bar('Energi', v.energy, '--bar-energy')}${bar('Suasana hati', v.mood, '--bar-mood')}${bar('Kesehatan', v.health ?? 100, '--bar-health')}
-    <h3>Keahlian</h3>${Object.entries(SK).map(([k, l]) => `<div class="row"><span>${l}</span><span>${'★'.repeat(Math.min(5, Math.floor((v.skills[k] || 0) * 2)))}${'☆'.repeat(5 - Math.min(5, Math.floor((v.skills[k] || 0) * 2)))} ${(v.skills[k] || 0).toFixed(2)}</span></div>`).join('')}
+    ${bar('Kenyang', v.hunger, '--bar-hunger', 'f-red', 'ikon_need_hunger')}${bar('Energi', v.energy, '--bar-energy', 'f-blue', 'ikon_need_energy')}${bar('Suasana hati', v.mood, '--bar-mood', 'f-yellow', 'ikon_need_mood')}${bar('Kesehatan', v.health ?? 100, '--bar-health', 'f-green', 'ikon_need_health')}
+    <h3>Keahlian</h3>${Object.entries(SK).map(([k, l]) => `<div class="row"><span>${uiIco('ikon_skill_' + k)}${l}</span><span>${'★'.repeat(Math.min(5, Math.floor((v.skills[k] || 0) * 2)))}${'☆'.repeat(5 - Math.min(5, Math.floor((v.skills[k] || 0) * 2)))} ${(v.skills[k] || 0).toFixed(2)}</span></div>`).join('')}
     <h3>Riwayat</h3><ul>${(v.history || []).map(h => `<li>${h}</li>`).join('') || '<li>Belum ada catatan.</li>'}</ul>`); }
 document.addEventListener('change', e => { if (e.target.id === 'favSel' && selVid != null) { const v = S.villagers.find(x => x.id === selVid); if (!v) return;
   v.fav = e.target.value || null; vhist(v, v.fav ? `Tugas favorit diatur: ${JOB_LABEL[v.fav]}` : 'Tugas favorit dihapus'); } });
@@ -337,7 +370,7 @@ function step(dt) {
   checkQuest();
   for (const v of S.villagers.slice()) if (v.health <= 0) { S.villagers.splice(S.villagers.indexOf(v), 1); log(`💀 ${v.name} meninggal karena kelaparan/sakit.`); }
   const winter = isWinter();
-  for (const b of S.buildings) if (b.type === 'ladang' && b.done && b.stage === 'tumbuh' && !winter && (b.grow += dt / C.DAY_LENGTH_SEC) >= C.FIELD.growDays) b.stage = 'siap';
+  for (const b of S.buildings) if (b.type === 'ladang' && b.done && b.stage === 'tumbuh' && !winter && (b.grow += dt / C.DAY_LENGTH_SEC) >= C.FIELD.growDays + techVal('ladang_tumbuh', 0, { b })) b.stage = 'siap';
   if (!winter) for (const n of S.nodes) if (n.type === 'semak' && n.amount <= 0 && (n.regrow -= dt) <= 0) n.amount = C.NODE_AMOUNT.makanan;
   S.nodes = S.nodes.filter(n => n.amount > 0 || n.type === 'semak');
   if (S.day !== lastDay) { lastDay = S.day; newDay(); }
@@ -441,7 +474,7 @@ function render() {
   for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) { const t = S.tiles[y][x];
     if (t === 0) sprite(winterKey(S.grassVar && S.grassVar[y][x] ? 'rumput2' : 'rumput'), x, y);
     else { drawWater(x, y);
-      if (t === 2) { const bl = S.tiles[y][x - 1] === 2, br = S.tiles[y][x + 1] === 2; sprite('jembatan', x, y, 1, 1, !bl ? 0 : !br ? 2 : 1);
+      if (t === 2) { const bl = S.tiles[y][x - 1] === 2, br = S.tiles[y][x + 1] === 2; sprite('jembatan', x, y, 1, 1, !bl ? 0 : !br ? 2 : 1); if (ASSETS.rel_belakang.image) sprite('rel_belakang', x, y, 1, 1, !bl ? 0 : !br ? 2 : 1);
         if (!ASSETS.jembatan.image) { ctx.fillStyle = '#9c6b3c'; ctx.fillRect(x * T, y * T + 4, T, 24); } } } }
   const list = [];
   for (const n of S.nodes) { if (!inView(n.x, n.y)) continue;
@@ -456,8 +489,15 @@ function render() {
   for (const g of Object.values(groups)) g.forEach((v, i) => { const off = (i - (g.length - 1) / 2) * 12;
     list.push({ y: v.y + 1 + 0.01 * i, draw: () => drawVillager(v, off) }); });
   list.sort((p, q) => p.y - q.y).forEach(o => o.draw());
+  if (ASSETS.rel_depan.image) for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) if (S.tiles[y][x] === 2) {
+    const bl = S.tiles[y][x - 1] === 2, br = S.tiles[y][x + 1] === 2; sprite('rel_depan', x, y, 1, 1, !bl ? 0 : !br ? 2 : 1); }
   if (!darkness) for (const b of done('apiunggun')) { const g = ASSETS.cahaya.image; if (g) { ctx.globalAlpha = 0.35; ctx.drawImage(g, b.x * T - 32, b.y * T - 32); ctx.globalAlpha = 1; } }
   // malam: overlay (blend normal) lalu cahaya (additive)
+  // senja/fajar: tween warna sebelum & sesudah malam
+  const tw = 0.06, dusk = Math.max(0, 1 - Math.abs(f - C.NIGHT_START) / tw), dawn = Math.max(0, 1 - Math.abs(f - C.NIGHT_END) / tw);
+  const vw = [cam.x - 2, cam.y - 2, cv.width / cam.zoom + 4, cv.height / cam.zoom + 4];
+  if (dusk > 0) { ctx.globalAlpha = dusk; ctx.fillStyle = ASSETS.senja_overlay.color; ctx.fillRect(...vw); ctx.globalAlpha = 1; }
+  if (dawn > 0) { ctx.globalAlpha = dawn; ctx.fillStyle = ASSETS.fajar_overlay.color; ctx.fillRect(...vw); ctx.globalAlpha = 1; }
   if (darkness > 0) {
     ctx.globalAlpha = darkness; ctx.fillStyle = ASSETS.malam_overlay.color; ctx.fillRect(cam.x - 2, cam.y - 2, cv.width / cam.zoom + 4, cv.height / cam.zoom + 4);
     ctx.globalCompositeOperation = 'lighter';
@@ -484,7 +524,8 @@ function drawBuilding(b, d) {
     if (!hasImg) { ctx.fillStyle = ['#8a5a32', '#8a7a32', '#7a9a3a', '#5aa03a', '#e0c040'][fr] || '#8a5a32'; ctx.fillRect(b.x * T + 2, b.y * T + 2, T - 4, T - 4); }
     if (b.done && (fr === 2 || fr === 3) && !isWinter()) sprite('kilau', b.x, b.y, 1, 1, animFrame(ASSETS.kilau, ASSETS.kilau.fps));
   } else {
-    const key = b.done && darkness > 0.5 && ASSETS[b.type + '_malam'] && ASSETS[b.type + '_malam'].image ? b.type + '_malam' : b.type;
+    const has = k => ASSETS[k] && ASSETS[k].image, w = isWinter(), night = b.done && darkness > 0.5;
+    const key = [night && w && b.type + '_malam_dingin', night && b.type + '_malam', w && b.type + '_dingin', b.type].find(k => k && has(k)) || b.type;
     const a = ASSETS[b.type], fr = b.type === 'apiunggun' && b.done ? animFrame(a, a.fps) : 0;
     hasImg = sprite(key, b.x, b.y, d.w, d.h, fr);
     if (!hasImg && b.type === 'gubuk') { ctx.fillStyle = a.roof; ctx.beginPath(); ctx.moveTo(b.x * T - 2, b.y * T + 26); ctx.lineTo(b.x * T + T, b.y * T - 6); ctx.lineTo(b.x * T + 2 * T + 2, b.y * T + 26); ctx.fill(); }
@@ -504,8 +545,11 @@ function drawVillager(v, off = 0) {
   let workRow = null, fps = 0;
   if (wim && v.working && v.task && v.task.kind === 'kumpul' && v.task.res === 'kayu') { workRow = wk.rows.tebang; fps = wk.fpsWork; }
   else if (wim && v.working && v.task && (v.task.kind === 'kumpul' && v.task.res === 'batu' || v.task.kind === 'bangun')) { workRow = wk.rows.tambang; fps = wk.fpsWork; }
+  const cb = ASSETS.penduduk_bawa, cim = cb.images && (cb.images[variant] || cb.image);
+  if (cim && v.carry && v.moving && cb.tipe[v.carry.res] != null) { ctx.drawImage(cim, (Math.floor(t * cb.fps) % cb.frames) * 32, (cb.tipe[v.carry.res] * 4 + dir) * 32, 32, 32, dx, dy, 32, 32); workRow = -1; }
   else if (wim && v.carry && v.moving) { workRow = wk.rows.bawa; fps = wk.fpsCarry; }
-  if (workRow !== null) ctx.drawImage(wim, (Math.floor(t * fps) % wk.frames) * 32, (workRow + dir) * 32, 32, 32, dx, dy, 32, 32);
+  if (workRow === -1) { /* sudah digambar (membawa) */ }
+  else if (workRow !== null) ctx.drawImage(wim, (Math.floor(t * fps) % wk.frames) * 32, (workRow + dir) * 32, 32, 32, dx, dy, 32, 32);
   else if (im) { const moving = v.moving && !asleep, row = (moving ? 4 : 0) + dir;
     const fr = Math.floor(t * (moving ? a.fpsWalk : a.fpsIdle)) % a.frames;
     ctx.drawImage(im, fr * 32, row * 32, 32, 32, dx, dy, 32, 32); }
@@ -540,9 +584,22 @@ function ui() {
   const era = C.ERAS[S.era | 0], next = C.ERAS[(S.era | 0) + 1];
   setHTML('era', `<b>${era.nama}</b>` + (next ? `<br>Menuju <b>${next.nama}</b>:<br>` + eraReqStatus(next).map(([t, ok]) => `${ok ? '✅' : '▫️'} ${t}`).join('<br>') : '<br>Era tertinggi tercapai!'));
   document.querySelectorAll('[data-b]').forEach(bt => { const k = bt.dataset.b; if (k) bt.disabled = !unlocked(k) || !canAfford(C.BUILDINGS[k].cost); });
-  setHTML('quest', questUI()); villagerPanelUI();
+  setHTML('quest', questUI()); villagerPanelUI(); techPanelUI();
   setHTML('log', S.log.slice(0, 15).map(l => `<div>${l}</div>`).join(''));
 }
+function techPanelUI() { const el = $('techpanel'); if (!el || el.style.display !== 'block') return;
+  const T = window.TECH || { cabang: {} }, nodes = techNodes(), R = S.research, rn = R && nodes.find(n => n.id === R.id);
+  const ST = { done: 'Selesai ✔', active: 'Sedang diteliti', locked: 'Terkunci', busy: 'Tunggu riset lain', poor: 'Bahan kurang', available: 'Bisa diteliti' };
+  const cost = c => Object.entries(c || {}).map(([k, q]) => `${q} ${RES_LABEL[k] || k}`).join(', ') || 'gratis';
+  const ico = n => { const a = n.ikon && ASSETS[n.ikon]; return a && a.ui ? `<img src="${a.ui}" width="32" height="32" style="float:left;margin-right:6px;image-rendering:pixelated">` : ''; };
+  setHTML('techpanel', `<button class="close" id="techClose">✕</button><h3 style="margin-top:0">🔬 Pohon Teknologi</h3>
+    <div style="font-size:12px;margin-bottom:8px">${rn ? `Sedang diteliti: <b>${rn.nama}</b> — ${Math.floor(R.progress)}/${rn.work}<div class="bar"><i style="width:${100 * R.progress / rn.work}%;background:var(--bar-energy)"></i></div>` : 'Belum ada riset berjalan. Pilih satu teknologi; biaya dibayar di muka.'}
+    Prioritas kerja <b>Riset</b>: ${S.prio.riset || 'mati'}</div>
+    <div class="tech-grid">${Object.entries(T.cabang).map(([cb, nm]) => `<div><h3>${nm}</h3>${nodes.filter(n => n.cabang === cb).map(n => { const s = techStatus(n);
+      return `<div class="tech ${s.st === 'done' ? 'done' : s.st === 'active' ? 'active' : s.st === 'locked' ? 'locked' : ''}" data-tech="${n.id}">${ico(n)}<b>${n.nama}</b> <small style="display:inline">${n.id}</small>
+        <small>${n.deskripsi || ''}</small><small>Biaya: ${cost(n.biaya)} · Kerja: ${n.work}</small>
+        <small>${ST[s.st]}${s.why ? ': ' + s.why.join(', ') : ''}</small>${s.st === 'available' ? `<button data-research="${n.id}">Teliti</button>` : ''}</div>`; }).join('') || '<small>Segera hadir</small>'}</div>`).join('')}</div>`); }
+function openTech() { $('techpanel').style.display = 'block'; delete _html.techpanel; techPanelUI(); tutAction('buka_riset'); }
 function buildBuildBar() {
   $('buildbar').innerHTML = 'Bangun: ' + Object.entries(C.BUILDINGS).filter(([k]) => unlocked(k)).map(([k, d]) =>
     `<button data-b="${k}" title="${Object.entries(d.cost).map(([r, n]) => n + ' ' + RES_LABEL[r]).join(', ')}">${d.nama}</button>`).join('') + '<button data-b="">Batal</button>'; }
@@ -552,6 +609,9 @@ function buildPrioUI() {
 }
 document.addEventListener('click', e => { const d = e.target.dataset; if (!d) return;
   if (e.target.id === 'vpClose') closeVillager();
+  if (e.target.id === 'techbtn') openTech();
+  if (e.target.id === 'techClose') $('techpanel').style.display = 'none';
+  if (d.research) startResearch(d.research);
   if (d.ev !== undefined) chooseEvent(+d.ev);
   const vrow = e.target.closest && e.target.closest('[data-vid]'); if (vrow) openVillager(+vrow.dataset.vid);
   if (e.target.id === 'tutNext') { S.tutorialStep++; tutorialUI(); }
@@ -588,7 +648,7 @@ $('save').onclick = () => { localStorage.setItem(KEY, JSON.stringify({ ...S, vil
 $('load').onclick = () => loadGame(true);
 $('reset').onclick = () => { if (confirm('Mulai permainan baru?')) { S = null; newGame(); lastDay = S.day; buildPrioUI(); buildBuildBar(); tutorialUI(); } };
 function loadGame(verbose) { const s = localStorage.getItem(KEY); if (!s) { if (verbose) log('Belum ada simpanan.'); return false; }
-  try { const L = JSON.parse(s); if (!L.tiles || L.tiles.length !== C.MAP_H || L.tiles[0].length !== C.MAP_W) { if (verbose) log('Simpanan versi lama tidak cocok dengan peta baru.'); return false; } S = L; lastDay = S.day; S.prio = { ...C.DEFAULT_PRIO, ...S.prio }; S.gathered = S.gathered || {}; S.era |= 0; for (const [k, n] of Object.entries(C.START_RES)) if (!(k in S.res)) S.res[k] = 0; if (!S.banks) computeBanks(); S.villagers.forEach(v => { v.skills.bertani = v.skills.bertani || 0; if (v.health == null) v.health = 100; }); S.questIdx |= 0; S.tutorialStep |= 0; S.restUntil = S.restUntil || 0; buildPrioUI(); buildBuildBar(); tutorialUI(); $('modal').style.display = 'none'; if (S.event) showEvent(); log('Permainan dimuat.'); return true; } catch (e) { console.warn(e); return false; } }
+  try { const L = JSON.parse(s); if (!L.tiles || L.tiles.length !== C.MAP_H || L.tiles[0].length !== C.MAP_W) { if (verbose) log('Simpanan versi lama tidak cocok dengan peta baru.'); return false; } S = L; lastDay = S.day; S.prio = { ...C.DEFAULT_PRIO, ...S.prio }; S.techDone = S.techDone || []; S.research = S.research || null; S.gathered = S.gathered || {}; S.era |= 0; for (const [k, n] of Object.entries(C.START_RES)) if (!(k in S.res)) S.res[k] = 0; if (!S.banks) computeBanks(); S.villagers.forEach(v => { v.skills.bertani = v.skills.bertani || 0; if (v.health == null) v.health = 100; }); S.questIdx |= 0; S.tutorialStep |= 0; S.restUntil = S.restUntil || 0; buildPrioUI(); buildBuildBar(); tutorialUI(); $('modal').style.display = 'none'; if (S.event) showEvent(); log('Permainan dimuat.'); return true; } catch (e) { console.warn(e); return false; } }
 
 // ---------- loop ----------
 let prev = performance.now();
@@ -596,7 +656,7 @@ function frame(now) { const real = Math.min(0.25, (now - prev) / 1000); prev = n
   for (const n of notes) n.life -= real; while (notes.length && notes[0].life <= 0) notes.shift();
   let sim = menuOpen ? 0 : real * speed; while (sim > 0) { const d = Math.min(0.1, sim); step(d); sim -= d; }
   render(); ui(); requestAnimationFrame(frame); }
-window.DESA = { get state() { return S; }, showEvent, validSpot, canAfford, addBuilding, season,  step, cam, findPath, setZoom, centerCam };
+window.DESA = { get state() { return S; }, startResearch, techVal, techNodes, openTech, showEvent, validSpot, canAfford, addBuilding, season,  step, cam, findPath, setZoom, centerCam };
 fetch('TEKS-GAME.json').then(r => r.ok ? r.json() : null).catch(() => null).then(t => { TEXT = t;
   if (!t) console.warn('TEKS-GAME.json tidak dapat dimuat; memakai teks bawaan.');
   loadAssets(() => { newGame(); lastDay = S.day; buildPrioUI(); buildBuildBar(); centerCam(CAMP.x, CAMP.y); openMenu(); requestAnimationFrame(frame); }); });

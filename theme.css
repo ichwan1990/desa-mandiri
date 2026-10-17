@@ -38,3 +38,25 @@ h3{margin:8px 0 4px;color:var(--accent);font-size:14px} .row{display:flex;justif
 .tech{border:1px solid var(--line);border-radius:6px;padding:8px;font-size:12px;background:rgba(0,0,0,.15)}
 .tech b{color:var(--accent)} .tech.done{border-color:#6bd06b;background:rgba(107,208,107,.12)} .tech.active{border-color:var(--highlight)}
 .tech.locked{opacity:.5} .tech small{display:block;opacity:.8;margin-top:3px}
+
+/* ===== Skin pixel-art (assets/ui/skin, 9-slice) — hapus class "skin" dari <body> untuk kembali ke tema warna polos ===== */
+body.skin{--panel-text:#3a2830;--panel-accent:#a63e34;--ui:'assets/ui/skin/'}
+body.skin .panel, body.skin #menu .box{background:none;border-style:solid;border-width:8px;border-image:url(assets/ui/skin/panel.png) 8 fill / 8px / 0 stretch;border-radius:0;color:var(--panel-text);image-rendering:pixelated}
+body.skin .panel h3, body.skin .panel b, body.skin .tech b{color:var(--panel-accent)}
+body.skin #menu h1{color:var(--panel-accent)}
+body.skin #top, body.skin #side{border-style:solid;border-width:8px;border-image:url(assets/ui/skin/panel_wood.png) 8 fill / 8px / 0 stretch;background:none;image-rendering:pixelated}
+body.skin #side{height:800px}
+body.skin button{background:none;border-style:solid;border-width:4px 6px 6px 6px;border-image:url(assets/ui/skin/button_normal.png) 4 6 6 6 fill / 4px 6px 6px 6px / 0 stretch;border-radius:0;color:#fff8e6;text-shadow:1px 1px 0 #3a2830;padding:1px 6px 0;image-rendering:pixelated}
+body.skin button:hover:not(:disabled){border-image-source:url(assets/ui/skin/button_hover.png)}
+body.skin button:active:not(:disabled), body.skin button.on{border-image-source:url(assets/ui/skin/button_pressed.png);padding-top:3px;padding-bottom:0}
+body.skin button:disabled{border-image-source:url(assets/ui/skin/button_disabled.png);opacity:1;color:#d8c8b0}
+body.skin .bar{height:12px;border-radius:0;background:none;border-style:solid;border-width:3px;border-image:url(assets/ui/skin/bar_frame.png) 3 fill / 3px / 0 stretch;box-sizing:border-box;overflow:hidden}
+body.skin .bar>i{background-size:100% 100%!important;image-rendering:pixelated}
+body.skin .bar>i.f-red{background:url(assets/ui/skin/bar_fill_red.png)} body.skin .bar>i.f-blue{background:url(assets/ui/skin/bar_fill_blue.png)}
+body.skin .bar>i.f-yellow{background:url(assets/ui/skin/bar_fill_yellow.png)} body.skin .bar>i.f-green{background:url(assets/ui/skin/bar_fill_green.png)}
+body.skin .bar>i.f-purple{background:url(assets/ui/skin/bar_fill_purple.png)}
+body.skin .tech{background:rgba(120,80,40,.08);border-color:#c49a6c} body.skin .tech.done{background:rgba(80,160,80,.15)}
+body.skin #menu{background:#1d1610 url(assets/ui/title/title_bg_640x360.png) center/cover no-repeat;image-rendering:pixelated}
+body.skin #menu .box{background:none}
+.ico{width:16px;height:16px;vertical-align:-3px;image-rendering:pixelated;margin-right:3px}
+#menu .logo{display:block;margin:0 auto 6px;image-rendering:pixelated}
