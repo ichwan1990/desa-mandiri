@@ -23,7 +23,7 @@ const path = require('path');
   // UI
   await p.click('#marketbtn'); await p.waitForTimeout(200);
   r.ui = await p.evaluate(() => ({ rows: document.querySelectorAll('#mkTable tr').length, status: document.getElementById('mkStatus').textContent.slice(0, 60) }));
-  await p.fill('#mkQty', '6'); await p.selectOption('#mkGive', 'kayu'); await p.selectOption('#mkGet', 'makanan'); await p.waitForTimeout(150);
+  await p.fill('#mkQty', '12'); await p.selectOption('#mkGive', 'kayu'); await p.selectOption('#mkGet', 'makanan'); await p.waitForTimeout(150);
   const t0 = await p.evaluate(() => DESA.state.trades); await p.click('#mkDo'); r.uiTrade = (await p.evaluate(() => DESA.state.trades)) === t0 + 1;
   await p.evaluate(() => { const m = DESA.state.merchant; DESA.setZoom(2); DESA.centerCam(m.x, m.y - 2); }); await p.waitForTimeout(300);
   await p.screenshot({ path: path.join(__dirname, '..', 'docs', 'screenshots', 'v4-market.png') });

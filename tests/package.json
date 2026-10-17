@@ -4,7 +4,7 @@
   "description": "Tes Playwright untuk Desa Mandiri (butuh server di http://localhost:8080)",
   "scripts": {
     "setup": "npx playwright install chromium",
-    "test": "node menu-tutorial.test.js && node villager-panel.test.js && node tech-tree.test.js && node market.test.js && node text-v11.test.js && node audio.test.js && node achievements.test.js && node smoke.test.js && node pathfinding-camera.test.js && node seasons-farming.test.js && node newcomer.test.js"
+    "test": "node menu-tutorial.test.js && node villager-panel.test.js && node tech-tree.test.js && node market.test.js && node text-v11.test.js && node audio.test.js && node achievements.test.js && node mobile.test.js && node smoke.test.js && node pathfinding-camera.test.js && node seasons-farming.test.js && node newcomer.test.js"
   },
   "devDependencies": { "playwright": "^1.50.0" }
 }

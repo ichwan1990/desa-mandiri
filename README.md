@@ -17,16 +17,26 @@ Server harus berjalan di `http://localhost:8080` (atau set `GAME_URL`).
 cd tests
 npm install
 npm run setup     # unduh Chromium untuk Playwright
-npm test          # smoke, pathfinding+kamera, musim+ladang, event pendatang
+npm test          # semua tes: menu, panel, riset, pasar, teks, audio, pencapaian, ponsel (390x844), dll.
 node balance-sim.test.js 5   # simulasi balancing 24 hari (5 kali), cetak kurva stok makanan
 ```
 Tes gagal (exit code 1) bila ada error di konsol. Screenshot disimpan di `docs/screenshots/`.
+
+## Fitur tahap 3
+- **Pasar & pedagang keliling** — tombol 🛒 Pasar (butuh bangunan Pasar atau pedagang yang sedang singgah). Barter berbasis nilai: tiap barang punya harga jual & beli, harga bergeser tiap hari (0,92–1,08, dibatasi 0,7–1,4), dipengaruhi musim & event, dengan kuota nilai harian per era. Menjual pangan saat stok > ±16 hari dihargai lebih murah. Om Robert datang berkala dengan gerobaknya lewat jembatan dan memberi diskon beli 10%. Angka di `balance.js` (`MARKET`, `MERCHANT`).
+- **Suara** — musik ambien generatif + SFX (tebang, tambang, bangun, panen, event, koin, lonceng, klik), semuanya dibuat WebAudio. Mulai setelah klik/tombol pertama (aturan autoplay browser). Volume musik & efek terpisah di Pengaturan, tombol 🔊/🔇 untuk bisu.
+- **Pencapaian** — 24 pencapaian (A01–A24) dari `TEKS-GAME.json`, dengan ikon, notifikasi toast, dan panel 🏅 (yang rahasia tampil sebagai ???). Disimpan terpisah dari save game (`localStorage: desaMandiriPencapaian`), jadi tetap ada walau mulai desa baru. Hadiah diberikan saat terbuka.
+- **Ringkasan harian** — tiap fajar, log & panel "Ringkasan Kemarin" menampilkan yang dikumpulkan, dimakan, dibangun, dan kejadian hari sebelumnya.
+- **Layar sentuh & ponsel** — di bawah 900px kanvas memenuhi layar dan panel samping menjadi laci bawah (tombol ☰ Panel). Satu jari: seret untuk geser, ketuk untuk memilih penduduk/menaruh bangunan. Dua jari: cubit untuk zoom (level bulat 1/2/3 agar pixel tetap tajam). Tombol diperbesar (≥ 40px). Angka di `balance.js` (`TOUCH`).
 
 ## Struktur file
 ```
 index.html          Tata letak & UI
 balance.js          SEMUA angka balancing (CONFIG) — ubah di sini untuk tuning
 assets.js           Peta aset tunggal (ASSETS): path sprite, ukuran frame, animasi, warna placeholder
+audio.js            Musik ambien & SFX (WebAudio, tanpa file suara)
+tech.js             Pohon teknologi (data)
+theme.css           Tema/skin UI + tata letak responsif
 game.js             Simulasi, AI penduduk, pathfinding, render, UI, simpan/muat
 TEKS-GAME.json      Teks game: nama penduduk, log harian, event, tutorial, misi (dimuat via fetch)
 assets/             Sprite pixel art (lihat assets/README.md & manifest.json)

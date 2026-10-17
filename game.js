@@ -798,14 +798,44 @@ window.addEventListener('keydown', e => { const k = { ArrowLeft: [-1, 0], a: [-1
   if (k) { cam.x += k[0] * 64 / cam.zoom; cam.y += k[1] * 64 / cam.zoom; clampCam(); } });
 $('zin').onclick = () => { const Z = C.ZOOM_LEVELS, i = Z.indexOf(cam.zoom); setZoom(Z[Math.min(Z.length - 1, i + 1)]); };
 $('zout').onclick = () => { const Z = C.ZOOM_LEVELS, i = Z.indexOf(cam.zoom); setZoom(Z[Math.max(0, i - 1)]); };
-cv.addEventListener('click', e => { if (drag && drag.moved) return; const p = scr(e), t = screenToTile(p.x, p.y); mouse.x = t.x; mouse.y = t.y;
+cv.addEventListener('click', e => { if (drag && drag.moved) return; handleTap(scr(e)); });
+function handleTap(p) { const t = screenToTile(p.x, p.y); mouse.x = t.x; mouse.y = t.y;
   if (!placing) { const wx = (cam.x + p.x / cam.zoom) / T - 0.5, wy = (cam.y + p.y / cam.zoom) / T - 0.4;
     const v = nearest(S.villagers.filter(o => Math.hypot(o.x - wx, o.y - wy) < 0.8), { x: wx, y: wy }); if (v) openVillager(v.id); return; }
   const d = C.BUILDINGS[placing];
   if (!canAfford(d.cost)) return log(`Bahan tidak cukup untuk ${d.nama}.`);
   if (!validSpot(placing, mouse.x, mouse.y)) return;
   for (const [k, n] of Object.entries(d.cost)) S.res[k] -= n;
-  addBuilding(placing, mouse.x, mouse.y, false); log(`Rencana ${d.nama} ditempatkan.`); placing = null; tutAction('taruh_bangunan'); });
+  addBuilding(placing, mouse.x, mouse.y, false); log(`Rencana ${d.nama} ditempatkan.`); placing = null; tutAction('taruh_bangunan'); }
+// ---------- layar sentuh: 1 jari = geser/ketuk, 2 jari = cubit zoom (zoom tetap bulat agar pixel tajam) ----------
+let touch = null;
+const tpos = t => scr(t), tdist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y), tmid = (a, b) => ({ x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 });
+cv.addEventListener('touchstart', e => { e.preventDefault(); const ts = [...e.touches].map(tpos);
+  if (ts.length === 1) { touch = { mode: 'pan', sx: ts[0].x, sy: ts[0].y, cx: cam.x, cy: cam.y, moved: false };
+    const t = screenToTile(ts[0].x, ts[0].y); mouse.x = t.x; mouse.y = t.y; }
+  else if (ts.length >= 2) { const m = tmid(ts[0], ts[1]); touch = { mode: 'pinch', d0: tdist(ts[0], ts[1]), z0: cam.zoom, mx: m.x, my: m.y, moved: true }; } }, { passive: false });
+cv.addEventListener('touchmove', e => { e.preventDefault(); if (!touch) return; const ts = [...e.touches].map(tpos);
+  if (touch.mode === 'pan' && ts.length === 1) { const dx = ts[0].x - touch.sx, dy = ts[0].y - touch.sy;
+    if (Math.abs(dx) + Math.abs(dy) > C.TOUCH.tapSlop) touch.moved = true;
+    if (touch.moved) { cam.x = touch.cx - dx / cam.zoom; cam.y = touch.cy - dy / cam.zoom; clampCam(); }
+    const t = screenToTile(ts[0].x, ts[0].y); mouse.x = t.x; mouse.y = t.y; }
+  else if (touch.mode === 'pinch' && ts.length >= 2) { const m = tmid(ts[0], ts[1]), ratio = tdist(ts[0], ts[1]) / touch.d0, Z = C.ZOOM_LEVELS;
+    // geser ikut titik tengah dua jari
+    cam.x -= (m.x - touch.mx) / cam.zoom; cam.y -= (m.y - touch.my) / cam.zoom; touch.mx = m.x; touch.my = m.y; clampCam();
+    const i0 = Z.indexOf(touch.z0), steps = ratio >= 1 ? Math.floor(Math.log(ratio) / Math.log(C.TOUCH.pinchStep)) : -Math.floor(Math.log(1 / ratio) / Math.log(C.TOUCH.pinchStep));
+    const nz = Z[Math.max(0, Math.min(Z.length - 1, i0 + steps))]; if (nz !== cam.zoom) setZoom(nz, m.x, m.y); } }, { passive: false });
+cv.addEventListener('touchend', e => { e.preventDefault(); if (!touch) return;
+  if (touch.mode === 'pan' && !touch.moved && e.touches.length === 0) handleTap({ x: touch.sx, y: touch.sy });
+  touch = e.touches.length ? (touch.mode === 'pinch' ? { ...touch, mode: 'done' } : touch) : null; }, { passive: false });
+cv.addEventListener('touchcancel', () => touch = null);
+// ---------- tata letak responsif: di bawah ~900px kanvas memenuhi layar, panel samping jadi laci bawah ----------
+function fitCanvas() { const mob = window.innerWidth < C.TOUCH.mobileMaxWidth; document.body.classList.toggle('mobile', mob);
+  let w = C.VIEW_W, h = C.VIEW_H;
+  if (mob) { w = window.innerWidth; h = Math.max(240, window.innerHeight - $('top').offsetHeight); }
+  if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; ctx.imageSmoothingEnabled = false; clampCam(); }
+  if (!mob) document.body.classList.remove('drawer-open'); }
+$('drawerbtn').onclick = () => document.body.classList.toggle('drawer-open');
+window.addEventListener('resize', fitCanvas); window.addEventListener('orientationchange', () => setTimeout(fitCanvas, 200)); fitCanvas();
 cv.addEventListener('contextmenu', e => { e.preventDefault(); placing = null; });
 // save/load: referensi node/bangunan di task tidak diserialisasi, task direset saat muat
 const KEY = 'desaMandiriSave';
@@ -821,7 +851,7 @@ function frame(now) { const real = Math.min(0.25, (now - prev) / 1000); prev = n
   for (const n of notes) n.life -= real; while (notes.length && notes[0].life <= 0) notes.shift();
   let sim = menuOpen ? 0 : real * speed; while (sim > 0) { const d = Math.min(0.1, sim); step(d); sim -= d; }
   render(); ui(); requestAnimationFrame(frame); }
-window.DESA = { get state() { return S; }, get ach() { return ACH; }, checkAch, achProgress, unlockAch, endOfDaySummary, newDay, toast, applyEffects, allEvents, eventEraOk, fill, marketNewDay, priceOf, tradeQuote, doTrade, spawnMerchant, marketOpen, quota, foodSellMult, openMarket, startResearch, techVal, techNodes, openTech, showEvent, validSpot, canAfford, addBuilding, season,  step, cam, findPath, setZoom, centerCam };
+window.DESA = { get state() { return S; }, fitCanvas, get placing() { return placing; }, setPlacing(b) { placing = b; }, get ach() { return ACH; }, checkAch, achProgress, unlockAch, endOfDaySummary, newDay, toast, applyEffects, allEvents, eventEraOk, fill, marketNewDay, priceOf, tradeQuote, doTrade, spawnMerchant, marketOpen, quota, foodSellMult, openMarket, startResearch, techVal, techNodes, openTech, showEvent, validSpot, canAfford, addBuilding, season,  step, cam, findPath, setZoom, centerCam };
 fetch('TEKS-GAME.json').then(r => r.ok ? r.json() : null).catch(() => null).then(t => { TEXT = t;
   if (!t) console.warn('TEKS-GAME.json tidak dapat dimuat; memakai teks bawaan.');
   loadAssets(() => { newGame(); lastDay = S.day; buildPrioUI(); buildBuildBar(); centerCam(CAMP.x, CAMP.y); applyMenuText(); openMenu(); requestAnimationFrame(frame); }); });
