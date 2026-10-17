@@ -208,7 +208,7 @@ function updateVillager(v, dt) {
     case 'makan': { const per = C.EAT_RESTORE_PER_FOOD * (done('dapur').length ? 1 + techVal('dapur_bonus', C.KITCHEN_EAT_BONUS) : 1);
       let need = Math.ceil((100 - v.hunger) / per); const a = Math.min(need, S.res.makanan); S.res.makanan -= a; need -= a;
       const g = Math.min(need, S.res.gandum || 0); S.res.gandum -= g;
-      v.hunger = Math.min(100, v.hunger + (a + g) * per); v.task = null; break; }
+      v.hunger = Math.min(100, v.hunger + (a + g) * per); if (a) dstat('eaten', 'makanan', a); if (g) dstat('eaten', 'gandum', g); v.task = null; break; }
     case 'tidur': t.asleep = true; v.energy = Math.min(100, v.energy + C.SLEEP_REGEN_PER_SEC * dt);
       if (v.energy >= 100 && !isNight() || v.hunger <= C.HUNGER_CRIT && foodTotal() > 0) v.task = null; break;
     case 'kumpul': { const n = t.node; if (n.amount <= 0) { v.task = null; break; }
@@ -222,7 +222,7 @@ function updateVillager(v, dt) {
         if (b.hp >= 100) { log(`${v.name} selesai memperbaiki ${C.BUILDINGS[b.type].nama}.`); v.working = false; v.task = null; } break; }
       v.working = true; b.progress += dt * workMult(v, 'membangun');
       if (b.progress >= C.BUILDINGS[b.type].work) { b.done = true; v.skills.membangun += C.SKILL_GAIN * 5;
-        log(`${v.name} selesai membangun ${C.BUILDINGS[b.type].nama}.`); vhist(v, `Selesai membangun ${C.BUILDINGS[b.type].nama}`); sfx('bangun'); v.working = false; v.task = null; } break; }
+        log(`${v.name} selesai membangun ${C.BUILDINGS[b.type].nama}.`); vhist(v, `Selesai membangun ${C.BUILDINGS[b.type].nama}`); sfx('bangun'); dstat('built', C.BUILDINGS[b.type].nama, 1); v.working = false; v.task = null; } break; }
     case 'tani': { const b = t.b; if (!S.buildings.includes(b) || (t.harvest ? b.stage !== 'siap' : b.stage !== 'kosong')) { v.task = null; break; }
       v.working = true; t.work += dt * workMult(v, 'bertani');
       if (t.work >= (t.harvest ? C.FIELD.harvestTime : C.FIELD.plantTime) * techVal('tani_waktu', 1)) { v.working = false; v.skills.bertani += C.SKILL_GAIN;
@@ -241,7 +241,7 @@ function updateVillager(v, dt) {
         log(n.teks_selesai ? '🎓 ' + fill(n.teks_selesai, { nama: v.name }) : `🎓 ${v.name} menyelesaikan riset ${n.nama}!`); sfx('panen'); vhist(v, `Menyelesaikan riset ${n.nama}`); v.working = false; v.task = null; techPanelUI(); } break; }
   }
 }
-function deposit(v, drop) { if (v.carry) { if (!drop) { S.res[v.carry.res] += v.carry.n; S.gathered[v.carry.res] = (S.gathered[v.carry.res] || 0) + v.carry.n; notify(v.carry.res, v.carry.n, v); } v.carry = null; } }
+function deposit(v, drop) { if (v.carry) { if (!drop) { S.res[v.carry.res] += v.carry.n; S.gathered[v.carry.res] = (S.gathered[v.carry.res] || 0) + v.carry.n; dstat('gathered', v.carry.res, v.carry.n); notify(v.carry.res, v.carry.n, v); } v.carry = null; } }
 
 const notes = [];
 // notifikasi melayang: digabung per jenis sumber daya di dekatnya, maksimal C.MAX_NOTES
@@ -363,7 +363,8 @@ function showEvent() { const e = allEvents().find(x => x.id === S.event); if (!e
 function chooseEvent(i) { const e = allEvents().find(x => x.id === S.event), p = e.pilihan[i];
   if (addsPop(p.efek) && !housingOk(p.efek)) { log(`${e.judul} — Tidak ada tempat untuk ${S.eventName || 'pendatang'}; ia melanjutkan perjalanan.`); }
   else { const nm = S.eventName ? { nama: S.eventName } : {}; applyEffects(p.efek, 'event ' + e.id); log(`${e.judul} — ${fill(p.teks_hasil || '', nm)}`); }
-  S.event = null; S.eventName = null; $('modal').style.display = 'none'; }
+  dstat('events', e.judul, 1); S.eventChoices = S.eventChoices || {}; (S.eventChoices[e.id] = S.eventChoices[e.id] || [])[i] = ((S.eventChoices[e.id] || [])[i] || 0) + 1;
+  S.event = null; S.eventName = null; $('modal').style.display = 'none'; checkAch(); }
 const allQuests = () => !TEXT ? [] : [...(TEXT.quest_awal || []), ...(TEXT.quest_lanjutan || [])];
 function quest() { return allQuests()[S.questIdx]; }
 function questProgress(q) { const g = q.tujuan;
@@ -396,6 +397,59 @@ function tutorialUI() { const t = TEXT && TEXT.tutorial && TEXT.tutorial[S.tutor
   const h = tutHook(S.tutorialStep), tgt = h.target && document.querySelector(h.target); if (tgt) tgt.classList.add('tut-hl');
   el.innerHTML = `<small>Tutorial ${S.tutorialStep + 1}/${TEXT.tutorial.length}</small><br><b>${t.judul}</b><br>${t.teks}` +
     (h.aksi ? `<br><i>👉 ${AKSI_LABEL[h.aksi] || h.aksi}</i>` : '') + `<br><button id="tutNext">Lanjut</button> <button id="tutSkip">Lewati</button>`; }
+// ---------- statistik harian ----------
+function dstat(cat, key, n) { const d = S.dayStats = S.dayStats || {}; (d[cat] = d[cat] || {})[key] = (d[cat][key] || 0) + n; }
+function endOfDaySummary() { const d = S.dayStats || {}, day = S.day - 1; S.dayStats = {};
+  const fmt = o => Object.entries(o || {}).map(([k, n]) => `${RES_LABEL[k] ? RES_LABEL[k].toLowerCase() : k}${n > 1 || RES_LABEL[k] ? ' ' + Math.floor(n) : ''}`).join(', ');
+  const r = { day, gathered: d.gathered || {}, eaten: d.eaten || {}, built: d.built || {}, events: d.events || {}, deaths: d.deaths || {} };
+  S.lastSummary = r; if (day < 1) return r;
+  const parts = [];
+  if (Object.keys(r.gathered).length) parts.push('dikumpulkan ' + fmt(r.gathered));
+  if (Object.keys(r.eaten).length) parts.push('dimakan ' + fmt(r.eaten));
+  if (Object.keys(r.built).length) parts.push('dibangun ' + Object.entries(r.built).map(([k, n]) => n > 1 ? `${k} ×${n}` : k).join(', '));
+  if (Object.keys(r.events).length) parts.push('kejadian: ' + Object.keys(r.events).join(', '));
+  if (Object.keys(r.deaths).length) parts.push('berpulang: ' + Object.keys(r.deaths).join(', '));
+  log(`📊 Ringkasan hari ${day}: ${parts.length ? parts.join('; ') : 'hari yang tenang'}.`); return r; }
+function summaryUI() { const r = S.lastSummary; if (!r || r.day < 1) return '<i>Belum ada hari yang lewat.</i>';
+  const row = (lbl, o) => { const e = Object.entries(o); return `<div><b>${lbl}:</b> ${e.length ? e.map(([k, n]) => `${RES_LABEL[k] || k} ${Math.floor(n)}`).join(', ') : '-'}</div>`; };
+  return `<div style="opacity:.8">Hari ${r.day}</div>` + row('Dikumpulkan', r.gathered) + row('Dimakan', r.eaten) + row('Dibangun', r.built) + `<div><b>Kejadian:</b> ${Object.keys(r.events).join(', ') || '-'}</div>`; }
+// ---------- pencapaian (A01-A24, disimpan terpisah dari save game) ----------
+const ACH_KEY = 'desaMandiriPencapaian';
+let ACH = (() => { try { return JSON.parse(localStorage.getItem(ACH_KEY)) || {}; } catch (e) { return {}; } })(); ACH.unlocked = ACH.unlocked || {};
+const achList = () => (TEXT && TEXT.pencapaian) || [];
+const achText = () => (TEXT && TEXT.ui_progres && TEXT.ui_progres.pencapaian) || {};
+const achUnsupported = new Set();
+function achProgress(sy) { // -> angka progres, atau null jika tipe belum didukung
+  switch (sy.tipe) {
+    case 'bangun': case 'kumpulkan': case 'capai_penduduk': case 'riset': case 'transaksi_pasar': case 'panen': case 'simpan_pangan': case 'hari_pangan': case 'capai_hari': case 'alami_event': case 'capai_era':
+      return questProgress({ tujuan: sy });
+    case 'lewati_musim': return sy.target === 'dingin' ? (S.wintersOk || 0) : null;
+    case 'beruntun_hari_pangan': return S.foodStreakMax || 0;
+    case 'adakan_festival': return S.festivals || 0;     // belum ada mekanik festival -> tetap 0
+    case 'kontrak_selesai': return S.contracts || 0;     // belum ada kontrak pedagang -> tetap 0
+    case 'tanpa_kematian': return S.day - (S.lastDeathDay || 0);
+    case 'pilih_event': return ((S.eventChoices || {})[sy.target] || [])[sy.pilihan || 0] || 0;
+    case 'gabungan': return (sy.semua || []).every(x => (achProgress(x) ?? -1) >= x.jumlah) ? 1 : 0;
+    default: return null; } }
+function checkAch() { if (!S) return;
+  for (const a of achList()) { if (ACH.unlocked[a.id]) continue; const pr = achProgress(a.syarat);
+    if (pr === null) { if (!achUnsupported.has(a.id)) { achUnsupported.add(a.id); console.info(`[pencapaian] tipe "${a.syarat.tipe}" belum didukung (${a.id}).`); } continue; }
+    if (pr >= a.syarat.jumlah) unlockAch(a); } }
+function unlockAch(a) { ACH.unlocked[a.id] = { day: S.day, at: Date.now() }; localStorage.setItem(ACH_KEY, JSON.stringify(ACH));
+  if (a.hadiah && Object.keys(a.hadiah).length) applyEffects(a.hadiah, 'pencapaian ' + a.id);
+  const msg = fill(achText().notifikasi || '🏅 Pencapaian terbuka: {pencapaian}!', { pencapaian: a.nama }); log(msg + (a.teks_terbuka ? ' ' + a.teks_terbuka : ''));
+  toast(achIcon(a.id, true), msg, a.teks_terbuka || a.deskripsi); sfx('lonceng'); if ($('achpanel').style.display === 'block') achUI(); }
+const achIcon = (id, open) => { const m = ASSETS.ACH_ICON || {}; return (m._dir || '') + (open ? (m[id] || m._locked) : m._locked) + '.png'; };
+function toast(icon, title, body) { const el = document.createElement('div'); el.className = 'toast panel';
+  el.innerHTML = `<img src="${icon}" alt=""><div><b>${title}</b><br><small>${body || ''}</small></div>`; $('toasts').appendChild(el);
+  setTimeout(() => el.classList.add('out'), 4500); setTimeout(() => el.remove(), 5200); }
+function achUI() { const L = achList(), T_ = achText(), n = L.filter(a => ACH.unlocked[a.id]).length;
+  $('achpanel').innerHTML = `<button id="achClose" style="float:right">×</button><h3>${T_.judul_panel || 'Pencapaian'}</h3><small>${T_.subjudul || ''}</small>
+  <div style="margin:6px 0"><b>${fill(T_.progres || '{jumlah} dari {jumlah2} pencapaian', { jumlah: n, jumlah2: L.length })}</b>${n ? '' : `<br><i>${T_.kosong || ''}</i>`}</div>
+  <div class="achgrid">${L.map(a => { const u = ACH.unlocked[a.id], secret = a.rahasia && !u, pr = achProgress(a.syarat);
+    const prog = u ? `✅ Terbuka hari ${u.day}` : pr === null ? '<i>Belum tersedia di versi ini</i>' : a.syarat.tipe === 'gabungan' ? 'Syarat gabungan' : `${Math.min(pr, a.syarat.jumlah)}/${a.syarat.jumlah}`;
+    return `<div class="ach ${u ? 'open' : 'locked'}" data-ach="${a.id}"><img src="${achIcon(a.id, !!u)}" alt=""><div><b>${secret ? T_.rahasia_nama || '???' : a.nama}</b><br><small>${secret ? T_.rahasia_deskripsi || '' : a.deskripsi}</small><br><small>${secret ? '' : prog}</small></div></div>`; }).join('')}</div>`; }
+function openAch() { const p = $('achpanel'); if (p.style.display === 'block') { p.style.display = 'none'; return; } checkAch(); achUI(); p.style.display = 'block'; }
 // ---------- panel detail penduduk ----------
 let selVid = null;
 function vhist(v, msg) { const f = dayFrac(), hh = String(Math.floor(f * 24)).padStart(2, '0');
@@ -435,14 +489,16 @@ function step(dt) {
   for (const v of S.villagers) updateVillager(v, dt);
   checkQuest();
   updateMerchant(dt);
-  for (const v of S.villagers.slice()) if (v.health <= 0) { S.villagers.splice(S.villagers.indexOf(v), 1); log(`💀 ${v.name} meninggal karena kelaparan/sakit.`); }
+  for (const v of S.villagers.slice()) if (v.health <= 0) { S.villagers.splice(S.villagers.indexOf(v), 1); log(`💀 ${v.name} meninggal karena kelaparan/sakit.`); S.lastDeathDay = S.day; dstat('deaths', v.name, 1); }
   const winter = isWinter();
   for (const b of S.buildings) if (b.type === 'ladang' && b.done && b.stage === 'tumbuh' && !winter && (b.grow += dt / C.DAY_LENGTH_SEC) >= C.FIELD.growDays + techVal('ladang_tumbuh', 0, { b })) b.stage = 'siap';
   if (!winter) for (const n of S.nodes) if (n.type === 'semak' && n.amount <= 0 && (n.regrow -= dt) <= 0) n.amount = C.NODE_AMOUNT.makanan;
   S.nodes = S.nodes.filter(n => n.amount > 0 || n.type === 'semak');
   if (S.day !== lastDay) { lastDay = S.day; newDay(); }
+  if (isWinter() && S.villagers.some(v => v.hunger <= 5)) S.winterStarve = true;
 }
 function newDay() {
+  endOfDaySummary();
   const pop = S.villagers.length; if (!pop) { log('Desa telah kosong... Mulai permainan baru.'); return; }
   // musim
   if ((S.day - 1) % C.SEASON_DAYS === 0) { const se = season(), m = TEXT && TEXT.meta && TEXT.meta.musim && TEXT.meta.musim.find(x => x.id === se);
@@ -473,6 +529,10 @@ function newDay() {
   const need = pop * C.SPAWN.foodPerDayPerPop;
   if (foodTotal() < need * 2) log(`⚠️ PERINGATAN: makanan hanya cukup ~${(foodTotal() / need).toFixed(1)} hari! Naikkan prioritas Makanan.`);
   if (S.villagers.some(v => v.hunger <= 5)) log('⚠️ Ada penduduk kelaparan parah!');
+  // pelacak pencapaian: beruntun hari pangan & musim dingin yang terlewati
+  const fdays = foodTotal() / foodPerDay(); S.foodStreak = fdays >= 5 ? (S.foodStreak || 0) + 1 : 0; S.foodStreakMax = Math.max(S.foodStreakMax || 0, S.foodStreak);
+  if (S.prevSeason === 'dingin' && se !== 'dingin') { if (!S.winterStarve) S.wintersOk = (S.wintersOk || 0) + 1; S.winterStarve = false; } S.prevSeason = se;
+  checkAch();
   flavorLog(); maybeEvent();
   log(`Fajar menyingsing. Penduduk: ${S.villagers.length}, makanan: ${Math.floor(foodTotal())}, air: ${Math.floor(S.res.air)}.`);
 }
@@ -664,7 +724,7 @@ function ui() {
   const era = C.ERAS[S.era | 0], next = C.ERAS[(S.era | 0) + 1];
   setHTML('era', `<b>${era.nama}</b>` + (next ? `<br>Menuju <b>${next.nama}</b>:<br>` + eraReqStatus(next).map(([t, ok]) => `${ok ? '✅' : '▫️'} ${t}`).join('<br>') : '<br>Era tertinggi tercapai!'));
   document.querySelectorAll('[data-b]').forEach(bt => { const k = bt.dataset.b; if (k) bt.disabled = !unlocked(k) || !canAfford(C.BUILDINGS[k].cost); });
-  setHTML('quest', questUI()); villagerPanelUI(); techPanelUI(); marketUI(); $('marketbtn').classList.toggle('on', marketOpen());
+  setHTML('quest', questUI()); setHTML('summary', summaryUI()); villagerPanelUI(); techPanelUI(); marketUI(); $('marketbtn').classList.toggle('on', marketOpen());
   setHTML('log', S.log.slice(0, 15).map(l => `<div>${l}</div>`).join(''));
 }
 function techPanelUI() { const el = $('techpanel'); if (!el || el.style.display !== 'block') return;
@@ -714,6 +774,8 @@ document.addEventListener('click', e => { if (e.target.tagName === 'BUTTON') sfx
   if (e.target.id === 'mkClose') $('market').style.display = 'none';
   if (e.target.id === 'mkDo') { doTrade($('mkGive').value, +$('mkQty').value, $('mkGet').value); marketUI(); }
   if (e.target.id === 'techClose') $('techpanel').style.display = 'none';
+  if (e.target.id === 'achClose') $('achpanel').style.display = 'none';
+  if (e.target.id === 'achbtn') openAch();
   if (d.research) startResearch(d.research);
   if (d.ev !== undefined) chooseEvent(+d.ev);
   const vrow = e.target.closest && e.target.closest('[data-vid]'); if (vrow) openVillager(+vrow.dataset.vid);
@@ -759,7 +821,7 @@ function frame(now) { const real = Math.min(0.25, (now - prev) / 1000); prev = n
   for (const n of notes) n.life -= real; while (notes.length && notes[0].life <= 0) notes.shift();
   let sim = menuOpen ? 0 : real * speed; while (sim > 0) { const d = Math.min(0.1, sim); step(d); sim -= d; }
   render(); ui(); requestAnimationFrame(frame); }
-window.DESA = { get state() { return S; }, applyEffects, allEvents, eventEraOk, fill, marketNewDay, priceOf, tradeQuote, doTrade, spawnMerchant, marketOpen, quota, foodSellMult, openMarket, startResearch, techVal, techNodes, openTech, showEvent, validSpot, canAfford, addBuilding, season,  step, cam, findPath, setZoom, centerCam };
+window.DESA = { get state() { return S; }, get ach() { return ACH; }, checkAch, achProgress, unlockAch, endOfDaySummary, newDay, toast, applyEffects, allEvents, eventEraOk, fill, marketNewDay, priceOf, tradeQuote, doTrade, spawnMerchant, marketOpen, quota, foodSellMult, openMarket, startResearch, techVal, techNodes, openTech, showEvent, validSpot, canAfford, addBuilding, season,  step, cam, findPath, setZoom, centerCam };
 fetch('TEKS-GAME.json').then(r => r.ok ? r.json() : null).catch(() => null).then(t => { TEXT = t;
   if (!t) console.warn('TEKS-GAME.json tidak dapat dimuat; memakai teks bawaan.');
   loadAssets(() => { newGame(); lastDay = S.day; buildPrioUI(); buildBuildBar(); centerCam(CAMP.x, CAMP.y); applyMenuText(); openMenu(); requestAnimationFrame(frame); }); });

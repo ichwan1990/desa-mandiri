@@ -87,6 +87,11 @@ window.ASSETS = {
   ikon_tech_bread: { ui: 'assets/icons/tech/tech_bread.png' }, ikon_tech_tools: { ui: 'assets/icons/tech/tech_tools.png' },
   pedagang: { color: '#7a3b8a', img: 'assets/characters/merchant.png', fw: 32, fh: 32, frames: 4 },
   gerobak:  { color: '#8a5a32', img: 'assets/characters/merchant_cart.png', fw: 64, fh: 64 }, // kolom = arah, baris = frame roda
+  // ikon pencapaian (A01-A24 -> berkas di assets/icons/achievements); yang terkunci memakai ach_locked
+  ACH_ICON: { A01: 'first_fire', A02: 'first_house', A03: 'rich_storage', A04: 'survive_winter', A05: 'population_10', A06: 'first_harvest', A07: 'first_house',
+    A08: 'town_founded', A09: 'first_harvest', A10: 'town_founded', A11: 'rich_storage', A12: 'rich_storage', A13: 'master_skill', A14: 'master_skill',
+    A15: 'town_founded', A16: 'first_fire', A17: 'survive_winter', A18: 'town_founded', A19: 'rich_storage', A20: 'town_founded', A21: 'master_skill',
+    A22: 'first_fire', A23: 'master_skill', A24: 'population_10', _dir: 'assets/icons/achievements/ach_', _locked: 'locked' },
   blob47:   { json: 'assets/tiles/autotile_blob47.json' },
 };
 window.loadAssets = function (done) {

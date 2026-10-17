@@ -11,7 +11,7 @@ const { chromium } = require('playwright');
   await p.evaluate(() => { DESA.addBuilding('gubuk', 18, 21, true); DESA.addBuilding('gubuk', 26, 22, true); });
   const withHouse = await trigger();
   const after = await p.evaluate(() => { document.querySelector('[data-ev="0"]').click(); const S = DESA.state;
-    return { names: S.villagers.map(v => v.name), log: S.log[0] }; });
+    return { names: S.villagers.map(v => v.name), log: S.log.slice(0, 4).join(' | ') }; });
   const unique = new Set(after.names).size === after.names.length;
   const ok = noHouse.disabled && !withHouse.disabled && unique && after.names.includes(withHouse.name) && after.log.includes(withHouse.name);
   console.log(JSON.stringify({ noHouse, withHouse, after, unique, ok, errs }));
