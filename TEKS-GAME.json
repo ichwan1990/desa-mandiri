@@ -1,0 +1,1041 @@
+{
+  "meta": {
+    "judul_game": "Desa Mandiri",
+    "versi": "1.0.0",
+    "bahasa": "id-ID",
+    "encoding": "UTF-8",
+    "nuansa": "Hangat, santai, dan menggemaskan. Pemain menjaga penduduk kecil yang hidup mandiri. Ancaman nyata tapi ringan (badai, babi hutan, wabah, kekurangan makanan), dengan kehangatan kebersamaan sebagai penyeimbang.",
+    "placeholder": {
+      "{hari}": "Nomor hari berjalan dalam permainan (angka)",
+      "{nama}": "Nama penduduk utama dalam cerita",
+      "{nama2}": "Nama penduduk kedua (harus berbeda dari {nama})",
+      "{jumlah}": "Jumlah/angka sumber daya",
+      "{sumber_daya}": "Nama sumber daya, lihat meta.sumber_daya",
+      "{bangunan}": "Nama bangunan, lihat meta.bangunan",
+      "{skill}": "Nama skill, lihat meta.skill",
+      "{musim}": "Nama musim, lihat meta.musim",
+      "{pesan_musim}": "Pesan pembuka musim, lihat meta.musim[].pesan",
+      "{era}": "Nama era, lihat meta.era",
+      "{umur}": "Umur penduduk (angka)"
+    },
+    "sumber_daya": {
+      "kayu": "Kayu",
+      "batu": "Batu",
+      "makanan": "Makanan",
+      "buah": "Buah",
+      "ikan": "Ikan",
+      "daging": "Daging",
+      "air": "Air",
+      "gandum": "Gandum",
+      "roti": "Roti",
+      "papan": "Papan",
+      "batu_bata": "Batu bata",
+      "alat": "Alat (perkakas)",
+      "kulit": "Kulit/pakaian"
+    },
+    "bangunan": {
+      "api_unggun": "Api unggun",
+      "gubuk": "Gubuk",
+      "gudang": "Gudang",
+      "ladang": "Ladang",
+      "sumur": "Sumur",
+      "tempat_penebangan": "Tempat penebangan",
+      "tambang": "Tambang",
+      "dapur": "Dapur",
+      "bengkel_alat": "Bengkel alat",
+      "rumah_kayu": "Rumah kayu",
+      "lumbung": "Lumbung",
+      "pasar": "Pasar",
+      "balai_desa": "Balai desa"
+    },
+    "skill": {
+      "menebang": "menebang",
+      "menambang": "menambang",
+      "bertani": "bertani",
+      "membangun": "membangun",
+      "berburu": "berburu"
+    },
+    "kebutuhan": {
+      "lapar": "Lapar",
+      "energi": "Energi",
+      "suasana_hati": "Suasana hati"
+    },
+    "musim": [
+      {
+        "id": "semi",
+        "nama": "semi",
+        "pesan": "Tunas-tunas baru bermunculan. Saatnya menanam!"
+      },
+      {
+        "id": "panas",
+        "nama": "panas",
+        "pesan": "Hari-hari panjang dan cerah. Jangan lupa stok air."
+      },
+      {
+        "id": "gugur",
+        "nama": "gugur",
+        "pesan": "Daun berguguran. Waktunya panen dan menyimpan makanan."
+      },
+      {
+        "id": "dingin",
+        "nama": "dingin",
+        "pesan": "Tanaman berhenti tumbuh. Semoga Lumbung cukup penuh."
+      }
+    ],
+    "era": {
+      "perkemahan": "Perkemahan",
+      "dusun": "Dusun",
+      "desa_pertanian": "Desa Pertanian",
+      "kota_kecil": "Kota Kecil"
+    },
+    "kunci_efek": {
+      "_catatan": "Efek event dan hadiah quest memakai key sumber daya (meta.sumber_daya) serta key berikut. Nilai positif menambah, negatif mengurangi.",
+      "suasana_hati": "Perubahan suasana hati seluruh penduduk (poin)",
+      "energi": "Perubahan energi seluruh penduduk (poin)",
+      "kesehatan": "Perubahan kesehatan seluruh penduduk (poin)",
+      "penduduk": "Perubahan jumlah penduduk (orang)",
+      "hari_kerja_hilang": "Jumlah hari penduduk tidak bekerja",
+      "kesehatan_bangunan": "Perubahan kondisi bangunan (persen)"
+    },
+    "tipe_tujuan_quest": {
+      "bangun": "Selesaikan bangunan dengan id target sebanyak jumlah",
+      "kumpulkan": "Kumpulkan sumber daya target secara kumulatif sebanyak jumlah",
+      "simpan": "Miliki stok sumber daya target minimal jumlah pada satu waktu",
+      "capai_penduduk": "Capai jumlah penduduk minimal jumlah",
+      "capai_era": "Capai era dengan id target"
+    }
+  },
+  "penduduk": [
+    {
+      "nama": "Sari",
+      "jenis_kelamin": "perempuan",
+      "sifat": "rajin dan ceria"
+    },
+    {
+      "nama": "Budi",
+      "jenis_kelamin": "laki-laki",
+      "sifat": "tenang, suka menebang"
+    },
+    {
+      "nama": "Wulan",
+      "jenis_kelamin": "perempuan",
+      "sifat": "lembut, pandai memasak"
+    },
+    {
+      "nama": "Joko",
+      "jenis_kelamin": "laki-laki",
+      "sifat": "kuat tapi pelupa"
+    },
+    {
+      "nama": "Ayu",
+      "jenis_kelamin": "perempuan",
+      "sifat": "teliti"
+    },
+    {
+      "nama": "Slamet",
+      "jenis_kelamin": "laki-laki",
+      "sifat": "sabar dan tekun"
+    },
+    {
+      "nama": "Rahayu",
+      "jenis_kelamin": "perempuan",
+      "sifat": "penyayang"
+    },
+    {
+      "nama": "Bambang",
+      "jenis_kelamin": "laki-laki",
+      "sifat": "suka bercanda"
+    },
+    {
+      "nama": "Lestari",
+      "jenis_kelamin": "perempuan",
+      "sifat": "gemar berkebun"
+    },
+    {
+      "nama": "Sugeng",
+      "jenis_kelamin": "laki-laki",
+      "sifat": "bangun paling pagi"
+    },
+    {
+      "nama": "Ningsih",
+      "jenis_kelamin": "perempuan",
+      "sifat": "pendiam tapi peduli"
+    },
+    {
+      "nama": "Hartono",
+      "jenis_kelamin": "laki-laki",
+      "sifat": "perajin teliti"
+    },
+    {
+      "nama": "Asep",
+      "jenis_kelamin": "laki-laki",
+      "sifat": "lucu dan banyak akal"
+    },
+    {
+      "nama": "Euis",
+      "jenis_kelamin": "perempuan",
+      "sifat": "suaranya merdu"
+    },
+    {
+      "nama": "Dadang",
+      "jenis_kelamin": "laki-laki",
+      "sifat": "pekerja keras"
+    },
+    {
+      "nama": "Neng Rina",
+      "jenis_kelamin": "perempuan",
+      "sifat": "ramah"
+    },
+    {
+      "nama": "Ujang",
+      "jenis_kelamin": "laki-laki",
+      "sifat": "penasaran"
+    },
+    {
+      "nama": "Siti Nurhayati",
+      "jenis_kelamin": "perempuan",
+      "sifat": "cekatan"
+    },
+    {
+      "nama": "Cecep",
+      "jenis_kelamin": "laki-laki",
+      "sifat": "suka memancing"
+    },
+    {
+      "nama": "Iis",
+      "jenis_kelamin": "perempuan",
+      "sifat": "murah senyum"
+    },
+    {
+      "nama": "Togar",
+      "jenis_kelamin": "laki-laki",
+      "sifat": "berani"
+    },
+    {
+      "nama": "Rumondang",
+      "jenis_kelamin": "perempuan",
+      "sifat": "tegas dan adil"
+    },
+    {
+      "nama": "Parlindungan",
+      "jenis_kelamin": "laki-laki",
+      "sifat": "pelindung desa"
+    },
+    {
+      "nama": "Butet",
+      "jenis_kelamin": "perempuan",
+      "sifat": "bersemangat"
+    },
+    {
+      "nama": "Sihol",
+      "jenis_kelamin": "laki-laki",
+      "sifat": "suka bernyanyi"
+    },
+    {
+      "nama": "Tiur",
+      "jenis_kelamin": "perempuan",
+      "sifat": "bijak"
+    },
+    {
+      "nama": "Horas Simanjuntak",
+      "jenis_kelamin": "laki-laki",
+      "sifat": "pemimpin alami"
+    },
+    {
+      "nama": "Lamtiar",
+      "jenis_kelamin": "perempuan",
+      "sifat": "pandai berhitung"
+    },
+    {
+      "nama": "Rangkayo",
+      "jenis_kelamin": "perempuan",
+      "sifat": "pandai berdagang"
+    },
+    {
+      "nama": "Datuak Malin",
+      "jenis_kelamin": "laki-laki",
+      "sifat": "bijaksana"
+    },
+    {
+      "nama": "Upik",
+      "jenis_kelamin": "perempuan",
+      "sifat": "gesit"
+    },
+    {
+      "nama": "Buyung",
+      "jenis_kelamin": "laki-laki",
+      "sifat": "suka merantau"
+    },
+    {
+      "nama": "Ranti",
+      "jenis_kelamin": "perempuan",
+      "sifat": "pandai menenun"
+    },
+    {
+      "nama": "Fauzan",
+      "jenis_kelamin": "laki-laki",
+      "sifat": "hemat"
+    },
+    {
+      "nama": "Nurhaliza",
+      "jenis_kelamin": "perempuan",
+      "sifat": "sopan"
+    },
+    {
+      "nama": "Zulkifli",
+      "jenis_kelamin": "laki-laki",
+      "sifat": "juru masak andal"
+    },
+    {
+      "nama": "Andi Baso",
+      "jenis_kelamin": "laki-laki",
+      "sifat": "pelaut tangguh"
+    },
+    {
+      "nama": "Daeng Tasi",
+      "jenis_kelamin": "perempuan",
+      "sifat": "teguh pendirian"
+    },
+    {
+      "nama": "La Upe",
+      "jenis_kelamin": "laki-laki",
+      "sifat": "pembuat perahu"
+    },
+    {
+      "nama": "Besse",
+      "jenis_kelamin": "perempuan",
+      "sifat": "anggun dan cermat"
+    },
+    {
+      "nama": "Daeng Rewa",
+      "jenis_kelamin": "laki-laki",
+      "sifat": "pemberani"
+    },
+    {
+      "nama": "Hasnah",
+      "jenis_kelamin": "perempuan",
+      "sifat": "rajin menabung"
+    },
+    {
+      "nama": "Made Wirawan",
+      "jenis_kelamin": "laki-laki",
+      "sifat": "tukang bangunan teliti"
+    },
+    {
+      "nama": "Ni Luh Ayu",
+      "jenis_kelamin": "perempuan",
+      "sifat": "penari riang"
+    },
+    {
+      "nama": "Ketut Arsa",
+      "jenis_kelamin": "laki-laki",
+      "sifat": "petani sabar"
+    },
+    {
+      "nama": "Komang Sri",
+      "jenis_kelamin": "perempuan",
+      "sifat": "pandai mengatur"
+    },
+    {
+      "nama": "Wayan Gede",
+      "jenis_kelamin": "laki-laki",
+      "sifat": "suka bekerja keras"
+    },
+    {
+      "nama": "Nyoman Dewi",
+      "jenis_kelamin": "perempuan",
+      "sifat": "penuh rasa syukur"
+    },
+    {
+      "nama": "Mpok Ijah",
+      "jenis_kelamin": "perempuan",
+      "sifat": "cerewet tapi baik hati"
+    },
+    {
+      "nama": "Bang Rojali",
+      "jenis_kelamin": "laki-laki",
+      "sifat": "jago silat"
+    },
+    {
+      "nama": "Matrawi",
+      "jenis_kelamin": "laki-laki",
+      "sifat": "pantang menyerah"
+    },
+    {
+      "nama": "Halimah",
+      "jenis_kelamin": "perempuan",
+      "sifat": "pedagang ulung"
+    },
+    {
+      "nama": "Galuh",
+      "jenis_kelamin": "perempuan",
+      "sifat": "lincah"
+    },
+    {
+      "nama": "Utuh",
+      "jenis_kelamin": "laki-laki",
+      "sifat": "pendayung handal"
+    },
+    {
+      "nama": "Bujang Ilai",
+      "jenis_kelamin": "laki-laki",
+      "sifat": "pemburu jeli"
+    },
+    {
+      "nama": "Dayang Lenggang",
+      "jenis_kelamin": "perempuan",
+      "sifat": "tahu banyak tanaman obat"
+    },
+    {
+      "nama": "Teuku Rizal",
+      "jenis_kelamin": "laki-laki",
+      "sifat": "disiplin"
+    },
+    {
+      "nama": "Cut Meutia",
+      "jenis_kelamin": "perempuan",
+      "sifat": "berani dan tegas"
+    },
+    {
+      "nama": "Jefri Lumentut",
+      "jenis_kelamin": "laki-laki",
+      "sifat": "periang"
+    },
+    {
+      "nama": "Stevani Rondonuwu",
+      "jenis_kelamin": "perempuan",
+      "sifat": "suka menolong"
+    },
+    {
+      "nama": "Yopi Pattinama",
+      "jenis_kelamin": "laki-laki",
+      "sifat": "perenang ulung"
+    },
+    {
+      "nama": "Ona Latuconsina",
+      "jenis_kelamin": "perempuan",
+      "sifat": "penyanyi desa"
+    },
+    {
+      "nama": "Yakob Wenda",
+      "jenis_kelamin": "laki-laki",
+      "sifat": "pendaki tangguh"
+    },
+    {
+      "nama": "Maria Kogoya",
+      "jenis_kelamin": "perempuan",
+      "sifat": "kuat dan sabar"
+    },
+    {
+      "nama": "Lalu Hamzah",
+      "jenis_kelamin": "laki-laki",
+      "sifat": "penggembala setia"
+    },
+    {
+      "nama": "Baiq Nurul",
+      "jenis_kelamin": "perempuan",
+      "sifat": "penenun cekatan"
+    },
+    {
+      "nama": "Liem Hok",
+      "jenis_kelamin": "laki-laki",
+      "sifat": "pandai membuat alat"
+    },
+    {
+      "nama": "Mei Ling",
+      "jenis_kelamin": "perempuan",
+      "sifat": "rapi dan cermat"
+    }
+  ],
+  "log_harian": {
+    "kerja": [
+      "Hari {hari}: {nama} menebang pohon dan membawa pulang {jumlah} {sumber_daya}.",
+      "Hari {hari}: {nama} memetik buah dari semak sambil bersenandung kecil.",
+      "Hari {hari}: {nama} memancing di sungai dan mendapat {jumlah} ikan. Lumayan untuk makan malam!",
+      "Hari {hari}: {nama} menambang batu sampai tangannya berdebu, tapi wajahnya puas.",
+      "Hari {hari}: {nama} menimba {jumlah} air dari sungai untuk persediaan desa.",
+      "Hari {hari}: Kemampuan {skill} {nama} meningkat. Ia makin percaya diri!",
+      "Hari {hari}: {nama} dan {nama2} bekerja sama mengangkut {jumlah} {sumber_daya} ke Gudang.",
+      "Hari {hari}: {nama} menanam benih gandum di Ladang dengan hati-hati.",
+      "Hari {hari}: {nama} mengolah gandum menjadi {jumlah} roti hangat di Dapur.",
+      "Hari {hari}: {nama} membuat perkakas baru di Bengkel alat. Bunyi palunya terdengar sampai sungai.",
+      "Hari {hari}: {nama} kelelahan dan tertidur pulas di dekat Api unggun.",
+      "Hari {hari}: {nama} berhenti bekerja sebentar untuk makan. Perut kenyang, kerja pun senang."
+    ],
+    "sosial": [
+      "Hari {hari}: {nama} dan {nama2} bercerita di dekat Api unggun sampai larut malam.",
+      "Hari {hari}: {nama} menghibur {nama2} yang sedang murung. Suasana hati desa membaik.",
+      "Hari {hari}: {nama} mengajari {nama2} cara {skill}. Mereka tertawa saat percobaan pertama gagal.",
+      "Hari {hari}: {nama} dan {nama2} berdebat soal siapa yang memasak paling enak. Akhirnya mereka makan bersama.",
+      "Hari {hari}: Seluruh desa makan malam bersama. Malam ini terasa hangat sekali.",
+      "Hari {hari}: {nama} menyanyikan lagu daerah, dan {nama2} ikut bertepuk tangan.",
+      "Hari {hari}: {nama} berbagi jatah makanannya dengan {nama2} yang belum sempat makan.",
+      "Hari {hari}: {nama} merasa rindu kampung halaman, tapi senyum teman-teman membuatnya betah."
+    ],
+    "temuan": [
+      "Hari {hari}: {nama} menemukan batu besi di dekat tebing!",
+      "Hari {hari}: {nama} menemukan sarang lebah. Ada madu manis untuk semua.",
+      "Hari {hari}: {nama} menemukan {jumlah} {sumber_daya} tersembunyi di balik semak.",
+      "Hari {hari}: {nama} menemukan jejak hewan di tepi hutan. Sebaiknya berhati-hati.",
+      "Hari {hari}: {nama} menemukan sebuah kendi tua berisi benih. Mungkin bisa ditanam?",
+      "Hari {hari}: {nama} menemukan tempat memancing baru yang ikannya melimpah.",
+      "Hari {hari}: {nama} memungut bulu burung yang cantik dan menyelipkannya di rambut."
+    ],
+    "cuaca": [
+      "Hari {hari}: Matahari bersinar cerah. Semua orang bekerja dengan semangat.",
+      "Hari {hari}: Hujan turun pelan. Penduduk berteduh sambil menikmati suara rintik.",
+      "Hari {hari}: Kabut pagi menutupi desa. {nama} hampir tersesat ke sungai.",
+      "Hari {hari}: Angin kencang menggoyang pepohonan. Atap Gubuk berderit-derit.",
+      "Hari {hari}: Musim {musim} telah tiba. {pesan_musim}",
+      "Hari {hari}: Udara musim dingin menusuk tulang. Api unggun menyala lebih lama malam ini.",
+      "Hari {hari}: Pelangi muncul setelah hujan. {nama} berhenti sejenak untuk memandanginya."
+    ],
+    "pembangunan": [
+      "Hari {hari}: {nama} mulai membangun {bangunan}.",
+      "Hari {hari}: {bangunan} selesai dibangun! Penduduk bersorak gembira.",
+      "Hari {hari}: {nama} dan {nama2} memasang tiang terakhir {bangunan}.",
+      "Hari {hari}: Pembangunan {bangunan} tertunda karena {sumber_daya} kurang {jumlah}.",
+      "Hari {hari}: {nama} memperbaiki {bangunan} yang rusak.",
+      "Hari {hari}: Desa memasuki era {era}! Bangunan dan teknologi baru terbuka."
+    ],
+    "kebutuhan": [
+      "Hari {hari}: {nama} kelaparan dan berhenti bekerja untuk mencari makanan.",
+      "Hari {hari}: {nama} terlalu lelah. Ia butuh tidur sebelum bisa bekerja lagi.",
+      "Hari {hari}: Stok {sumber_daya} tinggal {jumlah}. Penduduk mulai cemas.",
+      "Hari {hari}: {nama} sedang murung. Mungkin ia butuh istirahat atau teman bicara.",
+      "Hari {hari}: Tidak ada tempat tidur untuk {nama}. Ia tidur beralas daun malam ini."
+    ],
+    "keluarga": [
+      "Hari {hari}: Seorang bayi lahir! Selamat datang, {nama}.",
+      "Hari {hari}: {nama} tiba di desa dan memutuskan untuk tinggal.",
+      "Hari {hari}: {nama} berulang tahun ke-{umur}. Semua orang memberi ucapan selamat.",
+      "Hari {hari}: {nama} dan {nama2} kini resmi menjadi keluarga. Desa merayakannya dengan makan bersama."
+    ]
+  },
+  "event_acak": [
+    {
+      "id": "badai",
+      "judul": "Badai Datang!",
+      "kategori": "cuaca",
+      "deskripsi": "Langit mendadak gelap dan angin menderu. Badai akan segera menghantam desa. Apa yang harus dilakukan penduduk?",
+      "pilihan": [
+        {
+          "teks": "Semua berlindung di dalam rumah",
+          "efek": {
+            "suasana_hati": -5,
+            "hari_kerja_hilang": 1
+          },
+          "teks_hasil": "Penduduk meringkuk bersama sampai badai reda. Pekerjaan tertunda, tapi semua selamat."
+        },
+        {
+          "teks": "Perkuat atap dengan kayu",
+          "efek": {
+            "kayu": -15,
+            "suasana_hati": 5
+          },
+          "teks_hasil": "Atap diperkuat tepat waktu. Badai lewat tanpa merusak satu bangunan pun."
+        },
+        {
+          "teks": "Lanjutkan bekerja seperti biasa",
+          "efek": {
+            "kesehatan_bangunan": -20,
+            "kayu": 10,
+            "suasana_hati": -10
+          },
+          "teks_hasil": "Beberapa dahan tumbang bisa dijadikan kayu, tapi bangunan rusak dan penduduk basah kuyup."
+        }
+      ]
+    },
+    {
+      "id": "pedagang_keliling",
+      "judul": "Pedagang Keliling",
+      "kategori": "perdagangan",
+      "deskripsi": "Seorang pedagang berpikul tiba di desa sambil membunyikan lonceng kecil. \"Barang bagus, harga bersahabat!\" katanya.",
+      "pilihan": [
+        {
+          "teks": "Tukar kayu dengan makanan",
+          "efek": {
+            "kayu": -20,
+            "makanan": 25
+          },
+          "teks_hasil": "Pedagang mengangguk puas. Lumbung desa terasa sedikit lebih penuh."
+        },
+        {
+          "teks": "Beli perkakas dengan batu",
+          "efek": {
+            "batu": -25,
+            "alat": 3
+          },
+          "teks_hasil": "Perkakas baru berkilau di tangan penduduk. Kerja jadi lebih cepat!"
+        },
+        {
+          "teks": "Tawarkan teh hangat saja",
+          "efek": {
+            "suasana_hati": 5
+          },
+          "teks_hasil": "Pedagang berterima kasih dan berjanji akan mampir lagi. Ia juga meninggalkan cerita lucu dari desa seberang."
+        }
+      ]
+    },
+    {
+      "id": "pendatang",
+      "judul": "Pendatang Mengetuk",
+      "kategori": "penduduk",
+      "deskripsi": "Seorang pengembara lelah berhenti di tepi desa. Ia bertanya apakah ada tempat untuknya bernaung.",
+      "pilihan": [
+        {
+          "teks": "Sambut dengan hangat",
+          "efek": {
+            "penduduk": 1,
+            "makanan": -10,
+            "suasana_hati": 5
+          },
+          "teks_hasil": "{nama} kini menjadi bagian dari desa. Wajahnya langsung cerah."
+        },
+        {
+          "teks": "Beri bekal lalu antar pergi",
+          "efek": {
+            "makanan": -5
+          },
+          "teks_hasil": "Pengembara pamit sambil tersenyum. Mungkin suatu hari ia akan kembali."
+        },
+        {
+          "teks": "Tolak dengan sopan",
+          "efek": {
+            "suasana_hati": -3
+          },
+          "teks_hasil": "Pengembara berlalu pelan. Beberapa penduduk tampak sedikit sedih."
+        }
+      ]
+    },
+    {
+      "id": "hewan_buas",
+      "judul": "Babi Hutan Mengamuk",
+      "kategori": "bahaya",
+      "deskripsi": "Seekor babi hutan besar menerobos semak dan mendekati ladang! Penduduk panik.",
+      "pilihan": [
+        {
+          "teks": "Kumpulkan penduduk untuk mengusirnya",
+          "efek": {
+            "energi": -15,
+            "daging": 15,
+            "kulit": 2
+          },
+          "teks_hasil": "Dengan teriakan dan obor, babi hutan berhasil dihalau. Desa bahkan mendapat daging dan kulit."
+        },
+        {
+          "teks": "Bangun pagar darurat",
+          "efek": {
+            "kayu": -20
+          },
+          "teks_hasil": "Pagar kayu berdiri tepat waktu. Babi hutan mendengus lalu pergi."
+        },
+        {
+          "teks": "Biarkan saja dan berlindung",
+          "efek": {
+            "makanan": -20,
+            "gandum": -10
+          },
+          "teks_hasil": "Babi hutan berpesta di ladang. Panen kali ini berkurang."
+        }
+      ]
+    },
+    {
+      "id": "serigala_malam",
+      "judul": "Lolongan di Malam Hari",
+      "kategori": "bahaya",
+      "deskripsi": "Lolongan serigala terdengar dari arah hutan. Penduduk tidak bisa tidur dengan tenang.",
+      "pilihan": [
+        {
+          "teks": "Nyalakan api unggun lebih besar",
+          "efek": {
+            "kayu": -10,
+            "energi": -5
+          },
+          "teks_hasil": "Cahaya api membuat serigala menjauh. Malam pun berlalu dengan damai."
+        },
+        {
+          "teks": "Jaga bergantian sepanjang malam",
+          "efek": {
+            "energi": -20,
+            "suasana_hati": 5
+          },
+          "teks_hasil": "Para penjaga mengantuk esok harinya, tapi semua merasa aman."
+        }
+      ]
+    },
+    {
+      "id": "panen_raya",
+      "judul": "Panen Raya!",
+      "kategori": "musim",
+      "deskripsi": "Ladang menguning dan buah bergelantungan di mana-mana. Ini panen terbaik tahun ini!",
+      "pilihan": [
+        {
+          "teks": "Simpan semua di Lumbung",
+          "efek": {
+            "gandum": 40,
+            "makanan": 30
+          },
+          "teks_hasil": "Lumbung penuh sesak. Musim dingin tidak lagi menakutkan."
+        },
+        {
+          "teks": "Adakan pesta panen",
+          "efek": {
+            "makanan": 15,
+            "suasana_hati": 20
+          },
+          "teks_hasil": "Penduduk menari dan bernyanyi semalaman. Ini malam yang akan dikenang lama."
+        },
+        {
+          "teks": "Jual sebagian ke pedagang",
+          "efek": {
+            "gandum": 20,
+            "alat": 2,
+            "batu_bata": 10
+          },
+          "teks_hasil": "Sebagian hasil panen ditukar dengan barang berguna untuk membangun."
+        }
+      ]
+    },
+    {
+      "id": "wabah",
+      "judul": "Wabah Batuk",
+      "kategori": "bahaya",
+      "deskripsi": "Beberapa penduduk mulai batuk dan demam. Penyakit menyebar perlahan di desa.",
+      "pilihan": [
+        {
+          "teks": "Rawat dengan ramuan daun obat",
+          "efek": {
+            "makanan": -15,
+            "kesehatan": 10
+          },
+          "teks_hasil": "Ramuan pahit itu ampuh. Satu per satu penduduk mulai pulih."
+        },
+        {
+          "teks": "Istirahatkan semua yang sakit",
+          "efek": {
+            "hari_kerja_hilang": 2,
+            "kesehatan": 5
+          },
+          "teks_hasil": "Pekerjaan berhenti beberapa hari, tapi penyakit tidak menyebar lebih luas."
+        },
+        {
+          "teks": "Tetap bekerja, berharap cepat sembuh",
+          "efek": {
+            "kesehatan": -20,
+            "suasana_hati": -10
+          },
+          "teks_hasil": "Penyakit makin menyebar. Desa terasa sepi dan lesu."
+        }
+      ]
+    },
+    {
+      "id": "kekeringan",
+      "judul": "Sungai Menyusut",
+      "kategori": "cuaca",
+      "deskripsi": "Sudah lama hujan tidak turun. Permukaan sungai turun drastis.",
+      "pilihan": [
+        {
+          "teks": "Gali sumur lebih dalam",
+          "efek": {
+            "batu": -15,
+            "energi": -10,
+            "air": 20
+          },
+          "teks_hasil": "Air jernih memancar dari dalam tanah. Desa lega!"
+        },
+        {
+          "teks": "Hemat air untuk sementara",
+          "efek": {
+            "air": -5,
+            "suasana_hati": -5
+          },
+          "teks_hasil": "Penduduk berhemat sambil menunggu hujan. Tidak nyaman, tapi aman."
+        }
+      ]
+    },
+    {
+      "id": "anak_hilang",
+      "judul": "Si Kecil Tersesat",
+      "kategori": "penduduk",
+      "deskripsi": "{nama} belum kembali dari hutan padahal hari mulai gelap.",
+      "pilihan": [
+        {
+          "teks": "Kirim regu pencari dengan obor",
+          "efek": {
+            "kayu": -5,
+            "energi": -10,
+            "suasana_hati": 10
+          },
+          "teks_hasil": "{nama} ditemukan sedang memeluk seekor anak rusa. Semua lega dan tertawa."
+        },
+        {
+          "teks": "Tunggu di dekat api unggun",
+          "efek": {
+            "suasana_hati": -5
+          },
+          "teks_hasil": "Menjelang tengah malam, {nama} pulang sendiri sambil membawa segenggam jamur."
+        }
+      ]
+    },
+    {
+      "id": "hujan_meteor",
+      "judul": "Bintang Jatuh",
+      "kategori": "langka",
+      "deskripsi": "Langit malam dipenuhi bintang jatuh. Penduduk berkumpul di luar rumah.",
+      "pilihan": [
+        {
+          "teks": "Begadang menikmati langit",
+          "efek": {
+            "energi": -10,
+            "suasana_hati": 15
+          },
+          "teks_hasil": "Setiap orang membuat permohonan. Malam ini terasa ajaib."
+        },
+        {
+          "teks": "Cari batu yang jatuh di bukit",
+          "efek": {
+            "energi": -5,
+            "batu": 10,
+            "alat": 1
+          },
+          "teks_hasil": "Mereka menemukan batu aneh yang keras, cocok untuk membuat perkakas."
+        }
+      ]
+    },
+    {
+      "id": "musim_dingin_keras",
+      "judul": "Musim Dingin Menggigit",
+      "kategori": "musim",
+      "deskripsi": "Salju turun lebih tebal dari biasanya. Tanaman tidak tumbuh dan udara sangat dingin.",
+      "pilihan": [
+        {
+          "teks": "Bagikan kulit untuk pakaian hangat",
+          "efek": {
+            "kulit": -5,
+            "kesehatan": 10
+          },
+          "teks_hasil": "Penduduk tetap hangat dengan pakaian kulit baru."
+        },
+        {
+          "teks": "Kumpulkan semua di dekat api unggun",
+          "efek": {
+            "kayu": -20,
+            "suasana_hati": 5
+          },
+          "teks_hasil": "Malam-malam panjang dilalui bersama dengan cerita dan tawa."
+        }
+      ]
+    },
+    {
+      "id": "festival_desa",
+      "judul": "Hari Jadi Desa",
+      "kategori": "perayaan",
+      "deskripsi": "Hari ini tepat satu tahun desa berdiri. Penduduk ingin merayakannya.",
+      "pilihan": [
+        {
+          "teks": "Gelar pesta besar",
+          "efek": {
+            "makanan": -30,
+            "suasana_hati": 25
+          },
+          "teks_hasil": "Desa penuh lampu, musik, dan masakan lezat. Semua orang bahagia."
+        },
+        {
+          "teks": "Syukuran sederhana",
+          "efek": {
+            "makanan": -10,
+            "suasana_hati": 10
+          },
+          "teks_hasil": "Doa dan makan bersama yang sederhana, tapi terasa sangat bermakna."
+        }
+      ]
+    }
+  ],
+  "tutorial": [
+    {
+      "langkah": 1,
+      "judul": "Selamat Datang, Kepala Desa!",
+      "teks": "Dua penduduk baru saja tiba di tanah kecil ini. Mereka akan bekerja sendiri. Tugasmu adalah menjaga dan menuntun mereka."
+    },
+    {
+      "langkah": 2,
+      "judul": "Perhatikan Kebutuhan",
+      "teks": "Setiap penduduk punya Lapar, Energi, dan Suasana hati. Jika lapar atau lelah, mereka berhenti bekerja untuk makan dan tidur."
+    },
+    {
+      "langkah": 3,
+      "judul": "Atur Prioritas Kerja",
+      "teks": "Buka panel Prioritas untuk menentukan apa yang lebih dulu dikerjakan: menebang, menambang, bertani, membangun, atau berburu."
+    },
+    {
+      "langkah": 4,
+      "judul": "Taruh Rencana Bangunan",
+      "teks": "Pilih bangunan dari menu, lalu letakkan di peta. Mulailah dengan Api unggun dan Gubuk agar penduduk punya tempat beristirahat."
+    },
+    {
+      "langkah": 5,
+      "judul": "Hadapi Kejadian Tak Terduga",
+      "teks": "Badai, hewan buas, atau tamu bisa datang kapan saja. Pilih responsmu dengan bijak, dan jangan lupa siapkan stok makanan sebelum musim dingin."
+    }
+  ],
+  "quest_awal": [
+    {
+      "id": "q01_api_pertama",
+      "urutan": 1,
+      "judul": "Api Pertama",
+      "deskripsi": "Malam pertama akan segera tiba. Bangun Api unggun agar penduduk merasa hangat dan aman.",
+      "tujuan": {
+        "tipe": "bangun",
+        "target": "api_unggun",
+        "jumlah": 1
+      },
+      "hadiah": {
+        "suasana_hati": 10
+      },
+      "teks_selesai": "Nyala api menerangi wajah kedua penduduk. Rumah baru ini mulai terasa seperti rumah."
+    },
+    {
+      "id": "q02_kayu_bakar",
+      "urutan": 2,
+      "judul": "Tumpukan Kayu",
+      "deskripsi": "Kumpulkan kayu untuk persiapan membangun.",
+      "tujuan": {
+        "tipe": "kumpulkan",
+        "target": "kayu",
+        "jumlah": 20
+      },
+      "hadiah": {
+        "makanan": 10
+      },
+      "teks_selesai": "Tumpukan kayu tersusun rapi. Penduduk siap membangun!"
+    },
+    {
+      "id": "q03_atap_pertama",
+      "urutan": 3,
+      "judul": "Atap di Atas Kepala",
+      "deskripsi": "Bangun Gubuk supaya penduduk bisa tidur nyenyak.",
+      "tujuan": {
+        "tipe": "bangun",
+        "target": "gubuk",
+        "jumlah": 1
+      },
+      "hadiah": {
+        "kayu": 10,
+        "suasana_hati": 5
+      },
+      "teks_selesai": "Untuk pertama kalinya, penduduk tidur beratap. Dengkuran pelan terdengar sampai pagi."
+    },
+    {
+      "id": "q04_perut_kenyang",
+      "urutan": 4,
+      "judul": "Perut Kenyang",
+      "deskripsi": "Kumpulkan makanan dari buah, ikan, atau daging.",
+      "tujuan": {
+        "tipe": "kumpulkan",
+        "target": "makanan",
+        "jumlah": 30
+      },
+      "hadiah": {
+        "batu": 10
+      },
+      "teks_selesai": "Ada cukup makanan untuk beberapa hari ke depan. Semua bisa bekerja dengan tenang."
+    },
+    {
+      "id": "q05_gudang",
+      "urutan": 5,
+      "judul": "Tempat Menyimpan",
+      "deskripsi": "Bangun Gudang agar sumber daya tidak berserakan.",
+      "tujuan": {
+        "tipe": "bangun",
+        "target": "gudang",
+        "jumlah": 1
+      },
+      "hadiah": {
+        "kayu": 15,
+        "batu": 15
+      },
+      "teks_selesai": "Semua barang kini tersimpan rapi. Penduduk tak perlu lagi mencari-cari."
+    },
+    {
+      "id": "q06_air_bersih",
+      "urutan": 6,
+      "judul": "Air Bersih",
+      "deskripsi": "Bangun Sumur supaya penduduk tidak perlu bolak-balik ke sungai.",
+      "tujuan": {
+        "tipe": "bangun",
+        "target": "sumur",
+        "jumlah": 1
+      },
+      "hadiah": {
+        "air": 20,
+        "suasana_hati": 5
+      },
+      "teks_selesai": "Air jernih kini ada di tengah desa. Langkah penduduk terasa lebih ringan."
+    },
+    {
+      "id": "q07_ladang_pertama",
+      "urutan": 7,
+      "judul": "Benih Harapan",
+      "deskripsi": "Bangun Ladang dan panen gandum pertama desa.",
+      "tujuan": {
+        "tipe": "kumpulkan",
+        "target": "gandum",
+        "jumlah": 20
+      },
+      "hadiah": {
+        "makanan": 20
+      },
+      "teks_selesai": "Bulir gandum pertama berayun ditiup angin. Masa depan desa terlihat cerah."
+    },
+    {
+      "id": "q08_desa_bertumbuh",
+      "urutan": 8,
+      "judul": "Keluarga Bertambah",
+      "deskripsi": "Siapkan makanan berlebih dan rumah kosong agar penduduk baru mau tinggal.",
+      "tujuan": {
+        "tipe": "capai_penduduk",
+        "target": "penduduk",
+        "jumlah": 5
+      },
+      "hadiah": {
+        "alat": 2,
+        "suasana_hati": 10
+      },
+      "teks_selesai": "Kini ada lima penduduk di desa. Suara tawa terdengar di mana-mana."
+    },
+    {
+      "id": "q09_siap_dingin",
+      "urutan": 9,
+      "judul": "Siap Hadapi Musim Dingin",
+      "deskripsi": "Bangun Lumbung dan isi dengan stok makanan sebelum musim dingin tiba.",
+      "tujuan": {
+        "tipe": "simpan",
+        "target": "makanan",
+        "jumlah": 100
+      },
+      "hadiah": {
+        "kulit": 5,
+        "kayu": 30
+      },
+      "teks_selesai": "Lumbung penuh. Saat salju turun nanti, tak seorang pun akan kelaparan."
+    },
+    {
+      "id": "q10_dusun",
+      "urutan": 10,
+      "judul": "Dari Perkemahan Menjadi Dusun",
+      "deskripsi": "Bangun Rumah kayu dan Dapur, lalu capai 8 penduduk untuk naik ke era Dusun.",
+      "tujuan": {
+        "tipe": "capai_era",
+        "target": "dusun",
+        "jumlah": 1
+      },
+      "hadiah": {
+        "papan": 20,
+        "batu_bata": 20,
+        "suasana_hati": 20
+      },
+      "teks_selesai": "Perkemahan kecil kini menjadi Dusun yang ramai. Perjalanan desa baru saja dimulai!"
+    }
+  ]
+}

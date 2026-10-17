@@ -1,0 +1,1408 @@
+{
+ "palette": {
+  "outline": [
+   58,
+   40,
+   48
+  ],
+  "shadow": [
+   40,
+   30,
+   40,
+   90
+  ],
+  "grass_d": [
+   78,
+   140,
+   62
+  ],
+  "grass": [
+   112,
+   178,
+   72
+  ],
+  "grass_l": [
+   160,
+   208,
+   92
+  ],
+  "dirt_d": [
+   132,
+   86,
+   56
+  ],
+  "dirt": [
+   170,
+   118,
+   74
+  ],
+  "dirt_l": [
+   204,
+   154,
+   98
+  ],
+  "sand_d": [
+   214,
+   178,
+   110
+  ],
+  "sand": [
+   238,
+   208,
+   140
+  ],
+  "sand_l": [
+   250,
+   232,
+   176
+  ],
+  "water_d": [
+   52,
+   110,
+   170
+  ],
+  "water": [
+   78,
+   152,
+   206
+  ],
+  "water_l": [
+   150,
+   210,
+   236
+  ],
+  "foam": [
+   236,
+   248,
+   250
+  ],
+  "wood_d": [
+   102,
+   62,
+   44
+  ],
+  "wood": [
+   150,
+   94,
+   58
+  ],
+  "wood_l": [
+   196,
+   134,
+   82
+  ],
+  "stone_d": [
+   104,
+   102,
+   116
+  ],
+  "stone": [
+   150,
+   148,
+   158
+  ],
+  "stone_l": [
+   198,
+   196,
+   200
+  ],
+  "leaf_d": [
+   52,
+   112,
+   64
+  ],
+  "leaf": [
+   84,
+   156,
+   74
+  ],
+  "leaf_l": [
+   138,
+   196,
+   86
+  ],
+  "roof_d": [
+   166,
+   62,
+   52
+  ],
+  "roof": [
+   214,
+   94,
+   64
+  ],
+  "roof_l": [
+   240,
+   140,
+   88
+  ],
+  "straw_d": [
+   176,
+   134,
+   58
+  ],
+  "straw": [
+   222,
+   182,
+   86
+  ],
+  "straw_l": [
+   246,
+   218,
+   130
+  ],
+  "fire_d": [
+   214,
+   70,
+   40
+  ],
+  "fire": [
+   246,
+   144,
+   48
+  ],
+  "fire_l": [
+   255,
+   218,
+   92
+  ],
+  "fire_w": [
+   255,
+   248,
+   200
+  ],
+  "berry": [
+   210,
+   52,
+   88
+  ],
+  "berry_l": [
+   246,
+   120,
+   140
+  ],
+  "wheat": [
+   236,
+   196,
+   72
+  ],
+  "skin1": [
+   250,
+   212,
+   170
+  ],
+  "skin2": [
+   222,
+   166,
+   118
+  ],
+  "skin3": [
+   176,
+   114,
+   74
+  ],
+  "skin4": [
+   118,
+   76,
+   52
+  ],
+  "hair1": [
+   70,
+   46,
+   36
+  ],
+  "hair2": [
+   222,
+   170,
+   72
+  ],
+  "hair3": [
+   196,
+   80,
+   48
+  ],
+  "hair4": [
+   40,
+   34,
+   44
+  ],
+  "cloth1": [
+   214,
+   94,
+   64
+  ],
+  "cloth2": [
+   78,
+   152,
+   206
+  ],
+  "cloth3": [
+   112,
+   178,
+   72
+  ],
+  "cloth4": [
+   238,
+   196,
+   84
+  ],
+  "cloth_d": [
+   90,
+   60,
+   70
+  ],
+  "magic": [
+   170,
+   140,
+   240
+  ],
+  "magic_l": [
+   232,
+   220,
+   255
+  ],
+  "glow": [
+   255,
+   200,
+   90,
+   70
+  ],
+  "white": [
+   250,
+   246,
+   236
+  ],
+  "black": [
+   30,
+   24,
+   30
+  ],
+  "snow": [
+   236,
+   242,
+   248
+  ],
+  "snow_l": [
+   255,
+   255,
+   255
+  ],
+  "snow_d": [
+   196,
+   212,
+   232
+  ],
+  "ice": [
+   168,
+   214,
+   236
+  ],
+  "ice_l": [
+   220,
+   242,
+   250
+  ],
+  "ice_d": [
+   118,
+   170,
+   206
+  ],
+  "frost_dirt": [
+   150,
+   112,
+   92
+  ],
+  "frost_dirt_l": [
+   190,
+   170,
+   170
+  ],
+  "night": [
+   22,
+   28,
+   70,
+   150
+  ],
+  "smoke": [
+   206,
+   200,
+   200,
+   170
+  ],
+  "carrot": [
+   240,
+   128,
+   40
+  ],
+  "carrot_d": [
+   196,
+   88,
+   32
+  ],
+  "cloth_l": [
+   246,
+   236,
+   210
+  ]
+ },
+ "files": [
+  {
+   "file": "tiles/grass.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "seamless",
+   "stage": 1
+  },
+  {
+   "file": "tiles/grass_flowers.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "seamless, variasi rumput",
+   "stage": 1
+  },
+  {
+   "file": "tiles/dirt.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "seamless",
+   "stage": 1
+  },
+  {
+   "file": "tiles/sand.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "seamless",
+   "stage": 1
+  },
+  {
+   "file": "tiles/water_anim.png",
+   "size": [
+    64,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 2,
+   "note": "2 frame horizontal, ~500ms/frame, seamless",
+   "stage": 1
+  },
+  {
+   "file": "tiles/edge_grass_dirt.png",
+   "size": [
+    256,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 8,
+   "note": "urutan: n,e,s,w,ne,se,sw,nw = sisi tempat material atas (rumput di atas dirt) berada",
+   "stage": 1
+  },
+  {
+   "file": "tiles/edge_grass_sand.png",
+   "size": [
+    256,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 8,
+   "note": "urutan: n,e,s,w,ne,se,sw,nw = sisi tempat material atas (rumput di atas sand) berada",
+   "stage": 1
+  },
+  {
+   "file": "tiles/edge_sand_water.png",
+   "size": [
+    256,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 8,
+   "note": "urutan: n,e,s,w,ne,se,sw,nw = sisi tempat material atas (pasir di atas air) berada",
+   "stage": 1
+  },
+  {
+   "file": "nature/tree.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "32x64, alas (akar) di 32px bawah",
+   "stage": 1
+  },
+  {
+   "file": "nature/tree_stump.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "setelah ditebang",
+   "stage": 1
+  },
+  {
+   "file": "nature/rock.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 1
+  },
+  {
+   "file": "nature/rock_small.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 1
+  },
+  {
+   "file": "nature/berry_bush_full.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 1
+  },
+  {
+   "file": "nature/berry_bush_empty.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 1
+  },
+  {
+   "file": "nature/field_empty.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 1
+  },
+  {
+   "file": "nature/field_growing.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 1
+  },
+  {
+   "file": "nature/field_ready.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 1
+  },
+  {
+   "file": "nature/field_stages.png",
+   "size": [
+    96,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 3,
+   "note": "urutan: kosong, tumbuh, siap panen",
+   "stage": 1
+  },
+  {
+   "file": "characters/villager_1.png",
+   "size": [
+    128,
+    256
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 32,
+   "note": "8 baris x 4 kolom",
+   "stage": 1
+  },
+  {
+   "file": "characters/villager_2.png",
+   "size": [
+    128,
+    256
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 32,
+   "note": "8 baris x 4 kolom",
+   "stage": 1
+  },
+  {
+   "file": "characters/villager_3.png",
+   "size": [
+    128,
+    256
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 32,
+   "note": "8 baris x 4 kolom",
+   "stage": 1
+  },
+  {
+   "file": "characters/villager_4.png",
+   "size": [
+    128,
+    256
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 32,
+   "note": "8 baris x 4 kolom",
+   "stage": 1
+  },
+  {
+   "file": "buildings/campfire.png",
+   "size": [
+    128,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 4,
+   "note": "4 frame horizontal, ~120ms/frame",
+   "stage": 1
+  },
+  {
+   "file": "buildings/hut.png",
+   "size": [
+    64,
+    64
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 1,
+   "note": "64x64 (2x2 tile), kapasitas 2",
+   "stage": 1
+  },
+  {
+   "file": "buildings/warehouse.png",
+   "size": [
+    96,
+    64
+   ],
+   "frame": [
+    96,
+    64
+   ],
+   "frames": 1,
+   "note": "96x64 (3x2 tile)",
+   "stage": 1
+  },
+  {
+   "file": "buildings/well.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "32x64, alas di 32px bawah",
+   "stage": 1
+  },
+  {
+   "file": "buildings/mine.png",
+   "size": [
+    64,
+    64
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 1,
+   "note": "64x64 (2x2 tile)",
+   "stage": 1
+  },
+  {
+   "file": "buildings/wooden_house.png",
+   "size": [
+    96,
+    96
+   ],
+   "frame": [
+    96,
+    96
+   ],
+   "frames": 1,
+   "note": "96x96 (3x3 tile)",
+   "stage": 1
+  },
+  {
+   "file": "effects/sparkle_grow.png",
+   "size": [
+    128,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 4,
+   "note": "overlay di atas ladang/tanaman tumbuh, ~150ms/frame",
+   "stage": 1
+  },
+  {
+   "file": "effects/campfire_glow.png",
+   "size": [
+    96,
+    96
+   ],
+   "frame": [
+    96,
+    96
+   ],
+   "frames": 1,
+   "note": "overlay cahaya semi-transparan, pusatkan di api unggun (blend normal/additive)",
+   "stage": 1
+  },
+  {
+   "file": "icons/icon_wood.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 1
+  },
+  {
+   "file": "icons/icon_stone.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 1
+  },
+  {
+   "file": "icons/icon_food.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 1
+  },
+  {
+   "file": "icons/icon_water.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 1
+  },
+  {
+   "file": "tiles/winter/snow_grass.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "seamless, rumput bersalju",
+   "stage": 2
+  },
+  {
+   "file": "tiles/winter/dirt_frozen.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "seamless",
+   "stage": 2
+  },
+  {
+   "file": "tiles/winter/sand_winter.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "seamless, pasir berembun",
+   "stage": 2
+  },
+  {
+   "file": "tiles/winter/ice.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "seamless, air beku",
+   "stage": 2
+  },
+  {
+   "file": "tiles/autotile_water_sand.png",
+   "size": [
+    256,
+    384
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 94,
+   "note": "47-tile blob, grid 8 kolom; indeks = posisi mask di BLOB_MASKS (lihat README/autotile_blob47.json); frame air 0 = baris 0-5, frame 1 = baris 6-11",
+   "stage": 2
+  },
+  {
+   "file": "tiles/autotile_water_grass.png",
+   "size": [
+    256,
+    384
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 94,
+   "note": "47-tile blob, grid 8 kolom; indeks = posisi mask di BLOB_MASKS (lihat README/autotile_blob47.json); frame air 0 = baris 0-5, frame 1 = baris 6-11",
+   "stage": 2
+  },
+  {
+   "file": "tiles/autotile_path_grass.png",
+   "size": [
+    256,
+    192
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 47,
+   "note": "47-tile blob, grid 8 kolom; indeks = posisi mask di BLOB_MASKS (lihat README/autotile_blob47.json)",
+   "stage": 2
+  },
+  {
+   "file": "tiles/autotile_ice_snow.png",
+   "size": [
+    256,
+    192
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 47,
+   "note": "47-tile blob, grid 8 kolom; indeks = posisi mask di BLOB_MASKS (lihat README/autotile_blob47.json)",
+   "stage": 2
+  },
+  {
+   "file": "tiles/autotile_path_snow.png",
+   "size": [
+    256,
+    192
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 47,
+   "note": "47-tile blob, grid 8 kolom; indeks = posisi mask di BLOB_MASKS (lihat README/autotile_blob47.json)",
+   "stage": 2
+  },
+  {
+   "file": "tiles/autotile_blob47.json",
+   "size": null,
+   "frame": null,
+   "frames": null,
+   "note": "lookup bitmask -> indeks tile",
+   "stage": 2
+  },
+  {
+   "file": "nature/winter/tree_snow.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "32x64, sama anchor dengan tree.png",
+   "stage": 2
+  },
+  {
+   "file": "nature/winter/tree_bare.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "32x64, pohon gundul",
+   "stage": 2
+  },
+  {
+   "file": "nature/winter/berry_bush_snow.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 2
+  },
+  {
+   "file": "nature/winter/rock_snow.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 2
+  },
+  {
+   "file": "nature/crops/crop_wheat.png",
+   "size": [
+    192,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 6,
+   "note": "urutan: diolah, benih, tunas, tumbuh, siap panen, sudah dipanen",
+   "stage": 2
+  },
+  {
+   "file": "nature/crops/crop_carrot.png",
+   "size": [
+    192,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 6,
+   "note": "urutan: diolah, benih, tunas, tumbuh, siap panen, sudah dipanen",
+   "stage": 2
+  },
+  {
+   "file": "characters/villager_1_work.png",
+   "size": [
+    128,
+    384
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 48,
+   "note": "12 baris x 4 kolom: 0-3 menebang, 4-7 menambang, 8-11 membawa (arah bawah,kiri,kanan,atas)",
+   "stage": 2
+  },
+  {
+   "file": "characters/villager_2_work.png",
+   "size": [
+    128,
+    384
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 48,
+   "note": "12 baris x 4 kolom: 0-3 menebang, 4-7 menambang, 8-11 membawa (arah bawah,kiri,kanan,atas)",
+   "stage": 2
+  },
+  {
+   "file": "characters/villager_3_work.png",
+   "size": [
+    128,
+    384
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 48,
+   "note": "12 baris x 4 kolom: 0-3 menebang, 4-7 menambang, 8-11 membawa (arah bawah,kiri,kanan,atas)",
+   "stage": 2
+  },
+  {
+   "file": "characters/villager_4_work.png",
+   "size": [
+    128,
+    384
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 48,
+   "note": "12 baris x 4 kolom: 0-3 menebang, 4-7 menambang, 8-11 membawa (arah bawah,kiri,kanan,atas)",
+   "stage": 2
+  },
+  {
+   "file": "buildings/kitchen.png",
+   "size": [
+    64,
+    64
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 1,
+   "note": "64x64 (2x2)",
+   "stage": 2
+  },
+  {
+   "file": "buildings/night/kitchen_night.png",
+   "size": [
+    64,
+    64
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 1,
+   "note": "64x64 (2x2), jendela/pintu menyala",
+   "stage": 2
+  },
+  {
+   "file": "buildings/workshop.png",
+   "size": [
+    96,
+    64
+   ],
+   "frame": [
+    96,
+    64
+   ],
+   "frames": 1,
+   "note": "96x64 (3x2), bengkel alat",
+   "stage": 2
+  },
+  {
+   "file": "buildings/night/workshop_night.png",
+   "size": [
+    96,
+    64
+   ],
+   "frame": [
+    96,
+    64
+   ],
+   "frames": 1,
+   "note": "96x64 (3x2), bengkel alat, jendela/pintu menyala",
+   "stage": 2
+  },
+  {
+   "file": "buildings/granary.png",
+   "size": [
+    64,
+    96
+   ],
+   "frame": [
+    64,
+    96
+   ],
+   "frames": 1,
+   "note": "64x96 (2x3), lumbung panggung",
+   "stage": 2
+  },
+  {
+   "file": "buildings/night/granary_night.png",
+   "size": [
+    64,
+    96
+   ],
+   "frame": [
+    64,
+    96
+   ],
+   "frames": 1,
+   "note": "64x96 (2x3), lumbung panggung, jendela/pintu menyala",
+   "stage": 2
+  },
+  {
+   "file": "buildings/market.png",
+   "size": [
+    96,
+    64
+   ],
+   "frame": [
+    96,
+    64
+   ],
+   "frames": 1,
+   "note": "96x64 (3x2)",
+   "stage": 2
+  },
+  {
+   "file": "buildings/night/market_night.png",
+   "size": [
+    96,
+    64
+   ],
+   "frame": [
+    96,
+    64
+   ],
+   "frames": 1,
+   "note": "96x64 (3x2), jendela/pintu menyala",
+   "stage": 2
+  },
+  {
+   "file": "buildings/town_hall.png",
+   "size": [
+    128,
+    96
+   ],
+   "frame": [
+    128,
+    96
+   ],
+   "frames": 1,
+   "note": "128x96 (4x3), balai desa",
+   "stage": 2
+  },
+  {
+   "file": "buildings/night/town_hall_night.png",
+   "size": [
+    128,
+    96
+   ],
+   "frame": [
+    128,
+    96
+   ],
+   "frames": 1,
+   "note": "128x96 (4x3), balai desa, jendela/pintu menyala",
+   "stage": 2
+  },
+  {
+   "file": "buildings/bridge_h.png",
+   "size": [
+    96,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 3,
+   "note": "3 tile horizontal: ujung kiri, tengah (boleh diulang), ujung kanan; tengah menyambung mulus",
+   "stage": 2
+  },
+  {
+   "file": "buildings/bridge_v.png",
+   "size": [
+    32,
+    96
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 3,
+   "note": "3 tile vertikal: ujung atas, tengah (boleh diulang), ujung bawah",
+   "stage": 2
+  },
+  {
+   "file": "effects/night/night_overlay.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "tile 32x32 RGBA (22,28,70,150); ulangi/stretch menutup layar, blend normal",
+   "stage": 2
+  },
+  {
+   "file": "effects/night/light_glow_small.png",
+   "size": [
+    64,
+    64
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 1,
+   "note": "64x64, untuk obor/lentera; gambar SETELAH overlay, blend additive/screen",
+   "stage": 2
+  },
+  {
+   "file": "effects/night/light_glow_large.png",
+   "size": [
+    128,
+    128
+   ],
+   "frame": [
+    128,
+    128
+   ],
+   "frames": 1,
+   "note": "128x128, untuk api unggun/rumah",
+   "stage": 2
+  },
+  {
+   "file": "effects/night/torch.png",
+   "size": [
+    128,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 4,
+   "note": "obor, 4 frame horizontal ~120ms",
+   "stage": 2
+  },
+  {
+   "file": "effects/night/lantern_post.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "32x64 tiang lentera",
+   "stage": 2
+  },
+  {
+   "file": "effects/night/lantern_post_lit.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "32x64 tiang lentera",
+   "stage": 2
+  },
+  {
+   "file": "effects/night/lantern.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "lentera gantung/meja 32x32",
+   "stage": 2
+  },
+  {
+   "file": "effects/night/lantern_lit.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "lentera gantung/meja 32x32",
+   "stage": 2
+  },
+  {
+   "file": "buildings/night/wooden_house_night.png",
+   "size": [
+    96,
+    96
+   ],
+   "frame": [
+    96,
+    96
+   ],
+   "frames": 1,
+   "note": "versi malam tahap-1, jendela/pintu menyala",
+   "stage": 2
+  },
+  {
+   "file": "buildings/night/hut_night.png",
+   "size": [
+    64,
+    64
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 1,
+   "note": "versi malam tahap-1, jendela/pintu menyala",
+   "stage": 2
+  }
+ ]
+}
