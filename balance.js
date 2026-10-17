@@ -5,10 +5,10 @@ window.CONFIG = {
   RIVER_X: 34, BRIDGE_ROWS: [20, 33], // baris jembatan yang melintasi sungai
   DAY_LENGTH_SEC: 120, NIGHT_START: 0.75, NIGHT_END: 0.25,
   START_VILLAGERS: 2,
-  START_RES: { kayu: 12, batu: 5, makanan: 10, gandum: 0, air: 8, alat: 0, kulit: 0, papan: 0, batu_bata: 0 },
+  START_RES: { kayu: 12, batu: 8, makanan: 10, gandum: 0, air: 8, alat: 0, kulit: 0, papan: 0, batu_bata: 0 },
   VILLAGER_SPEED: 2.5,
-  CARRY: { kayu: 5, batu: 4, makanan: 1 },        // hasil per angkutan
-  GATHER_TIME: { kayu: 25, batu: 20, makanan: 14 }, // tebang 20-30s, buah 8-12s
+  CARRY: { kayu: 5, batu: 5, makanan: 1 },        // hasil per angkutan
+  GATHER_TIME: { kayu: 25, batu: 16, makanan: 14 }, // tebang 20-30s, buah 8-12s
   NODE_AMOUNT: { kayu: 25, batu: 40, makanan: 6 },
   BUSH_REGROW_SEC: 360,
   HUNGER_PER_DAY: 25, ENERGY_PER_DAY: 20,
@@ -56,10 +56,20 @@ window.CONFIG = {
   SKILL_GAIN: 0.02, // skill naik per angkutan; efek: waktu kerja / (1+skill*0.5)
   NAMES: ['Sari','Budi','Dewi','Agus','Rina','Joko','Wati','Eko','Lina','Hadi','Tari','Yudi','Ayu','Bayu'],
   WATER_SURPLUS_DAYS: 8, // stok air >= ini (hari) -> kerja air turun prioritas
-  RES_SOFT_CAP: { kayu: 150, batu: 100 }, // per 2 penduduk; di atas ini kerja tsb turun prioritas
+  RES_SOFT_CAP: { kayu: 120, batu: 35 }, // per 2 penduduk; di atas ini kerja tsb turun prioritas
+  // Aturan event acak: bobot (default 1, bisa juga 'bobot' di TEKS-GAME.json; config menang), musim yang diizinkan,
+  // maksPerTahun (direset tiap musim Semi), cooldownHari.
+  EVENT_RULES: {
+    panen_raya:        { bobot: 0.35, musim: ['panas', 'gugur'], maksPerTahun: 1 },
+    pedagang_keliling: { bobot: 0.7, cooldownHari: 8 },
+    badai:             { bobot: 1.1 },
+    hewan_buas:        { bobot: 1.0 },
+    wabah:             { bobot: 1.2 },
+    pendatang:         { bobot: 0.8 },
+  },
   MAX_LOG: 40, MAX_NOTES: 6,
   FOOD_SURPLUS_FACTOR: 1.2, FOOD_SURPLUS_PENALTY: 25, // jika stok makanan melimpah, kerja makanan turun prioritas
-  DEFAULT_PRIO: { bangun: 3, makanan: 3, bertani: 2, air: 2, kayu: 2, batu: 1 }, // 0=mati .. 3=tinggi
-  EVENT_MIN_DAY: 2, EVENT_CHANCE_PER_DAY: 0.3, FLAVOR_LOG_PER_DAY: 1,
+  DEFAULT_PRIO: { bangun: 3, makanan: 3, bertani: 2, air: 2, kayu: 2, batu: 2 }, // 0=mati .. 3=tinggi
+  EVENT_MIN_DAY: 3, EVENT_CHANCE_PER_DAY: 0.18, FLAVOR_LOG_PER_DAY: 1,
   START_BUILDINGS: [], // contoh: [['gudang', 16, 10]]  (quest awal meminta pemain membangun Api Unggun/Gudang sendiri)
 };

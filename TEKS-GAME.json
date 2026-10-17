@@ -555,16 +555,16 @@
         {
           "teks": "Tukar kayu dengan makanan",
           "efek": {
-            "kayu": -20,
-            "makanan": 25
+            "kayu": -15,
+            "makanan": 10
           },
           "teks_hasil": "Pedagang mengangguk puas. Lumbung desa terasa sedikit lebih penuh."
         },
         {
           "teks": "Beli perkakas dengan batu",
           "efek": {
-            "batu": -25,
-            "alat": 3
+            "batu": -15,
+            "alat": 2
           },
           "teks_hasil": "Perkakas baru berkilau di tangan penduduk. Kerja jadi lebih cepat!"
         },
@@ -673,25 +673,25 @@
         {
           "teks": "Simpan semua di Lumbung",
           "efek": {
-            "gandum": 40,
-            "makanan": 30
+            "gandum": 12,
+            "makanan": 8
           },
           "teks_hasil": "Lumbung penuh sesak. Musim dingin tidak lagi menakutkan."
         },
         {
           "teks": "Adakan pesta panen",
           "efek": {
-            "makanan": 15,
-            "suasana_hati": 20
+            "makanan": 8,
+            "suasana_hati": 15
           },
           "teks_hasil": "Penduduk menari dan bernyanyi semalaman. Ini malam yang akan dikenang lama."
         },
         {
           "teks": "Jual sebagian ke pedagang",
           "efek": {
-            "gandum": 20,
-            "alat": 2,
-            "batu_bata": 10
+            "gandum": 6,
+            "alat": 1,
+            "batu": 8
           },
           "teks_hasil": "Sebagian hasil panen ditukar dengan barang berguna untuk membangun."
         }

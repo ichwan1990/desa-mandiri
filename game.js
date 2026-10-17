@@ -243,8 +243,20 @@ function applyEffects(ef, src) {
     else console.info(`[efek] kunci "${k}" belum didukung (${src}), diabaikan.`);
   }
 }
+// pilih event berbobot sesuai C.EVENT_RULES (musim, maks per tahun, cooldown)
+function eventAllowed(e) { const r = (C.EVENT_RULES || {})[e.id] || {}, year = Math.floor((S.day - 1) / (C.SEASON_DAYS * C.SEASONS.length));
+  if (r.musim && !r.musim.includes(season())) return false;
+  if (r.maksPerTahun && ((S.eventYearCount || {})[e.id + '@' + year] || 0) >= r.maksPerTahun) return false;
+  if (r.cooldownHari && S.day - ((S.eventLastDay || {})[e.id] ?? -999) < r.cooldownHari) return false;
+  return true; }
+const eventWeight = e => { const r = (C.EVENT_RULES || {})[e.id]; return r && r.bobot != null ? r.bobot : e.bobot ?? 1; };
 function maybeEvent() { if (!TEXT || !TEXT.event_acak || S.day < C.EVENT_MIN_DAY || Math.random() > C.EVENT_CHANCE_PER_DAY) return;
-  S.event = pick(TEXT.event_acak).id; showEvent(); }
+  const pool = TEXT.event_acak.filter(eventAllowed), total = pool.reduce((a, e) => a + eventWeight(e), 0); if (!total) return;
+  let r = Math.random() * total, ev = pool[pool.length - 1]; for (const e of pool) { r -= eventWeight(e); if (r <= 0) { ev = e; break; } }
+  const year = Math.floor((S.day - 1) / (C.SEASON_DAYS * C.SEASONS.length));
+  S.eventLastDay = S.eventLastDay || {}; S.eventYearCount = S.eventYearCount || {}; S.eventCount = S.eventCount || {};
+  S.eventLastDay[ev.id] = S.day; S.eventYearCount[ev.id + '@' + year] = (S.eventYearCount[ev.id + '@' + year] || 0) + 1; S.eventCount[ev.id] = (S.eventCount[ev.id] || 0) + 1;
+  S.event = ev.id; showEvent(); }
 const addsPop = ef => (ef && ef.penduduk) > 0;
 const housingOk = ef => !addsPop(ef) || capacity() >= S.villagers.length + ef.penduduk;
 function showEvent() { const e = TEXT && TEXT.event_acak.find(x => x.id === S.event); if (!e) { S.event = null; return; }
