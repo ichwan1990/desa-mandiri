@@ -52,7 +52,9 @@ function spawnVillager(x, y, initial, forcedName) {
   const pd = TEXT && TEXT.penduduk && TEXT.penduduk.find(p => p.nama === name), sex = pd ? (pd.jenis_kelamin === 'laki-laki' ? 'L' : 'P') : (S.villagers.filter(v => v.sex === 'P').length > S.villagers.filter(v => v.sex === 'L').length ? 'L' : 'P');
   const ageF = 16 + Math.random() * 25;
   S.villagers.push({ id: S.nextId++, name, sex, age: Math.floor(ageF), ageF, x, y, hunger: 80, energy: 90, mood: 70,
-    health: 100, joined: S.day, skills: { menebang: 0, menambang: 0, meramu: 0, membangun: 0, bertani: 0, meneliti: 0 }, task: null, carry: null, color: S.villagers.length });
+    health: 100, joined: S.day, skills: { menebang: 0, menambang: 0, meramu: 0, membangun: 0, bertani: 0, meneliti: 0 }, task: null, carry: null, color: S.villagers.length,
+    traits: initial ? founderTraits() : newcomerTraits(name) });
+  relInitFor(S.villagers[S.villagers.length - 1], !!initial);
   if (!initial) { log(`${name} bergabung dengan desa!`); assignHomes(); }
 }
 function log(msg) { S.log.unshift(`Hari ${S.day}: ${msg}`); S.log.length = Math.min(S.log.length, C.MAX_LOG); }
@@ -246,6 +248,7 @@ function growUp(v, dt) { const before = stageOf(v); v.ageF = ageOf(v) + dt / (C.
   if (v.born != null) { v.ms = v.ms || 0; const M_ = MILESTONES[v.ms]; if (M_ && v.ageF >= M_[0]) { v.ms++;
     const adult = S.villagers.find(o => !isKid(o) && o.id !== v.motherId) || S.villagers[0];
     log('🧒 ' + TX('tumbuh_kembang.milestone.' + M_[1], { ...famEx(v), nama2: adult ? adult.name : v.name, skill: pick(Object.values((TEXT && TEXT.meta && TEXT.meta.skill) || { a: 'menebang' })) }, `${v.name} ${M_[2]}`)); } }
+  if (v.born != null) { revealTraits(v); thirdTrait(v); }
   const now = stageOf(v); if (now !== before) onStage(v, now); }
 function onStage(v, st) { const ex = famEx(v);
   if (st === 'anak') log('🧒 ' + TX('tumbuh_kembang.menjadi_anak', ex, `${v.name} bukan bayi lagi.`));
@@ -253,20 +256,98 @@ function onStage(v, st) { const ex = famEx(v);
   else if (st === 'dewasa') log('🎉 ' + TX('tumbuh_kembang.menjadi_dewasa', ex, `${v.name} kini dewasa dan siap bekerja penuh.`));
   else if (st === 'lansia') log('👴 ' + TX('tumbuh_kembang.menjadi_lansia', ex, `${v.name} kini berusia ${v.age} tahun dan menjadi sesepuh desa.`));
   if (st !== 'bayi') assignHomes(); }
+// ---- tokoh: sifat & hubungan (fondasi, docs/RISET-CERITA-TUJUAN.md §1.1-1.2; cerita/keinginan/dilema belum) ----
+const TRT = () => C.TRAITS, RLC = () => C.RELATION;
+const traitName = id => TX('sifat.' + id + '.nama', {}, id.replace('_', ' '));
+const traitsVisible = v => !(v.traitsHidden && ageOf(v) < TRT().inherit.revealAge);
+function pickTraits(o = {}) { const T = TRT(), L = T.list, out = (o.seed || []).filter(id => L[id]).slice(0, o.max || T.max);
+  const n = Math.min(o.max || T.max, o.n ?? (T.perVillager + (Math.random() < T.thirdChance ? 1 : 0)));
+  const clash = id => out.includes(id) || T.conflicts.some(([a, b]) => a === id && out.includes(b) || b === id && out.includes(a));
+  const w = id => (L[id].bobot || 1) * ((o.weightMult || {})[id] || 1);
+  const draw = c => { c = c.filter(id => L[id] && !clash(id) && !(o.exclude || []).includes(id)); if (!c.length) return null;
+    let r = Math.random() * c.reduce((a, id) => a + w(id), 0); for (const id of c) if ((r -= w(id)) <= 0) return id; return c[c.length - 1]; };
+  if (o.needOneOf && !out.some(id => o.needOneOf.includes(id))) { const id = draw(o.needOneOf); if (id) out.push(id); }
+  for (let g = 0; out.length < n && g < 40; g++) { const id = draw(o.from && Math.random() < (o.fromChance || 0) ? o.from : Object.keys(L)); if (id) out.push(id); }
+  return out; }
+const founderTraits = () => pickTraits({ n: TRT().perVillager, exclude: TRT().founderExclude, needOneOf: TRT().founderNeedOneOf });
+function newcomerTraits(name) { const M = TEXT && TEXT.meta && TEXT.meta.peta_sifat_penduduk; return pickTraits({ seed: (M && M[name]) || [], weightMult: TRT().newcomerWeightMult }); }
+function babyTraits(m, f) { const T = TRT(), I = T.inherit, par = [...new Set([...(m && m.traits || []), ...(f && f.traits || [])])].filter(id => !I.noInherit.includes(id));
+  return pickTraits({ n: T.perVillager, from: par, fromChance: I.fromParents + I.fromMentor, exclude: I.noInherit }); } // mentor belum ada -> porsinya ikut orang tua
+// skor hubungan: S.rel['a-b'] (a<b), simetris
+const relKey = (a, b) => a.id < b.id ? a.id + '-' + b.id : b.id + '-' + a.id;
+const isFamily = (a, b) => a.motherId === b.id || a.fatherId === b.id || b.motherId === a.id || b.fatherId === a.id
+  || (a.motherId != null && a.motherId === b.motherId) || (a.fatherId != null && a.fatherId === b.fatherId);
+const relGet = (a, b) => (S.rel || {})[relKey(a, b)] ?? 0;
+function relFloor(a, b) { const F = RLC().floors; return a.partnerId === b.id ? F.pasangan : isFamily(a, b) ? F.keluarga : RLC().range[0]; }
+function relLevel(a, b, s = relGet(a, b)) { const L = RLC().levels; return a.partnerId === b.id ? 'pasangan' : isFamily(a, b) ? 'keluarga' : s >= L.sahabat ? 'sahabat' : s >= L.teman ? 'teman' : s <= L.rival ? 'rival' : 'kenalan'; }
+const gainMult = v => (v.traits || []).reduce((m, id) => m * (TRT().list[id].relGainMult || 1), 1);
+function relSet(a, b, s) { S.rel = S.rel || {}; S.rel[relKey(a, b)] = Math.max(relFloor(a, b), Math.min(RLC().range[1], Math.round(s * 100) / 100)); }
+// d>0: dibatasi +6/hari per pasangan (dan per jenis pemicu bila 'cap' diberi); penurunan tidak dibatasi
+function relAdd(a, b, d, kind, cap) { if (!a || !b || a === b) return 0; S.rel = S.rel || {}; const k = relKey(a, b), before = relGet(a, b), lv0 = relLevel(a, b, before);
+  if (d > 0) { d *= Math.sqrt(gainMult(a) * gainMult(b)); const G = (S.relGain = S.relGain || {}), g = G[k] && G[k].day === S.day ? G[k] : (G[k] = { day: S.day, all: 0 });
+    let room = RLC().dailyGainCap - g.all; if (kind && cap != null) room = Math.min(room, cap - (g[kind] || 0)); d = Math.max(0, Math.min(d, room)); if (!d) return 0;
+    g.all += d; if (kind) g[kind] = (g[kind] || 0) + d; }
+  relSet(a, b, before + d); (S.relSeen = S.relSeen || {})[k] = S.day; const lv = relLevel(a, b);
+  if (lv !== lv0 && ['teman', 'sahabat', 'rival'].includes(lv) && (lv !== 'teman' || lv0 === 'kenalan')) {
+    const ex = { nama: a.name, nama2: b.name, pasangan: b.name };
+    log({ teman: '🙂 ', sahabat: '🤝 ', rival: '⚡ ' }[lv] + TX('hubungan.log.menjadi_' + lv, ex, lv === 'rival' ? `${a.name} dan ${b.name} sering berselisih.` : `${a.name} dan ${b.name} kini ${lv}.`)); }
+  return d; }
+// awal: pendiri +25; pendatang 0 (+15 bila salah satu ramah, +5 bila salah satu jujur); orang tua-anak 60, saudara 50
+function relInitFor(v, founder) { const R = RLC(), has = (x, id) => (x.traits || []).includes(id);
+  for (const o of S.villagers) { if (o === v || (S.rel || {})[relKey(v, o)] != null) continue;
+    let s = founder && (o.joined ?? 1) <= 1 ? R.start.pendiri : R.start.pendatang;
+    if (v.motherId === o.id || v.fatherId === o.id) s = R.start.orangTuaAnak; else if (isFamily(v, o)) s = R.start.saudara;
+    else if (!(founder && (o.joined ?? 1) <= 1)) { // sambutan ramah/jujur hanya untuk pendatang (spes: pendiri tetap 25)
+      if (has(v, 'ramah') || has(o, 'ramah')) s += R.welcome.ramahRel; if (has(v, 'jujur') || has(o, 'jujur')) s += R.welcome.jujurRel; }
+    relSet(v, o, s); } }
+// pemicu berkala (tiap 30 dtk): kerja bareng; senja: api unggun; malam: ronda bareng
+function relTick(dt) { const R = RLC(), TICK = 5; S._relAcc = (S._relAcc || 0) + dt; if (S._relAcc < TICK) return; S._relAcc -= TICK; // cek tiap 5 dtk; kerja = 0.5 per 30 dtk
+  const vs = S.villagers.filter(v => !isBaby(v)), f = dayFrac(), fire = campfireLit() ? done('apiunggun') : [];
+  if (f > 0.05 && f < 0.2 && S._relNight !== S.day) { S._relNight = S.day; // tidur serumah semalam (tambahan lokal: RELATION.gain.serumahMalam)
+    for (let i = 0; i < vs.length; i++) for (let j = i + 1; j < vs.length; j++) if (vs[i].inside != null && vs[i].inside === vs[j].inside) relAdd(vs[i], vs[j], R.gain.serumahMalam || 0, 'serumah', R.gain.serumahMalam || 0); }
+  for (let i = 0; i < vs.length; i++) for (let j = i + 1; j < vs.length; j++) { const a = vs[i], b = vs[j], ta = a.task, tb = b.task; if (!ta || !tb) continue; const d = dist(a, b);
+    if (a.working && b.working && ta.kind === tb.kind && d <= R.gain.kerjaRadius) relAdd(a, b, R.gain.kerjaPer30s * TICK / 30, 'kerja', R.gain.kerjaMax);
+    if (f >= C.NIGHT_START && f < SCH().sleepFrac && fire.some(fp => dist(center(fp), a) <= R.gain.apiRadius && dist(center(fp), b) <= R.gain.apiRadius)) relAdd(a, b, R.gain.apiMalam, 'api', R.gain.apiMalam);
+    if (ta.kind === 'jaga' && tb.kind === 'jaga' && ta.b === tb.b && ta.arrived && tb.arrived) relAdd(a, b, R.gain.ronda, 'ronda', R.gain.ronda); } }
+function relOnEat(v) { const R = RLC(); v.ateAt = S.t;
+  for (const o of S.villagers) if (o !== v && o.ateAt != null && S.t - o.ateAt < 20 && dist(o, v) <= R.gain.makanRadius) relAdd(v, o, R.gain.makan, 'makan', R.gain.makanMax); }
+// harian: pelupaan setelah 3 hari tanpa interaksi
+function relDaily() { const D = RLC().decay; for (const k of Object.keys(S.rel || {})) { const [x, y] = k.split('-').map(Number), a = S.villagers.find(v => v.id === x), b = S.villagers.find(v => v.id === y);
+    if (!a || !b) { delete S.rel[k]; continue; } if (S.day - ((S.relSeen || {})[k] ?? S.day) < D.idleDays) continue; const s = S.rel[k];
+    if (s > 0) relSet(a, b, Math.max(0, s - (s >= RLC().levels.sahabat ? D.sahabat : D.teman))); else if (s < 0) relSet(a, b, Math.min(0, s + D.rivalRecover)); } }
+// duka berdasar hubungan (tambahan di atas DEATH)
+function relGrief(dead, old) { const G = RLC().grief, m = old ? C.AGE.oldDeathGriefMult : 1;
+  for (const o of S.villagers) { if (o === dead) continue; const lv = relLevel(o, dead);
+    const add = lv === 'keluarga' ? C.DEATH.griefMoodInstant * (G.keluargaMult - 1) : lv === 'sahabat' ? G.sahabatInstant : lv === 'teman' ? G.temanInstant : lv === 'rival' ? G.rivalInstant : 0;
+    if (add) o.mood = Math.max(0, o.mood + add * m); } }
+function revealTraits(v) { if (!v.traitsHidden || ageOf(v) < TRT().inherit.revealAge) return; v.traitsHidden = false;
+  const names = v.traits.map(id => TX('sifat.' + id + '.kata', {}, id)).join(' dan '), id0 = v.traits[0];
+  log('✨ ' + TX('sifat.' + id0 + '.log_terlihat', { nama: v.name }, `Sifat ${v.name} mulai terlihat: ${names}.`)); }
+function thirdTrait(v) { const T = TRT(); if (v.thirdDone || ageOf(v) < T.inherit.thirdAtAge) return; v.thirdDone = true; if (Math.random() < T.thirdChance) v.traits = pickTraits({ seed: v.traits, n: v.traits.length + 1 }); }
+function relHTML(v) { const H = (k, fb) => TX('hubungan.' + k, {}, fb), list = S.villagers.filter(o => o !== v).map(o => ({ o, s: relGet(v, o), lv: relLevel(v, o) }))
+    .filter(r => r.lv !== 'kenalan').sort((a, b) => Math.abs(b.s) - Math.abs(a.s)).slice(0, 6);
+  return `<h3 id="vpRel">${H('panel.judul', 'Hubungan')}</h3>` + (list.length ? list.map(r => `<div class="row rel-row" data-rel="${r.lv}"><span><img class="ico" src="assets/icons/relations/rel_${r.lv}_16.png" alt=""> ${r.o.name}</span><span title="${H('tooltip.' + r.lv, '')}">${H('tingkat.' + r.lv, r.lv)} <b>${Math.round(r.s)}</b></span></div>`).join('')
+    : `<div style="font-size:12px;opacity:.8">${H('panel.kosong', 'Belum ada')}</div>`); }
+function traitsHTML(v) { if (!v.traits || !v.traits.length) return '';
+  const body = traitsVisible(v) ? v.traits.map(id => `<span class="trait" data-trait="${id}" title="${TX('sifat.' + id + '.tooltip', {}, '')}"><img class="ico" src="assets/icons/traits/trait_${id}_16.png" alt=""> ${traitName(id)}</span>`).join(' ') : '<span class="trait">?</span>';
+  return `<div id="vpTraits" style="font-size:12px;margin:4px 0">${body}</div>`; }
 // ---- berpasangan ----
-function pairingDaily() { const P = C.PAIRING;
+function pairingDaily() { const P = C.PAIRING, RP = RLC().pairing;
   for (const v of S.villagers) v.goodMoodDays = v.mood >= P.minMood ? (v.goodMoodDays || 0) + 1 : 0;
-  const elig = v => v.partnerId == null && ageOf(v) >= P.minAge && ageOf(v) <= P.maxAge && (v.goodMoodDays || 0) >= P.moodDays && !(v.widowDay != null && S.day - v.widowDay < P.rematchDays);
-  const singles = S.villagers.filter(v => v.partnerId == null && ageOf(v) >= P.minAge && ageOf(v) <= P.maxAge && !(v.widowDay != null && S.day - v.widowDay < P.rematchDays));
-  for (const h of houses()) { const occ = S.villagers.filter(v => v.homeId === h.id && elig(v));
-    for (const a of occ) for (const b of occ) { if (a.id >= b.id || a.sex === b.sex || a.partnerId != null || b.partnerId != null) continue;
-      if (!a.closeTo) { a.closeTo = b.id; b.closeTo = a.id; log('💞 ' + TX('log_hubungan.menjadi_dekat', { nama: a.name, pasangan: b.name }, `${a.name} dan ${b.name} mulai akrab.`)); continue; }
-      if (Math.random() < P.chancePerDay) pairUp(a, b); } }
-  // dua lajang beda jenis kelamin tapi tidak serumah karena tidak ada tempat
-  const L = singles.filter(v => v.sex === 'L'), Pp = singles.filter(v => v.sex === 'P');
-  if (L.length && Pp.length && !L.some(a => Pp.some(b => a.homeId != null && a.homeId === b.homeId)) && S.day - (S.needHouseLog || -99) >= 7) { S.needHouseLog = S.day;
-    log('🏠 ' + TX('log_hubungan.butuh_rumah', { nama: L[0].name, pasangan: Pp[0].name }, `${L[0].name} dan ${Pp[0].name} ingin tinggal bersama, tapi belum ada rumah kosong.`)); } }
-function pairUp(a, b) { a.partnerId = b.id; b.partnerId = a.id; a.pairedDay = b.pairedDay = S.day; a.heartUntil = b.heartUntil = S.t + C.DAY_LENGTH_SEC; S.pairs = (S.pairs || 0) + 1;
+  const free = v => v.partnerId == null && ageOf(v) >= P.minAge && ageOf(v) <= P.maxAge && !(v.widowDay != null && S.day - v.widowDay < P.rematchDays);
+  const elig = v => free(v) && (v.goodMoodDays || 0) >= P.moodDays;
+  const vs = S.villagers.filter(elig);
+  // calon: beda jenis kelamin, skor >= sahabat (50), bukan rival/keluarga; skor tertinggi dulu (pindah serumah lewat assignHomes)
+  const cands = []; for (const a of vs) for (const b of vs) if (a.id < b.id && a.sex !== b.sex && !(RP.noFamily && isFamily(a, b)) && relGet(a, b) >= RP.minRel) cands.push([relGet(a, b), a, b]);
+  cands.sort((x, y) => y[0] - x[0]);
+  for (const [, a, b] of cands) { if (a.partnerId != null || b.partnerId != null) continue;
+    if (!a.closeTo || a.closeTo !== b.id) { a.closeTo = b.id; b.closeTo = a.id; log('💞 ' + TX('log_hubungan.menjadi_dekat', { nama: a.name, pasangan: b.name }, `${a.name} dan ${b.name} mulai akrab.`)); continue; }
+    if (Math.random() < P.chancePerDay) pairUp(a, b); }
+  const singles = S.villagers.filter(free), L = singles.filter(v => v.sex === 'L'), Pp = singles.filter(v => v.sex === 'P');
+  const hs = houses(); if (S.villagers.some(v => v.partnerId != null && partnerOf(v) && partnerOf(v).homeId !== v.homeId) && S.day - (S.needHouseLog || -99) >= 7) { S.needHouseLog = S.day;
+    const a = S.villagers.find(v => v.partnerId != null && partnerOf(v).homeId !== v.homeId), b = partnerOf(a);
+    log('🏠 ' + TX('log_hubungan.butuh_rumah', { nama: a.name, pasangan: b.name }, `${a.name} dan ${b.name} ingin tinggal bersama, tapi belum ada rumah kosong.`)); } }
+function pairUp(a, b) { a.partnerId = b.id; b.partnerId = a.id; a.pairedDay = b.pairedDay = S.day; a.heartUntil = b.heartUntil = S.t + C.DAY_LENGTH_SEC; a.loveAt = b.loveAt = S.t; S.pairs = (S.pairs || 0) + 1; relSet(a, b, relGet(a, b));
   log('💍 ' + TX(Math.random() < 0.5 ? 'log_hubungan.menikah' : 'log_hubungan.menjadi_pasangan', { nama: a.name, pasangan: b.name }, `${a.name} dan ${b.name} kini resmi berpasangan.`));
   vhist(a, `Berpasangan dengan ${b.name}`); vhist(b, `Berpasangan dengan ${a.name}`); assignHomes(); }
 // ---- kehamilan & kelahiran ----
@@ -283,7 +364,8 @@ function pregnancyDaily() { const P = C.PREGNANCY;
       else if (left === 1) log('🤰 ' + TX('kehamilan.menjelang_lahir', ex, `Sebentar lagi si kecil akan lahir. ${m.name} beristirahat di rumah.`));
       else if (Math.random() < 0.25) log('🤰 ' + TX('kehamilan.masa_kehamilan', ex, `${m.name} sedang hamil. ${ex.ayah} selalu menemaninya.`));
       continue; }
-    if (!pregnancyOk(m, f) || Math.random() >= P.chancePerDay * (isWinter() ? P.winterMult : 1)) continue;
+    const RM = RLC().pregnancyRelMult, relM = f ? Math.max(0, Math.min(RM.maxTotal, 1 + (relGet(m, f) - RM.from) / RM.per)) : 1;
+    if (!pregnancyOk(m, f) || Math.random() >= P.chancePerDay * relM * (isWinter() ? P.winterMult : 1)) continue;
     m.pregnantUntil = S.day + P.lengthDays; const si = (Math.floor((S.day - 1) / yearDays()) * 8 + seasonInfo(S.day).idx); S.seasonBirths = S.seasonBirths || {}; S.seasonBirths[si] = (S.seasonBirths[si] || 0) + 1;
     log('🤰 ' + TX('kehamilan.kabar', { ...famEx(m), ibu: m.name, ayah: f.name }, `Kabar bahagia! ${m.name} dan ${f.name} sedang menanti buah hati.`)); vhist(m, 'Menanti buah hati'); } }
 function babyName(sex) { const N = TEXT && TEXT.kelahiran && TEXT.kelahiran.nama_bayi, list = (N && N[sex === 'L' ? 'laki_laki' : 'perempuan']) || (sex === 'L' ? ['Arya', 'Bima', 'Raka', 'Dimas'] : ['Anisa', 'Laras', 'Putri', 'Sekar']);
@@ -296,7 +378,8 @@ function giveBirth(m) { const P = C.PREGNANCY, f = partnerOf(m); m.pregnantUntil
   const sex = Math.random() < 0.5 ? 'L' : 'P', name = babyName(sex), h = bById(m.homeId), p = h ? cradlePos(h) : { x: m.x, y: m.y };
   const b = { id: S.nextId++, name, sex, age: 0, ageF: 0, born: S.day, ms: 0, x: p.x, y: p.y, hunger: 90, energy: 100, mood: 80, health: 100, joined: S.day,
     skills: { menebang: 0, menambang: 0, meramu: 0, membangun: 0, bertani: 0, meneliti: 0 }, task: null, carry: null, color: (m.color + (f ? f.color : 1)) % 4, motherId: m.id, fatherId: f ? f.id : null, homeId: m.homeId };
-  S.villagers.push(b); S.births = (S.births || 0) + 1; dstat('births', name, 1);
+  b.traits = babyTraits(m, f); b.traitsHidden = true;
+  S.villagers.push(b); relInitFor(b, false); S.births = (S.births || 0) + 1; dstat('births', name, 1);
   S.villagers.forEach(o => o.mood = Math.min(100, o.mood + P.birthMood)); [m, f].forEach(o => { if (o) { o.mood = Math.min(100, o.mood + P.parentMood); o.heartUntil = S.t + C.DAY_LENGTH_SEC / 2; vhist(o, `Anak lahir: ${name}`); } });
   const ex = { bayi: name, ibu: m.name, ayah, nama: m.name, pasangan: ayah };
   log('👶 ' + TX('kelahiran.log', ex, `Tangisan kecil terdengar dari rumah ${m.name} dan ${ayah}. Selamat datang, ${name}!`)); sfx('lonceng');
@@ -310,7 +393,7 @@ function oldAgeDaily() { const A = C.AGE;
     if (!v.frail) { v.frail = true; log('🍂 ' + `${v.name} (${v.age} tahun) mulai renta. Langkahnya makin pelan, tapi ceritanya makin panjang.`); vhist(v, 'Mulai renta'); }
     if (ageOf(v) >= A.maxAge || Math.random() < oldDeathChance(v)) killVillager(v, 'tua'); } }
 function lifeDaily() { if (S.syukuran && S.syukuran.day === S.day) { log('🎊 ' + TX('kelahiran.syukuran', S.syukuran.ex, `Desa mengadakan syukuran kecil untuk ${S.syukuran.name}.`)); S.syukuran = null; }
-  assignHomes(); pairingDaily(); pregnancyDaily(); oldAgeDaily(); }
+  assignHomes(); relDaily(); pairingDaily(); pregnancyDaily(); oldAgeDaily(); }
 // ---------- AI ----------
 function chooseTask(v) {
   const st = storage(v);
@@ -326,7 +409,9 @@ function chooseTask(v) {
   if (S.t < S.restUntil) return { kind: 'diam', target: { ...CAMP }, timer: 5 };
   // 3. Darurat desa: makanan menipis
   const pop = S.villagers.length;
-  if (foodTotal() < pop * 3) { const t = (childHelper(v) ? null : farmTask(v, true)) || gatherTask(v, 'makanan'); if (t) return t; }
+  if (foodTotal() < pop * 3) { const planting = S.villagers.filter(o => o.task && o.task.kind === 'tani' && !o.task.harvest).length;
+    // panen dulu; ladang kosong tetap ditanami oleh sebagian penduduk (dulu darurat pangan hanya panen/meramu -> ladang kosong berminggu-minggu -> kolaps)
+    const t = (childHelper(v) ? null : farmTask(v, true) || (planting < Math.ceil(pop / 3) ? farmTask(v) : null)) || gatherTask(v, 'makanan'); if (t) return t; }
   if (S.res.air < pop * C.WATER.perDayPerPop) { const t = waterTask(v); if (t) return t; }
   // 3b. Pengaman: hari >= 6 tanpa gubuk jadi -> bangun gubuk yang sudah ditaruh, atau kumpulkan kayu/batu yang kurang untuk biayanya (Asisten Analisa)
   { const t = hutEmergencyTask(v); if (t) return t; }
@@ -429,7 +514,7 @@ function updateVillager(v, dt) {
   if (mv === null) { if (t.node) t.node.unreachable = S.t + 60; v.task = null; v.pathKey = null; return; }
   if (!mv) { v.working = false; return; }
   switch (t.kind) {
-    case 'makan': eatNow(v); v.task = null; break;
+    case 'makan': eatNow(v); relOnEat(v); v.task = null; break;
     case 'tidur': sleepTick(v, t, dt); break;
     case 'kumpul': { const n = t.node; if (n.amount <= 0) { v.task = null; break; }
       v.dir = 2; v.working = true; t.work += dt * workMult(v, SKILL_OF[t.res]);
@@ -536,7 +621,7 @@ function fill(tpl, extra = {}) {
     sumber_daya: pick(['kayu', 'batu', 'makanan']), bangunan: pick(Object.values(m.bangunan || { x: 'Gubuk' })),
     skill: pick(Object.values(m.skill || { x: 'menebang' })), musim: C.SEASON_NAMES[season()].toLowerCase(), pesan_musim: '', era: C.ERAS[S.era | 0].nama,
     jumlah2: 2 + Math.floor(Math.random() * 6), sumber_daya2: pick(['makanan', 'gandum', 'alat']), persen: 10, nilai: 1, kuota: 0, hari_sisa: 5,
-    teknologi: S.research ? (techNodes().find(n => n.id === S.research.id) || {}).nama : 'ilmu baru', pencapaian: '', pedagang: (S.merchant && S.merchant.name) || 'Pedagang', hewan: TERM('hewan'), sifat: 'yang baik hati', lama_tinggal: S.day - (a.joined ?? 1), tahun: Math.floor((S.day - 1) / C.YEAR_SCALE.daysPerYear) + 1, ...extra };
+    teknologi: S.research ? (techNodes().find(n => n.id === S.research.id) || {}).nama : 'ilmu baru', pencapaian: '', pedagang: (S.merchant && S.merchant.name) || 'Pedagang', hewan: TERM('hewan'), sifat: (() => { const id = a.traits && a.traits.length && traitsVisible(a) ? pick(a.traits) : null, t = id && TEXT && TEXT.sifat && TEXT.sifat[id]; return (t && t.kata) || 'yang baik hati'; })(), /* TEKS v1.5.0 sifat.<id>.kata */ lama_tinggal: S.day - (a.joined ?? 1), tahun: Math.floor((S.day - 1) / C.YEAR_SCALE.daysPerYear) + 1, ...extra };
   return tpl.replace(/^Hari \{hari\}:\s*/, '').replace(/\{(\w+)\}/g, (_, k) => map[k] ?? k);
 }
 function flavorLog() { if (!TEXT || !TEXT.log_harian) return; const cats = ['kerja', 'sosial', 'temuan'].filter(c => TEXT.log_harian[c]);
@@ -904,7 +989,7 @@ function sicknessDaily() { const K = C.SICKNESS, F = FX();
 function careTask(v) { if (v.sick && v.sick.lvl === 'parah') return null;
   const p = S.villagers.find(o => o !== v && o.sick && o.sick.lvl === 'parah' && !o.sick.cared && !S.villagers.some(c => c.task && c.task.kind === 'rawat' && c.task.pid === o.id));
   if (!p || !canAfford(C.SICKNESS.careCost)) return null; return { kind: 'rawat', pid: p.id, target: { x: p.x, y: p.y }, work: 0 }; }
-function finishCare(v, t) { const p = vById(t.pid); if (!p || !p.sick) return; for (const [k, n] of Object.entries(C.SICKNESS.careCost)) S.res[k] = Math.max(0, S.res[k] - n);
+function finishCare(v, t) { const p = vById(t.pid); if (!p || !p.sick) return; relAdd(v, p, RLC().gain.tolong, 'tolong'); for (const [k, n] of Object.entries(C.SICKNESS.careCost)) S.res[k] = Math.max(0, S.res[k] - n);
   p.sick = { lvl: 'ringan', until: S.day + 2, cause: p.sick.cause, cared: true };
   log('💊 ' + TX('penduduk_sakit.parah.dirawat', { nama: p.name, nama2: v.name }, `${v.name} merawat ${p.name} seharian. Ia mulai pulih.`)); }
 // ---- pergi ----
@@ -930,7 +1015,7 @@ function killVillager(v, cause) { const D = C.DEATH; if (!S.villagers.includes(v
   log('💀 ' + (old ? TX(partner ? 'lansia_berpulang.meninggal_berpasangan' : 'lansia_berpulang.meninggal', ex, `${v.name} berpulang dengan tenang di usia ${v.age} tahun.`) : TX('penduduk_meninggal.per_penyebab.' + cause, ex, `${v.name} meninggal (${cause}).`)));
   (S.memorials = S.memorials || []).push({ id: v.id, name: v.name, age: v.age, day: S.day, cause, since: v.joined ?? 1 });
   (S.bodies = S.bodies || []).push({ id: v.id, name: v.name, x: v.x, y: v.y, cause, day: S.day });
-  S.villagers.forEach(o => o.mood = Math.max(0, o.mood + D.griefMoodInstant * gm));
+  S.villagers.forEach(o => o.mood = Math.max(0, o.mood + D.griefMoodInstant * gm)); relGrief(v, old);
   if (partner) { partner.partnerId = null; partner.formerPartner = v.name; partner.widowDay = S.day; partner.closeTo = null;
     partner.mood = Math.max(0, partner.mood + D.griefMoodInstant * gm * (C.PAIRING.widowGriefMult - 1)); vhist(partner, `Ditinggal ${v.name}`); }
   S.villagers.forEach(o => { if (o.closeTo === v.id) o.closeTo = null; });
@@ -978,10 +1063,15 @@ function drawLightning(now, W, H, z) { if (!bolt || now > bolt.t + 900) { if (Ma
   const k = ASSETS.kilat; if (k && k.image && e < 300) ctx.drawImage(k.image, Math.min(2, Math.floor(e / 100)) * 32, 0, 32, 96, Math.round(bolt.x - 16 * z), Math.round(bolt.y - 96 * z), 32 * z, 96 * z); }
 // kunang-kunang malam (tema Nusantara, bukan musim kemarau): kedip di dekat semak & pohon, digambar setelah overlay malam
 function drawFireflies(now, z) { const a = ASSETS.kunang_kunang; if (!a || !a.image || !isNight() || season() === C.HARD_SEASON) return;
+  // lebih terlihat: 28 kunang-kunang di sekitar pohon/semak yang tampak di layar, halo lembut berdenyut + sprite 1.5x
+  const vx0 = cam.x / T - 1, vy0 = cam.y / T - 1, vx1 = vx0 + cv.width / z / T + 2, vy1 = vy0 + cv.height / z / T + 2;
+  const vis = S.nodes.filter(n => (n.type === 'pohon' || n.type === 'semak') && n.x >= vx0 && n.x <= vx1 && n.y >= vy0 && n.y <= vy1); if (!vis.length) return;
   ctx.globalCompositeOperation = 'lighter';
-  for (let i = 0; i < 18; i++) { const n = S.nodes[(i * 37) % S.nodes.length]; if (!n) break; const t = now / 1000 + i * 1.7;
-    const x = (n.x + 0.5 + Math.sin(t * 0.6 + i) * 0.8) * T, y = (n.y + Math.cos(t * 0.45 + i * 2) * 0.7) * T;
-    ctx.drawImage(a.image, (Math.floor(now / 200 + i) % 4) * 8, 0, 8, 8, Math.round((x - cam.x) * z), Math.round((y - cam.y) * z), 8 * z, 8 * z); }
+  for (let i = 0; i < 28; i++) { const n = vis[(i * 7) % vis.length], t = now / 1000 + i * 1.7, pulse = 0.55 + 0.45 * Math.sin(t * 2.3 + i);
+    const x = ((n.x + 0.5 + Math.sin(t * 0.6 + i) * 1.1) * T - cam.x) * z, y = ((n.y - 0.2 + Math.cos(t * 0.45 + i * 2) * 0.9) * T - cam.y) * z, r = 7 * z;
+    const g = ctx.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, `rgba(230,255,140,${0.55 * pulse})`); g.addColorStop(1, 'rgba(230,255,140,0)');
+    ctx.fillStyle = g; ctx.fillRect(x - r, y - r, r * 2, r * 2);
+    ctx.globalAlpha = 0.6 + 0.4 * pulse; ctx.drawImage(a.image, (Math.floor(now / 200 + i) % 4) * 8, 0, 8, 8, Math.round(x - 6 * z), Math.round(y - 6 * z), 12 * z, 12 * z); ctx.globalAlpha = 1; }
   ctx.globalCompositeOperation = 'source-over'; }
 function drawWolf(o) { if (C.NIGHT_THREAT !== 'wolf' && !(ASSETS.babi_hutan && ASSETS.babi_hutan.image)) return drawBoarPlaceholder(o);
   const a = C.NIGHT_THREAT !== 'wolf' ? ASSETS.babi_hutan : ASSETS.serigala, im = a.images && (a.images[o.variant] || a.image), t = performance.now() / 1000;
@@ -1129,9 +1219,9 @@ function villagerPanelUI() { if (selVid == null) return; const v = S.villagers.f
   const uiIco = k => ASSETS[k] && ASSETS[k].ui ? `<img class="ico" src="${ASSETS[k].ui}">` : '';
   const bar = (label, val, col, fill, ik) => `${uiIco(ik)}${label} <b>${val | 0}</b><div class="bar"><i class="${fill}" style="width:${Math.max(0, Math.min(100, val))}%;--c:var(${col})"></i></div>`;
   const SK = { menebang: 'Menebang', menambang: 'Menambang', meramu: 'Meramu', membangun: 'Membangun', bertani: 'Bertani', meneliti: 'Meneliti' };
-  setHTML('vpDyn', `<div style="font-size:12px;margin:6px 0">${v.age} th · ${role(v)}<br>Sedang: <b>${TASK_TEXT(v.task)}</b>${v.sick ? ` · <span style="color:#a63e34">Sakit ${v.sick.lvl}</span>` : ''}${v.injured ? ' · Terluka' : ''}${v.traumaUntil >= S.day ? ' · Trauma' : ''}${v.lowMoodDays >= 2 ? ` · Murung ${v.lowMoodDays} hari` : ''}${v.carry ? ` (membawa ${v.carry.n} ${RES_LABEL[v.carry.res].toLowerCase()})` : ''}</div>
+  setHTML('vpDyn', traitsHTML(v) + `<div style="font-size:12px;margin:6px 0">${v.age} th · ${role(v)}<br>Sedang: <b>${TASK_TEXT(v.task)}</b>${v.sick ? ` · <span style="color:#a63e34">Sakit ${v.sick.lvl}</span>` : ''}${v.injured ? ' · Terluka' : ''}${v.traumaUntil >= S.day ? ' · Trauma' : ''}${v.lowMoodDays >= 2 ? ` · Murung ${v.lowMoodDays} hari` : ''}${v.carry ? ` (membawa ${v.carry.n} ${RES_LABEL[v.carry.res].toLowerCase()})` : ''}</div>
     ${bar('Kenyang', v.hunger, '--bar-hunger', 'f-red', 'ikon_need_hunger')}${bar('Energi', v.energy, '--bar-energy', 'f-blue', 'ikon_need_energy')}${bar('Suasana hati', v.mood, '--bar-mood', 'f-yellow', 'ikon_need_mood')}${bar('Kesehatan', v.health ?? 100, '--bar-health', 'f-green', 'ikon_need_health')}
-    ${familyHTML(v)}<h3>Keahlian</h3>${Object.entries(SK).map(([k, l]) => `<div class="row"><span>${uiIco('ikon_skill_' + k)}${l}</span><span>${'★'.repeat(Math.min(5, Math.floor((v.skills[k] || 0) * 2)))}${'☆'.repeat(5 - Math.min(5, Math.floor((v.skills[k] || 0) * 2)))} ${(v.skills[k] || 0).toFixed(2)}</span></div>`).join('')}
+    ${familyHTML(v)}${relHTML(v)}<h3>Keahlian</h3>${Object.entries(SK).map(([k, l]) => `<div class="row"><span>${uiIco('ikon_skill_' + k)}${l}</span><span>${'★'.repeat(Math.min(5, Math.floor((v.skills[k] || 0) * 2)))}${'☆'.repeat(5 - Math.min(5, Math.floor((v.skills[k] || 0) * 2)))} ${(v.skills[k] || 0).toFixed(2)}</span></div>`).join('')}
     <h3>Riwayat</h3><ul>${(v.history || []).map(h => `<li>${h}</li>`).join('') || '<li>Belum ada catatan.</li>'}</ul>`); }
 // panel keluarga: umur, tahap usia, status, pasangan, orang tua, anak (TEKS panel_keluarga, cadangan bahasa Indonesia)
 function familyHTML(v) { const K = (k, ex, fb) => TX('panel_keluarga.' + k, ex || {}, fb);
@@ -1160,7 +1250,7 @@ function step(dt) {
   checkQuest();
   updateMerchant(dt);
   for (const v of S.villagers.slice()) if (v.health <= 0) killVillager(v, v.lastHurt === 'serangan' && v.injured ? 'serangan' : v.hunger <= 0 ? (isHardSeason() && C.HARD_COLD ? 'dingin' : 'kelaparan') : 'sakit');
-  seasonStep(dt); scheduleStep();
+  seasonStep(dt); scheduleStep(); relTick(dt);
   const winter = isHardSeason() && !!FX().fieldsStop;
   for (const b of S.buildings) if (b.type === 'ladang' && b.done && b.stage === 'tumbuh' && canGrow(b) && (b.grow += dt / C.DAY_LENGTH_SEC) >= growDaysOf(b)) b.stage = 'siap';
   if (!winter) for (const n of S.nodes) if (n.type === 'semak' && n.amount <= 0 && (n.regrow -= dt / (isRaining() ? FX().rainBushRegrowMult : 1)) <= 0) n.amount = C.NODE_AMOUNT.makanan;
@@ -1392,6 +1482,7 @@ function drawLifeIcons() { const O = ASSETS.IKON_OFFSET;
     drawIcon('ikon_zzz', b.x * T + d.w * T / 2 + (d.w >= 3 ? 14 : 8), (b.y + d.h) * T - fh - 4); }
   for (const v of S.villagers) { if (v.inside != null || isBaby(v) && v.heldBy != null) continue; const st = stageOf(v);
     if (v.task && v.task.asleep) { const o = O.zzz[st] || O.zzz.dewasa; drawIcon('ikon_zzz', v.x * T + o[0], v.y * T + o[1]); continue; }
+    if (v.loveAt != null && S.t - v.loveAt < 10 && ASSETS.emote_cinta && ASSETS.emote_cinta.image) { const E = ASSETS.emote_cinta, fr = Math.floor(performance.now() / 180) % (E.frames || 4); ctx.drawImage(E.image, fr * 16, 0, 16, 16, v.x * T + 8, v.y * T - 22, 16, 16); } // pasangan baru terbentuk
     const p = partnerOf(v); if (p && (v.heartUntil > S.t || p.inside == null && dist(p, v) < 1.5 && !v.working && !p.working && v.id < p.id)) { const o = O.hati[st] || O.hati.dewasa; drawIcon('ikon_hati', v.x * T + o[0], v.y * T + o[1]); } } }
 function drawMerchant(m) { const a = ASSETS.pedagang, c = ASSETS.gerobak, dir = m.dir || 0, t = performance.now() / 1000;
   const vx = [0, -1, 1, 0][dir], vy = [1, 0, 0, -1][dir], cx = m.x - vx * 0.9, cy = m.y - vy * 0.9;
@@ -1600,7 +1691,7 @@ $('save').onclick = () => { localStorage.setItem(KEY, JSON.stringify({ ...S, _fl
 $('load').onclick = () => loadGame(true);
 $('reset').onclick = () => { if (confirm('Mulai permainan baru?')) { S = null; newGame(); lastDay = S.day; buildPrioUI(); buildBuildBar(); tutorialUI(); } };
 function loadGame(verbose) { const s = localStorage.getItem(KEY); if (!s) { if (verbose) log('Belum ada simpanan.'); return false; }
-  try { const L = JSON.parse(s); if (!L.tiles || L.tiles.length !== C.MAP_H || L.tiles[0].length !== C.MAP_W) { if (verbose) log('Simpanan versi lama tidak cocok dengan peta baru.'); return false; } S = L; delete S._floodSet; /* cache Set, tidak bisa di-JSON-kan */ lastDay = S.day; S.prio = { ...C.DEFAULT_PRIO, ...S.prio }; S.techDone = S.techDone || []; S.research = S.research || null; marketInit(); S.gathered = S.gathered || {}; S.era |= 0; for (const [k, n] of Object.entries(C.START_RES)) if (!(k in S.res)) S.res[k] = 0; if (!S.banks) computeBanks(); S.villagers.forEach(v => { v.skills.bertani = v.skills.bertani || 0; if (v.health == null) v.health = 100; }); S.questIdx |= 0; S.tutorialStep |= 0; S.restUntil = S.restUntil || 0; buildPrioUI(); buildBuildBar(); tutorialUI(); $('modal').style.display = 'none'; if (S.event) showEvent(); log('Permainan dimuat.'); return true; } catch (e) { console.warn(e); return false; } }
+  try { const L = JSON.parse(s); if (!L.tiles || L.tiles.length !== C.MAP_H || L.tiles[0].length !== C.MAP_W) { if (verbose) log('Simpanan versi lama tidak cocok dengan peta baru.'); return false; } S = L; delete S._floodSet; S.rel = S.rel || {}; S.villagers.forEach(v => { if (!v.traits) v.traits = newcomerTraits(v.name); }); S.villagers.forEach(v => relInitFor(v, (v.joined ?? 1) <= 1)); /* cache Set, tidak bisa di-JSON-kan */ lastDay = S.day; S.prio = { ...C.DEFAULT_PRIO, ...S.prio }; S.techDone = S.techDone || []; S.research = S.research || null; marketInit(); S.gathered = S.gathered || {}; S.era |= 0; for (const [k, n] of Object.entries(C.START_RES)) if (!(k in S.res)) S.res[k] = 0; if (!S.banks) computeBanks(); S.villagers.forEach(v => { v.skills.bertani = v.skills.bertani || 0; if (v.health == null) v.health = 100; }); S.questIdx |= 0; S.tutorialStep |= 0; S.restUntil = S.restUntil || 0; buildPrioUI(); buildBuildBar(); tutorialUI(); $('modal').style.display = 'none'; if (S.event) showEvent(); log('Permainan dimuat.'); return true; } catch (e) { console.warn(e); return false; } }
 
 // ---------- loop ----------
 let prev = performance.now();
@@ -1608,7 +1699,7 @@ function frame(now) { const real = Math.min(0.25, (now - prev) / 1000); prev = n
   for (const n of notes) n.life -= real; while (notes.length && notes[0].life <= 0) notes.shift();
   let sim = menuOpen ? 0 : real * speed; while (sim > 0) { const d = Math.min(0.1, sim); step(d); sim -= d; }
   render(); ui(); requestAnimationFrame(frame); }
-window.DESA = { get state() { return S; }, life: { stageOf, ageOf, isKid, isBaby, canWork, childHelper, partnerOf, childrenOf, houses, capacity, chooseTask, inSleepWindow, pastLate, lateAllowed, pregnancyOk, giveBirth, pairUp, assignHomes, lifeDaily, oldAgeDaily, foodPerDay, updateVillager, spawnVillager }, bindThemeText, hutEmergencyTask, buildTask, sicknessDaily, sawahDry, drySawahImg, popBadge, maybeEvent, waterNeed, wellYieldNow, riverYieldNow, canGrow, growDaysOf, cropId, seasonInfo, isHardSeason, yearDays, eventAllowed, chooseTask, wreckField, fieldTarget, foodPerDay, hungerMultNow, RES_LABEL, isY2, updateVillager, loadGame, biteVillager, updateWolf, wolfCost, seasonDaily, stockpiles, pileTier, pileSpots, notify, get notes() { return notes; }, killVillager, makeSick, ignite, spawnWolf, startFlood, famineLevel, warnings, threatDaily, seasonStep, wolfDaily, leaveDaily, sicknessDaily, spoilDaily, year, foodDays, floodTiles, isFlooded, fitCanvas, get placing() { return placing; }, setPlacing(b) { placing = b; }, get ach() { return ACH; }, checkAch, achProgress, unlockAch, endOfDaySummary, newDay, toast, applyEffects, allEvents, eventEraOk, fill, marketNewDay, priceOf, tradeQuote, doTrade, spawnMerchant, marketOpen, quota, foodSellMult, openMarket, startResearch, techVal, techNodes, openTech, showEvent, validSpot, canAfford, addBuilding, season,  step, cam, findPath, setZoom, centerCam };
+window.DESA = { get state() { return S; }, openVillager, houseLit, rel: { relGet, relAdd, relSet, relLevel, relKey, relInitFor, relTick, relDaily, relGrief, isFamily, pickTraits, founderTraits, newcomerTraits, babyTraits, revealTraits, traitsVisible, pairingDaily }, life: { stageOf, ageOf, isKid, isBaby, canWork, childHelper, partnerOf, childrenOf, houses, capacity, chooseTask, inSleepWindow, pastLate, lateAllowed, pregnancyOk, giveBirth, pairUp, assignHomes, lifeDaily, oldAgeDaily, foodPerDay, updateVillager, spawnVillager }, bindThemeText, hutEmergencyTask, buildTask, sicknessDaily, sawahDry, drySawahImg, popBadge, maybeEvent, waterNeed, wellYieldNow, riverYieldNow, canGrow, growDaysOf, cropId, seasonInfo, isHardSeason, yearDays, eventAllowed, chooseTask, wreckField, fieldTarget, foodPerDay, hungerMultNow, RES_LABEL, isY2, updateVillager, loadGame, biteVillager, updateWolf, wolfCost, seasonDaily, stockpiles, pileTier, pileSpots, notify, get notes() { return notes; }, killVillager, makeSick, ignite, spawnWolf, startFlood, famineLevel, warnings, threatDaily, seasonStep, wolfDaily, leaveDaily, sicknessDaily, spoilDaily, year, foodDays, floodTiles, isFlooded, fitCanvas, get placing() { return placing; }, setPlacing(b) { placing = b; }, get ach() { return ACH; }, checkAch, achProgress, unlockAch, endOfDaySummary, newDay, toast, applyEffects, allEvents, eventEraOk, fill, marketNewDay, priceOf, tradeQuote, doTrade, spawnMerchant, marketOpen, quota, foodSellMult, openMarket, startResearch, techVal, techNodes, openTech, showEvent, validSpot, canAfford, addBuilding, season,  step, cam, findPath, setZoom, centerCam };
 // tambalan teks tema di memori (TEKS-GAME.json tidak diubah): 'event:<id>.<path>' atau '<path>'
 // TEKS meta.txt_tema_nusantara: isi path TEKS untuk THEMES.indonesia.TXT (cadangan di tema.js tetap dipakai bila path tidak ada)
 function bindThemeText(t) { const M = t && t.meta && t.meta.txt_tema_nusantara; if (!M || C.THEME === 'sedang') return;

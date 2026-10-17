@@ -26,6 +26,7 @@ window.THEMES = {
     RES_LABEL: {}, EVENT_DISABLE: [], EVENT_SEASON_ALIAS: {}, EVENT_RULES: {},
     MARKET_MUSIM: { dingin: { jual: { makanan: 1.25, gandum: 1.25 }, beli: { makanan: 1.4, gandum: 1.4 } }, semi: { jual: { kayu: 0.9 } }, panas: { jual: { makanan: 0.85 } } },
     TXT: {}, TEXT_PATCH: {},
+    SCHEDULE_PATCH: { dayWorkMult: 1.2, daySpeedMult: 1.2 }, // kompensasi jam tidur per tema (sim d24: 1.35 membuat empat musim ~56)
     // TEKS-GAME.json v1.4.0 sudah Nusantara; tema empat musim memakai salinan v1.3.0 (teks lama, tanpa nasi bungkus/macan)
     TEXT_FILE: 'TEKS-GAME-sedang.json',
   },
@@ -113,6 +114,7 @@ CONFIG.THREAT.wolf.hardMult = CONFIG.THREAT.wolf.winterMult;
     'SEASON_FX', 'NIGHT_THREAT', 'ART_SUFFIX', 'WINTER_ART', 'WEATHER', 'EVENT_DISABLE', 'EVENT_SEASON_ALIAS', 'TXT', 'TEXT_PATCH', 'TERMS', 'FIELD_ROTATION', 'ASSET_SWAP', 'RES_ICON', 'TEXT_FILE']) CONFIG[k] = T[k];
   for (const [b, n] of Object.entries(T.BUILDING_NAMES || {})) if (CONFIG.BUILDINGS[b]) CONFIG.BUILDINGS[b] = Object.assign({}, CONFIG.BUILDINGS[b], { nama: n });
   CONFIG.YEAR_SCALE = Object.assign({}, CONFIG.YEAR_SCALE, T.YEAR_SCALE);
+  if (T.SCHEDULE_PATCH && CONFIG.SCHEDULE) CONFIG.SCHEDULE = Object.assign({}, CONFIG.SCHEDULE, T.SCHEDULE_PATCH);
   CONFIG.FIELD = Object.assign({}, CONFIG.FIELD, { crops: T.FIELD_CROPS });
   CONFIG.MARKET.musim = T.MARKET_MUSIM;
   CONFIG.EVENT_RULES = Object.assign({}, CONFIG.EVENT_RULES); for (const [k, r] of Object.entries(T.EVENT_RULES)) CONFIG.EVENT_RULES[k] = Object.assign({}, CONFIG.EVENT_RULES[k], r);

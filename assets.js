@@ -61,6 +61,7 @@ window.ASSETS = {
   rumah_malam: { color: '#b07a4a', img: 'assets/buildings/night/wooden_house_night.png', fw: 96, fh: 96 },
   rumah_dingin: { color: '#e8eef2', img: 'assets/buildings/winter/wooden_house_winter.png', fw: 96, fh: 96 },
   rumah_malam_dingin: { color: '#e8eef2', img: 'assets/buildings/winter/wooden_house_night_winter.png', fw: 96, fh: 96 },
+  emote_cinta: { img: 'assets/icons/emotes/emote_cinta.png', fw: 16, fh: 16, frames: 4 }, // 64x16, 4 frame (pasangan baru)
   gubuk_mati: { img: 'assets/buildings/night/hut_night_off.png', fw: 64, fh: 64 },
   gubuk_mati_dingin: { img: 'assets/buildings/winter/hut_night_off_winter.png', fw: 64, fh: 64 },
   rumah_mati: { img: 'assets/buildings/night/wooden_house_night_off.png', fw: 96, fh: 96 },

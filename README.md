@@ -65,6 +65,16 @@ Tema bawaan sekarang **Nusantara**; tema empat musim lama tetap ada (buka `index
 - Ringkasan hari yang dilompati (debug/tes) diberi label rentang ("Hari 16–19"). Tes: `tests/perbaikan.test.js`.
 - Sprite tropis tahap 7: varian musim `seasons/tropis/<musim>/`, cuaca (hujan lebat + kilat, debu & tint kemarau, bayang awan labuh), gubuk bambu, lumbung padi, pos ronda, pagar bambu, obor bambu, babi hutan, kunang-kunang malam (`ASSET_SWAP` di tema).
 
+## Siklus hidup & hubungan (`docs/RISET-SIKLUS-HIDUP.md`, `docs/RISET-CERITA-TUJUAN.md`)
+- **Jadwal tidur 21:00–05:00** (`SCHEDULE`). Agar produktivitas siang tetap sama seperti sebelum ada tidur, kerja dan langkah di siang hari dikali `SCHEDULE.dayWorkMult`/`daySpeedMult`: 1.35 di Nusantara (`balance.js`), 1.2 di empat musim (`THEMES.sedang.SCHEDULE_PATCH` di `tema.js`). Malam: penduduk masuk rumah, lampu rumah padam saat semua penghuni tidur, ada Zzz di atap, animasi pintu tropis disembunyikan, dan kunang-kunang dibuat lebih terang (halo + 28 ekor di sekitar pohon/semak yang tampak).
+- **Umur & keluarga** (`AGE`, `PAIRING`, `PREGNANCY`): bayi → anak → remaja → dewasa → lansia, mati tua mulai 60 th. Berpasangan butuh hubungan ≥ 50 + syarat `PAIRING`. Hamil butuh era Dusun, pangan ≥ 7 hari, status pangan aman/waspada, dan rumah dengan tempat kosong. Panel penduduk menampilkan keluarga, sifat, dan hubungan. Muncul `emote_cinta` saat pasangan terbentuk.
+- **Hubungan** (`RELATION`, salinan spes §1.2): skor −100..+100. Tingkat: rival ≤ −30, kenalan, teman ≥ 20, sahabat ≥ 50, lalu pasangan/keluarga. Kenaikan maksimal +6/hari per pasang. Skor naik dari kerja bareng, duduk di api unggun malam, ronda, makan bareng, dan merawat; turun pelan bila tidak berinteraksi. Skor awal: sesama pendiri 25, pendatang 0 (+15 bila ada yang `ramah`, +5 bila `jujur`), orang tua–anak 60, saudara 50. Duka saat ada yang meninggal sebanding dengan hubungan. **Tambahan di luar spes:** `gain.serumahMalam: 2` (tidur serumah), karena tanpa itu skor tidak pernah mencapai 50 di sim.
+- **Sifat** (`TRAITS`, 20 id dari TEKS v1.5.0 `sifat`): 2 sifat + 25% sifat ketiga (muncul di umur 16), tanpa pasangan sifat yang bertentangan. Pendiri tanpa malas/pemarah/pemurung dan punya minimal satu sifat kerja. Pendatang memakai `meta.peta_sifat_penduduk`. Sifat bayi turunan orang tua, disembunyikan ("?") sampai umur 8. Ikon tahap 8b (`trait_<id>_16`, `rel_<tingkat>_16`). Efek sifat (kerja, mood, gosip, konflik), cerita, keinginan, dan dilema **belum** diterapkan.
+- Darurat pangan kini juga menanam (bila petak tertanam < pop/3), tidak hanya memanen/meramu. Sebelumnya ladang bisa kosong dan desa kolaps di akhir permainan.
+- Tata letak 900–1560px: panel samping tetap 280px, tidak ada overflow atau tumpang-tindih (dites).
+- Sim `node balance-sim.test.js 5 140`: median pop d40 4, d80 9, d140 16, 16 kelahiran, 4 mati tua, 0 mati lain, 0 pergi, 0 kolaps. Lahir pertama median hari 51 (rentang 44–71; terhambat syarat era Dusun dan pangan ≥ 7 hari). Hari 24 (31 run): pangan median Nusantara 37, empat musim 40.
+- Tes: `tests/siklus-hidup.test.js` (screenshot `v6-night.png`, `v6-family.png`).
+
 ## Struktur file
 ```
 index.html          Tata letak & UI

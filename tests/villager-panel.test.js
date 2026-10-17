@@ -14,7 +14,7 @@ const path = require('path');
   const r = {};
   r.panel = await p.isVisible('#vpanel');
   r.content = await p.evaluate(() => ({ name: document.querySelector('#vpanel h3').textContent, bars: document.querySelectorAll('#vpanel .bar').length,
-    skills: [...document.querySelectorAll('#vpDyn .row')].length, history: document.querySelectorAll('#vpDyn li').length, task: document.querySelector('#vpDyn b').textContent }));
+    skills: (() => { let n = 0, on = false; for (const el of document.querySelectorAll('#vpDyn > *')) { if (el.tagName === 'H3') on = el.textContent === 'Keahlian'; else if (on && el.classList.contains('row')) n++; } return n; })(), history: document.querySelectorAll('#vpDyn li').length, task: document.querySelector('#vpDyn b').textContent }));
   await p.selectOption('#favSel', 'batu');
   r.fav = await p.evaluate(() => DESA.state.villagers[0].fav);
   // favorit meningkatkan pilihan kerja batu, tapi kebutuhan kritis tetap didahulukan

@@ -131,6 +131,67 @@ window.CONFIG = {
     oldDeathFrom: 60, oldDeathPerYear: 0.004, oldDeathMaxPerDay: 0.08, maxAge: 80,
     oldDeathGriefMult: 0.6, frailWarnChance: 0.03,
   },
+  // ---- fondasi tokoh (docs/RISET-CERITA-TUJUAN.md §1.1-1.2, disalin apa adanya agar cerita/tujuan P0 tinggal dipasang) ----
+  // Dipakai sekarang: pembagian & pewarisan sifat, skor hubungan (S.rel), tingkat, batas +6/hari, lantai, pelupaan, kerja/makan/api/ronda/tolong,
+  // syarat pasangan (>= sahabat), pengali hamil, duka per hubungan, relGainMult. Efek sifat lain (kerja, mood, gosip, konflik) menyusul bersama cerita.
+  // ---- TOKOH: sifat (docs/RISET-CERITA-TUJUAN.md §1.1). ikon: assets/icons/traits/trait_<id>.png (+ _16.png) ----
+  TRAITS: {
+    perVillager: 2, thirdChance: 0.25, max: 3,
+    auraRadius: 4, auraMaxStack: 3,
+    iconDir: 'icons/traits/', iconPrefix: 'trait_', iconSmallSuffix: '_16',
+    newIcons: ['perantau', 'ahli_tani', 'pandai_masak', 'seniman'],   // belum ada di manifest; sementara pakai ikon generik bingkai hijau
+    conflicts: [['rajin', 'malas'], ['pemberani', 'penakut'], ['periang', 'pemurung'], ['sabar', 'pemarah'], ['dermawan', 'pelit'], ['jujur', 'jahil']],
+    founderExclude: ['malas', 'pemarah', 'pemurung'], founderNeedOneOf: ['rajin', 'ahli_tani', 'suka_menolong', 'pandai_masak'],
+    newcomerWeightMult: { perantau: 2 },
+    inherit: { revealAge: 8, fromParents: 0.45, fromMentor: 0.15, random: 0.40, thirdAtAge: 16, rerollMax: 5, maxChangesPerLife: 1, noInherit: ['perantau'],
+               thirdBias: { dekatPendopo: { seniman: 3 }, diselamatkan: { pemberani: 2 }, ortuSukaMenolong: { suka_menolong: 2 }, yatim: { sabar: 2, pemurung: 1.5 }, bersekolah: { cerdas: 2 } } },
+    list: {
+      rajin:         { kutub: '+', bobot: 1.0, workMult: 1.12, energyMult: 1.10 },
+      malas:         { kutub: '-', bobot: 0.8, workMult: 0.90, energyMult: 0.85, moodPerDay: 2, wishFailMult: 0.5 },
+      pemberani:     { kutub: '+', bobot: 0.9, jagaUtil: 8, scareMult: 1.5, fleeFracAdd: -0.03, threatDmgMult: 1.1, traumaMult: 0.5 },
+      penakut:       { kutub: '-', bobot: 0.9, nightWorkMult: 0.9, fleeFracAdd: 0.05, noNightJaga: true, threatDmgMult: 0.8, traumaMult: 1.5 },
+      periang:       { kutub: '+', bobot: 1.0, moodPerDay: 1, aura: 1.0, lombaBonus: { makan_kerupuk: 0.2 } },
+      pemurung:      { kutub: '-', bobot: 0.7, moodPerDay: -2, aloneWorkMult: 1.08, fireMoodMult: 0.5, relGainMult: 0.7, conflictMult: 0.6 },
+      ramah:         { kutub: '+', bobot: 1.0, relGainMult: 1.25, conflictMult: 0.8, welcome: { newcomerRel: 15, newcomerMood: 5, newcomerStayDays: 14, stayAboveMood: 30 } },
+      pemarah:       { kutub: '-', bobot: 0.7, aloneWorkMult: 1.05, moodPerDay: -1, relGainMult: 0.8, conflictMult: 2.0 },
+      sabar:         { kutub: '+', bobot: 0.9, conflictMult: 0.4, griefMult: 0.7, wishFailMult: 0.6, wishRateMult: 0.8, leaveMoodAdd: -10 },
+      dermawan:      { kutub: '+', bobot: 0.9, moodPerDay: 1, giftChance: 0.05, giftRel: 8, giftCost: { makanan: 1 }, giftCostAlt: { kopi: 1 } },
+      pelit:         { kutub: '-', bobot: 0.8, hungerMult: 0.95, relGainMult: 0.9, bigSpendMood: -1, bigSpendAt: 10, giftChance: 0, tengkulakBonus: 0.05 },
+      suka_menolong: { kutub: '+', bobot: 1.0, helpWorkMult: 1.15, helpJobs: ['kerja_bakti', 'rawat', 'membangun'], helpRelAdd: 4, childHomeMood: 2, childSkillMult: 1.25, childGriefMult: 1.3 },
+      jujur:         { kutub: '+', bobot: 0.9, neverThief: true, relGainMult: 1.1, trustRelStart: 5, noScaleCheat: true, bribeRefuseMood: 3, bribeTakenMood: -5 },
+      jahil:         { kutub: '-', bobot: 0.7, moodPerDay: 1, gossipChance: 0.08, prankChance: 0.06, prankMood: 2, prankAudience: 3, prankRelChance: 0.25, prankRel: -3, prankRelMult: { pemarah: 2, sabar: 0 }, wishRevealDays: 1 },
+      cerdas:        { kutub: '+', bobot: 0.9, skillGainMult: 1.25, jobMult: { meneliti: 1.2 }, skillStartRandom: 0.1 },
+      religius:      { kutub: '+', bobot: 1.0, jumatWorkMult: 0.9, jumatEvery: 7, moodLanggar: 1, moodMasjid: 3, griefMult: 0.7 },
+      perantau:      { kutub: '+', bobot: 0.8, skillStartAdd: 0.15, leaveMoodAdd: 5, wishRateMult: 1.3, earlyRelGainMult: 0.9, earlyDays: 14 },
+      ahli_tani:     { kutub: '+', bobot: 0.9, jobMult: { bertani: 1.2 }, yieldAdd: 1, harvestMood: 1 },
+      pandai_masak:  { kutub: '+', bobot: 0.8, kitchenBonusAdd: 0.05, kitchenBonusCap: 0.10, feastCostMult: 0.9 },
+      seniman:       { kutub: '+', bobot: 0.6, jobMultMonumen: { pendopo_reog: 1.2 }, fireAura: 0.5, festivalMoodMult: 1.25 },
+    },
+  },
+  // ---- TOKOH: hubungan (docs/RISET-CERITA-TUJUAN.md §1.2) ----
+  RELATION: {
+    range: [-100, 100],
+    start: { pendiri: 25, pendatang: 0, datangBerdua: 40, orangTuaAnak: 60, saudara: 50 },
+    levels: { rival: -30, teman: 20, sahabat: 50 },               // di antara rival dan teman = kenalan
+    floors: { pasangan: 40, keluarga: 30 },
+    dailyGainCap: 6,
+    gain: { kerjaPer30s: 0.5, kerjaMax: 3, kerjaRadius: 4, makan: 1.5, makanMax: 3, makanRadius: 3, apiMalam: 1, apiRadius: 3,
+            ronda: 5, kerjaBakti: 3, lombaTim: 5, lombaMenang: 8, hadiah: 8, tolong: 10,
+            serumahMalam: 2 }, // TAMBAHAN di luar spec: sim menunjukkan kerja bareng jarang (penduduk tersebar) -> tanpa ini skor tak pernah capai 50 & tak ada kelahiran
+    gossip: { speakerListener: 1, targetListener: -4 },               // sumber: sifat jahil
+    welcome: { ramahRel: 15, jujurRel: 5 },
+    conflict: { chancePerDay: 0.03, below: 0, rel: -8, mood: -4, meetHours: 1 },
+    decay: { idleDays: 3, teman: 0.5, sahabat: 0.25, rivalRecover: 0.3 },
+    fx: {
+      teman:   { workMult: 1.05, radius: 4, moodPerDay: 0.5, moodCap: 1.5 },
+      sahabat: { workMult: 1.10, radius: 4, moodPerDay: 1.0, moodCap: 2.0, noLeaveAboveMood: 25 },
+      rival:   { workMult: 0.95, moodPerDay: -1, radius: 6, minHours: 1, conflictMult: 2 },
+      pasangan:{ moodPerDay: 1.5, sameHouse: true, renggangBelow: 40, renggangDays: 7, renggangPregMult: 0.5, renggangMood: -1 },
+    },
+    pairing: { minRel: 50, noRival: true, noFamily: true, moveIn: true },   // ditambahkan ke PAIRING
+    pregnancyRelMult: { from: 50, per: 200, maxTotal: 1.25 },               // (1 + (rel-50)/200)
+    grief: { pasanganMult: 1.5, keluargaMult: 1.5, keluargaDaysAdd: 3, sahabatInstant: -10, sahabatDaysAdd: 2, temanInstant: -5, rivalInstant: -3 },
+  },
   // tampilan per umur (assets/README.md "Siklus hidup"): kecepatan gerak & ms per frame jalan
   AGE_LOOK: { anak: { speedMult: 0.9, walkMs: 110 }, lansia: { speedMult: 0.7, walkMs: 180, idleMs: 400 } },
   // layar sentuh & tata letak responsif
