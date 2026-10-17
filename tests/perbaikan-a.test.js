@@ -1,6 +1,6 @@
 // Milestone A (sisa): rawat melewati malam (perawat tidur, pasien tetap terlindung), tumbuh tanaman tidak negatif, efek sifat (kerja/lapar/energi/mood/
 // gosip/konflik/aura), syarat hamil baru (Perkemahan + rumah + pangan 5 hari), tata letak tinggi 768/860 (tanpa gulir, peta utuh), lebar 900 (bilah atas
-// <= 2 baris), panel penduduk tidak menutupi tombol bilah atas, teks ancaman per tema dari tema.js.
+// <= 2 baris), panel penduduk tidak menutupi tombol bilah atas, teks ancaman per tema dari tema.js; retest hardware: 1100-1599 x 768/860, padi layu.
 const { chromium } = require('playwright');
 (async () => {
   const b = await chromium.launch(); const errs = [];
@@ -75,11 +75,25 @@ const { chromium } = require('playwright');
     await p.evaluate(() => DESA.openVillager(DESA.state.villagers[0].id)); await p.waitForTimeout(200);
     vp.push(await p.evaluate(() => ['marketbtn', 'achbtn', 'save', 'load', 'techbtn'].map(id => { const e = document.getElementById(id), r = e.getBoundingClientRect(), hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2); return !!hit && (hit === e || e.contains(hit)); }).every(Boolean)));
   }
-  await p.click('#achbtn'); vp.push(await p.isVisible('#achpanel'));
-  console.log(JSON.stringify({ r, lay, vp }));
+  await p.click('#achbtn'); vp.push(await p.isVisible('#achpanel')); await p.evaluate(() => { const a = document.getElementById('achpanel'); if (a) a.style.display = 'none'; });
+  // (8) retest hardware @5abc262: lebar 1100/1280/1366/1500/1599 x tinggi 768/860 dengan panel penduduk terbuka -> bilah atas <= ~2 baris (<= 80px),
+  //     panel penduduk tidak lewat bawah layar, baris tombol bangun tidak terpotong/tersembunyi (membungkus, tanpa gulir mendatar)
+  const hw = [];
+  for (const w of [1100, 1280, 1366, 1500, 1599]) for (const h of [768, 860]) { await p.setViewportSize({ width: w, height: h }); await p.waitForTimeout(350);
+    await p.evaluate(() => DESA.openVillager(DESA.state.villagers[0].id)); await p.waitForTimeout(150);
+    hw.push(await p.evaluate(([w, h]) => { const t = document.getElementById('top').getBoundingClientRect(), vpn = document.getElementById('vpanel').getBoundingClientRect(), bb = document.getElementById('buildbar'), br = bb.getBoundingClientRect();
+      const btns = [...bb.querySelectorAll('button')].filter(x => x.offsetParent), cut = btns.filter(x => { const r = x.getBoundingClientRect(); return r.right > br.right + 1 || r.left < br.left - 1 || r.right > innerWidth || r.bottom > t.bottom + 1; }).map(x => x.textContent.trim());
+      return { w, h, topH: Math.round(t.height), vpBottom: Math.round(vpn.bottom), cut, noHScroll: bb.scrollWidth <= bb.clientWidth + 1, nBtn: btns.length }; }, [w, h])); }
+  // (9) padi layu di sawah kering (kemarau tanpa irigasi) benar-benar digambar (dulu tak terlihat di atas lumpur retak)
+  const wilt = await p.evaluate(() => new Promise(res => { const S = DESA.state, C = CONFIG; S.t = 14 * C.DAY_LENGTH_SEC + 0.4 * C.DAY_LENGTH_SEC; S.day = 15; S.event = null;
+    const fx = S.villagers[0].x | 0, fy = (S.villagers[0].y | 0) + 2; DESA.addBuilding('ladang', fx, fy, true); const f = S.buildings[S.buildings.length - 1]; f.crop = 'padi'; f.stage = 'tumbuh'; f.grow = 0.8 * 6;
+    const g = document.getElementById('c').getContext('2d'), orig = g.drawImage, T = C.TILE; let hit = 0;
+    g.drawImage = function (im, ...a) { if (a.length === 8 && a[4] === fx * T && a[5] === fy * T && im instanceof HTMLCanvasElement && a[0] > 0) hit++; return orig.call(this, im, ...a); };
+    setTimeout(() => { g.drawImage = orig; res({ season: DESA.season(), hit }); }, 400); }));
+  console.log(JSON.stringify({ r, lay, vp, hw, wilt }));
   const ok = r.careStarted && r.carerSlept && r.nightRoll && r.aliveAtDawn && r.curedLater && r.growClamp && r.workRajinTani >= 1.12 * 1.2 * 0.95 - 0.001
     && r.pelitFood === 0.975 && r.energyMult.join() === '1.1,0.85' && r.moodPassive === 3 && r.gossip && r.conflict && r.welcomed && r.aura && r.penakut.join() === '0.8,1.5'
     && r.labuhRain && r.bushNoNaN && r.bushRegrew && r.rainKeys.every(s => s.endsWith('truetrue')) && r.pregRules.join() === 'perkemahan,5,true' && r.pregCamp === true && r.pregNoHome === false && /Dengusan/.test(r.txt[0]) && /babi hutan/i.test(r.txt[1])
-    && lay.every(l => l.noScroll && l.canvasFits && l.sideFits) && lay.filter(l => l.w === 900).every(l => l.rows <= 2) && vp.every(Boolean) && !errs.length;
+    && lay.every(l => l.noScroll && l.canvasFits && l.sideFits) && lay.filter(l => l.w === 900).every(l => l.rows <= 2) && vp.every(Boolean) && hw.every(l => l.topH <= 80 && l.vpBottom <= l.h && !l.cut.length && l.noHScroll && l.nBtn >= 5) && wilt.season === 'kemarau' && wilt.hit > 0 && !errs.length;
   console.log(errs.length ? errs : 'no errors', ok ? 'LULUS' : 'GAGAL'); await b.close(); process.exit(ok ? 0 : 1);
 })();

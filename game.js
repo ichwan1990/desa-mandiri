@@ -1501,6 +1501,13 @@ function drySawahImg() { if (ASSETS.sawah_kering && ASSETS.sawah_kering.image) r
     const x = (k / 4) % c.width, y = Math.floor(k / 4 / c.width), crack = (x * 7 + y * 13) % 17 === 0 || (x + y * 3) % 23 === 0, lite = bl > 200;
     const col = crack ? [96, 66, 40] : lite ? [196, 160, 110] : (x + y) % 5 === 0 ? [160, 124, 82] : [176, 140, 94]; p[k] = col[0]; p[k + 1] = col[1]; p[k + 2] = col[2]; }
   g.putImageData(d, 0, 0); return (_drySawah = c); }
+// padi layu (aset 8c) berwarna hampir sama dengan lumpur retak -> dibuat sekali versi bergaris tepi gelap 1px supaya terbaca (hardware retest @5abc262)
+const _wilt = {};
+function wiltImg(key) { if (_wilt[key]) return _wilt[key]; const src = ASSETS[key].image, c = document.createElement('canvas'); c.width = src.width; c.height = src.height; const g = c.getContext('2d');
+  g.drawImage(src, 0, 0); const d = g.getImageData(0, 0, c.width, c.height), p = d.data, o = new Uint8ClampedArray(p), W = c.width, H = c.height, A = (x, y) => x >= 0 && y >= 0 && x < W && y < H && p[(y * W + x) * 4 + 3] > 40;
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { const k = (y * W + x) * 4; if (p[k + 3] > 40) continue;
+    if (A(x - 1, y) || A(x + 1, y) || A(x, y - 1) || A(x, y + 1)) { o[k] = 70; o[k + 1] = 46; o[k + 2] = 22; o[k + 3] = 230; } }
+  d.data.set(o); g.putImageData(d, 0, 0); return (_wilt[key] = c); }
 function drawBuilding(b, d) {
   ctx.globalAlpha = b.done ? 1 : 0.45;
   let hasImg;
@@ -1512,7 +1519,8 @@ function drawBuilding(b, d) {
       ctx.drawImage(dry ? drySawahImg() : ASSETS.sawah.image, (i % 4) * T, Math.floor(i / 4) * T, T, T, b.x * T, b.y * T, T, T);
       if (!dry && i === 15 && ASSETS.sawah_kilau.image && fr <= 1) sprite('sawah_kilau', b.x, b.y, 1, 1, frameAt(ASSETS.sawah_kilau, 2)); }
     const wilt = a.overSawah && ASSETS[key + '_kering'] && ASSETS[key + '_kering'].image && sawahDry(b); // padi layu di sawah kering
-    hasImg = sprite(wilt ? key + '_kering' : key, b.x, b.y, 1, 1, fr);
+    if (wilt) { const im = wiltImg(key + '_kering'); ctx.drawImage(im, fr * T, 0, T, T, b.x * T, b.y * T, T, T); hasImg = true; } // garis tepi gelap: tanpa itu padi layu tak terlihat di atas lumpur retak
+    else hasImg = sprite(key, b.x, b.y, 1, 1, fr);
     if (!hasImg) { ctx.fillStyle = ['#8a5a32', '#8a7a32', '#7a9a3a', '#5aa03a', '#e0c040'][fr] || '#8a5a32'; ctx.fillRect(b.x * T + 2, b.y * T + 2, T - 4, T - 4); }
     if (b.done && (fr === 2 || fr === 3) && canGrow(b)) sprite('kilau', b.x, b.y, 1, 1, animFrame(ASSETS.kilau, ASSETS.kilau.fps));
   } else if (b.done && (b.hp ?? 100) <= 0 && b.type !== 'makam') { // hangus -> puing
@@ -1750,7 +1758,8 @@ cv.addEventListener('touchend', e => { e.preventDefault(); if (!touch) return;
 cv.addEventListener('touchcancel', () => touch = null);
 // ---------- tata letak responsif: di bawah ~900px kanvas memenuhi layar, panel samping jadi laci bawah ----------
 function fitCanvas() { const mob = window.innerWidth < C.TOUCH.mobileMaxWidth; document.body.classList.toggle('mobile', mob);
-  document.body.classList.toggle('compact', !mob && window.innerWidth < (C.TOPBAR_COMPACT_W || 1500)); // bilah atas ringkas: label disembunyikan, ikon saja
+  // bilah atas ringkas (label disembunyikan, ikon saja): di bawah TOPBAR_COMPACT_W, ATAU bila bilah penuh lebih tinggi dari ~2 baris (mis. 1500-1599px dgn banyak tombol)
+  document.body.classList.remove('compact'); if (!mob && (window.innerWidth < (C.TOPBAR_COMPACT_W || 1500) || $('top').offsetHeight > (C.TOPBAR_MAX_H || 80))) document.body.classList.add('compact');
   const topH = $('top').offsetHeight; document.documentElement.style.setProperty('--topH', topH + 'px');
   let w = C.VIEW_W, h = Math.max(C.VIEW_MIN_H || 360, Math.min(C.VIEW_H, window.innerHeight - topH)); // tinggi kanvas mengikuti viewport (tanpa gulir halaman)
   if (mob) { w = window.innerWidth; h = Math.max(240, window.innerHeight - topH); }
