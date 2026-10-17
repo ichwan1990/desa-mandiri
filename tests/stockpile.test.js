@@ -1,4 +1,4 @@
-// Tumpukan stok terlihat di peta, sprite membawa per jenis, teks melayang "+N" saat setor.
+// Tumpukan stok terlihat di peta, sprite membawa per jenis, teks melayang "+N" saat setor; gudang utuh menyembunyikan tumpukan (penanda isi), hancur/dibongkar -> tumpukan kembali.
 const { chromium } = require('playwright');
 const path = require('path');
 (async () => {
@@ -40,8 +40,28 @@ const path = require('path');
   await p.screenshot({ path: path.join(__dirname, '..', 'docs', 'screenshots', 'v5-stockpile.png') });
   // tema empat musim: musim dingin -> varian _winter; tema Nusantara: tanpa salju (varian _winter tidak dimuat)
   const winter = await p.evaluate(() => { const S = DESA.state; S.day = 22; return CONFIG.THEME === 'sedang' ? DESA.season() === 'dingin' && !!ASSETS.stockpile_kayu_4_winter.image : !ASSETS.stockpile_kayu_4_winter && DESA.season() === 'kemarau'; });
-  console.log(JSON.stringify({ ...r, carryDrawn, winter }));
+  // gudang menyimpan barang (hanya tampilan): sebelum gudang tumpukan tanah tampak; gudang utuh -> tumpukan hilang + penanda isi 0-4; gudang hancur/dibongkar -> tumpukan kembali
+  const q = await b.newPage({ viewport: { width: 1600, height: 900 } }); q.on('pageerror', e => errs.push(String(e))); q.on('console', m => m.type() === 'error' && errs.push(m.text()));
+  await q.goto(process.env.GAME_URL || 'http://localhost:8095/'); await q.evaluate(() => localStorage.clear()); await q.reload();
+  await q.waitForFunction(() => window.DESA && DESA.state, null, { timeout: 15000 }); await q.click('#btnNew'); await q.click('#tutSkip'); await q.click('[data-s="0"]');
+  const pileDraws = () => q.evaluate(() => new Promise(res => { const g = document.getElementById('c').getContext('2d'), o = g.drawImage; let n = 0;
+    g.drawImage = function (im, ...a) { if (im && im.src && /stockpile/.test(im.src)) n++; return o.call(this, im, ...a); }; setTimeout(() => { g.drawImage = o; res(n); }, 250); }));
+  await q.evaluate(() => { const S = DESA.state; S.t = 120 * 0.4; DESA.addBuilding('apiunggun', 22, 20, true); Object.assign(S.res, { kayu: 60, batu: 20, makanan: 15, air: 10 }); DESA.setZoom(3); DESA.centerCam(24, 19.5); S.villagers.forEach((v, i) => { v.x = 20 + i; v.y = 23; v.task = null; }); });
+  await q.waitForTimeout(300);
+  const g = { before: await q.evaluate(() => DESA.pilesVisible()), beforeDraws: await pileDraws() };
+  await q.screenshot({ path: path.join(__dirname, '..', 'docs', 'screenshots', 'v8-stockpile-sebelum.png') });
+  await q.evaluate(() => DESA.addBuilding('gudang', 25, 17, true)); await q.waitForTimeout(200);
+  Object.assign(g, await q.evaluate(() => { const S = DESA.state, C = CONFIG, cap = C.STOCKPILE.capacity, out = { after: DESA.pilesVisible(), store: DESA.storeBuilding() && DESA.storeBuilding().type };
+    const set = f => { for (const r of ['kayu', 'batu', 'air']) S.res[r] = cap[r] * f; S.res.makanan = cap.makanan * f; S.res.gandum = 0; return DESA.storeFillLevel(); };
+    out.levels = [set(0), set(0.05), set(0.4), set(0.7), set(1.2)]; set(0.7); return out; }));
+  g.afterDraws = await pileDraws(); await q.waitForTimeout(200);
+  await q.screenshot({ path: path.join(__dirname, '..', 'docs', 'screenshots', 'v8-stockpile-gudang.png') });
+  Object.assign(g, await q.evaluate(() => { const S = DESA.state, gd = S.buildings.find(x => x.type === 'gudang'); gd.hp = 0; return { destroyed: DESA.pilesVisible(), anchorNotRuin: DESA.stockpiles().every(p => !(p.x >= 25 && p.x < 28 && p.y >= 17 && p.y < 19)) }; }));
+  g.destroyedDraws = await pileDraws();
+  Object.assign(g, await q.evaluate(() => { const S = DESA.state, gd = S.buildings.find(x => x.type === 'gudang'); gd.hp = 100; const mid = DESA.pilesVisible(); S.buildings.splice(S.buildings.indexOf(gd), 1); return { repaired: mid, demolished: DESA.pilesVisible() }; }));
+  console.log(JSON.stringify({ ...r, carryDrawn, winter, gudang: g }));
   const ok = r.missing.length === 0 && r.campTiers.every(t => t === 0) && r.campSpots.length === 4 && r.formula && r.foodIncludesWheat && r.nearWarehouse && r.free
-    && r.gud.join() === 'kayu4,batu2,makanan1,air1' && r.carryRows && r.deposit && carryDrawn && winter && errs.length === 0;
+    && r.gud.join() === 'kayu4,batu2,makanan1,air1' && r.carryRows && r.deposit && carryDrawn && winter
+    && g.before && g.beforeDraws > 0 && !g.after && g.store === 'gudang' && g.afterDraws === 0 && g.levels.join() === '0,1,2,3,4' && g.destroyed && g.anchorNotRuin && g.destroyedDraws > 0 && !g.repaired && g.demolished && errs.length === 0;
   console.log(errs.length ? errs : 'no errors'); await b.close(); process.exit(ok ? 0 : 1);
 })();
