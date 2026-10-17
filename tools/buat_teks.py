@@ -1615,11 +1615,778 @@ PATCH_V130 = {
                 "tumbuh_kembang": tumbuh_kembang, "lansia_berpulang": lansia_berpulang, "panel_keluarga": panel_keluarga}
 }
 
+
+# =====================================================================
+# v1.4.0 — LOKALISASI NUANSA INDONESIA. Spec: docs/RISET-INDONESIA.md (§4 pemetaan event, §6 teks).
+# Berbeda dari v1.1–v1.3: v1.4 MENGUBAH teks tampilan lama (id/key/angka tetap) lewat UBAH_V140
+# (path -> teks baru; "@id" memilih item list berdasarkan id), lalu menambah bagian baru lewat PATCH_V140.
+# Sumber teks lama di atas sengaja dibiarkan sebagai riwayat; teks yang tampil = hasil UBAH_V140.
+# Transisi musim (kode masih 4 slot lama): semi=Musim Hujan, panas=Pancaroba, gugur=Musim Panen (Mareng),
+# dingin=Musim Kemarau. Id musim final (spec): hujan, mareng, kemarau, labuh (lihat meta.alias_id_v140).
+# =====================================================================
+UBAH_V140 = {
+ # ---- meta (label tampilan) ----
+ "meta/sumber_daya/gandum": "Padi",
+ "meta/bangunan/gubuk": "Gubuk bambu",
+ "meta/bangunan/ladang": "Ladang (tegalan)",
+ "meta/bangunan/lumbung": "Lumbung padi",
+ "meta/bangunan/balai_desa": "Balai desa (pendopo)",
+ "meta/musim/@semi/nama": "hujan",
+ "meta/musim/@semi/pesan": "Hujan mulai rajin turun. Saatnya menanam padi di sawah!",
+ "meta/musim/@panas/nama": "pancaroba",
+ "meta/musim/@panas/pesan": "Hujan makin jarang dan siang terasa terik. Jaga stok air dan awasi api.",
+ "meta/musim/@gugur/nama": "panen (mareng)",
+ "meta/musim/@gugur/pesan": "Padi menguning. Waktunya panen dan menyimpan bekal untuk kemarau.",
+ "meta/musim/@dingin/nama": "kemarau",
+ "meta/musim/@dingin/pesan": "Sawah mulai kering dan air menyusut. Semoga lumbung padi cukup penuh.",
+ "meta/kunci_efek/harga_jual_pangan": "Perubahan harga jual makanan & padi di pasar (persen) selama 5 hari",
+ "meta/kunci_efek/harga_beli_pangan": "Perubahan harga beli makanan & padi di pasar (persen) selama 5 hari",
+ "meta/tipe_tujuan_quest/simpan_pangan": "Miliki stok makanan + padi (id gandum) gabungan minimal jumlah pada satu waktu, target \"pangan\"",
+ "meta/target_khusus/pangan": "Makanan + padi/gabah (id gandum; tipe simpan_pangan)",
+ "meta/struktur_tambahan/penduduk_meninggal": "notifikasi{judul,tombol}, per_penyebab{sakit|tua|kelaparan|cuaca(id lama: dingin)|serangan: []}, kenangan_panel[] (1 baris)",
+ "meta/struktur_tambahan/log_jadwal": "Dict kategori -> log (\"Hari {hari}:\"): pulang, tidur, bangun_pagi, berpasangan{pulang,tidur,bangun_pagi}, tidur_di_luar, tidur_di_luar_dingin (= tidur di luar saat hujan), tidak_bisa_tidur",
+ "meta/penyebab_kondisi/dingin": "Cuaca buruk (kehujanan / panas terik)",
+ "meta/hewan/serigala": "babi hutan",
+ # ---- log_harian ----
+ "log_harian/kerja/7": "Hari {hari}: {nama} menanam bibit padi di sawah dengan hati-hati, kakinya terbenam lumpur.",
+ "log_harian/kerja/8": "Hari {hari}: {nama} menumbuk padi lalu menanak {jumlah} porsi nasi hangat di Dapur.",
+ "log_harian/cuaca/5": "Hari {hari}: Kemarau terasa terik sekali. Penduduk beristirahat di bawah pohon rindang saat tengah hari.",
+ # ---- event_acak (id tetap; lihat alias) ----
+ "event_acak/@badai/judul": "Angin Kencang Datang!",
+ "event_acak/@badai/deskripsi": "Langit mendadak gelap dan angin menderu kencang. Puting beliung kecil terlihat di kejauhan. Apa yang harus dilakukan penduduk?",
+ "event_acak/@badai/pilihan/1/teks": "Ikat atap dengan bambu dan kayu",
+ "event_acak/@badai/pilihan/1/teks_hasil": "Atap diikat kencang tepat waktu. Angin lewat tanpa merobohkan satu bangunan pun.",
+ "event_acak/@badai/pilihan/2/teks_hasil": "Beberapa dahan tumbang bisa dijadikan kayu, tapi atap rumbia beterbangan dan penduduk basah kuyup.",
+ "event_acak/@pedagang_keliling/deskripsi": "Seorang pedagang berpikul tiba di desa sambil membunyikan kentongan kecil. \"Barang bagus, harga bersahabat!\" katanya.",
+ "event_acak/@pedagang_keliling/pilihan/2/teks": "Suguhkan kopi tubruk dan pisang goreng",
+ "event_acak/@hewan_buas/deskripsi": "Seekor babi hutan besar menerobos semak dan mendekati sawah! Penduduk panik.",
+ "event_acak/@hewan_buas/pilihan/0/teks_hasil": "Dengan teriakan, kentongan, dan obor, babi hutan berhasil dihalau. Desa bahkan mendapat daging dan kulit.",
+ "event_acak/@hewan_buas/pilihan/1/teks": "Pasang pagar bambu darurat",
+ "event_acak/@hewan_buas/pilihan/1/teks_hasil": "Pagar bambu berdiri tepat waktu. Babi hutan mendengus lalu pergi.",
+ "event_acak/@hewan_buas/pilihan/2/teks_hasil": "Babi hutan berpesta di sawah dan tegalan. Panen kali ini berkurang.",
+ "event_acak/@serigala_malam/judul": "Jejak Kucing Besar",
+ "event_acak/@serigala_malam/deskripsi": "Ada jejak kaki kucing besar di tepi hutan. Kata para tetua, itu macan tutul jawa yang sedang lewat. Penduduk tidak bisa tidur dengan tenang.",
+ "event_acak/@serigala_malam/pilihan/0/teks": "Nyalakan obor dan api unggun lebih besar",
+ "event_acak/@serigala_malam/pilihan/0/teks_hasil": "Cahaya api membuat sang macan menjauh ke dalam hutan. Malam pun berlalu dengan damai.",
+ "event_acak/@serigala_malam/pilihan/1/teks": "Ronda bergantian sambil membawa kentongan",
+ "event_acak/@serigala_malam/pilihan/1/teks_hasil": "Bunyi kentongan terdengar sepanjang malam. Para peronda mengantuk esok harinya, tapi semua merasa aman.",
+ "event_acak/@panen_raya/deskripsi": "Sawah menguning dan buah bergelantungan di mana-mana. Ini panen terbaik tahun ini!",
+ "event_acak/@panen_raya/pilihan/0/teks": "Simpan semua di Lumbung padi",
+ "event_acak/@panen_raya/pilihan/0/teks_hasil": "Lumbung padi penuh sesak. Kemarau tidak lagi menakutkan.",
+ "event_acak/@panen_raya/pilihan/1/teks": "Adakan kenduri panen",
+ "event_acak/@panen_raya/pilihan/1/teks_hasil": "Tumpeng kecil dibagikan, penduduk menari dan bernyanyi semalaman. Ini malam yang akan dikenang lama.",
+ "event_acak/@wabah/judul": "Diare di Musim Hujan",
+ "event_acak/@wabah/deskripsi": "Beberapa penduduk sakit perut dan bolak-balik ke jamban. Sepertinya ada yang minum air sungai tanpa direbus.",
+ "event_acak/@wabah/pilihan/0/teks": "Rawat dengan oralit, air matang, dan daun jambu",
+ "event_acak/@wabah/pilihan/0/teks_hasil": "Penduduk minum air matang dan oralit buatan sendiri. Satu per satu mulai pulih. Mulai sekarang, air minum selalu direbus!",
+ "event_acak/@wabah/pilihan/1/teks_hasil": "Pekerjaan berhenti beberapa hari, tapi sakit perut tidak menular lebih luas.",
+ "event_acak/@wabah/pilihan/2/teks_hasil": "Penyakit makin menyebar. Desa terasa sepi dan lesu. Ingat: cuci tangan dan rebus air minum.",
+ "event_acak/@kekeringan/deskripsi": "Kemarau datang lebih awal. Sudah lama hujan tidak turun dan permukaan sungai turun drastis.",
+ "event_acak/@anak_hilang/pilihan/0/teks_hasil": "{nama} ditemukan sedang memeluk seekor anak kambing yang tersesat. Semua lega dan tertawa.",
+ "event_acak/@anak_hilang/pilihan/1/teks_hasil": "Menjelang tengah malam, {nama} pulang sendiri sambil membawa segenggam buah salak.",
+ "event_acak/@musim_dingin_keras/judul": "Kemarau Panjang",
+ "event_acak/@musim_dingin_keras/deskripsi": "Hujan tak kunjung datang, padahal kemarau seharusnya sudah usai. Sawah retak-retak dan udara terasa terik.",
+ "event_acak/@musim_dingin_keras/pilihan/0/teks": "Bagikan caping dan kendi kulit",
+ "event_acak/@musim_dingin_keras/pilihan/0/teks_hasil": "Penduduk tetap segar bekerja di bawah caping, dengan kendi air selalu di dekatnya.",
+ "event_acak/@musim_dingin_keras/pilihan/1/teks": "Kumpulkan semua di bawah pendopo dan nyalakan tungku",
+ "event_acak/@musim_dingin_keras/pilihan/1/teks_hasil": "Siang terik dilalui bersama di tempat teduh, dengan wedang dan cerita sampai sore.",
+ "event_acak/@festival_desa/judul": "Bersih Desa",
+ "event_acak/@festival_desa/deskripsi": "Hari ini tepat satu tahun desa berdiri. Penduduk ingin mengadakan bersih desa dan sedekah bumi.",
+ "event_acak/@festival_desa/pilihan/0/teks": "Gelar sedekah bumi yang meriah",
+ "event_acak/@festival_desa/pilihan/0/teks_hasil": "Desa penuh janur, gamelan, dan tumpeng lezat. Semua orang bahagia.",
+ "event_acak/@festival_desa/pilihan/1/teks": "Kenduri sederhana",
+ "event_acak/@festival_desa/pilihan/1/teks_hasil": "Doa dan makan bersama di pendopo yang sederhana, tapi terasa sangat bermakna.",
+ # ---- tutorial & quest ----
+ "tutorial/4/teks": "Angin kencang, babi hutan, atau tamu bisa datang kapan saja. Pilih responsmu dengan bijak, dan jangan lupa siapkan stok makanan sebelum kemarau.",
+ "quest_awal/@q07_ladang_pertama/deskripsi": "Bangun Ladang dan panen padi pertama desa.",
+ "quest_awal/@q07_ladang_pertama/teks_selesai": "Bulir padi pertama berayun ditiup angin. Masa depan desa terlihat cerah.",
+ "quest_awal/@q09_siap_dingin/judul": "Siap Hadapi Kemarau",
+ "quest_awal/@q09_siap_dingin/deskripsi": "Bangun Lumbung padi dan isi dengan stok makanan sebelum kemarau tiba.",
+ "quest_awal/@q09_siap_dingin/teks_selesai": "Lumbung penuh. Saat sawah mengering nanti, tak seorang pun akan kelaparan.",
+ "menu/slogan_acak/2": "Ada bau nasi hangat dan kopi dari arah dapur...",
+ "pengaturan/opsi/tampilan/sub/efek_cuaca/deskripsi": "Hujan, debu kemarau, dan kilau kecil. Matikan jika peramban terasa berat.",
+}
+
+UBAH_V140.update({
+ # ---- teknologi (nama baru sesuai spec §2; id & efek tetap) ----
+ "teknologi/@T04/nama": "Irigasi Sawah",
+ "teknologi/@T04/deskripsi": "Saluran air bergilir dari sumur dan sungai ke petak-petak sawah, seperti subak.",
+ "teknologi/@T04/teks_terbuka": "Air sumur dan sawah letaknya berdekatan. Bagaimana kalau dibuat saluran yang dibagi adil untuk semua petak?",
+ "teknologi/@T04/teks_selesai": "{nama} menyelesaikan riset Irigasi Sawah. Air mengalir pelan di antara pematang, dan bibit padi tampak berseri.",
+ "teknologi/@T05/nama": "Gaplek & Ikan Asin",
+ "teknologi/@T05/deskripsi": "Menjemur singkong menjadi gaplek dan mengasinkan ikan supaya tahan lama.",
+ "teknologi/@T05/efek_ringkas": "Makanan lebih awet, dan penduduk tidak cepat lapar saat kemarau.",
+ "teknologi/@T05/teks_terbuka": "Ada singkong yang lupa dijemur dan ternyata awet berminggu-minggu. Menarik sekali!",
+ "teknologi/@T05/teks_selesai": "{nama} menyelesaikan riset Gaplek & Ikan Asin. Gaplek dan ikan asin tersusun rapi menunggu kemarau.",
+ "teknologi/@T08/teks_terbuka": "Lumbung mulai sesak. Ikatan padi bertumpuk sampai ke pintu.",
+ "teknologi/@T09/teks_terbuka": "{nama} menyimpan segenggam gabah paling bernas. \"Yang ini jangan ditumbuk dulu!\"",
+ "teknologi/@T09/teks_selesai": "{nama} menyelesaikan riset Bibit Unggul. Bulir padi kini lebih bernas dan lebih berkilau.",
+ "teknologi/@T10/nama": "Tanggul & Parit",
+ "teknologi/@T10/deskripsi": "Tanggul tanah berlapis batu dan parit yang menyalurkan air bersih ke seluruh desa.",
+ "teknologi/@T10/teks_selesai": "{nama} menyelesaikan riset Tanggul & Parit. Gemericik air kini terdengar di setiap sudut desa, dan banjir cepat surut.",
+ "teknologi/@T11/teks_terbuka": "{nama} melihat batang kelapa bundar menggelinding di bukit, lalu tersenyum lebar.",
+ "teknologi/@T13/nama": "Caping & Kendi",
+ "teknologi/@T13/deskripsi": "Menganyam caping bambu dan membuat kendi kulit agar penduduk kuat bekerja di bawah terik kemarau.",
+ "teknologi/@T13/efek_ringkas": "Penduduk tidak cepat lapar dan tetap ceria saat kemarau.",
+ "teknologi/@T13/teks_terbuka": "Matahari kemarau menyengat. {nama} membayangkan topi lebar dari anyaman bambu dan kendi air yang selalu sejuk.",
+ "teknologi/@T13/teks_selesai": "{nama} menyelesaikan riset Caping & Kendi. Semua orang kini terlihat menggemaskan dengan caping lebar.",
+ "teknologi/@T15/teks_terbuka": "Pedagang sering bilang karung gabah desa \"kurang berat\". Benarkah?",
+ "teknologi/@T16/teks_selesai": "{nama} menyelesaikan riset Papan Pengumuman. Kertas pertama yang ditempel berbunyi: \"Dicari: ayam jago hilang, bulunya cokelat.\"",
+ "teknologi/@T20/nama": "Bersih Desa",
+ "teknologi/@T20/deskripsi": "Bersih desa dan sedekah bumi tahunan, dengan gamelan, tarian, dan tumpeng dari setiap keluarga.",
+ "teknologi/@T20/efek_ringkas": "Sekali setahun desa bersyukur bersama: suasana hati melonjak dan pendatang lebih cepat tertarik.",
+ "teknologi/@T20/teks_terbuka": "Penduduk datang dari banyak daerah. Masing-masing punya lagu, tarian, dan masakan yang ingin dibagi.",
+ "teknologi/@T20/teks_selesai": "{nama} menyelesaikan riset Bersih Desa. Kalender desa kini punya satu hari yang ditunggu semua orang.",
+ # ---- pencapaian ----
+ "pencapaian/@A03/deskripsi": "Miliki stok makanan dan padi gabungan minimal 40.",
+ "pencapaian/@A04/nama": "Kemarau Pertama",
+ "pencapaian/@A04/deskripsi": "Lewati kemarau tahun pertama tanpa ada yang kelaparan parah.",
+ "pencapaian/@A04/teks_terbuka": "Hujan pertama turun, dan semua orang masih tersenyum. Kalian berhasil!",
+ "pencapaian/@A06/teks_terbuka": "Panen pertama! Padinya mungkin sedikit, tapi rasanya istimewa.",
+ "pencapaian/@A07/teks_terbuka": "Tak perlu lagi berjalan jauh ke sungai. Airnya sejuk dan segar.",
+ "pencapaian/@A16/nama": "Bersih Desa Pertama",
+ "pencapaian/@A16/deskripsi": "Adakan bersih desa atau sedekah bumi pertama.",
+ "pencapaian/@A16/teks_terbuka": "Gamelan, tarian, dan tumpeng sampai larut malam. Inilah desa yang bahagia.",
+ "pencapaian/@A24/teks_terbuka": "Si Oranye kini resmi menjadi penduduk kehormatan. Ia tidur di karung gabah paling empuk.",
+ # ---- pasar ----
+ "pasar/pesan_fluktuasi/@musim_dingin_pangan/teks": "Kemarau tiba. Harga makanan dan padi naik karena sawah berhenti tumbuh.",
+ "pasar/pesan_fluktuasi/@musim_dingin_gandum/teks": "Harga padi naik karena kemarau. Lumbung yang penuh kini terasa seperti harta karun.",
+ "pasar/pesan_fluktuasi/@semi_kayu/teks": "Musim hujan! Bambu dan kayu tumbuh subur, jadi harga jual kayu sedikit turun.",
+ "pasar/pesan_fluktuasi/@panas_makanan/teks": "Buah dan ikan melimpah di pancaroba. Harga jual makanan turun.",
+ "pasar/pesan_fluktuasi/@setelah_panen_raya/teks": "Setelah panen raya, gabah ada di mana-mana. Harga jualnya turun untuk beberapa hari.",
+ "pasar/musim_dingin/peringatan": "Kemarau sebentar lagi. Harga makanan biasanya melonjak, jadi sebaiknya stok dibeli atau disimpan sekarang.",
+ "pasar/musim_dingin/tooltip": "Kemarau: makanan dan padi lebih mahal dibeli, tapi juga lebih berharga dijual.",
+ "pasar/musim_dingin/log": "Hari {hari}: Pedagang mengipasi wajahnya dengan caping. \"Makanan sedang mahal di kemarau, Kepala Desa. Maaf ya.\"",
+ # ---- event_era_lanjut ----
+ "event_era_lanjut/@hama_gudang/deskripsi": "Malam-malam terdengar cicit kecil dari Lumbung padi. Sekeluarga tikus sawah gemuk ternyata sedang berpesta gabah!",
+ "event_era_lanjut/@hama_gudang/pilihan/0/teks": "Pasang perangkap bambu",
+ "event_era_lanjut/@kerbau_nyasar/deskripsi": "Seekor kerbau besar berjalan santai ke tengah desa, lalu berkubang di genangan depan Gudang. Sepertinya ia tersesat.",
+ "event_era_lanjut/@kerbau_nyasar/pilihan/0/teks_hasil": "Si kerbau betah dan mau membantu membajak sawah. Ia dinamai \"Mbok Besar\" oleh anak-anak.",
+ "event_era_lanjut/@ilmuwan_pengembara/pilihan/0/teks_hasil": "Sambil makan nasi pecel, pengembara menjelaskan banyak hal. Riset desa maju pesat!",
+ "event_era_lanjut/@kunang_kunang/deskripsi": "Malam ini sawah dipenuhi kunang-kunang. Cahayanya berkelip seperti bintang yang turun ke bumi.",
+ "event_era_lanjut/@embun_beku/judul": "Serangan Wereng",
+ "event_era_lanjut/@embun_beku/deskripsi": "Pagi ini batang padi di beberapa petak menguning lebih cepat. Wereng cokelat sedang berpesta di sawah!",
+ "event_era_lanjut/@embun_beku/pilihan/0/teks_hasil": "Semua tangan turun ke sawah. Padi diselamatkan sebelum dihabisi wereng, walau bulirnya belum terlalu bernas.",
+ "event_era_lanjut/@embun_beku/pilihan/1/teks": "Lepas bebek ke sawah dan bakar jerami jauh dari petak",
+ "event_era_lanjut/@embun_beku/pilihan/1/teks_hasil": "Bebek-bebek berbaris lucu sambil mematuki wereng. Padi tetap tumbuh pelan-pelan.",
+ "event_era_lanjut/@embun_beku/pilihan/2/teks": "Berdoa dan menunggu",
+ "event_era_lanjut/@embun_beku/pilihan/2/teks_hasil": "Penduduk menunggu wereng pergi sendiri, tapi sebagian padi layu, dan semua ikut lesu karena cemas.",
+ "event_era_lanjut/@percikan_dapur/pilihan/0/teks_hasil": "Ember-ember berpindah tangan dengan cepat. Api padam, dan hanya kuali yang sedikit gosong.",
+ "event_era_lanjut/@harga_pangan_melambung/pilihan/2/teks": "Simpan untuk kemarau",
+ "event_era_lanjut/@rombongan_seniman/deskripsi": "Gerobak warna-warni berhenti di depan Balai desa. Ada pemain gamelan, penari jaranan, dan seekor monyet kecil berpeci.",
+ "event_era_lanjut/@pilek_musim_gugur/judul": "Masuk Angin Pancaroba",
+ "event_era_lanjut/@pilek_musim_gugur/deskripsi": "Cuaca pancaroba berubah-ubah: pagi terik, sore hujan. Satu per satu penduduk mulai bersin dan pegal-pegal.",
+ "event_era_lanjut/@pilek_musim_gugur/pilihan/0/teks": "Seduh wedang jahe dan beri kerokan",
+ "event_era_lanjut/@pilek_musim_gugur/pilihan/0/teks_hasil": "Wedang jahe mengepul di setiap rumah. Setelah dikerok dan tidur cukup, bersin-bersin cepat mereda.",
+ "event_era_lanjut/@pilek_musim_gugur/pilihan/2/teks": "Bekerja sambil pakai sarung",
+ "event_era_lanjut/@bangau_balai/judul": "Bangau di Atap Pendopo",
+ "event_era_lanjut/@tanah_bukit_bergeser/judul": "Longsor Kecil di Bukit",
+ "event_era_lanjut/@tanah_bukit_bergeser/pilihan/1/teks": "Tanam bambu penahan tanah",
+ "event_era_lanjut/@tanah_bukit_bergeser/pilihan/1/teks_hasil": "Rumpun bambu ditanam berjajar seperti terasering. Akarnya akan memeluk lereng supaya tidak longsor lagi.",
+})
+
+UBAH_V140.update({
+ # ---- event_musiman (id & musim lama tetap; narasi Indonesia) ----
+ "event_musiman/@banjir_kecil/deskripsi": "Hujan semalaman membuat sungai naik. Air cokelat mulai merayap ke sawah di tepi sungai.",
+ "event_musiman/@banjir_kecil/pilihan/0/teks_hasil": "Parit kecil menuntun air kembali ke sungai. Sawah selamat, dan semua orang belepotan lumpur sambil tertawa.",
+ "event_musiman/@banjir_kecil/pilihan/1/teks": "Selamatkan bibit padi ke Gudang",
+ "event_musiman/@banjir_kecil/pilihan/1/teks_hasil": "Bibit aman di Gudang, tapi sawah tepi sungai harus menunggu air surut sebelum ditanami lagi.",
+ "event_musiman/@bunga_semi/deskripsi": "Bukit di dekat desa tiba-tiba dipenuhi bunga liar kuning dan ungu. Kupu-kupu dan lebah beterbangan riang di mana-mana.",
+ "event_musiman/@bunga_semi/pilihan/0/teks_hasil": "Semua orang duduk di atas tikar di antara bunga, berbagi bekal nasi bungkus dan cerita. Hari yang sempurna.",
+ "event_musiman/@bunga_semi/pilihan/1/teks": "Cari sarang lebah hutan",
+ "event_musiman/@bunga_semi/pilihan/2/teks_hasil": "Kendi-kendi kecil berisi bunga menghiasi setiap jendela gubuk.",
+ "event_musiman/@kelinci_ladang/judul": "Burung Pipit Menyerbu Sawah",
+ "event_musiman/@kelinci_ladang/deskripsi": "Sekawanan burung pipit berkicau riuh dan mematuki bulir padi muda. Lucu, tapi merepotkan!",
+ "event_musiman/@kelinci_ladang/pilihan/0/teks": "Pasang orang-orangan sawah dari ranting",
+ "event_musiman/@kelinci_ladang/pilihan/0/teks_hasil": "Orang-orangan sawah bertopi caping berdiri gagah. Pipit-pipit kabur ke semak liar sambil mencicit kesal.",
+ "event_musiman/@kelinci_ladang/pilihan/1/teks": "Sisihkan segenggam padi untuk burung",
+ "event_musiman/@kelinci_ladang/pilihan/1/teks_hasil": "Pipit kenyang di pojok pematang dan tidak lagi mengganggu sawah. Anak-anak senang memandangi mereka.",
+ "event_musiman/@kelinci_ladang/pilihan/2/teks_hasil": "Pipit berpesta bulir muda. Sawah harus menumbuhkan bulir baru dulu.",
+ "event_musiman/@gelombang_panas/judul": "Panas Terik Pancaroba",
+ "event_musiman/@gelombang_panas/deskripsi": "Matahari menyengat tanpa ampun. Kendi di sumur cepat kosong dan penduduk berkeringat sejak pagi.",
+ "event_musiman/@gelombang_panas/pilihan/0/teks_hasil": "Siang hari semua tidur di bawah pohon beringin yang rindang. Pekerjaan lambat, tapi tak ada yang kepanasan.",
+ "event_musiman/@gelombang_panas/pilihan/1/teks": "Bagikan air kelapa dan air kendi",
+ "event_musiman/@ikan_melimpah/pilihan/0/teks_hasil": "Keranjang terisi ikan wader dan nila. Malam ini ada ikan bakar sambal untuk semua.",
+ "event_musiman/@angin_gugur/judul": "Angin Mareng yang Usil",
+ "event_musiman/@angin_gugur/deskripsi": "Angin kencang mareng menerbangkan daun kering dan atap rumbia ke mana-mana.",
+ "event_musiman/@angin_gugur/pilihan/0/teks": "Ikat atap dengan tali sabut",
+ "event_musiman/@angin_gugur/pilihan/1/teks_hasil": "Daun-daun jadi kompos. Sawah musim depan akan lebih subur.",
+ "event_musiman/@angin_gugur/pilihan/2/teks_hasil": "Tawa terdengar di mana-mana. Sedikit atap rumbia hilang, tapi tidak ada yang menyesal.",
+ "event_musiman/@jamur_hutan/deskripsi": "Setelah hujan, jamur-jamur bermunculan di bawah rumpun bambu. Ada jamur kuping yang cokelat, ada yang berwarna mencolok.",
+ "event_musiman/@jamur_hutan/pilihan/0/teks_hasil": "{nama} yang paham tanaman memilih jamur yang aman. Sayur jamur malam ini harum sekali.",
+ "event_musiman/@jamur_hutan/pilihan/1/teks_hasil": "Sayur jamurnya enak, tapi beberapa orang sakit perut semalaman. Jamur berwarna mencolok memang bukan untuk dimakan.",
+ "event_musiman/@burung_migrasi/judul": "Rombongan Elang Pulang",
+ "event_musiman/@burung_migrasi/deskripsi": "Ratusan elang alap-alap terbang melingkar tinggi di langit, menuju pulau-pulau di timur. Pertanda kemarau sebentar lagi tiba.",
+ "event_musiman/@burung_migrasi/pilihan/1/teks_hasil": "Melihat burung bersiap, penduduk ikut menumpuk kayu bakar dan gaplek untuk kemarau.",
+ "event_musiman/@badai_salju/judul": "Angin Kering Berdebu",
+ "event_musiman/@badai_salju/deskripsi": "Angin kemarau bertiup kencang membawa debu dari sawah yang kering. Gudang hampir tak terlihat dari Gubuk.",
+ "event_musiman/@badai_salju/pilihan/0/teks": "Sapu debu bersama-sama",
+ "event_musiman/@badai_salju/pilihan/0/teks_hasil": "Halaman bersih kembali. Seseorang menggambar wajah lucu di debu tebal di dinding Gudang.",
+ "event_musiman/@badai_salju/pilihan/1/teks": "Perkuat atap dan dinding anyaman",
+ "event_musiman/@badai_salju/pilihan/1/teks_hasil": "Atap ditopang balok tambahan. Tak ada yang roboh walau angin bertiup kencang.",
+ "event_musiman/@badai_salju/pilihan/2/teks": "Tunggu angin reda",
+ "event_musiman/@badai_salju/pilihan/2/teks_hasil": "Angin reda keesokan harinya. Beberapa atap rumbia terlepas dan dinding berlapis debu.",
+ "event_musiman/@malam_terpanjang/judul": "Malam Purnama Kemarau",
+ "event_musiman/@malam_terpanjang/deskripsi": "Langit kemarau bersih tanpa awan, dan bulan purnama bersinar terang. Para tetua bilang, kisah yang diceritakan malam ini akan diingat lama.",
+ "event_musiman/@malam_terpanjang/pilihan/1/teks": "Nyalakan oncor di setiap rumah",
+ "event_musiman/@malam_terpanjang/pilihan/1/teks_hasil": "Desa berkelip seperti bintang di bawah bulan purnama. Siapa pun yang tersesat pasti bisa menemukan jalan pulang.",
+ "event_musiman/@malam_terpanjang/pilihan/2/teks_hasil": "Malam yang sejuk berarti tidur yang nyenyak. Semua bangun segar dan siap bekerja.",
+ "event_musiman/@serigala_lapar/judul": "Babi Hutan Kehausan",
+ "event_musiman/@serigala_lapar/deskripsi": "Kemarau membuat hutan kering dan babi hutan sulit mencari makan. Jejak mereka terlihat makin dekat ke Gudang dan sumur.",
+ "event_musiman/@serigala_lapar/pilihan/0/teks": "Nyalakan oncor di sekeliling desa",
+ "event_musiman/@serigala_lapar/pilihan/0/teks_hasil": "Cincin cahaya mengelilingi desa. Babi hutan mengamati dari jauh, lalu pergi mencari tempat lain.",
+ "event_musiman/@serigala_lapar/pilihan/1/teks": "Taruh sisa daging dan kulit buah di tepi hutan",
+ "event_musiman/@serigala_lapar/pilihan/1/teks_hasil": "Babi hutan mengendus sisa makanan itu dan tidak mendekat lagi. Mungkin mereka juga punya anak yang lapar.",
+ "event_musiman/@serigala_lapar/pilihan/2/teks": "Tutup pintu dan ronda bergantian",
+ "event_musiman/@serigala_lapar/pilihan/2/teks_hasil": "Malam panjang dengan bunyi kentongan. Pagi harinya, hanya jejak kaki yang tersisa di tanah kering.",
+
+ "event_musiman/@dingin_ekstrem/judul": "Malam Bediding",
+ "event_musiman/@dingin_ekstrem/deskripsi": "Siang terik, tapi angin kering dari selatan membuat malam terasa menusuk tulang. Para tetua menyebutnya bediding, tanda puncak kemarau.",
+ "event_musiman/@dingin_ekstrem/pilihan/0/teks": "Semua berkumpul di dekat api unggun",
+ "event_musiman/@dingin_ekstrem/pilihan/0/teks_hasil": "Desa menghabiskan malam dengan bercerita di dekat api, ditemani wedang jahe. Sejuk di luar, hangat di dalam.",
+ "event_musiman/@dingin_ekstrem/pilihan/1/teks": "Bagikan sarung dan kain dari kulit",
+ "event_musiman/@dingin_ekstrem/pilihan/1/teks_hasil": "Sarung dan kain dibagikan. Penduduk tetap bisa ronda walau pipi mereka merah seperti jambu air.",
+ "event_musiman/@dingin_ekstrem/pilihan/2/teks": "Tidur lebih awal di rumah masing-masing",
+ "event_musiman/@dingin_ekstrem/pilihan/2/teks_hasil": "Semua meringkuk bersarung di atas dipan. Sepi dan sejuk, tapi semua selamat.",
+})
+
+UBAH_V140.update({
+ "meta/bangunan_pertahanan/pagar": "Pagar bambu",
+ "meta/bangunan_pertahanan/menara_jaga": "Pos ronda",
+ # ---- musim_pembuka (key lama tetap; isi mengikuti peta transisi) ----
+ "musim_pembuka/musim_semi/kapan": "Fajar hari pertama musim hujan",
+ "musim_pembuka/musim_semi/variasi/0": "Musim hujan tiba. Saatnya membajak sawah dan menanam padi.",
+ "musim_pembuka/musim_semi/variasi/1": "Bau tanah basah tercium di mana-mana. Katak bernyanyi di pematang, dan sawah sudah menunggu bibit.",
+ "musim_pembuka/musim_semi/variasi/2": "Daun pisang berkilau basah. Musim hujan tahun ke-{tahun} dimulai, dan tanah terasa lembut untuk dicangkul.",
+ "musim_pembuka/musim_panas/kapan": "Fajar hari pertama pancaroba",
+ "musim_pembuka/musim_panas/variasi/0": "Pancaroba datang. Hujan makin jarang dan siang makin terik, jadi sumur akan bekerja lebih keras. Jaga stok air!",
+ "musim_pembuka/musim_panas/variasi/2": "Pagi cerah, sore kadang gerimis. Nikmati pancaroba, tapi ingat: ilalang kering mudah terbakar.",
+ "musim_pembuka/musim_gugur/kapan": "Fajar hari pertama musim panen / mareng",
+ "musim_pembuka/musim_gugur/variasi/0": "Mareng tiba. Padi menguning, sawah siap dipanen, dan lumbung menunggu diisi.",
+ "musim_pembuka/musim_gugur/variasi/1": "Angin kering membawa aroma jerami. Waktunya panen, menjemur gabah, dan menyimpan bekal untuk kemarau.",
+ "musim_pembuka/musim_gugur/variasi/2": "Sawah berubah keemasan. Penduduk mulai menghitung ikatan padi sambil bersenandung.",
+ "musim_pembuka/musim_dingin/kapan": "Fajar hari pertama musim kemarau",
+ "musim_pembuka/musim_dingin/variasi/0": "Kemarau datang. Sawah berhenti tumbuh, air menyusut, dan setiap porsi makanan berharga.",
+ "musim_pembuka/musim_dingin/variasi/1": "Langit biru tanpa awan dan tanah mulai retak. Siang terik, malam bediding, jadi penduduk merapat ke api unggun.",
+ "musim_pembuka/musim_dingin/variasi/2": "Daun jati mulai meranggas. Semoga lumbung padi cukup penuh dan sumur tetap berair sampai hujan pertama.",
+ "musim_pembuka/musim_semi_hujan/kapan": "Hari hujan deras di musim hujan",
+ "musim_pembuka/musim_semi_hujan/variasi/0": "Hujan deras turun. Semak cepat berbuah lagi, walau kayu dan bambu jadi licin untuk ditebang.",
+ "musim_pembuka/musim_semi_hujan/variasi/1": "Gerimis sore membuat semua orang tersenyum. Tanah wangi, dan katak bernyanyi di tepi sungai.",
+ "musim_pembuka/musim_gugur_menuju_dingin/kapan": "Fajar hari ke-4 sampai ke-7 musim panen (peringatan menjelang kemarau)",
+ "musim_pembuka/musim_gugur_menuju_dingin/variasi/0": "Sisa {hari_sisa} hari sebelum kemarau. Stok pangan cukup untuk {jumlah} dari {jumlah2} hari yang disarankan.",
+ "musim_pembuka/musim_gugur_menuju_dingin/variasi/1": "Angin mulai kering. {hari_sisa} hari lagi sawah berhenti tumbuh. Lumbung kita baru cukup {jumlah} dari {jumlah2} hari.",
+ "musim_pembuka/musim_gugur_menuju_dingin/variasi/2": "{nama} menatap langit yang makin cerah. \"Tinggal {hari_sisa} hari lagi sebelum kemarau,\" katanya. Persediaan: {jumlah}/{jumlah2} hari.",
+ "musim_pembuka/musim_gugur_stok_kurang/kapan": "Banner jika stok di bawah target cadangan kemarau",
+ "musim_pembuka/musim_gugur_stok_kurang/variasi/0": "Stok pangan belum cukup untuk kemarau. Utamakan panen, berburu, dan simpan makanan sekarang.",
+ "musim_pembuka/musim_gugur_stok_kurang/variasi/1": "Lumbung padi masih terlalu ringan untuk menghadapi kemarau. Ayo kumpulkan bekal selagi sempat!",
+ "musim_pembuka/musim_gugur_syukur/kapan": "Akhir musim panen jika stok pangan aman",
+ "musim_pembuka/musim_gugur_syukur/variasi/0": "Lumbung penuh sebelum kemarau datang. Penduduk berkumpul untuk syukuran kecil. Kerja keras kalian terbayar!",
+ "musim_pembuka/musim_gugur_syukur/variasi/1": "Semua ikatan padi tersusun rapi. Malam ini desa makan bersama, hangat dan tenang menyambut kemarau.",
+ "musim_pembuka/musim_dingin_kayu_bakar/kapan": "Saat api unggun memakai kayu bakar di malam bediding kemarau",
+ "musim_pembuka/musim_dingin_kayu_bakar/variasi/0": "Malam bediding membuat api unggun melahap kayu bakar lebih banyak. Pastikan tumpukan kayu tidak habis.",
+ "musim_pembuka/musim_tahun_baru/kapan": "Awal tahun ke-2 dan seterusnya (hujan pertama)",
+ # ---- peringatan_dini ----
+ "peringatan_dini/ancaman_kekeringan/tingkat/waspada/teks/0": "Stok air hanya cukup untuk {hari_sisa} hari. Sumur bekerja keras saat hujan makin jarang.",
+ "peringatan_dini/ancaman_kekeringan/tingkat/bahaya/teks/0": "Stok air hampir habis. Penduduk mulai haus, dan padi di sawah terlihat layu.",
+ "peringatan_dini/ancaman_kekeringan/tingkat/reda/teks/1": "Stok air kembali aman. Padi yang layu perlahan tegak lagi.",
+ "peringatan_dini/ancaman_serigala/nama": "Babi hutan & macan tutul",
+ "peringatan_dini/ancaman_serigala/catatan": "waspada = fase jejak (sore), bahaya = fase mendekat (awal malam), reda = fase usai (fajar). Teks serangan ada di log_ancaman. Hewan tampilan: babi hutan (utama) dan macan tutul jawa (langka). Lihat meta.alias_id_v140.",
+ "peringatan_dini/ancaman_serigala/tingkat/waspada/judul": "Jejak di Tepi Hutan",
+ "peringatan_dini/ancaman_serigala/tingkat/waspada/teks/0": "Ada jejak kaki babi hutan dan tanah yang teraduk di tepi hutan. Dengusan terdengar menjelang senja.",
+ "peringatan_dini/ancaman_serigala/tingkat/waspada/teks/1": "{nama} menemukan jejak kuku di lumpur dekat sawah. Malam ini sebaiknya semua pulang lebih awal.",
+ "peringatan_dini/ancaman_serigala/tingkat/waspada/saran": "Nyalakan Obor dan pasang Pagar bambu di sekitar rumah dan sawah.",
+ "peringatan_dini/ancaman_serigala/tingkat/bahaya/judul": "Dengusan Mendekat!",
+ "peringatan_dini/ancaman_serigala/tingkat/bahaya/teks/0": "Semak-semak bergoyang makin dekat. Penduduk yang masih di luar sebaiknya segera pulang.",
+ "peringatan_dini/ancaman_serigala/tingkat/bahaya/teks/1": "Mata-mata kecil berkilat di balik rumpun bambu. Babi hutan sedang mengintai sawah malam ini.",
+ "peringatan_dini/ancaman_serigala/tingkat/bahaya/saran": "Jauhkan penduduk dari kegelapan. Obor, Pagar bambu, dan Pos ronda dengan kentongan membuat desa lebih aman.",
+ "peringatan_dini/ancaman_serigala/tingkat/reda/teks/0": "Matahari terbit dan babi hutan kembali ke hutan. Desa bisa bernapas lega.",
+ "peringatan_dini/ancaman_dingin_ekstrem/nama": "Malam bediding",
+ "peringatan_dini/ancaman_dingin_ekstrem/tingkat/waspada/judul": "Angin Kering dari Selatan",
+ "peringatan_dini/ancaman_dingin_ekstrem/tingkat/waspada/teks/0": "Angin kering bertiup sejak sore dan langit bersih tanpa awan. Malam ini akan bediding, menusuk tulang.",
+ "peringatan_dini/ancaman_dingin_ekstrem/tingkat/waspada/teks/1": "Langit sore berwarna jingga pucat dan angin terasa menusuk. {nama} menumpuk kayu bakar ekstra di dekat api.",
+ "peringatan_dini/ancaman_dingin_ekstrem/tingkat/waspada/saran": "Tambah kayu bakar dan siapkan sarung. Jaga penduduk dekat api atau rumah.",
+ "peringatan_dini/ancaman_dingin_ekstrem/tingkat/bahaya/judul": "Bediding Menusuk!",
+ "peringatan_dini/ancaman_dingin_ekstrem/tingkat/bahaya/teks/0": "Malam ini sejuk sekali, padahal siangnya terik. Penduduk yang jauh dari api cepat lapar dan murung.",
+ "peringatan_dini/ancaman_dingin_ekstrem/tingkat/bahaya/teks/1": "Embun tebal menempel di daun pisang dan tikar. Siapa pun yang di luar terlalu lama akan menggigil.",
+ "peringatan_dini/ancaman_dingin_ekstrem/tingkat/reda/judul": "Pagi yang Hangat",
+ "peringatan_dini/ancaman_dingin_ekstrem/tingkat/reda/teks/0": "Angin kering sudah reda. Penduduk berjemur di halaman sambil meregangkan badan.",
+ "peringatan_dini/ancaman_dingin_ekstrem/tingkat/reda/teks/1": "Matahari kemarau muncul hangat. Malam paling sejuk telah berlalu.",
+ # ---- log_ancaman (key serigala_* tetap; hewan tampilan = babi hutan) ----
+ "log_ancaman/serigala_jejak/0": "Hari {hari}: {nama} menemukan jejak babi hutan di tepi hutan. Dengusan terdengar saat matahari terbenam.",
+ "log_ancaman/serigala_mendekat/0": "Hari {hari}: Dengusan babi hutan makin dekat. {nama} bergegas pulang sambil menoleh ke belakang.",
+ "log_ancaman/serangan_serigala/0": "Hari {hari}: Seekor babi hutan menyeruduk {nama} yang masih bekerja di luar saat gelap. {nama2} datang membawa obor dan mengusirnya.",
+ "log_ancaman/serangan_serigala/1": "Hari {hari}: {nama} diseruduk babi hutan dalam perjalanan pulang. Untung teriakannya membangunkan seluruh desa.",
+ "log_ancaman/serangan_serigala/2": "Hari {hari}: Babi hutan menyergap {nama} di dekat sawah. Ia berhasil lari ke gubuk, tapi terluka.",
+ "log_ancaman/diusir/0": "Hari {hari}: Cahaya obor membuat babi hutan ragu. Mereka berbalik ke hutan tanpa mendekat.",
+ "log_ancaman/diusir/1": "Hari {hari}: Pagar bambu menghalangi jalan babi hutan. Mereka berputar-putar lalu pergi dengan kesal.",
+ "log_ancaman/diusir/2": "Hari {hari}: {nama} memukul kentongan dari Pos ronda. Babi hutan lari terbirit-birit ke hutan.",
+ "log_ancaman/diusir/3": "Hari {hari}: {nama} dan {nama2} ronda semalaman. Tidak ada satu pun babi hutan yang berani mendekat.",
+ "log_ancaman/serigala_usai/0": "Hari {hari}: Fajar menyingsing. Babi hutan sudah kembali ke hutan.",
+ "log_ancaman/dingin_jauh_api/0": "Hari {hari}: {nama} menggigil karena terlalu lama bekerja jauh dari api di malam bediding.",
+ "log_ancaman/dingin_jauh_api/1": "Hari {hari}: Jari-jari {nama} kaku karena angin malam kemarau. Ia buru-buru menghangatkan diri di dekat api unggun.",
+ "log_ancaman/kayu_bakar_habis/0": "Hari {hari}: Kayu bakar habis! Api unggun meredup dan penduduk merapatkan sarung.",
+ # ---- penduduk_sakit / meninggal / pemakaman / pergi ----
+ "penduduk_sakit/ringan/istirahat/0": "Hari {hari}: {nama} tidur siang di gubuk, berselimut sarung. Teman-teman menjaga suara agar tidak berisik.",
+ "penduduk_sakit/per_penyebab/dingin/0": "Hari {hari}: {nama} masuk angin karena terlalu lama kehujanan atau terkena angin malam. Hidungnya merah seperti buah jambu.",
+ "penduduk_sakit/per_penyebab/dingin/1": "Hari {hari}: Cuaca yang berubah-ubah membuat {nama} demam. Ia dikerok, diberi wedang jahe, dan dibungkus sarung di dekat api.",
+ "penduduk_meninggal/per_penyebab/dingin/0": "Hari {hari}: Tubuh {nama} terlalu lemah menghadapi cuaca buruk musim ini, dan ia berpulang malam ini. Api unggun dinyalakan lebih besar untuknya.",
+ "penduduk_meninggal/per_penyebab/dingin/1": "Hari {hari}: Kemarau terlalu berat bagi {nama}. Ia tertidur di atas tikar dan tidak bangun lagi.",
+ "penduduk_meninggal/per_penyebab/dingin/2": "Hari {hari}: {nama} berpulang di malam bediding yang sunyi. Desa berkumpul, saling menguatkan dalam diam.",
+ "pemakaman/upacara/2": "Hari {hari}: Bunga kamboja diletakkan di Makam {nama}. {nama2} berjanji akan merawatnya setiap musim hujan.",
+ "pemakaman/per_penyebab/kelaparan/0": "Di depan Makam {nama}, desa berjanji untuk selalu mengisi lumbung padi sebelum kemarau.",
+ "pemakaman/per_penyebab/dingin/0": "Pohon kamboja kecil ditanam di samping Makam {nama}, supaya ia selalu teduh dan tenang.",
+ "penduduk_pergi/kepergian/1": "Hari {hari}: {nama} pamit dengan mata berkaca-kaca. Ia membawa bekal secukupnya dan sehelai sarung tenun {nama2}.",
+ # ---- bangunan_ancaman (key tetap) ----
+ "bangunan_ancaman/bangunan_pagar/nama": "Pagar Bambu",
+ "bangunan_ancaman/bangunan_pagar/tooltip": "Pagar bambu sederhana. Babi hutan malas melewatinya.",
+ "bangunan_ancaman/bangunan_pagar/deskripsi": "Pasang pagar bambu di sekeliling rumah dan sawah supaya babi hutan harus berputar jauh. Rumah yang hampir terkurung pagar menjadi zona aman.",
+ "bangunan_ancaman/bangunan_pagar/selesai": "Hari {hari}: {nama} menancapkan bilah bambu terakhir. Gubuk-gubuk kini terasa lebih terlindungi.",
+ "bangunan_ancaman/bangunan_pagar/terkunci": "Pagar bambu terbuka di era Dusun.",
+ "bangunan_ancaman/bangunan_obor/tooltip": "Obor bambu (oncor) yang membuat malam lebih aman.",
+ "bangunan_ancaman/bangunan_obor/deskripsi": "Obor bambu menerangi sekitarnya di malam hari. Babi hutan dan macan tutul jauh lebih jarang mendekati penduduk di dekat cahaya. Butuh kayu sesekali agar tetap menyala.",
+ "bangunan_ancaman/bangunan_menara_jaga/nama": "Pos Ronda",
+ "bangunan_ancaman/bangunan_menara_jaga/tooltip": "Pos ronda berkentongan untuk berjaga dan memberi tanda bahaya.",
+ "bangunan_ancaman/bangunan_menara_jaga/deskripsi": "Dari pos ronda, peronda bisa melihat babi hutan atau macan tutul yang mendekat dan mengusirnya sekali setiap malam dengan bunyi kentongan. Butuh penduduk dengan prioritas Jaga, atau penduduk yang sedang luang.",
+ "bangunan_ancaman/bangunan_menara_jaga/selesai": "Hari {hari}: Pos ronda berdiri, lengkap dengan kentongan bambu. {nama} memukulnya tiga kali sambil tersenyum lebar.",
+ "bangunan_ancaman/bangunan_menara_jaga/usir": "Hari {hari}: Dari Pos ronda, {nama} melihat babi hutan mendekat dan memukul kentongan. Mereka lari ke hutan.",
+ "bangunan_ancaman/bangunan_menara_jaga/kosong": "Pos ronda tidak ada perondanya malam ini.",
+ "bangunan_ancaman/bangunan_menara_jaga/terkunci": "Pos ronda terbuka di era Desa Pertanian.",
+ "bangunan_ancaman/bangunan_makam/selesai": "Hari {hari}: Makam untuk {nama} selesai dibuat. Bunga kamboja dan melati mulai ditanam di sekitarnya.",
+ # ---- log_jadwal / tumbuh_kembang ----
+ "log_jadwal/tidur_di_luar_dingin/0": "Hari {hari}: {nama} tidur di luar dan kehujanan sepanjang malam. Ia sangat butuh rumah.",
+ "log_jadwal/tidur_di_luar_dingin/1": "Hari {hari}: Angin malam bertiup kencang. {nama} yang tidur di luar bangun dengan hidung merah dan suasana hati buruk.",
+ "log_jadwal/tidur_di_luar_dingin/2": "Hari {hari}: {nama} tidak bisa tidur karena digigit nyamuk dan basah di luar. Bangun Gubuk agar ia bisa beristirahat nyaman.",
+ "tumbuh_kembang/ulang_tahun_anak/0": "Hari {hari}: {nama} berulang tahun ke-{umur}! {ibu} membuat kue kecil dari tepung beras dan gula aren.",
+})
+
+UBAH_V140.update({
+ "meta/tipe_tujuan_quest/adakan_festival": "Adakan bersih desa/sedekah bumi sebanyak jumlah (efek T20 Bersih Desa atau event festival_desa), target \"semua\"",
+ "peringatan_dini/ancaman_banjir/tingkat/waspada/saran": "Jauhkan sawah baru dari tepi sungai. Riset Tanggul & Parit membantu air cepat surut.",
+ "peringatan_dini/ancaman_banjir/tingkat/waspada/teks/1": "{nama} melihat air sungai sudah menyentuh akar rumpun bambu di tepian. Sebaiknya jangan menanam dekat sungai dulu.",
+ "peringatan_dini/ancaman_banjir/tingkat/bahaya/teks/0": "Sungai meluap ke tepian. Jalan di dekat air jadi becek dan sawah di tepi sungai berhenti tumbuh sebentar.",
+ "peringatan_dini/ancaman_banjir/tingkat/bahaya/teks/1": "Air setinggi mata kaki menggenangi tepi sungai. Penduduk berjalan pelan sambil menggulung sarung.",
+ "prioritas_darurat/jaga/tooltip": "Ronda di Pos ronda dan sekitar desa saat malam, membawa kentongan.",
+ "event_musiman/@gelombang_panas/judul": "Panas Terik",
+})
+
+# ---------- v1.4.0: bagian baru (aditif) ----------
+def _P(judul, teks, saran=""): return {"judul": judul, "teks": teks, "saran": saran}
+def _MP(musim, kapan, variasi): return {"musim": musim, "kapan": kapan, "variasi": variasi}
+def _EV(id, judul, desk, pilihan, kategori, musim): return {"id": id, "judul": judul, "kategori": kategori, "deskripsi": desk, "pilihan": pilihan, "musim": musim}
+def _C(teks, efek, hasil): return {"teks": teks, "efek": efek, "teks_hasil": hasil}
+
+musim_pembuka_v140 = {
+ "musim_hujan": _MP("hujan", "Fajar hari pertama musim hujan (rendheng)", [
+  "Musim hujan tiba. Saatnya membajak sawah dan menanam padi bersama-sama.",
+  "Bau tanah basah tercium di mana-mana. Katak bernyanyi di pematang, dan sawah sudah menunggu bibit.",
+  "Awan kelabu berarak dari gunung. Musim hujan tahun ke-{tahun} dimulai, dan tanah terasa lembut untuk dicangkul."]),
+ "musim_mareng": _MP("mareng", "Fajar hari pertama pancaroba mareng (menuju kemarau)", [
+  "Pancaroba mareng datang. Padi menguning, angin mulai kering, dan sawah siap dipanen.",
+  "Hujan makin jarang, siang makin terik. Waktunya panen, menjemur gabah, dan menyimpan bekal.",
+  "Capung beterbangan di atas sawah keemasan. Kata para tetua, kemarau sudah tidak jauh lagi."]),
+ "musim_kemarau": _MP("kemarau", "Fajar hari pertama musim kemarau (ketiga)", [
+  "Kemarau tiba. Sawah tanpa irigasi berhenti tumbuh, dan air cepat habis. Hemat-hemat ya!",
+  "Langit biru tanpa awan dan tanah mulai retak. Tegalan berisi singkong dan jagung kini jadi andalan.",
+  "Daun jati mulai meranggas. Semoga lumbung padi cukup penuh dan sumur tetap berair sampai hujan pertama."]),
+ "musim_labuh": _MP("labuh", "Fajar hari pertama pancaroba labuh (menuju hujan)", [
+  "Pancaroba labuh datang. Mendung mulai menggantung, dan sumur perlahan berair lagi.",
+  "Angin berubah arah dan pohon mangga berbuah lebat. Siapkan bibit, hujan sebentar lagi turun.",
+  "Cuaca berubah-ubah: pagi terik, sore gerimis. Jaga kesehatan, minum wedang jahe, dan jangan lupa tutup tempayan."]),
+ "musim_hujan_deras": _MP("hujan", "Hari hujan deras di musim hujan", [
+  "Hujan turun seharian. Yang tidak punya atap kebasahan.",
+  "Hujan deras mengguyur genting dan daun pisang. Anak-anak berlarian main hujan sambil tertawa.",
+  "Gerimis tak berhenti sejak pagi. Sawah senang, tapi kayu dan bambu jadi licin untuk ditebang."]),
+ "musim_labuh_hujan_pertama": _MP("labuh", "Hujan pertama setelah kemarau", [
+  "Hujan pertama turun! Bau tanah basah membuat semua orang tersenyum.",
+  "Tetes hujan pertama jatuh di tanah yang retak. Penduduk menengadah dan menari di halaman.",
+  "Akhirnya hujan! Sumur mulai terisi, dan kodok-kodok kembali bernyanyi malam ini."]),
+ "musim_mareng_menuju_kemarau": _MP("mareng", "Hitung mundur menjelang kemarau (peringatan sebelum kemarau)", [
+  "Sisa {hari_sisa} hari sebelum kemarau. Stok pangan cukup untuk {jumlah} dari {jumlah2} hari yang disarankan.",
+  "Angin mulai kering. {hari_sisa} hari lagi sawah berhenti tumbuh. Lumbung kita baru cukup {jumlah} dari {jumlah2} hari.",
+  "{nama} menatap langit yang makin cerah. \"Tinggal {hari_sisa} hari lagi sebelum kemarau,\" katanya. Persediaan: {jumlah}/{jumlah2} hari."]),
+ "musim_mareng_stok_kurang": _MP("mareng", "Banner jika stok di bawah target cadangan kemarau", [
+  "Tanam singkong dan jagung, simpan padi di lumbung.",
+  "Lumbung padi masih ringan. Jemur gaplek dan simpan gabah selagi sempat!"]),
+ "musim_mareng_syukur": _MP("mareng", "Akhir mareng jika stok pangan aman", [
+  "Lumbung penuh gabah sebelum kemarau. Syukuran kecil!",
+  "Semua ikatan padi tersusun rapi di lumbung. Malam ini desa kenduri kecil, makan bersama di pendopo."]),
+ "musim_hujan_kayu_bakar": _MP("hujan", "Saat api unggun memakai kayu bakar di malam lembap musim hujan", [
+  "Malam lembap: api unggun memakai {jumlah} kayu bakar per hari selama musim hujan.",
+  "Udara malam basah dan nyamuk banyak. Api unggun butuh {jumlah} kayu bakar setiap hari."]),
+ "musim_hujan_api_padam": _MP("hujan", "Kayu bakar habis di musim hujan", [
+  "Kayu bakar habis! Api unggun meredup, malam terasa lembap.",
+  "Api unggun padam diguyur gerimis dan tidak ada kayu kering lagi. Ayo cari ranting di bawah rumpun bambu!"]),
+ "musim_kemarau_panjang": _MP("kemarau", "Kemarau diperpanjang (tahun ke-2+, peluang kemarau panjang)", [
+  "Hujan belum juga datang. Kemarau tahun ini lebih panjang {jumlah} hari. Hemat air dan pangan!",
+  "Para tetua menggeleng pelan. \"Kemarau panjang,\" kata mereka. Masih {jumlah} hari lagi sebelum labuh."]),
+ "musim_tahun_baru_hujan": _MP("hujan", "Awal tahun ke-2 dan seterusnya (musim hujan)", [
+  "Tahun ke-{tahun} dimulai. Hujan pertama membasahi sawah.",
+  "Satu tahun lagi terlewati bersama. Tahun ke-{tahun} dibuka dengan suara hujan di atap rumbia."]),
+ "musim_umum": _MP("", "Pembuka cadangan bila tidak ada teks khusus; {musim} = nama musim", [
+  "{musim} dimulai.",
+  "Selamat datang, {musim}! Penduduk menyesuaikan pekerjaan dengan cuaca."]),
+}
+
+peringatan_dini_v140 = {
+ "ancaman_babi_hutan": {"nama": "Babi hutan", "musim": ["hujan", "mareng", "kemarau", "labuh"], "event_terkait": ["hewan_buas", "serigala_lapar"],
+  "catatan": "Ancaman malam utama tema Nusantara (pengganti ancaman malam lama, lihat meta.alias_id_v140). Menyasar sawah/tegalan dulu; melukai penduduk mulai era Dusun.",
+  "tingkat": {
+   "waspada": _P("Tanah Teraduk", ["Tanah teraduk dan jejak babi hutan terlihat di tepi hutan.", "{nama} menemukan bekas moncong di pematang. Malam ini sawah perlu dijaga."], "Pasang Pagar bambu dan Obor di sekitar sawah."),
+   "bahaya": _P("Dengusan Mendekat!", ["Suara dengusan babi hutan makin dekat. Penduduk bergegas pulang.", "Rumpun bambu bergoyang keras. Babi hutan sedang menuju sawah!"], "Pukul kentongan dari Pos ronda dan jauhkan penduduk dari kegelapan."),
+   "reda": _P("Fajar Menyingsing", ["Fajar menyingsing. Babi hutan sudah kembali ke hutan.", "Pagi datang. Hanya jejak kuku di lumpur yang tersisa."])}},
+ "ancaman_monyet": {"nama": "Monyet ekor panjang", "musim": ["mareng", "kemarau"], "event_terkait": ["monyet_pencuri"],
+  "catatan": "Mencuri di siang hari (pisang, jagung, buah di Gudang). Tidak melukai.",
+  "tingkat": {
+   "waspada": _P("Kawanan di Pohon", ["Sekawanan monyet bergelantungan di pohon kelapa dekat desa. Mereka memperhatikan tumpukan pisang.", "{nama} melihat monyet kecil mengintip dari atap Gudang."], "Tutup Gudang rapat dan jaga kebun pisang."),
+   "bahaya": _P("Monyet Beraksi!", ["Monyet-monyet melompat ke tegalan dan menyambar jagung!", "Pintu Gudang terbuka sedikit, dan seekor monyet sudah menggondol sesisir pisang."], "Usir dengan kentongan dan pasang orang-orangan sawah."),
+   "reda": _P("Kembali ke Hutan", ["Kawanan monyet kembali ke hutan sambil mengunyah. Desa tenang lagi.", "Monyet-monyet pergi. Anak-anak tertawa menirukan gaya mereka."])}},
+ "ancaman_ular": {"nama": "Ular sawah", "musim": ["hujan", "labuh"], "event_terkait": ["ular_di_sawah"],
+  "catatan": "Muncul di sawah dan semak saat basah. Bisa menggigit penduduk yang bekerja di sawah.",
+  "tingkat": {
+   "waspada": _P("Rumput Basah Bergerak", ["Rumput di pematang bergerak sendiri. Hati-hati, mungkin ada ular yang berteduh.", "{nama} melihat kulit ular yang ditinggalkan di dekat sawah."], "Babat ilalang di sekitar sawah dan pakai sepatu bot karet atau tongkat."),
+   "bahaya": _P("Ada Ular!", ["Seekor ular menyeberangi pematang! Penduduk di sawah mundur pelan-pelan.", "Ular masuk ke tumpukan jerami dekat Gubuk. Jangan dipegang!"], "Jangan panik, beri jalan pada ular. Rawat segera jika ada yang tergigit."),
+   "reda": _P("Ular Pergi", ["Ular sudah masuk kembali ke semak. Pekerjaan di sawah bisa dilanjutkan.", "Ular itu ternyata hanya lewat. Semua menarik napas lega."])}},
+ "ancaman_macan_tutul": {"nama": "Macan tutul jawa", "musim": ["kemarau", "labuh"], "event_terkait": ["serigala_malam"],
+  "catatan": "Langka, mulai tahun ke-2. Kentongan dan obor MENGUSIR (tidak dibunuh): macan tutul jawa satwa dilindungi.",
+  "tingkat": {
+   "waspada": _P("Jejak Kucing Besar", ["Ada jejak kucing besar di tepi hutan. Kata para tetua, macan tutul sedang lewat.", "Kambing-kambing gelisah sejak sore. {nama} memeriksa kandang dua kali."], "Masukkan ternak ke kandang dan nyalakan obor."),
+   "bahaya": _P("Macan Tutul di Tepi Desa!", ["Sepasang mata berkilat di balik semak. Macan tutul mengintai kandang malam ini.", "Auman pendek terdengar dari arah hutan jati. Semua masuk rumah!"], "Pukul kentongan bertalu-talu dari Pos ronda. Jangan dikejar."),
+   "reda": _P("Kembali ke Hutan", ["Bunyi kentongan membuat sang macan kembali ke hutan. Ternak selamat.", "Pagi datang. Macan tutul sudah jauh di dalam hutan, tempat ia seharusnya tinggal."])}},
+ "ancaman_longsor": {"nama": "Longsor", "musim": ["hujan"], "event_terkait": ["longsor", "tanah_bukit_bergeser"],
+  "catatan": "Hujan deras berhari-hari di lereng. Terasering dan rumpun bambu mengurangi risiko.",
+  "tingkat": {
+   "waspada": _P("Lereng Retak", ["Ada retakan kecil di lereng bukit setelah hujan semalaman. Air keruh merembes dari tanah.", "{nama} mendengar kerikil berjatuhan dari tebing dekat desa."], "Jangan bangun di kaki lereng. Tanam bambu dan buat terasering."),
+   "bahaya": _P("Tanah Bergerak!", ["Tanah di lereng bergeser pelan. Penduduk di bawah bukit sebaiknya menjauh dulu.", "Pohon-pohon di lereng miring. Longsor bisa terjadi kapan saja!"], "Pindahkan penduduk dari kaki bukit sampai hujan reda."),
+   "reda": _P("Lereng Tenang", ["Hujan reda dan lereng kembali diam. Penduduk gotong royong membersihkan tanah yang turun.", "Akar bambu menahan tanah dengan kuat. Lereng aman lagi."])}},
+ "ancaman_kemarau_panjang": {"nama": "Kemarau panjang", "musim": ["kemarau"], "event_terkait": ["musim_dingin_keras", "kekeringan"],
+  "catatan": "Tahun ke-2+: kemarau bisa diperpanjang beberapa hari (YEAR_SCALE.longDryChance).",
+  "tingkat": {
+   "waspada": _P("Hujan Belum Datang", ["Seharusnya labuh sudah dekat, tapi langit tetap biru. Kemarau mungkin lebih panjang tahun ini.", "{nama} melihat sumur makin dalam. \"Kita harus berhemat,\" katanya."], "Hemat air, simpan gaplek, dan buat embung atau sumur dalam."),
+   "bahaya": _P("Kemarau Panjang!", ["Sawah retak dan sungai tinggal genangan. Setiap tetes air dan butir padi sangat berharga.", "Daun-daun pisang menguning. Kemarau panjang benar-benar datang."], "Utamakan air dan pangan. Kurangi pekerjaan berat di siang hari."),
+   "reda": _P("Mendung Datang", ["Mendung tebal muncul dari selatan. Kemarau panjang akhirnya hampir usai!", "Hujan pertama setelah kemarau panjang. Semua menangis haru dan tertawa."])}},
+}
+
+log_ancaman_v140 = {
+ "babi_hutan_jejak": ["Hari {hari}: Tanah teraduk dan jejak babi hutan terlihat di tepi hutan.", "Hari {hari}: {nama} menemukan bekas moncong babi hutan di pematang sawah."],
+ "babi_hutan_mendekat": ["Hari {hari}: Suara dengusan babi hutan makin dekat. Penduduk bergegas pulang.", "Hari {hari}: Semak bambu bergoyang. {nama} cepat-cepat pulang membawa obor."],
+ "babi_hutan_mengintai": ["Hari {hari}: Babi hutan hanya mengendus di tepi hutan malam ini.", "Hari {hari}: Babi hutan mondar-mandir di batas hutan, lalu pergi sendiri."],
+ "babi_hutan_usai": ["Hari {hari}: Fajar menyingsing. Babi hutan sudah kembali ke hutan."],
+ "babi_hutan_serang": ["Hari {hari}: Babi hutan menyeruduk {nama}! Kesehatannya turun {jumlah}.", "Hari {hari}: {nama} terjatuh diseruduk babi hutan di pematang. Kesehatannya turun {jumlah}."],
+ "babi_hutan_rusak_ladang": ["Hari {hari}: Babi hutan mengobrak-abrik ladang {tanaman}. Tanamannya rusak.", "Hari {hari}: Pagi ini ladang {tanaman} berantakan. Babi hutan berpesta semalam."],
+ "babi_hutan_diusir": ["Hari {hari}: Cahaya obor membuat babi hutan ragu. Ia berbalik ke hutan.", "Hari {hari}: Pagar bambu menghalangi babi hutan. Ia mendengus kesal lalu pergi."],
+ "pos_ronda_usir": ["Hari {hari}: Dari Pos ronda, {nama} memukul kentongan. Babi hutan lari ke hutan.", "Hari {hari}: Tong-tong-tong! Kentongan {nama} membuat babi hutan kabur terbirit-birit."],
+ "monyet_mencuri": ["Hari {hari}: Seekor monyet menggondol {jumlah} {sumber_daya} dari Gudang!", "Hari {hari}: Monyet-monyet berpesta jagung di tegalan. {nama} hanya bisa geleng-geleng."],
+ "monyet_diusir": ["Hari {hari}: {nama} memukul kentongan, dan kawanan monyet kabur ke pohon kelapa.", "Hari {hari}: Orang-orangan sawah bergoyang ditiup angin. Monyet-monyet ragu dan pergi."],
+ "ular_terlihat": ["Hari {hari}: {nama} melihat ular sawah melintas di pematang dan memberinya jalan.", "Hari {hari}: Ada ular di tumpukan jerami. Penduduk menunggu ia pergi sendiri."],
+ "ular_menggigit": ["Hari {hari}: {nama} tergigit ular saat menyiangi sawah. {nama2} segera membebat lukanya dan membawanya istirahat.", "Hari {hari}: Kaki {nama} digigit ular kecil. Untung tidak berbisa, tapi ia harus istirahat."],
+ "macan_jejak": ["Hari {hari}: Ada jejak kucing besar di tepi hutan jati. Kambing-kambing gelisah."],
+ "macan_diusir": ["Hari {hari}: Kentongan bertalu-talu dari Pos ronda. Macan tutul jawa mundur ke dalam hutan tanpa ada yang terluka.", "Hari {hari}: {nama} mengayunkan obor dan memukul kentongan. Sang macan menatap sebentar, lalu menghilang ke hutan."],
+ "longsor": ["Hari {hari}: Tanah di lereng longsor dan menimbun sebagian {bangunan}. Penduduk gotong royong membersihkannya.", "Hari {hari}: Longsor kecil menutup jalan setapak ke hutan. Untung tidak ada yang terluka."],
+ "banjir_kiriman": ["Hari {hari}: Air bah kiriman dari hulu datang tiba-tiba, padahal di desa tidak hujan! Sawah tepi sungai tergenang."],
+ "angin_kencang": ["Hari {hari}: Angin kencang menerbangkan atap rumbia {bangunan}. Kondisinya turun sedikit.", "Hari {hari}: Angin menderu seharian. Pekerjaan di luar jadi lebih lambat."],
+ "wereng": ["Hari {hari}: Wereng menyerang padi di sawah. Hasil panen kali ini berkurang."],
+ "gagal_panen": ["Hari {hari}: Sawah tanpa irigasi gagal panen karena kemarau. Hanya sedikit gabah yang bisa diselamatkan."],
+ "kebakaran_ilalang": ["Hari {hari}: Ilalang kering di tepi desa terbakar! {nama} dan {nama2} memadamkannya dengan ranting basah dan ember."],
+}
+
+event_lokal = [
+ _EV("banjir_kiriman", "Banjir Kiriman", "Di desa tidak hujan, tapi sungai tiba-tiba naik dan keruh. Rupanya hujan deras turun di hulu!", [
+   _C("Angkat bibit dan karung ke rumah panggung", {"energi": -10}, "Semua barang naik ke tempat tinggi tepat waktu. Air lewat, dan penduduk tertawa lega sambil berlumpur."),
+   _C("Perkuat tanggul dengan karung tanah", {"energi": -10, "kayu": -5}, "Tanggul tanah bertahan. Air hanya menggenangi sedikit sawah tepi sungai."),
+   _C("Mengungsi dulu ke bukit", {"pertumbuhan_ladang": -1, "suasana_hati": -3}, "Penduduk menunggu air surut di bukit. Sawah tepi sungai harus ditanami ulang.")], "alam", ["hujan"]),
+ _EV("longsor", "Longsor di Lereng", "Hujan tiga hari tiga malam membuat lereng bukit bergeser. Tanah dan batu menutup jalan ke hutan.", [
+   _C("Gotong royong membersihkan jalan", {"energi": -15, "batu": 4}, "Semua turun tangan membawa cangkul dan pikulan. Jalan terbuka, dan batunya bisa dipakai membangun."),
+   _C("Tanam bambu dan buat terasering", {"kayu": -8, "suasana_hati": 3}, "Rumpun bambu dan undakan tanah dibuat di lereng. Lain kali tanahnya lebih kuat menahan hujan."),
+   _C("Cari jalan memutar dulu", {"hari_kerja_hilang": 1}, "Penduduk berjalan memutar ke hutan. Lebih lama, tapi aman.")], "alam", ["hujan"]),
+ _EV("ular_di_sawah", "Ular di Sawah", "Seekor ular sawah melingkar di pematang tempat {nama} biasa bekerja. Ia diam saja, menatap dengan tenang.", [
+   _C("Beri jalan dan tunggu ia pergi", {"energi": -3}, "Ular itu pelan-pelan masuk ke semak. Kata para tetua, ular sawah membantu memakan tikus."),
+   _C("Babat ilalang di sekitar sawah", {"energi": -10, "suasana_hati": 2}, "Pematang kini bersih dan terang. Ular tidak lagi suka berteduh di dekat sawah."),
+   _C("Biarkan saja dan lanjut bekerja", {"kesehatan_satu": -8}, "{nama} terlalu dekat dan tergigit di betis. Untung ular sawah tidak berbisa, tapi ia harus istirahat.")], "satwa", ["hujan", "labuh"]),
+ _EV("hujan_pertama", "Hujan Pertama", "Setelah kemarau panjang, tetes pertama jatuh di tanah yang retak. Bau tanah basah memenuhi desa!", [
+   _C("Menari dan main hujan bersama", {"suasana_hati": 10, "energi": -5}, "Anak-anak dan orang tua menari di halaman. Hari ini semua orang basah dan bahagia."),
+   _C("Tampung air hujan di tempayan", {"air": 5, "energi": -5}, "Semua tempayan, kendi, dan ember penuh air hujan. Sumur pun ikut terisi."),
+   _C("Mulai semai bibit padi", {"pertumbuhan_ladang": 1}, "Bibit padi disemai tepat saat tanah melunak. Sawah akan siap ditanami lebih cepat.")], "alam", ["labuh"]),
+ _EV("panen_padi_raya", "Panen Padi Raya", "Sawah menguning merata dari ujung ke ujung. Semua penduduk turun membawa ani-ani dan tampah!", [
+   _C("Panen serentak dan simpan di lumbung", {"gandum": 5, "energi": -10}, "Ikatan padi menumpuk di lumbung. Kemarau tahun ini tidak terlalu menakutkan."),
+   _C("Panen sambil bernyanyi dan makan bersama", {"gandum": 3, "suasana_hati": 8, "energi": -5}, "Lagu panen terdengar dari setiap petak. Nasi liwet dan sambal dimakan beralas daun pisang."),
+   _C("Sisihkan untuk benih dan tetangga", {"suasana_hati": 5}, "Gabah terbaik disimpan untuk benih, sisanya dibagi rata. Rasa syukur memenuhi desa.")], "panen", ["mareng"]),
+ _EV("monyet_pencuri", "Monyet Pencuri", "Sekawanan monyet ekor panjang turun dari pohon kelapa dan mengincar pisang serta jagung di dekat Gudang!", [
+   _C("Pukul kentongan dan usir bersama", {"energi": -8}, "Tong-tong-tong! Monyet-monyet kabur ke pohon sambil berteriak protes. Pisang selamat."),
+   _C("Pasang orang-orangan dan tutup Gudang", {"kayu": -5, "suasana_hati": 2}, "Orang-orangan bertopi caping berdiri gagah. Monyet-monyet ragu mendekat."),
+   _C("Biarkan saja, nanti pergi sendiri", {"suasana_hati": -2}, "Monyet-monyet berpesta pisang di kebun sampai kenyang. Untung pintu Gudang tertutup rapat.")], "satwa", ["mareng", "kemarau"]),
+ _EV("dbd_pancaroba", "Nyamuk Demam Berdarah", "Genangan air di kaleng bekas dan tempayan terbuka jadi sarang jentik nyamuk. Dua penduduk demam tinggi!", [
+   _C("Kerja bakti 3M: menguras, menutup, mengubur", {"energi": -10, "kesehatan": 5}, "Tempayan dikuras, ditutup, dan barang bekas dikubur. Jentik hilang, dan yang sakit dirawat dengan banyak minum."),
+   _C("Rawat yang sakit dengan air dan jus jambu", {"makanan": -3, "kesehatan": 3}, "Yang demam banyak minum dan istirahat. Pelan-pelan suhu tubuh mereka turun."),
+   _C("Tunggu saja", {"kesehatan": -8, "suasana_hati": -3}, "Nyamuk makin banyak. Ingat 3M: menguras, menutup, dan mengubur supaya jentik tidak berkembang.")], "kesehatan", ["hujan", "labuh"]),
+ _EV("ispa_asap", "Asap Kemarau", "Asap dari pembakaran ilalang di bukit seberang terbawa angin. Beberapa penduduk batuk-batuk dan matanya perih.", [
+   _C("Pakai kain basah penutup hidung", {"energi": -3, "kesehatan": 3}, "Semua bekerja dengan kain basah di wajah. Batuk berkurang sampai asap menipis."),
+   _C("Kurangi kerja di luar sampai asap reda", {"hari_kerja_hilang": 1, "kesehatan": 5}, "Penduduk beristirahat di rumah. Paru-paru lega, besok kerja lagi."),
+   _C("Tetap bekerja seperti biasa", {"kesehatan": -6}, "Pekerjaan jalan terus, tapi batuk terdengar di mana-mana. Jangan bakar sampah sembarangan ya.")], "kesehatan", ["kemarau"]),
+ _EV("kebakaran_ilalang", "Ilalang Terbakar", "Angin kering membawa percikan api ke padang ilalang di tepi desa. Asap mulai mengepul!", [
+   _C("Padamkan dengan ranting basah dan ember", {"air": -8, "energi": -10}, "Api padam sebelum mencapai Gubuk. Semua wajah belepotan jelaga, tapi tersenyum."),
+   _C("Buat sekat bakar dengan cangkul", {"energi": -12, "suasana_hati": 2}, "Jalur tanah kosong dibuat mengelilingi desa. Api berhenti di sana dengan sendirinya."),
+   _C("Biarkan padam sendiri", {"kesehatan_bangunan": -10, "suasana_hati": -3}, "Api sempat menjilat pagar bambu sebelum padam. Tukang harus memperbaikinya.")], "bahaya", ["kemarau"]),
+ _EV("sumur_menyusut", "Sumur Menyusut", "Timba harus diturunkan makin dalam. Air sumur tinggal sedikit di dasar.", [
+   _C("Gali sumur lebih dalam bersama", {"energi": -12, "air": 4}, "Setelah menggali seharian, mata air baru memancar. Semua bersorak."),
+   _C("Ambil air bergantian ke mata air di bukit", {"energi": -8, "air": 3}, "Penduduk berjalan berbaris membawa kendi. Jauh, tapi airnya jernih sekali."),
+   _C("Hemat air sebisanya", {"suasana_hati": -2}, "Mandi cukup sekali sehari. Semua berhemat sambil menunggu hujan.")], "alam", ["kemarau"]),
+ _EV("angin_mareng", "Angin Kencang Mareng", "Angin mareng bertiup kencang dari timur. Pohon kelapa meliuk dan jemuran gabah hampir terbang!", [
+   _C("Amankan jemuran gabah bersama", {"energi": -8}, "Tikar jemuran digulung cepat-cepat. Gabah selamat, dan rambut semua orang berantakan."),
+   _C("Ikat atap dengan tali sabut", {"kayu": -5, "kesehatan_bangunan": 5}, "Atap terikat kencang. Angin hanya bisa bermain dengan daun kering."),
+   _C("Main layangan saja!", {"suasana_hati": 8}, "Langit desa penuh layangan warna-warni. Kerja ditunda sebentar demi tawa anak-anak.")], "alam", ["mareng", "labuh"]),
+ _EV("tanam_serentak", "Tanam Serentak", "Tetua desa mengusulkan semua keluarga menanam padi di hari yang sama, supaya hama tidak berpindah-pindah.", [
+   _C("Setuju, tanam serentak!", {"energi": -10, "pertumbuhan_ladang": 1}, "Sawah hijau serempak dari ujung ke ujung. Wereng bingung mau ke mana."),
+   _C("Tanam bergantian sesuai giliran air", {"energi": -5}, "Air dibagi adil seperti subak. Tidak ada yang berebut di saluran."),
+   _C("Tanam kapan sempat saja", {"suasana_hati": 1}, "Setiap keluarga menanam sendiri-sendiri. Lebih santai, walau hasilnya biasa saja.")], "panen", ["labuh"]),
+ _EV("gotong_royong", "Gotong Royong", "Pak Kamituwa memukul kentongan pagi-pagi: \"Hari Minggu kita kerja bakti!\" Ada jalan becek dan atap balai yang bocor.", [
+   _C("Semua ikut kerja bakti", {"energi": -10, "kesehatan_bangunan": 10, "suasana_hati": 5}, "Jalan diratakan, atap ditambal, dan ibu-ibu membawa gorengan. Desa jadi rapi dan semua makin akrab."),
+   _C("Kerja bakti setengah hari saja", {"energi": -5, "kesehatan_bangunan": 5}, "Pekerjaan penting selesai sebelum tengah hari. Sisanya dilanjutkan minggu depan."),
+   _C("Tunda dulu, banyak kerja lain", {"suasana_hati": -2}, "Kerja bakti ditunda. Beberapa orang sedikit kecewa, tapi mengerti.")], "sosial", []),
+ _EV("kenduri_panen", "Kenduri Syukuran Panen", "Panen tahun ini cukup. Penduduk ingin mengadakan kenduri kecil untuk bersyukur bersama.", [
+   _C("Kenduri dengan tumpeng dan doa bersama", {"makanan": -5, "suasana_hati": 10}, "Tumpeng nasi kuning dibagi rata di pendopo. Doa, tawa, dan cerita mengalir sampai malam."),
+   _C("Bancakan sederhana beralas daun pisang", {"makanan": -2, "suasana_hati": 6}, "Nasi dan lauk dibungkus daun pisang dan dibagikan ke setiap rumah. Sederhana tapi hangat."),
+   _C("Cukup ucapkan syukur di rumah masing-masing", {"suasana_hati": 2}, "Setiap keluarga bersyukur dengan caranya sendiri. Desa tenang dan damai.")], "sosial", ["mareng"]),
+ _EV("ronda_malam", "Giliran Ronda Malam", "Sudah lama tidak ada ronda. Beberapa penduduk mengusulkan jadwal ronda bergiliran di pos ronda.", [
+   _C("Buat jadwal ronda dan kentongan", {"energi": -8, "suasana_hati": 4}, "Malam-malam kini ditemani bunyi kentongan dan obrolan peronda sambil makan singkong rebus."),
+   _C("Ronda sambil main catur dan ngopi", {"energi": -5, "suasana_hati": 6}, "Pos ronda jadi tempat paling ramai di malam hari. Desa terasa aman dan akrab."),
+   _C("Tidak usah, desa sedang aman", {"energi": 3}, "Semua tidur nyenyak. Semoga malam tetap tenang.")], "sosial", []),
+ _EV("hari_pasar", "Hari Pasaran", "Hari ini pasaran Legi! Pedagang dari desa-desa sekitar datang membawa dagangan ke lapangan dekat pendopo.", [
+   _C("Tukar padi dengan peralatan", {"gandum": -5, "alat": 2}, "Seorang pandai besi menukar dua cangkul baru dengan sekarung gabah. Kesepakatan yang bagus!"),
+   _C("Jual gorengan dan kopi", {"makanan": -3, "suasana_hati": 6}, "Gorengan dan kopi tubruk desa laris manis. Penduduk pulang dengan cerita lucu dari pasar."),
+   _C("Jalan-jalan dan lihat-lihat saja", {"suasana_hati": 3}, "Penduduk berkeliling pasar, mencicipi jajanan, dan pulang dengan hati senang.")], "pasar", []),
+ _EV("tamu_desa_sebelah", "Tamu dari Desa Sebelah", "Rombongan kecil dari desa sebelah datang bersilaturahmi, membawa sekeranjang rambutan.", [
+   _C("Jamu dengan makan siang", {"makanan": -4, "suasana_hati": 8}, "Tamu dijamu sayur asem dan ikan goreng. Mereka berjanji mengundang balik saat panen nanti."),
+   _C("Tukar bibit dan cerita", {"energi": -3, "progres_riset": 5}, "Tamu membagikan cara menanam padi di lahan miring. Ilmu baru untuk desa!"),
+   _C("Sambut dengan teh hangat saja", {"suasana_hati": 3}, "Obrolan ringan sambil minum teh. Silaturahmi tetap terasa hangat.")], "sosial", []),
+]
+
+flora = {
+ "kelapa": {"nama": "Pohon kelapa", "deskripsi": "Pohon serbaguna: buahnya jadi santan dan minyak, sabutnya jadi tali, daunnya jadi atap dan janur.", "hasil": ["kelapa", "minyak", "sabut", "kayu"], "musim": []},
+ "pisang": {"nama": "Pohon pisang", "deskripsi": "Cepat berbuah dan daunnya jadi pembungkus makanan. Kesukaan monyet!", "hasil": ["makanan"], "musim": []},
+ "bambu": {"nama": "Rumpun bambu", "deskripsi": "Tumbuh cepat di musim hujan. Bahan pagar, gubuk, obor, dan kentongan. Akarnya menahan tanah dari longsor.", "hasil": ["bambu"], "musim": ["hujan"]},
+ "jati": {"nama": "Pohon jati", "deskripsi": "Kayunya kuat dan awet. Daunnya meranggas saat kemarau.", "hasil": ["kayu"], "musim": []},
+ "beringin": {"nama": "Pohon beringin", "deskripsi": "Rindang dan sejuk, tempat penduduk beristirahat dan bercerita.", "hasil": [], "musim": []},
+ "mangga": {"nama": "Pohon mangga", "deskripsi": "Berbuah lebat saat pancaroba labuh.", "hasil": ["buah"], "musim": ["labuh"]},
+ "rambutan": {"nama": "Pohon rambutan", "deskripsi": "Buahnya merah berambut, ranum di musim hujan.", "hasil": ["buah"], "musim": ["hujan"]},
+ "kamboja": {"nama": "Pohon kamboja", "deskripsi": "Bunganya harum dan biasa ditanam di makam.", "hasil": [], "musim": []},
+ "padi": {"nama": "Padi", "deskripsi": "Ditanam di sawah, butuh banyak air. Berhenti tumbuh saat kemarau kecuali sawahnya beririgasi.", "hasil": ["gandum"], "musim": ["hujan", "labuh"]},
+ "jagung": {"nama": "Jagung", "deskripsi": "Tanaman tegalan yang cukup tahan kering.", "hasil": ["makanan"], "musim": []},
+ "singkong": {"nama": "Singkong", "deskripsi": "Lama tumbuh tapi tahan kemarau. Bisa dijemur menjadi gaplek.", "hasil": ["makanan"], "musim": []},
+ "ubi": {"nama": "Ubi jalar", "deskripsi": "Cepat dipanen dan manis, cocok di tegalan.", "hasil": ["makanan"], "musim": []},
+ "kopi": {"nama": "Kopi", "deskripsi": "Ditanam di kebun lereng. Bijinya dijemur dan disangrai untuk kopi tubruk.", "hasil": ["kopi"], "musim": []},
+}
+
+fauna = {
+ "ternak": {
+  "ayam": {"nama": "Ayam kampung", "deskripsi": "Bertelur setiap hari dan membangunkan desa dengan kokoknya."},
+  "bebek": {"nama": "Bebek", "deskripsi": "Suka berbaris di sawah dan memakan wereng serta keong."},
+  "kambing": {"nama": "Kambing", "deskripsi": "Pemakan rumput yang lincah. Perlu kandang supaya aman dari macan tutul."},
+  "kerbau": {"nama": "Kerbau", "deskripsi": "Teman setia membajak sawah. Suka berkubang di lumpur saat siang terik."},
+  "sapi": {"nama": "Sapi", "deskripsi": "Tenang dan kuat, membantu menarik gerobak."}},
+ "satwa_liar": {
+  "rusa": {"nama": "Rusa", "deskripsi": "Berlari lincah di tepi hutan jati."},
+  "ikan": {"nama": "Ikan sungai", "deskripsi": "Wader dan nila melimpah saat musim hujan, menyusut saat kemarau."},
+  "burung_pipit": {"nama": "Burung pipit", "deskripsi": "Kecil dan riuh, suka mematuki padi yang menguning."},
+  "kutilang": {"nama": "Burung kutilang", "deskripsi": "Kicaunya merdu di pagi hari."},
+  "bangau": {"nama": "Bangau putih", "deskripsi": "Berjalan anggun di sawah, mencari katak dan ikan kecil."},
+  "kupu_kupu": {"nama": "Kupu-kupu", "deskripsi": "Beterbangan di antara bunga liar setelah hujan."},
+  "kunang_kunang": {"nama": "Kunang-kunang", "deskripsi": "Berkelip di sawah pada malam yang lembap."},
+  "anjing_kampung": {"nama": "Anjing kampung", "deskripsi": "Sahabat penduduk yang menggonggong saat babi hutan mendekat."}},
+ "ancaman": {
+  "babi_hutan": {"nama": "Babi hutan", "deskripsi": "Ancaman malam utama. Mengobrak-abrik sawah dan tegalan; takut pada pagar bambu, obor, dan kentongan."},
+  "monyet": {"nama": "Monyet ekor panjang", "deskripsi": "Mencuri pisang, jagung, dan isi Gudang di siang hari."},
+  "ular": {"nama": "Ular sawah", "deskripsi": "Muncul di sawah saat basah. Beri jalan, jangan dipegang."},
+  "macan_tutul": {"nama": "Macan tutul jawa", "deskripsi": "Langka dan dilindungi. Diusir dengan kentongan dan obor, tidak diburu."},
+  "tikus_sawah": {"nama": "Tikus sawah", "deskripsi": "Suka berpesta gabah di lumbung."},
+  "wereng": {"nama": "Wereng cokelat", "deskripsi": "Hama kecil yang membuat padi menguning sebelum waktunya."}},
+}
+
+bangunan_lokal = {
+ "sawah": {"nama": "Sawah", "tooltip": "Petak berlumpur untuk menanam padi. Subur di musim hujan; butuh irigasi saat kemarau.", "id_kode": "ladang"},
+ "tegalan": {"nama": "Tegalan", "tooltip": "Ladang kering untuk jagung, singkong, dan ubi. Tetap tumbuh saat kemarau.", "id_kode": "ladang"},
+ "gubuk_bambu": {"nama": "Gubuk bambu", "tooltip": "Rumah sederhana berdinding anyaman bambu dan beratap rumbia.", "id_kode": "gubuk"},
+ "rumah_panggung": {"nama": "Rumah panggung", "tooltip": "Rumah bertiang tinggi: aman dari banjir dan ular, sejuk di siang terik.", "id_kode": "rumah_kayu"},
+ "lumbung_padi": {"nama": "Lumbung padi", "tooltip": "Lumbung berkaki tinggi supaya gabah aman dari tikus dan lembap.", "id_kode": "lumbung"},
+ "pendopo": {"nama": "Balai desa (pendopo)", "tooltip": "Bangunan terbuka beratap joglo, tempat musyawarah, kenduri, dan latihan gamelan.", "id_kode": "balai_desa"},
+ "langgar": {"nama": "Langgar / surau", "tooltip": "Tempat ibadah kecil yang tenang. Anak-anak belajar mengaji di sore hari.", "id_kode": None},
+ "pagar_bambu": {"nama": "Pagar bambu", "tooltip": "Bilah bambu berjajar rapat. Babi hutan malas melewatinya.", "id_kode": "pagar"},
+ "obor": {"nama": "Obor bambu (oncor)", "tooltip": "Cahaya kecil yang membuat babi hutan dan macan tutul ragu mendekat.", "id_kode": "obor"},
+ "orang_orangan_sawah": {"nama": "Orang-orangan sawah", "tooltip": "Bertopi caping dan berbaju lusuh. Mengusir pipit dan membuat monyet ragu.", "id_kode": None},
+ "pos_ronda": {"nama": "Pos ronda + kentongan", "tooltip": "Tempat peronda berjaga. Kentongan dipukul untuk mengusir babi hutan dan macan tutul.", "id_kode": "menara_jaga"},
+ "tanggul": {"nama": "Tanggul", "tooltip": "Gundukan tanah berbatu di tepi sungai. Menahan banjir dan banjir kiriman.", "id_kode": None},
+ "terasering": {"nama": "Terasering", "tooltip": "Sawah berundak di lereng. Mengurangi risiko longsor.", "id_kode": None},
+ "embung": {"nama": "Embung", "tooltip": "Kolam penampung air hujan untuk cadangan kemarau.", "id_kode": None},
+ "sumur_dalam": {"nama": "Sumur dalam", "tooltip": "Sumur yang digali lebih dalam supaya tetap berair saat kemarau.", "id_kode": None},
+ "sekat_bakar": {"nama": "Sekat bakar", "tooltip": "Jalur tanah kosong yang menghentikan api ilalang di kemarau.", "id_kode": None},
+ "kandang_ayam": {"nama": "Kandang ayam", "tooltip": "Rumah kecil untuk ayam kampung. Telurnya menambah makanan.", "id_kode": None},
+ "kandang_bebek": {"nama": "Kandang bebek", "tooltip": "Bebek dilepas ke sawah pagi hari untuk memakan wereng.", "id_kode": None},
+ "kandang_kambing": {"nama": "Kandang kambing", "tooltip": "Kandang panggung dari bambu. Aman dari macan tutul di malam hari.", "id_kode": None},
+ "kandang_kerbau": {"nama": "Kandang kerbau", "tooltip": "Kandang besar untuk kerbau pembajak sawah, lengkap dengan kubangan lumpur.", "id_kode": None},
+ "kebun_kopi": {"nama": "Kebun kopi", "tooltip": "Kebun di lereng sejuk. Biji kopi dijemur lalu disangrai.", "id_kode": None},
+}
+
+penyakit_musiman = {
+ "diare": {"nama": "Diare", "musim": ["hujan"], "gejala": "Sakit perut dan bolak-balik ke jamban.",
+  "edukasi": "Selalu minum air yang sudah direbus, cuci tangan pakai sabun sebelum makan, dan tutup makanan dari lalat.",
+  "mulai": ["Hari {hari}: {nama} sakit perut sejak pagi. Sepertinya ia minum air sungai tanpa direbus."],
+  "sembuh": ["Hari {hari}: {nama} sudah pulih setelah banyak minum oralit dan air matang."]},
+ "dbd": {"nama": "Demam berdarah (DBD)", "musim": ["hujan", "labuh"], "gejala": "Demam tinggi mendadak, pegal, dan lemas.",
+  "edukasi": "Lakukan 3M: Menguras tempat air, Menutup tempayan, dan Mengubur barang bekas yang bisa menampung air. Yang demam harus banyak minum dan beristirahat.",
+  "mulai": ["Hari {hari}: {nama} demam tinggi setelah digigit nyamuk. Desa perlu kerja bakti 3M!"],
+  "sembuh": ["Hari {hari}: Demam {nama} sudah turun. Tempayan di rumahnya kini selalu tertutup."]},
+ "ispa": {"nama": "ISPA (batuk & sesak)", "musim": ["kemarau"], "gejala": "Batuk, tenggorokan gatal, dan napas sesak karena asap dan debu.",
+  "edukasi": "Jangan bakar sampah atau ilalang sembarangan, tutup hidung dengan kain basah saat berasap, dan banyak minum air putih.",
+  "mulai": ["Hari {hari}: {nama} batuk-batuk karena asap pembakaran ilalang."],
+  "sembuh": ["Hari {hari}: Napas {nama} sudah lega lagi. Ia berjanji tidak membakar sampah sembarangan."]},
+ "masuk_angin": {"nama": "Masuk angin", "musim": ["mareng", "labuh"], "gejala": "Pegal, perut kembung, dan bersin saat cuaca berubah-ubah.",
+  "edukasi": "Tidur cukup, makan teratur, minum wedang jahe hangat, dan jangan kehujanan terlalu lama.",
+  "mulai": ["Hari {hari}: {nama} masuk angin karena cuaca pancaroba. Badannya pegal-pegal."],
+  "sembuh": ["Hari {hari}: Setelah dikerok dan minum wedang jahe, {nama} segar kembali."]},
+}
+
+ALIAS_ID_V140 = {
+ "_catatan": "id_lama -> id_baru (spec docs/RISET-INDONESIA.md §4). Id lama TIDAK dihapus: entri lama tetap ada dengan teks Indonesia. Kode boleh memakai id baru lewat pemetaan ini.",
+ "musim": {"semi": "hujan", "panas": "kemarau", "gugur": "mareng", "dingin": "kemarau"},
+ "event": {"badai": "angin_kencang", "hewan_buas": "babi_hutan", "serigala_malam": "jejak_macan", "musim_dingin_keras": "kemarau_panjang",
+           "embun_beku": "serangan_wereng", "pilek_musim_gugur": "masuk_angin_pancaroba", "hama_gudang": "tikus_lumbung", "wabah": "diare",
+           "festival_desa": "bersih_desa", "dingin_ekstrem": "malam_bediding", "badai_salju": "angin_kering_berdebu", "serigala_lapar": "babi_hutan_kehausan",
+           "malam_terpanjang": "malam_purnama_kemarau", "angin_gugur": "angin_mareng", "kelinci_ladang": "burung_pipit", "bunga_semi": "bunga_liar_hujan",
+           "gelombang_panas": "panas_terik"},
+ "hewan": {"serigala": "babi_hutan"},
+ "penyebab_kondisi": {"dingin": "cuaca"},
+ "key_teks": {
+  "peringatan_dini.ancaman_serigala": "peringatan_dini.ancaman_babi_hutan",
+  "peringatan_dini.ancaman_dingin_ekstrem": "peringatan_dini.ancaman_bediding (isi tetap di key lama)",
+  "musim_pembuka.musim_semi": "musim_pembuka.musim_hujan", "musim_pembuka.musim_gugur": "musim_pembuka.musim_mareng",
+  "musim_pembuka.musim_dingin": "musim_pembuka.musim_kemarau", "musim_pembuka.musim_panas": "musim_pembuka.musim_kemarau (atau musim_labuh)",
+  "musim_pembuka.musim_semi_hujan": "musim_pembuka.musim_hujan_deras",
+  "musim_pembuka.musim_gugur_menuju_dingin": "musim_pembuka.musim_mareng_menuju_kemarau",
+  "musim_pembuka.musim_gugur_stok_kurang": "musim_pembuka.musim_mareng_stok_kurang",
+  "musim_pembuka.musim_gugur_syukur": "musim_pembuka.musim_mareng_syukur",
+  "musim_pembuka.musim_dingin_kayu_bakar": "musim_pembuka.musim_hujan_kayu_bakar",
+  "musim_pembuka.musim_tahun_baru": "musim_pembuka.musim_tahun_baru_hujan",
+  "log_ancaman.serigala_jejak": "log_ancaman.babi_hutan_jejak", "log_ancaman.serigala_mendekat": "log_ancaman.babi_hutan_mendekat",
+  "log_ancaman.serangan_serigala": "log_ancaman.babi_hutan_serang", "log_ancaman.serigala_usai": "log_ancaman.babi_hutan_usai",
+  "log_ancaman.diusir": "log_ancaman.babi_hutan_diusir", "log_ancaman.kayu_bakar_habis": "musim_pembuka.musim_hujan_api_padam",
+  "bangunan_ancaman.bangunan_menara_jaga": "bangunan_lokal.pos_ronda (id kode tetap menara_jaga)",
+  "bangunan_ancaman.bangunan_menara_jaga.usir": "log_ancaman.pos_ronda_usir",
+  "pasar.musim_dingin": "pasar.musim_kemarau (isi tetap di key lama)",
+  "pasar.pesan_fluktuasi.musim_dingin_pangan": "musim_kemarau_pangan", "pasar.pesan_fluktuasi.musim_dingin_gandum": "musim_kemarau_padi",
+  "pasar.pesan_fluktuasi.semi_kayu": "hujan_kayu", "pasar.pesan_fluktuasi.panas_makanan": "mareng_makanan",
+  "log_jadwal.tidur_di_luar_dingin": "log_jadwal.tidur_di_luar_hujan (isi tetap di key lama)",
+  "penduduk_sakit.per_penyebab.dingin": "penyebab cuaca", "penduduk_meninggal.per_penyebab.dingin": "penyebab cuaca", "pemakaman.per_penyebab.dingin": "penyebab cuaca",
+  "quest_awal.q09_siap_dingin": "q09 Siap Hadapi Kemarau (id tetap)"},
+ "sumber_daya": {"gandum": "gandum (label tampilan: Padi; id tetap)"},
+}
+
+TXT_TEMA_NUSANTARA = {
+ "_catatan": "Isi path untuk tema.js THEMES.indonesia.TXT[k][0] (format [pathTEKS, cadangan]). Placeholder sama dengan cadangan yang sudah ada.",
+ "tahun_baru": "musim_pembuka.musim_tahun_baru_hujan.variasi", "musim_mulai": "musim_pembuka.musim_umum.variasi",
+ "hujan": "musim_pembuka.musim_hujan_deras.variasi", "hujan_pertama": "musim_pembuka.musim_labuh_hujan_pertama.variasi",
+ "menuju_sulit": "musim_pembuka.musim_mareng_menuju_kemarau.variasi", "stok_kurang": "musim_pembuka.musim_mareng_stok_kurang.variasi",
+ "syukur": "musim_pembuka.musim_mareng_syukur.variasi", "kayu_bakar": "musim_pembuka.musim_hujan_kayu_bakar.variasi",
+ "api_padam": "musim_pembuka.musim_hujan_api_padam.variasi", "sulit_mulai": "musim_pembuka.musim_kemarau.variasi",
+ "jejak": "log_ancaman.babi_hutan_jejak", "mendekat": "log_ancaman.babi_hutan_mendekat", "mengintai": "log_ancaman.babi_hutan_mengintai",
+ "usai": "log_ancaman.babi_hutan_usai", "serang": "log_ancaman.babi_hutan_serang", "rusak_ladang": "log_ancaman.babi_hutan_rusak_ladang",
+ "diusir": "log_ancaman.babi_hutan_diusir", "menara": "log_ancaman.pos_ronda_usir",
+ "musim_hujan": "musim_pembuka.musim_hujan.variasi", "musim_mareng": "musim_pembuka.musim_mareng.variasi",
+ "musim_labuh": "musim_pembuka.musim_labuh.variasi", "kemarau_panjang": "musim_pembuka.musim_kemarau_panjang.variasi",
+}
+
+PERLU_DIUBAH_DI_KODE = [
+ "tema.js THEMES.indonesia.TXT: isi path [0] sesuai meta.txt_tema_nusantara (saat ini null -> cadangan).",
+ "tema.js EVENT_DISABLE: event lama (serigala_malam, musim_dingin_keras, embun_beku, pilek_musim_gugur, bunga_semi, angin_gugur, jamur_hutan, burung_migrasi, dingin_ekstrem, badai_salju, malam_terpanjang, serigala_lapar, kelinci_ladang, harga_pangan_melambung) sudah bernarasi Nusantara di v1.4.0, jadi boleh diaktifkan lagi. Tambah EVENT_SEASON_ALIAS dingin -> kemarau (event_musiman ber-musim 'dingin' kini bertema kemarau/bediding).",
+ "Pool event baru: event_lokal[] (format = event_musiman; musim = id musim baru, [] = semua musim). Event kesehatan/satwa sebaiknya dibatasi per musim; jejak macan tutul (serigala_malam/ancaman_macan_tutul) mulai tahun ke-2, macan DIUSIR bukan dibunuh.",
+ "Peringatan dini baru: peringatan_dini.ancaman_babi_hutan, ancaman_monyet, ancaman_ular, ancaman_macan_tutul, ancaman_longsor, ancaman_kemarau_panjang (struktur sama, musim pakai id baru).",
+ "game.js: string hardcode/cadangan bertema serigala/dingin (\"Seekor serigala menerkam…\", \"Cahaya obor membuat serigala ragu\", \"Dari Menara jaga… Serigala lari\", \"Angin membeku malam ini…\", \"Angin beku sudah reda\", \"Lumbung penuh sebelum salju\", cadangan musim_pembuka 'Musim semi/dingin…', label 'Jejak serigala/Auman mendekat') -> ganti ke TX/TT berkunci baru atau kalimat Indonesia.",
+ "game.js RES_LABEL bawaan gandum:'Gandum' -> pakai TEXT.meta.sumber_daya (gandum = 'Padi'); tambahkan label bambu, kelapa, minyak, sabut, kopi bila sumber daya itu ditambahkan ke balance.js.",
+ "balance.js BUILDINGS nama & tech.js nama: Gubuk -> Gubuk bambu, Ladang -> Sawah/Tegalan, Lumbung -> Lumbung padi, Balai desa -> Balai desa (pendopo), Pagar -> Pagar bambu, Menara jaga -> Pos ronda; tech T04 Irigasi Sawah, T05 Gaplek & Ikan Asin, T10 Tanggul & Parit, T13 Caping & Kendi, T20 Bersih Desa (game.js sudah menimpa nama tech dari TEXT.teknologi).",
+ "Emoji/aset musim dingin di jalur Nusantara: ❄️/🍂/🐺/🥶, assets cuaca_salju, tint_beku, vignette_beku, ASSETS.serigala -> pakai aset tropis (kemarau_tint, dust_overlay, rain_heavy_overlay, babi_hutan).",
+ "Kunci TEXT berprefiks lama (musim_semi*, musim_gugur*, musim_dingin*, ancaman_serigala, ancaman_dingin_ekstrem, serigala_*, menara_jaga, pasar.musim_dingin, tidur_di_luar_dingin, per_penyebab.dingin) tetap dipakai kode; isinya sudah Indonesia. Pemetaan ke kunci baru: meta.alias_id_v140.key_teks.",
+ "Pencapaian lewati_musim target 'dingin' (A04 'Kemarau Pertama'): game.js sudah menerima C.HARD_SEASON; target teks tetap 'dingin' (alias -> kemarau).",
+ "penyebab kematian/sakit 'dingin' ditampilkan sebagai 'Cuaca buruk' (meta.penyebab_kondisi.dingin); id tetap.",
+ "Penyakit musiman (penyakit_musiman.diare/dbd/ispa/masuk_angin): kait ke chillSickChance/sleepOutsideSick/ispa saat kemarau berasap; teks edukasi bisa tampil di tooltip sakit.",
+]
+
+KATA_TERLARANG = ["salju", "es", "beku", "membeku", "musim dingin", "dingin ekstrem", "hari paling dingin", "malam paling dingin", "kedinginan salju",
+  "serigala", "perapian", "harimau", "musim gugur", "musim semi", "musim panas", "semi", "gugur", "gandum", "syal", "jaket", "mantel",
+  "boneka salju", "wortel", "kelinci", "ceri", "apel", "anggur", "termometer", "lolongan", "auman serigala", "cerobong salju"]
+
+
+def _resolve(node, p):
+    if p.startswith("@"):
+        m = [x for x in node if isinstance(x, dict) and x.get("id") == p[1:]]
+        if len(m) != 1: raise SystemExit(f"UBAH_V140: id {p} tidak unik/tidak ada")
+        return m[0]
+    return node[int(p)] if isinstance(node, list) else node[p]
+
+def terapkan_ubah(data, ubah):
+    """Ganti teks tampilan lama (harus str & berbeda). Mengembalikan daftar {path, lama, baru} untuk patch."""
+    hasil = []
+    for path, baru in ubah.items():
+        parts = path.split("/"); n = data
+        for p in parts[:-1]: n = _resolve(n, p)
+        k = int(parts[-1]) if isinstance(n, list) else parts[-1]
+        lama = n[k]
+        if not isinstance(lama, str) or not isinstance(baru, str): raise SystemExit(f"UBAH_V140 bukan teks: {path}")
+        if lama == baru: raise SystemExit(f"UBAH_V140 tidak mengubah apa pun: {path}")
+        n[k] = baru; hasil.append({"path": path, "lama": lama, "baru": baru})
+    return hasil
+
+def terapkan_patch_v140(data, patch):
+    """Seperti terapkan_patch + op tambah_subkey (key baru di dalam bagian lama) & tambah_item_meta (item list meta)."""
+    m = data["meta"]
+    for sec, ent in patch["tambah_subkey"].items():
+        for k, v in ent.items():
+            if k in data[sec] and data[sec][k] != v: raise SystemExit(f"{sec}.{k} sudah ada")
+            data[sec].setdefault(k, v)
+    for sec, items in patch["tambah_item_meta"].items():
+        ada = {x["id"] for x in m[sec]}
+        for it in items:
+            if it["id"] in ada: raise SystemExit(f"meta.{sec} id {it['id']} sudah ada")
+            m[sec].append(it)
+    return terapkan_patch(data, patch)
+
+PATCH_V140 = {
+ "_patch": {"versi_dari": "1.3.0", "versi_ke": "1.4.0", "sifat": "MENGUBAH teks tampilan lama (ubah_teks; id/key/angka tetap) + penambahan",
+            "spec": "docs/RISET-INDONESIA.md §4, §6"},
+ "tambah_item_meta": {"musim": [
+   {"id": "hujan", "nama": "Musim Hujan", "pesan": "Hujan mulai rajin turun. Saatnya menanam padi di sawah!", "jawa": "Rendheng"},
+   {"id": "mareng", "nama": "Pancaroba (Mareng)", "pesan": "Padi menguning dan angin mulai kering. Panen dan simpan bekal untuk kemarau.", "jawa": "Mareng"},
+   {"id": "kemarau", "nama": "Musim Kemarau", "pesan": "Sawah tanpa irigasi berhenti tumbuh dan air menyusut. Musim paling berat!", "jawa": "Ketiga"},
+   {"id": "labuh", "nama": "Pancaroba (Labuh)", "pesan": "Mendung mulai datang dan hujan pertama sudah dekat. Siapkan bibit!", "jawa": "Labuh"}]},
+ "tambah_entri_meta": {
+  "sumber_daya": {"bambu": "Bambu", "kelapa": "Kelapa", "minyak": "Minyak kelapa", "sabut": "Sabut kelapa", "kopi": "Kopi"},
+  "hewan": {"monyet": "monyet", "ular": "ular sawah", "macan_tutul": "macan tutul jawa"},
+  "bangunan_pertahanan": {"kentongan": "Kentongan", "orang_orangan_sawah": "Orang-orangan sawah", "tanggul": "Tanggul"},
+  "placeholder": {"{tanaman}": "Nama tanaman di ladang/sawah (padi, jagung, singkong, ubi); isi lewat extra fill()"},
+  "struktur_tambahan": {
+   "event_lokal": "Daftar event bernuansa desa Indonesia, format = event_musiman {id, judul, kategori, deskripsi, pilihan[3], musim[]}; musim = id musim baru (hujan/mareng/kemarau/labuh), [] = semua musim",
+   "flora": "Dict id -> {nama, deskripsi, hasil[id sumber daya], musim[]}",
+   "fauna": "Dict kelompok (ternak, satwa_liar, ancaman) -> id -> {nama, deskripsi}",
+   "bangunan_lokal": "Dict id -> {nama, tooltip, id_kode (id bangunan di kode bila ada, null = usulan baru)}",
+   "penyakit_musiman": "Dict id -> {nama, musim[], gejala, edukasi, mulai[], sembuh[]}"}},
+ "tambah_key_meta": {
+  "status_indonesia": "mengikuti_riset", "sumber_indonesia": "docs/RISET-INDONESIA.md (§4 pemetaan event, §6 tugas teks)",
+  "peta_musim_transisi": {"_catatan": "Isi teks key lama selama kode masih 4 slot lama (tema 'sedang').", "semi": "Musim Hujan", "panas": "Pancaroba (terik)", "gugur": "Musim Panen (Mareng)", "dingin": "Musim Kemarau (malam bediding)"},
+  "alias_id_v140": ALIAS_ID_V140, "txt_tema_nusantara": TXT_TEMA_NUSANTARA, "perlu_diubah_di_kode": PERLU_DIUBAH_DI_KODE,
+  "kata_terlarang": KATA_TERLARANG},
+ "tambah_subkey": {"musim_pembuka": musim_pembuka_v140, "peringatan_dini": peringatan_dini_v140, "log_ancaman": log_ancaman_v140},
+ "tambah_key": {"event_lokal": event_lokal, "flora": flora, "fauna": fauna, "bangunan_lokal": bangunan_lokal, "penyakit_musiman": penyakit_musiman},
+ "set_meta": {"versi": "1.4.0"},
+}
+
 data = {"meta":meta,"penduduk":penduduk,"log_harian":log,"event_acak":event,"tutorial":tutorial,"quest_awal":quest,
         "menu":menu,"pengaturan":pengaturan,"teknologi":teknologi,"ui_progres":ui_progres,"pencapaian":pencapaian,
         "pasar":pasar,"dialog_pedagang":dialog_pedagang,"event_era_lanjut":event_lanjut,"quest_lanjutan":quest_lanjutan}
 terapkan_patch(data, PATCH_V120)
 terapkan_patch(data, PATCH_V130)
+import copy
+data = copy.deepcopy(data)  # patch v1.2/v1.3 berbagi objek dengan data; jangan ikut berubah
+PATCH_V140["ubah_teks"] = terapkan_ubah(data, UBAH_V140)
+terapkan_patch_v140(data, PATCH_V140)
+with open("/workspace/village-game/tools/patch-v1.4.0.json","w",encoding="utf-8") as f:
+    json.dump(PATCH_V140,f,ensure_ascii=False,indent=2); f.write("\n")
 with open("/workspace/village-game/tools/patch-v1.3.0.json","w",encoding="utf-8") as f:
     json.dump(PATCH_V130,f,ensure_ascii=False,indent=2); f.write("\n")
 with open("/workspace/village-game/tools/patch-v1.2.0.json","w",encoding="utf-8") as f:
