@@ -19,8 +19,9 @@ Server harus berjalan di `http://localhost:8095` (`python serve.py`), atau set `
 cd tests
 npm install
 npm run setup     # unduh Chromium untuk Playwright
-npm test          # semua tes: menu, panel, riset, pasar, teks, audio, pencapaian, ponsel (390x844), dll.
-node balance-sim.test.js 5   # simulasi balancing 24 hari (5 kali), cetak kurva stok makanan
+npm test          # semua tes: menu, panel, riset, pasar, teks, audio, pencapaian, ponsel (390x844), musim & ancaman, tumpukan stok, dll.
+node balance-sim.test.js 5   # simulasi balancing 24 hari (5 kali), cetak kurva stok makanan + kematian/kepergian
+node balance-sim.test.js 6 120   # simulasi panjang 120 hari: kematian, kepergian, stok hari 60/120, soft-lock
 ```
 Tes gagal (exit code 1) bila ada error di konsol. Screenshot disimpan di `docs/screenshots/`.
 
@@ -31,12 +32,28 @@ Tes gagal (exit code 1) bila ada error di konsol. Screenshot disimpan di `docs/s
 - **Ringkasan harian** — tiap fajar, log & panel "Ringkasan Kemarin" menampilkan yang dikumpulkan, dimakan, dibangun, dan kejadian hari sebelumnya.
 - **Layar sentuh & ponsel** — di bawah 900px kanvas memenuhi layar dan panel samping menjadi laci bawah (tombol ☰ Panel). Satu jari: seret untuk geser, ketuk untuk memilih penduduk/menaruh bangunan. Dua jari: cubit untuk zoom (level bulat 1/2/3 agar pixel tetap tajam). Tombol diperbesar (≥ 40px). Angka di `balance.js` (`TOUCH`).
 
+## Musim & ancaman (tahap 4, `docs/RISET-MUSIM-ANCAMAN.md`)
+- **Peringatan di layar** — banner kuning/oranye/merah di bawah bar atas: stok pangan (waspada < 8 hari, bahaya < 5, kritis < 3, kolaps = lumbung kosong + jendela modal), jejak/auman serigala, asap & kebakaran, sungai naik/meluap, dingin ekstrem, api unggun padam, kekeringan. 7 hari pertama tanpa penalti kelaparan.
+- **Musim** — semi: tanam lebih cepat, hujan (mood +, tebang sedikit lambat), banjir kecil di tepi sungai (jalan lambat, ladang tepi sungai tertunda). Panas: butuh air ×1,35, kekeringan, risiko api di Dapur/Bengkel. Gugur: hitung mundur ke musim dingin (stok ≥ 8 hari, 10 di tahun ke-2) & syukuran. Dingin: lapar ×2 (Lumbung ×1,6), api unggun makan 2 kayu/hari, pakaian (Kulit ≥ penduduk) mengurangi penurunan mood di luar, dingin ekstrem diumumkan sore sebelumnya.
+- **Serigala** — malam hari, berfase: jejak (sore) → auman, penduduk pulang → serangan (mulai era Dusun; Perkemahan hanya jejak). Pagar memperlambat, Obor (1 kayu / 2 malam) mengurangi peluang terkena, Menara Jaga yang dijaga (tugas darurat **Jaga**) mengusir serigala. Gigitan melukai, bisa trauma; mulai tahun ke-2 bisa fatal bila kesehatan rendah dan jauh dari pagar/menara.
+- **Kebakaran** — bau asap dulu, lalu api; penduduk (tugas darurat **Padam**) memakai 5 air per siraman, atau membuat sekat 10 kayu bila air habis. Api bisa merembet ke bangunan di dekatnya.
+- **Sakit, pergi, kematian** — mood rendah/dingin/lapar bisa membuat sakit ringan (kerja lebih lambat); sakit parah butuh tugas **Rawat** (5 makanan) atau bisa meninggal. Penduduk yang murung 5 hari (atau kelaparan) pergi, tapi desa tidak dibiarkan < 2 orang. Kematian: jasad, tugas **Makam** (5 kayu), upacara, masa berkabung 5 hari (mood turun).
+- **Skala tahun** — tahun ke-2 (hari 29+): ancaman ×1,25, dingin ekstrem lebih sering, cadangan musim dingin 10 hari.
+- **Cuaca & visual** — hujan, salju, daun gugur, hawa panas, tint beku, vignette duka; sprite musiman (rumput/pohon/semak), banjir, api, asap, serigala, jejak, makam.
+- **Pembusukan** — makanan di atas 20 hari stok membusuk 2%/hari (×1,5 musim panas, ×0,5 dengan Lumbung); air di atas 12 hari menguap 10%/hari, maks 30 hari.
+- Prioritas darurat (Jaga/Padam/Rawat/Makam) di panel prioritas: di atas kerja biasa, di bawah makan/tidur kritis. Angka: `SEASON_FX`, `FAMINE`, `THREAT`, `FIRE`, `FLOOD`, `SICKNESS`, `LEAVE`, `DEATH`, `YEAR_SCALE`, `SPOILAGE` di `balance.js`.
+
+## Barang terlihat (tumpukan stok)
+- Kayu, batu, makanan (termasuk gandum) dan air ditumpuk di samping Gudang (atau api unggun / pusat kemah sebelum ada gudang). Tingkat 0–4: `stok == 0 ? 0 : min(4, 1 + floor(3 × stok / kapasitas))`, kapasitas per jenis di `balance.js` (`STOCKPILE.capacity`). Musim dingin memakai varian `_winter`. Sprite: `assets/stockpiles/stockpile_<res>_<0-4>[_winter].png` (kunci `stockpile_*` di `assets.js`); tanpa sprite, game menumpuk ikon sumber daya.
+- Penduduk selalu memakai sprite membawa sesuai jenis barang (kayu/batu/makanan/air; papan/bata/alat/kulit memakai baris terdekat), juga saat berhenti. Saat setor, muncul teks melayang `+N` dengan ikon sumber daya (digabung bila beruntun).
+
 ## Struktur file
 ```
 index.html          Tata letak & UI
 balance.js          SEMUA angka balancing (CONFIG) — ubah di sini untuk tuning
 assets.js           Peta aset tunggal (ASSETS): path sprite, ukuran frame, animasi, warna placeholder
 audio.js            Musik ambien & SFX (WebAudio, tanpa file suara)
+serve.py            Server lokal multi-thread (python serve.py [port] [folder], bawaan 8095)
 tech.js             Pohon teknologi (data)
 theme.css           Tema/skin UI + tata letak responsif
 game.js             Simulasi, AI penduduk, pathfinding, render, UI, simpan/muat

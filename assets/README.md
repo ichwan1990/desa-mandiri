@@ -387,3 +387,276 @@ CSS: `border-image: url(panel.png) 8 fill / 8px / 0 stretch; image-rendering: pi
 - Salju atap dibuat otomatis dari warna atap: atap pasar (kain) hanya dapat salju tipis di tepi atas; versi malam+salju hanya untuk 5 bangunan bercahaya utama.
 - Gerobak arah bawah/atas sederhana (roda tampak samping); tidak ada animasi pedagang mendorong.
 - Ikon tidak punya versi 16x16; untuk ukuran kecil gunakan skala 0.5 dengan hati-hati (gunakan 32 atau 64).
+
+---
+# Tahap 4 — Musim & Ancaman
+Tambahan saja (file tahap 1-3 tidak berubah, diverifikasi md5). Mengikuti `docs/RISET-MUSIM-ANCAMAN.md` (bagian visual): nada hangat & imut, bukan horor. Regenerasi: `cd tools && python3 generate_assets.py && python3 make_preview_stage4.py`. Preview: `preview_stage4.png`. Manifest: `stage: 4`.
+
+## Daftar file tahap 4
+| File | Ukuran gambar | Ukuran frame | Jumlah frame | Catatan |
+|---|---|---|---|---|
+| `seasons/spring/grass_spring.png` | 32x32 | 32x32 | 1 | varian spring dari tiles/grass.png; format/indeks identik |
+| `seasons/spring/grass_flowers_spring.png` | 32x32 | 32x32 | 1 | varian spring dari tiles/grass_flowers.png; format/indeks identik |
+| `seasons/spring/edge_grass_dirt_spring.png` | 256x32 | 32x32 | 8 | varian spring dari tiles/edge_grass_dirt.png; format/indeks identik |
+| `seasons/spring/edge_grass_sand_spring.png` | 256x32 | 32x32 | 8 | varian spring dari tiles/edge_grass_sand.png; format/indeks identik |
+| `seasons/spring/autotile_water_grass_spring.png` | 256x384 | 32x32 | 94 | varian spring dari tiles/autotile_water_grass.png; format/indeks identik |
+| `seasons/spring/autotile_path_grass_spring.png` | 256x192 | 32x32 | 47 | varian spring dari tiles/autotile_path_grass.png; format/indeks identik |
+| `seasons/spring/tree_spring.png` | 32x64 | 32x64 | 1 | varian spring dari nature/tree.png; format/indeks identik |
+| `seasons/spring/berry_bush_full_spring.png` | 32x32 | 32x32 | 1 | varian spring dari nature/berry_bush_full.png; format/indeks identik |
+| `seasons/spring/berry_bush_empty_spring.png` | 32x32 | 32x32 | 1 | varian spring dari nature/berry_bush_empty.png; format/indeks identik |
+| `seasons/summer/grass_summer.png` | 32x32 | 32x32 | 1 | varian summer dari tiles/grass.png; format/indeks identik |
+| `seasons/summer/grass_flowers_summer.png` | 32x32 | 32x32 | 1 | varian summer dari tiles/grass_flowers.png; format/indeks identik |
+| `seasons/summer/edge_grass_dirt_summer.png` | 256x32 | 32x32 | 8 | varian summer dari tiles/edge_grass_dirt.png; format/indeks identik |
+| `seasons/summer/edge_grass_sand_summer.png` | 256x32 | 32x32 | 8 | varian summer dari tiles/edge_grass_sand.png; format/indeks identik |
+| `seasons/summer/autotile_water_grass_summer.png` | 256x384 | 32x32 | 94 | varian summer dari tiles/autotile_water_grass.png; format/indeks identik |
+| `seasons/summer/autotile_path_grass_summer.png` | 256x192 | 32x32 | 47 | varian summer dari tiles/autotile_path_grass.png; format/indeks identik |
+| `seasons/summer/tree_summer.png` | 32x64 | 32x64 | 1 | varian summer dari nature/tree.png; format/indeks identik |
+| `seasons/summer/berry_bush_full_summer.png` | 32x32 | 32x32 | 1 | varian summer dari nature/berry_bush_full.png; format/indeks identik |
+| `seasons/summer/berry_bush_empty_summer.png` | 32x32 | 32x32 | 1 | varian summer dari nature/berry_bush_empty.png; format/indeks identik |
+| `seasons/autumn/grass_autumn.png` | 32x32 | 32x32 | 1 | varian autumn dari tiles/grass.png; format/indeks identik |
+| `seasons/autumn/grass_flowers_autumn.png` | 32x32 | 32x32 | 1 | varian autumn dari tiles/grass_flowers.png; format/indeks identik |
+| `seasons/autumn/edge_grass_dirt_autumn.png` | 256x32 | 32x32 | 8 | varian autumn dari tiles/edge_grass_dirt.png; format/indeks identik |
+| `seasons/autumn/edge_grass_sand_autumn.png` | 256x32 | 32x32 | 8 | varian autumn dari tiles/edge_grass_sand.png; format/indeks identik |
+| `seasons/autumn/autotile_water_grass_autumn.png` | 256x384 | 32x32 | 94 | varian autumn dari tiles/autotile_water_grass.png; format/indeks identik |
+| `seasons/autumn/autotile_path_grass_autumn.png` | 256x192 | 32x32 | 47 | varian autumn dari tiles/autotile_path_grass.png; format/indeks identik |
+| `seasons/autumn/tree_autumn.png` | 32x64 | 32x64 | 1 | varian autumn dari nature/tree.png; format/indeks identik |
+| `seasons/autumn/berry_bush_full_autumn.png` | 32x32 | 32x32 | 1 | varian autumn dari nature/berry_bush_full.png; format/indeks identik |
+| `seasons/autumn/berry_bush_empty_autumn.png` | 32x32 | 32x32 | 1 | varian autumn dari nature/berry_bush_empty.png; format/indeks identik |
+| `seasons/autumn/leaf_pile.png` | 32x32 | 32x32 | 1 | tumpukan daun dekor |
+| `seasons/spring/grass_meadow_spring.png` | 32x32 | 32x32 | 1 | padang bunga, seamless |
+| `seasons/summer/dirt_cracked_summer.png` | 32x32 | 32x32 | 1 | tanah retak kering (tidak seamless di garis retak tepi) |
+| `effects/weather/rain_overlay.png` | 256x64 | 64x64 | 4 | tile 64x64 seamless, 4 frame loop ~80ms; ulangi menutupi layar |
+| `effects/weather/snow_overlay.png` | 256x64 | 64x64 | 4 | tile 64x64 seamless, 4 frame ~200ms |
+| `effects/weather/leaves_overlay.png` | 256x64 | 64x64 | 4 | tile 64x64 seamless daun gugur, 4 frame ~200ms |
+| `effects/weather/heat_haze_overlay.png` | 256x64 | 64x64 | 4 | kilau panas, tile 64x64, 4 frame ~150ms; tambah heat_tint |
+| `effects/weather/heat_tint.png` | 32x32 | 32x32 | 1 | overlay panas kering RGBA (255,200,110,40) |
+| `effects/weather/rain_tint.png` | 32x32 | 32x32 | 1 | overlay mendung saat hujan |
+| `effects/weather/frost_overlay.png` | 32x32 | 32x32 | 1 | embun beku tile 32x32 seamless |
+| `effects/weather/frost_vignette.png` | 320x180 | 320x180 | 1 | stretch ke layar, dingin ekstrem |
+| `effects/weather/particle_rain.png` | 32x8 | 8x8 | 4 | 0-1 tetes jatuh, 2-3 percikan |
+| `effects/weather/particle_snow.png` | 24x8 | 8x8 | 3 | 3 ukuran kepingan |
+| `effects/weather/particle_leaf.png` | 32x16 | 8x8 | 8 | 2 baris warna x 4 frame rotasi |
+| `hazards/flood_tile.png` | 64x32 | 32x32 | 2 | genangan penuh semi-transparan, 2 frame ~500ms, seamless |
+| `hazards/autotile_flood.png` | 256x384 | 32x32 | 94 | 47-blob (sama dengan tahap 2), luar transparan → overlay di atas tanah apa pun; baris 0-5 frame 0, 6-11 frame 1 |
+| `hazards/puddle.png` | 64x32 | 32x32 | 2 | genangan kecil |
+| `hazards/water_rise.png` | 128x128 | 32x32 | 16 | air naik di tepi sungai: baris = sisi asal air (N,E,S,W), kolom = level 0-3; overlay di atas tile tepi |
+| `hazards/fire_small.png` | 192x32 | 32x32 | 6 | api kecil 6 frame ~100ms |
+| `hazards/fire_large.png` | 384x64 | 64x64 | 6 | api besar 6 frame; tumpuk di atas bangunan 2x2, ulang untuk bangunan lebih besar |
+| `hazards/smoke.png` | 128x32 | 32x32 | 4 | asap peringatan sebelum api (loop ~150ms); tampilkan 1-2 detik sebelum fire_* |
+| `hazards/burnt/hut_burnt.png` | 64x64 | 64x64 | 1 | hangus; ukuran/anchor sama dengan buildings/hut.png |
+| `hazards/burnt/warehouse_burnt.png` | 96x64 | 96x64 | 1 | hangus; ukuran/anchor sama dengan buildings/warehouse.png |
+| `hazards/burnt/well_burnt.png` | 32x64 | 32x64 | 1 | hangus; ukuran/anchor sama dengan buildings/well.png |
+| `hazards/burnt/mine_burnt.png` | 64x64 | 64x64 | 1 | hangus; ukuran/anchor sama dengan buildings/mine.png |
+| `hazards/burnt/wooden_house_burnt.png` | 96x96 | 96x96 | 1 | hangus; ukuran/anchor sama dengan buildings/wooden_house.png |
+| `hazards/burnt/kitchen_burnt.png` | 64x64 | 64x64 | 1 | hangus; ukuran/anchor sama dengan buildings/kitchen.png |
+| `hazards/burnt/workshop_burnt.png` | 96x64 | 96x64 | 1 | hangus; ukuran/anchor sama dengan buildings/workshop.png |
+| `hazards/burnt/granary_burnt.png` | 64x96 | 64x96 | 1 | hangus; ukuran/anchor sama dengan buildings/granary.png |
+| `hazards/burnt/market_burnt.png` | 96x64 | 96x64 | 1 | hangus; ukuran/anchor sama dengan buildings/market.png |
+| `hazards/burnt/town_hall_burnt.png` | 128x96 | 128x96 | 1 | hangus; ukuran/anchor sama dengan buildings/town_hall.png |
+| `hazards/burnt/rubble_small.png` | 32x32 | 32x32 | 1 | puing; letakkan setelah bangunan dibersihkan |
+| `hazards/burnt/rubble_large.png` | 64x64 | 64x64 | 1 | puing; letakkan setelah bangunan dibersihkan |
+| `characters/animals/wolf_grey.png` | 128x384 | 32x32 | 48 | 12 baris x 4 kolom: 0-3 diam, 4-7 jalan, 8-11 menyerang (frame 2 = gigitan); arah bawah,kiri,kanan,atas |
+| `characters/animals/wolf_brown.png` | 128x384 | 32x32 | 48 | 12 baris x 4 kolom: 0-3 diam, 4-7 jalan, 8-11 menyerang (frame 2 = gigitan); arah bawah,kiri,kanan,atas |
+| `characters/animals/paw_print.png` | 8x8 | 8x8 | 1 | jejak kaki tunggal 8x8 (atas = arah jalan), rotasi sesuai arah |
+| `characters/animals/paw_trail.png` | 32x32 | 32x32 | 1 | jejak serigala menuju atas (decal tanah), fade setelah ~1 hari |
+| `structures/fence_autotile.png` | 128x128 | 32x32 | 16 | 16-tile 4-bit: indeks = N1+E2+S4+W8 (tetangga pagar/gerbang); kolom = i%4, baris = i//4; indeks 0 = pagar 1-tile (tiang) |
+| `structures/gate_h.png` | 64x32 | 32x32 | 2 | frame 0 tertutup, 1 terbuka; menyambung pagar kiri-kanan (E/W) |
+| `structures/gate_v.png` | 64x32 | 32x32 | 2 | frame 0 tertutup, 1 terbuka; menyambung pagar atas-bawah (N/S) |
+| `structures/watchtower.png` | 64x96 | 64x96 | 1 | 64x96 (alas 2x1 tile di baris bawah); bendera/obor kecil di kanan atas |
+| `structures/torch_post.png` | 160x64 | 32x64 | 5 | obor tiang 32x64: frame 0-3 nyala (~120ms), frame 4 mati (berasap tipis); glow: effects/night/light_glow_small.png |
+| `icons/status/status_injured.png` | 32x32 | 32x32 | 1 |  |
+| `icons/status/status_injured_16.png` | 16x16 | 16x16 | 1 | 16x16 (downscale + kuantisasi palet) |
+| `icons/status/status_sick.png` | 32x32 | 32x32 | 1 |  |
+| `icons/status/status_sick_16.png` | 16x16 | 16x16 | 1 | 16x16 (downscale + kuantisasi palet) |
+| `icons/status/status_cold.png` | 32x32 | 32x32 | 1 |  |
+| `icons/status/status_cold_16.png` | 16x16 | 16x16 | 1 | 16x16 (downscale + kuantisasi palet) |
+| `icons/status/status_sad.png` | 32x32 | 32x32 | 1 |  |
+| `icons/status/status_sad_16.png` | 16x16 | 16x16 | 1 | 16x16 (downscale + kuantisasi palet) |
+| `icons/status/status_thermometer_cold.png` | 32x32 | 32x32 | 1 |  |
+| `icons/status/status_thermometer_cold_16.png` | 16x16 | 16x16 | 1 | 16x16 (downscale + kuantisasi palet) |
+| `icons/status/status_thermometer_hot.png` | 32x32 | 32x32 | 1 |  |
+| `icons/status/status_thermometer_hot_16.png` | 16x16 | 16x16 | 1 | 16x16 (downscale + kuantisasi palet) |
+| `icons/status/status_mourning.png` | 32x32 | 32x32 | 1 |  |
+| `icons/status/status_mourning_16.png` | 16x16 | 16x16 | 1 | 16x16 (downscale + kuantisasi palet) |
+| `ui/warning/banner_yellow.png` | 96x24 | 96x24 | 1 | 9-slice margin 8/4/8/5; teks gelap (kuning/oranye) atau putih (merah) |
+| `ui/warning/warn_hunger_yellow.png` | 32x32 | 32x32 | 1 | peringatan dini tingkat yellow |
+| `ui/warning/warn_fire_yellow.png` | 32x32 | 32x32 | 1 | peringatan dini tingkat yellow |
+| `ui/warning/warn_howl_yellow.png` | 32x32 | 32x32 | 1 | peringatan dini tingkat yellow |
+| `ui/warning/warn_flood_yellow.png` | 32x32 | 32x32 | 1 | peringatan dini tingkat yellow |
+| `ui/warning/banner_orange.png` | 96x24 | 96x24 | 1 | 9-slice margin 8/4/8/5; teks gelap (kuning/oranye) atau putih (merah) |
+| `ui/warning/warn_hunger_orange.png` | 32x32 | 32x32 | 1 | peringatan dini tingkat orange |
+| `ui/warning/warn_fire_orange.png` | 32x32 | 32x32 | 1 | peringatan dini tingkat orange |
+| `ui/warning/warn_howl_orange.png` | 32x32 | 32x32 | 1 | peringatan dini tingkat orange |
+| `ui/warning/warn_flood_orange.png` | 32x32 | 32x32 | 1 | peringatan dini tingkat orange |
+| `ui/warning/banner_red.png` | 96x24 | 96x24 | 1 | 9-slice margin 8/4/8/5; teks gelap (kuning/oranye) atau putih (merah) |
+| `ui/warning/warn_hunger_red.png` | 32x32 | 32x32 | 1 | peringatan dini tingkat red |
+| `ui/warning/warn_fire_red.png` | 32x32 | 32x32 | 1 | peringatan dini tingkat red |
+| `ui/warning/warn_howl_red.png` | 32x32 | 32x32 | 1 | peringatan dini tingkat red |
+| `ui/warning/warn_flood_red.png` | 32x32 | 32x32 | 1 | peringatan dini tingkat red |
+| `effects/mourning_overlay.png` | 32x32 | 32x32 | 1 | duka: overlay redup RGBA (70,70,90,70) selama 1 hari (opsional) |
+| `effects/mourning_vignette.png` | 320x180 | 320x180 | 1 | bingkai redup lembut, stretch ke layar |
+| `structures/graves/grave_stone_round.png` | 32x32 | 32x32 | 1 | 32x32 |
+| `structures/graves/grave_cross_wood.png` | 32x32 | 32x32 | 1 | 32x32 |
+| `structures/graves/grave_stone_flowers.png` | 32x32 | 32x32 | 1 | 32x32 |
+| `structures/graves/grave_cairn.png` | 32x32 | 32x32 | 1 | 32x32 |
+| `structures/graves/grave_mound_fresh.png` | 32x32 | 32x32 | 1 | 32x32 |
+| `structures/graves/grave_stone_snow.png` | 32x32 | 32x32 | 1 | 32x32 |
+| `structures/graves/graveyard_2x2.png` | 64x64 | 64x64 | 1 | contoh susunan makam 2x2 tile |
+
+## Varian musim (`seasons/<spring|summer|autumn>/`)
+Nama = `<file asli>_<musim>.png`, format/frame/indeks **identik** dengan aslinya (termasuk `autotile_water_grass_*` & `autotile_path_grass_*` 47-blob dan `edge_grass_*`). Musim `dingin` = aset tahap 2/3 (`tiles/winter`, `nature/winter`, `buildings/winter`). Peta musim game (`balance.js SEASONS`): semi→spring, panas→summer, gugur→autumn, dingin→winter. Tambahan: `grass_meadow_spring`, `dirt_cracked_summer`, `leaf_pile`. Semi: daun pohon tetap hijau + bunga sakura merah muda.
+
+## Cuaca (`effects/weather/`)
+- Overlay loop 64x64 seamless, 4 frame horizontal: `rain_overlay` (~80ms), `snow_overlay` (~200ms), `leaves_overlay` (~200ms), `heat_haze_overlay` (~150ms). Ubin-kan menutupi layar; bisa digeser (scroll) pelan untuk variasi.
+- Tint tile 32x32: `rain_tint` (mendung), `heat_tint` (panas kering), `frost_overlay` (embun beku), `frost_vignette` 320x180 (stretch; dingin ekstrem).
+- Partikel 8x8: `particle_rain` (0-1 tetes, 2-3 percikan), `particle_snow` (3 ukuran), `particle_leaf` (baris 0 oranye, 1 kuning; 4 frame rotasi).
+
+## Banjir & kebakaran (`hazards/`)
+- `flood_tile` 2 frame; `autotile_flood` 47-blob (indeks sama dengan `tiles/autotile_blob47.json`), luar transparan → overlay di atas tanah apa pun; frame 1 = indeks+47. `puddle` 2 frame.
+- `water_rise` 128x128: baris = sisi datangnya air (0 N, 1 E, 2 S, 3 W), kolom = level 0-3 (makin tinggi). Overlay di tile darat yang bersebelahan dengan sungai.
+- Urutan kebakaran: `smoke` (peringatan 1-2 dtk) → `fire_small` (32x32, 6f) → `fire_large` (64x64, 6f; ulang/tiling untuk bangunan >2x2) → `burnt/<bangunan>_burnt.png` (ukuran/anchor = asli) → setelah dibersihkan `rubble_small/large`.
+
+## Hewan buas (`characters/animals/`)
+`wolf_grey.png`, `wolf_brown.png`: 128x384, frame 32x32, 4 kolom x 12 baris. Baris 0-3 diam, 4-7 jalan, 8-11 menyerang; tiap kelompok bawah, kiri, kanan, atas. Serangan: frame 2 = gigit (kilat kecil), ~120ms/frame. `paw_print` 8x8 (atas = arah jalan; rotasi), `paw_trail` 32x32 (menuju atas).
+
+## Pertahanan (`structures/`)
+- `fence_autotile.png` 128x128, 16 tile 4-bit: **indeks = N·1 + E·2 + S·4 + W·8** (tetangga yang pagar/gerbang), kolom = i%4, baris = i//4. Indeks 0 = pagar 1-tile (tiang).
+- `gate_h.png` / `gate_v.png`: 64x32, frame 0 tertutup, 1 terbuka. gate_h tersambung ke pagar E/W, gate_v ke N/S (hitung gerbang sebagai tetangga pagar).
+- `watchtower.png` 64x96 (alas 2 tile di baris bawah). `torch_post.png` 160x64, frame 32x64: 0-3 nyala, 4 mati.
+- Makam `structures/graves/`: grave_stone_round, grave_cross_wood, grave_stone_flowers, grave_cairn, grave_mound_fresh, grave_stone_snow (32x32), `graveyard_2x2` (contoh 64x64).
+
+## Ikon status & peringatan
+- `icons/status/status_<n>.png` 32x32 + `status_<n>_16.png` 16x16: injured (terluka), sick (sakit), cold (kedinginan), sad (sedih), thermometer_cold (dingin ekstrem/peringatan malam), thermometer_hot (panas kering), mourning (duka).
+- Peringatan dini `ui/warning/`: `warn_<hunger|fire|howl|flood>_<yellow|orange|red>.png` 32x32 (segitiga; merah + tanda seru). `banner_<yellow|orange|red>.png` 96x24, 9-slice margin kiri 8, atas 4, kanan 8, bawah 5; teks gelap di kuning/oranye, putih di merah. Tingkat: kuning = waspada, oranye = segera, merah = kritis/sedang terjadi.
+- Duka (opsional): `effects/mourning_overlay.png` (RGBA 70,70,90,70; tile) dan `effects/mourning_vignette.png` 320x180 selama 1 hari.
+
+## Keterbatasan tahap 4
+- Varian musim dibuat dengan recolor palet; bentuk sama dengan musim semula (tidak ada pohon gugur gundul sebagian). Tanaman/ladang & bangunan tidak punya varian musim selain dingin.
+- `dirt_cracked_summer` tidak 100% seamless di garis retak.
+- Hewan buas hanya serigala (2 warna); tidak ada animasi mati/kabur. Arah atas tanpa ekor jelas.
+- Api besar 64x64 perlu diulang untuk bangunan besar; tidak ada animasi transisi bangunan → hangus.
+- Ikon 16x16 hasil downscale + kuantisasi palet: detail kecil (mata, tetesan) bisa hilang.
+- `water_rise` hanya sisi lurus (tanpa sudut); gunakan bersama autotile_flood untuk area luas.
+
+---
+# Stockpile (tahap 5)
+Sprite tumpukan sumber daya yang terlihat di peta. Semua **32x32** (1 tile, konsisten untuk keempat jenis), 1 frame, anchor tengah-bawah (alas/bayangan di y≈24-30; gambar dengan dasar sejajar bawah tile), bayangan oval sama seperti aset lain. Versi `_winter` ukuran/anchor identik (salju di permukaan atas). Regenerasi: `cd tools && python3 generate_assets.py && python3 make_preview_stockpiles.py`. Preview: `preview_stockpiles.png` (kiri normal, kanan dingin; baris kayu, batu, makanan, air; kolom tingkat 0-4). Manifest: `stage: 5`.
+
+| Sumber daya | File | Tingkat 0 → 4 |
+|---|---|---|
+| kayu | `stockpiles/stockpile_kayu_<0-4>[_winter].png` | palet kosong → 1, 3, 6, 10 gelondong bertingkat (patok penahan mulai tingkat 2) |
+| batu | `stockpiles/stockpile_batu_<0-4>[_winter].png` | alas tanah → 1, 3, 6, 10 batu bertumpuk |
+| makanan | `stockpiles/stockpile_makanan_<0-4>[_winter].png` | palet kosong → 1 keranjang, 2 keranjang, peti+2 keranjang, 3 peti penuh |
+| air | `stockpiles/stockpile_air_<0-4>[_winter].png` | alas batu → 1, 2, 3, 5 tong (+kendi kecil di tingkat 1-3) |
+
+Saran pemetaan tingkat: `lv = stok==0 ? 0 : min(4, 1 + floor(3 * stok / kapasitas))` (atau ambang tetap per sumber daya).
+
+| File | Ukuran | Catatan |
+|---|---|---|
+| `stockpiles/stockpile_kayu_0.png` | 32x32 | tumpukan kayu gelondong di atas palet; tingkat 0/4 (kosong/alas); anchor tengah-bawah |
+| `stockpiles/stockpile_kayu_0_winter.png` | 32x32 | tumpukan kayu gelondong di atas palet; tingkat 0/4 (kosong/alas); bersalju, ukuran/anchor sama |
+| `stockpiles/stockpile_kayu_1.png` | 32x32 | tumpukan kayu gelondong di atas palet; tingkat 1/4; anchor tengah-bawah |
+| `stockpiles/stockpile_kayu_1_winter.png` | 32x32 | tumpukan kayu gelondong di atas palet; tingkat 1/4; bersalju, ukuran/anchor sama |
+| `stockpiles/stockpile_kayu_2.png` | 32x32 | tumpukan kayu gelondong di atas palet; tingkat 2/4; anchor tengah-bawah |
+| `stockpiles/stockpile_kayu_2_winter.png` | 32x32 | tumpukan kayu gelondong di atas palet; tingkat 2/4; bersalju, ukuran/anchor sama |
+| `stockpiles/stockpile_kayu_3.png` | 32x32 | tumpukan kayu gelondong di atas palet; tingkat 3/4; anchor tengah-bawah |
+| `stockpiles/stockpile_kayu_3_winter.png` | 32x32 | tumpukan kayu gelondong di atas palet; tingkat 3/4; bersalju, ukuran/anchor sama |
+| `stockpiles/stockpile_kayu_4.png` | 32x32 | tumpukan kayu gelondong di atas palet; tingkat 4/4; anchor tengah-bawah |
+| `stockpiles/stockpile_kayu_4_winter.png` | 32x32 | tumpukan kayu gelondong di atas palet; tingkat 4/4; bersalju, ukuran/anchor sama |
+| `stockpiles/stockpile_batu_0.png` | 32x32 | tumpukan batu di alas tanah; tingkat 0/4 (kosong/alas); anchor tengah-bawah |
+| `stockpiles/stockpile_batu_0_winter.png` | 32x32 | tumpukan batu di alas tanah; tingkat 0/4 (kosong/alas); bersalju, ukuran/anchor sama |
+| `stockpiles/stockpile_batu_1.png` | 32x32 | tumpukan batu di alas tanah; tingkat 1/4; anchor tengah-bawah |
+| `stockpiles/stockpile_batu_1_winter.png` | 32x32 | tumpukan batu di alas tanah; tingkat 1/4; bersalju, ukuran/anchor sama |
+| `stockpiles/stockpile_batu_2.png` | 32x32 | tumpukan batu di alas tanah; tingkat 2/4; anchor tengah-bawah |
+| `stockpiles/stockpile_batu_2_winter.png` | 32x32 | tumpukan batu di alas tanah; tingkat 2/4; bersalju, ukuran/anchor sama |
+| `stockpiles/stockpile_batu_3.png` | 32x32 | tumpukan batu di alas tanah; tingkat 3/4; anchor tengah-bawah |
+| `stockpiles/stockpile_batu_3_winter.png` | 32x32 | tumpukan batu di alas tanah; tingkat 3/4; bersalju, ukuran/anchor sama |
+| `stockpiles/stockpile_batu_4.png` | 32x32 | tumpukan batu di alas tanah; tingkat 4/4; anchor tengah-bawah |
+| `stockpiles/stockpile_batu_4_winter.png` | 32x32 | tumpukan batu di alas tanah; tingkat 4/4; bersalju, ukuran/anchor sama |
+| `stockpiles/stockpile_makanan_0.png` | 32x32 | keranjang lalu peti makanan di palet; tingkat 0/4 (kosong/alas); anchor tengah-bawah |
+| `stockpiles/stockpile_makanan_0_winter.png` | 32x32 | keranjang lalu peti makanan di palet; tingkat 0/4 (kosong/alas); bersalju, ukuran/anchor sama |
+| `stockpiles/stockpile_makanan_1.png` | 32x32 | keranjang lalu peti makanan di palet; tingkat 1/4; anchor tengah-bawah |
+| `stockpiles/stockpile_makanan_1_winter.png` | 32x32 | keranjang lalu peti makanan di palet; tingkat 1/4; bersalju, ukuran/anchor sama |
+| `stockpiles/stockpile_makanan_2.png` | 32x32 | keranjang lalu peti makanan di palet; tingkat 2/4; anchor tengah-bawah |
+| `stockpiles/stockpile_makanan_2_winter.png` | 32x32 | keranjang lalu peti makanan di palet; tingkat 2/4; bersalju, ukuran/anchor sama |
+| `stockpiles/stockpile_makanan_3.png` | 32x32 | keranjang lalu peti makanan di palet; tingkat 3/4; anchor tengah-bawah |
+| `stockpiles/stockpile_makanan_3_winter.png` | 32x32 | keranjang lalu peti makanan di palet; tingkat 3/4; bersalju, ukuran/anchor sama |
+| `stockpiles/stockpile_makanan_4.png` | 32x32 | keranjang lalu peti makanan di palet; tingkat 4/4; anchor tengah-bawah |
+| `stockpiles/stockpile_makanan_4_winter.png` | 32x32 | keranjang lalu peti makanan di palet; tingkat 4/4; bersalju, ukuran/anchor sama |
+| `stockpiles/stockpile_air_0.png` | 32x32 | tong/gentong air di alas batu; tingkat 0/4 (kosong/alas); anchor tengah-bawah |
+| `stockpiles/stockpile_air_0_winter.png` | 32x32 | tong/gentong air di alas batu; tingkat 0/4 (kosong/alas); bersalju, ukuran/anchor sama |
+| `stockpiles/stockpile_air_1.png` | 32x32 | tong/gentong air di alas batu; tingkat 1/4; anchor tengah-bawah |
+| `stockpiles/stockpile_air_1_winter.png` | 32x32 | tong/gentong air di alas batu; tingkat 1/4; bersalju, ukuran/anchor sama |
+| `stockpiles/stockpile_air_2.png` | 32x32 | tong/gentong air di alas batu; tingkat 2/4; anchor tengah-bawah |
+| `stockpiles/stockpile_air_2_winter.png` | 32x32 | tong/gentong air di alas batu; tingkat 2/4; bersalju, ukuran/anchor sama |
+| `stockpiles/stockpile_air_3.png` | 32x32 | tong/gentong air di alas batu; tingkat 3/4; anchor tengah-bawah |
+| `stockpiles/stockpile_air_3_winter.png` | 32x32 | tong/gentong air di alas batu; tingkat 3/4; bersalju, ukuran/anchor sama |
+| `stockpiles/stockpile_air_4.png` | 32x32 | tong/gentong air di alas batu; tingkat 4/4; anchor tengah-bawah |
+| `stockpiles/stockpile_air_4_winter.png` | 32x32 | tong/gentong air di alas batu; tingkat 4/4; bersalju, ukuran/anchor sama |
+
+Keterbatasan: tingkat 4 mengisi hampir seluruh tile 32x32 (puncak kayu/batu menyentuh y≈4), tidak ada versi 64x32; tidak ada varian semi/panas/gugur (cukup versi normal); tidak animasi.
+
+---
+# Siklus hidup, tidur & rumah (tahap 6)
+Hanya file baru (file lama dicek md5). Anchor semua karakter = `villager_N.png` (frame 32x32, kaki y≈29, bayangan oval y≈27-31). Regenerasi: `cd tools && python3 generate_assets.py && python3 make_preview_lifecycle.py`. Preview: `preview_lifecycle.png`. Manifest: `stage: 6`.
+
+## Format
+| File | Ukuran | Frame | Isi |
+|---|---|---|---|
+| `characters/lifecycle/baby_<1-4>.png` | 64x32 | 32x32 ×2 | bayi bedong diam, napas ~500ms |
+| `characters/lifecycle/cradle.png` / `cradle_empty.png` | 64x32 | 32x32 ×2 | buaian berisi/kosong, ayun ~400ms |
+| `characters/lifecycle/baby_carried_overlay.png` | 128x32 | 32x32 ×4 | kolom = arah bawah, kiri, kanan, atas; tempel di (0,0) frame villager mana pun; saat jalan geser y −1 di frame 1 & 3 |
+| `characters/lifecycle/villager_<1-4>_holding_baby.png` | 128x256 | 32x32 | format villager_N.png (baris 0-3 diam, 4-7 jalan; bawah, kiri, kanan, atas) sudah menggendong bayi |
+| `characters/lifecycle/child_<1-4>.png` | 128x256 | 32x32 | anak, format villager_N.png; tinggi ≈23px (kepala mulai y≈7). Jalan ~110ms/frame |
+| `characters/lifecycle/elder_<1-4>.png` | 128x256 | 32x32 | lansia, format villager_N.png; rambut abu/putih, bungkuk, tongkat (kiri/kanan/bawah). **Saran: jalan 180ms/frame (dewasa 120ms), kecepatan gerak 0.7×**, diam 400ms |
+| `icons/status/icon_zzz_anim.png` | 64x16 | 16x16 ×4 | Zzz, ~300ms loop |
+| `icons/status/icon_heart_pulse.png` | 64x16 | 16x16 ×4 | hati pasangan; denyut 150ms/frame, tahan frame 0 ~600ms |
+| `buildings/night/hut_night_off.png`, `wooden_house_night_off.png` | = asli | 1 | malam lampu mati (jendela gelap); tetap gambar night_overlay di atasnya |
+| `buildings/winter/hut_night_off_winter.png`, `wooden_house_night_off_winter.png` | = asli | 1 | lampu mati + salju |
+| `buildings/hut_door.png` (+`_winter`) | 192x64 | 64x64 ×3 | pintu 0 tertutup, 1 setengah, 2 terbuka |
+| `buildings/wooden_house_door.png` (+`_winter`) | 288x96 | 96x96 ×3 | sama; ~100ms/frame, balik untuk menutup |
+
+Sudah ada sebelumnya (tidak diduplikasi): lampu menyala `buildings/night/hut_night.png`, `wooden_house_night.png`, versi salju menyala `buildings/winter/*_night_winter.png`.
+
+## Offset ikon di atas kepala (relatif kiri-atas frame penduduk 32x32)
+| Ikon | Dewasa | Anak | Lansia | Bayi |
+|---|---|---|---|---|
+| Zzz 16x16 (pojok kanan atas kepala) | (+16, −12) | (+16, −8) | (+16, −11) | (+14, +2) |
+| Hati 16x16 (tengah atas kepala) | (+8, −14) | (+8, −10) | (+8, −13) | (+8, 0) |
+
+Saat penduduk jalan, ikuti bob frame 1 & 3 (y −1). Pintu: posisi pintu hut x 28-36, y 42-56; wooden_house x 42-54, y 64-88 (dalam frame) — titik masuk penduduk = tengah bawah pintu.
+
+## Daftar file
+| File | Ukuran | Catatan |
+|---|---|---|
+| `characters/lifecycle/baby_1.png` | 64x32 | bayi diam (bedong), 2 frame napas ~500ms; kaki/alas y≈29 |
+| `characters/lifecycle/baby_2.png` | 64x32 | bayi diam (bedong), 2 frame napas ~500ms; kaki/alas y≈29 |
+| `characters/lifecycle/baby_3.png` | 64x32 | bayi diam (bedong), 2 frame napas ~500ms; kaki/alas y≈29 |
+| `characters/lifecycle/baby_4.png` | 64x32 | bayi diam (bedong), 2 frame napas ~500ms; kaki/alas y≈29 |
+| `characters/lifecycle/baby_carried_overlay.png` | 128x32 | tempel di atas frame villager_N (posisi 0,0 frame); kolom = arah bawah,kiri,kanan,atas; saat jalan geser y -1 pada frame 1 & 3 |
+| `characters/lifecycle/villager_1_holding_baby.png` | 128x256 | format villager_N.png (0-3 diam, 4-7 jalan) sambil menggendong bayi |
+| `characters/lifecycle/villager_2_holding_baby.png` | 128x256 | format villager_N.png (0-3 diam, 4-7 jalan) sambil menggendong bayi |
+| `characters/lifecycle/villager_3_holding_baby.png` | 128x256 | format villager_N.png (0-3 diam, 4-7 jalan) sambil menggendong bayi |
+| `characters/lifecycle/villager_4_holding_baby.png` | 128x256 | format villager_N.png (0-3 diam, 4-7 jalan) sambil menggendong bayi |
+| `characters/lifecycle/cradle.png` | 64x32 | buaian berisi bayi, 2 frame ayun ~400ms |
+| `characters/lifecycle/cradle_empty.png` | 64x32 | buaian kosong, 2 frame ayun ~400ms |
+| `characters/lifecycle/child_1.png` | 128x256 | anak: format villager_N.png, tinggi ≈23px (kepala mulai y≈7), kaki y≈29 |
+| `characters/lifecycle/child_2.png` | 128x256 | anak: format villager_N.png, tinggi ≈23px (kepala mulai y≈7), kaki y≈29 |
+| `characters/lifecycle/child_3.png` | 128x256 | anak: format villager_N.png, tinggi ≈23px (kepala mulai y≈7), kaki y≈29 |
+| `characters/lifecycle/child_4.png` | 128x256 | anak: format villager_N.png, tinggi ≈23px (kepala mulai y≈7), kaki y≈29 |
+| `characters/lifecycle/elder_1.png` | 128x256 | lansia: format villager_N.png, rambut abu/putih, bungkuk 1px, tongkat; jalan ~180ms/frame & kecepatan 0.7x |
+| `characters/lifecycle/elder_2.png` | 128x256 | lansia: format villager_N.png, rambut abu/putih, bungkuk 1px, tongkat; jalan ~180ms/frame & kecepatan 0.7x |
+| `characters/lifecycle/elder_3.png` | 128x256 | lansia: format villager_N.png, rambut abu/putih, bungkuk 1px, tongkat; jalan ~180ms/frame & kecepatan 0.7x |
+| `characters/lifecycle/elder_4.png` | 128x256 | lansia: format villager_N.png, rambut abu/putih, bungkuk 1px, tongkat; jalan ~180ms/frame & kecepatan 0.7x |
+| `icons/status/icon_zzz_anim.png` | 64x16 | Zzz tidur, 4 frame ~300ms loop; tempel di (x+16, y-12) relatif kiri-atas frame penduduk 32x32 (sudut kanan atas kepala) |
+| `icons/status/icon_heart_pulse.png` | 64x16 | hati pasangan, denyut 4 frame ~150ms (jeda 600ms di frame 0); tempel di (x+8, y-14) = tengah di atas kepala |
+| `buildings/night/wooden_house_night_off.png` | 96x96 | malam lampu mati (penghuni tidur/kosong); ukuran/anchor = buildings/wooden_house.png; tetap pakai night_overlay di atasnya |
+| `buildings/winter/wooden_house_night_off_winter.png` | 96x96 | malam lampu mati + salju |
+| `buildings/wooden_house_door.png` | 288x96 | pintu: 0 tertutup, 1 setengah, 2 terbuka (~100ms/frame; balik urutan untuk menutup); frame = ukuran/anchor wooden_house.png |
+| `buildings/wooden_house_door_winter.png` | 288x96 | pintu: 0 tertutup, 1 setengah, 2 terbuka (~100ms/frame; balik urutan untuk menutup); frame = ukuran/anchor wooden_house.png (versi salju) |
+| `buildings/night/hut_night_off.png` | 64x64 | malam lampu mati (penghuni tidur/kosong); ukuran/anchor = buildings/hut.png; tetap pakai night_overlay di atasnya |
+| `buildings/winter/hut_night_off_winter.png` | 64x64 | malam lampu mati + salju |
+| `buildings/hut_door.png` | 192x64 | pintu: 0 tertutup, 1 setengah, 2 terbuka (~100ms/frame; balik urutan untuk menutup); frame = ukuran/anchor hut.png |
+| `buildings/hut_door_winter.png` | 192x64 | pintu: 0 tertutup, 1 setengah, 2 terbuka (~100ms/frame; balik urutan untuk menutup); frame = ukuran/anchor hut.png (versi salju) |
+
+Keterbatasan: anak & lansia diturunkan dari rig dewasa (anak = baris badan dipadatkan, lansia = kepala digeser + tongkat), jadi proporsi mirip; bayi tidak berjalan; overlay gendong memakai satu warna bedong (biru) untuk semua penduduk (warna sama dengan baju villager_2); arah atas bayi hanya terlihat sebagian di bahu; tidak ada animasi tidur di kasur (pakai Zzz + sembunyikan sprite di dalam rumah); pintu hanya untuk hut & wooden_house.

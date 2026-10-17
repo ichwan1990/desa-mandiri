@@ -75,7 +75,15 @@ window.ASSETS = {
   fajar_overlay: { color: 'rgba(250,186,140,0.27)' },
   // Membawa per jenis: baris = tipe*4 + arah; tipe kayu 0, batu 1, makanan 2, air 3
   penduduk_bawa: { img: ['assets/characters/villager_1_carry.png','assets/characters/villager_2_carry.png','assets/characters/villager_3_carry.png','assets/characters/villager_4_carry.png'],
-              fw: 32, fh: 32, frames: 4, fps: 8, tipe: { kayu: 0, batu: 1, makanan: 2, gandum: 2, air: 3 } },
+              fw: 32, fh: 32, frames: 4, fps: 8, tipe: { kayu: 0, batu: 1, makanan: 2, gandum: 2, air: 3, papan: 0, batu_bata: 1, alat: 1, kulit: 2 } },
+  // Tumpukan stok di samping gudang (atau api unggun/pusat kemah sebelum ada gudang): stockpile_<res>_<0-4>[_winter], 32x32, 1 frame,
+  // anchor tengah-bawah (assets/README.md "Stockpile", manifest stage 5). Tingkat 0 = palet kosong, 4 = penuh.
+  ...Object.fromEntries(['kayu', 'batu', 'makanan', 'air'].flatMap(r => [0, 1, 2, 3, 4].flatMap(t => ['', '_winter'].map(w => [`stockpile_${r}_${t}${w}`,
+    { img: `assets/stockpiles/stockpile_${r}_${t}${w}.png`, color: { kayu: '#8b5a2b', batu: '#9a9a9a', makanan: '#d0413a', air: '#5ab0e6' }[r] }])))),
+  // ikon sumber daya untuk teks melayang "+N" & tumpukan cadangan (urutan = keys)
+  res_ikon: { keys: ['kayu', 'batu', 'makanan', 'air', 'gandum', 'papan', 'batu_bata', 'alat', 'kulit'],
+    img: ['assets/icons/icon_wood.png', 'assets/icons/icon_stone.png', 'assets/icons/icon_food.png', 'assets/icons/icon_water.png', 'assets/icons/resources/icon_wheat.png',
+          'assets/icons/resources/icon_planks.png', 'assets/icons/resources/icon_bricks.png', 'assets/icons/resources/icon_tools.png', 'assets/icons/resources/icon_leather.png'] },
   // Ikon UI (dipakai lewat path di HTML; tidak perlu dimuat ke canvas)
   ikon_need_hunger: { ui: 'assets/icons/needs/need_hunger.png' }, ikon_need_energy: { ui: 'assets/icons/needs/need_energy.png' },
   ikon_need_mood: { ui: 'assets/icons/needs/need_mood.png' }, ikon_need_health: { ui: 'assets/icons/needs/need_health.png' },
@@ -92,6 +100,50 @@ window.ASSETS = {
     A08: 'town_founded', A09: 'first_harvest', A10: 'town_founded', A11: 'rich_storage', A12: 'rich_storage', A13: 'master_skill', A14: 'master_skill',
     A15: 'town_founded', A16: 'first_fire', A17: 'survive_winter', A18: 'town_founded', A19: 'rich_storage', A20: 'town_founded', A21: 'master_skill',
     A22: 'first_fire', A23: 'master_skill', A24: 'population_10', _dir: 'assets/icons/achievements/ach_', _locked: 'locked' },
+  // ---------- tahap 4: varian musim (seasons/<spring|summer|autumn>/<asli>_<musim>.png), dipakai hanya bila gambarnya termuat ----------
+  rumput_semi: { img: 'assets/seasons/spring/grass_spring.png' }, rumput2_semi: { img: 'assets/seasons/spring/grass_flowers_spring.png' },
+  auto_air_semi: { img: 'assets/seasons/spring/autotile_water_grass_spring.png', blob: true, animFrames: 2, fps: 2 },
+  pohon_semi: { img: 'assets/seasons/spring/tree_spring.png', fw: 32, fh: 64 }, semak_semi: { img: 'assets/seasons/spring/berry_bush_full_spring.png' }, semak_kosong_semi: { img: 'assets/seasons/spring/berry_bush_empty_spring.png' },
+  rumput_panas: { img: 'assets/seasons/summer/grass_summer.png' }, rumput2_panas: { img: 'assets/seasons/summer/grass_flowers_summer.png' },
+  auto_air_panas: { img: 'assets/seasons/summer/autotile_water_grass_summer.png', blob: true, animFrames: 2, fps: 2 },
+  pohon_panas: { img: 'assets/seasons/summer/tree_summer.png', fw: 32, fh: 64 }, semak_panas: { img: 'assets/seasons/summer/berry_bush_full_summer.png' }, semak_kosong_panas: { img: 'assets/seasons/summer/berry_bush_empty_summer.png' },
+  rumput_gugur: { img: 'assets/seasons/autumn/grass_autumn.png' }, rumput2_gugur: { img: 'assets/seasons/autumn/grass_flowers_autumn.png' },
+  auto_air_gugur: { img: 'assets/seasons/autumn/autotile_water_grass_autumn.png', blob: true, animFrames: 2, fps: 2 },
+  pohon_gugur: { img: 'assets/seasons/autumn/tree_autumn.png', fw: 32, fh: 64 }, semak_gugur: { img: 'assets/seasons/autumn/berry_bush_full_autumn.png' }, semak_kosong_gugur: { img: 'assets/seasons/autumn/berry_bush_empty_autumn.png' },
+  rumput_meadow_semi: { img: 'assets/seasons/spring/grass_meadow_spring.png' }, tanah_retak_panas: { img: 'assets/seasons/summer/dirt_cracked_summer.png' }, tumpukan_daun: { img: 'assets/seasons/autumn/leaf_pile.png' },
+  // cuaca: overlay 64x64 x4 frame diubinkan menutupi layar; tint 32x32 diubinkan; vignette di-stretch
+  cuaca_hujan: { img: 'assets/effects/weather/rain_overlay.png', fw: 64, fh: 64, frames: 4, ms: 80, color: 'rgba(160,190,230,0.5)' },
+  cuaca_salju: { img: 'assets/effects/weather/snow_overlay.png', fw: 64, fh: 64, frames: 4, ms: 200, color: '#f4f8fc' },
+  cuaca_daun:  { img: 'assets/effects/weather/leaves_overlay.png', fw: 64, fh: 64, frames: 4, ms: 200, color: '#d9822b' },
+  cuaca_panas: { img: 'assets/effects/weather/heat_haze_overlay.png', fw: 64, fh: 64, frames: 4, ms: 150 },
+  tint_hujan: { img: 'assets/effects/weather/rain_tint.png', color: 'rgba(60,70,100,0.18)' },
+  tint_panas: { img: 'assets/effects/weather/heat_tint.png', color: 'rgba(255,200,110,0.16)' },
+  tint_beku:  { img: 'assets/effects/weather/frost_overlay.png', color: 'rgba(200,225,245,0.15)' },
+  vignette_beku: { img: 'assets/effects/weather/frost_vignette.png' },
+  duka_overlay: { img: 'assets/effects/mourning_overlay.png', color: 'rgba(70,70,90,0.27)' }, duka_vignette: { img: 'assets/effects/mourning_vignette.png' },
+  // bahaya
+  banjir_auto: { img: 'assets/hazards/autotile_flood.png', blob: true, animFrames: 2, fps: 2, color: 'rgba(90,150,210,0.45)' },
+  air_naik:    { img: 'assets/hazards/water_rise.png' },               // baris = sisi asal air N,E,S,W; kolom = level 0-3
+  asap:        { img: 'assets/hazards/smoke.png', frames: 4, ms: 150, color: 'rgba(206,200,200,0.66)' },
+  api_kecil:   { img: 'assets/hazards/fire_small.png', frames: 6, ms: 100, color: '#ff8a2a' },
+  api_besar:   { img: 'assets/hazards/fire_large.png', fw: 64, fh: 64, frames: 6, ms: 100, color: '#ff6a1a' },
+  puing_kecil: { img: 'assets/hazards/burnt/rubble_small.png' }, puing_besar: { img: 'assets/hazards/burnt/rubble_large.png', fw: 64, fh: 64 },
+  gubuk_hangus: { img: 'assets/hazards/burnt/hut_burnt.png', fw: 64, fh: 64 }, gudang_hangus: { img: 'assets/hazards/burnt/warehouse_burnt.png', fw: 96, fh: 64 },
+  sumur_hangus: { img: 'assets/hazards/burnt/well_burnt.png', fw: 32, fh: 64 }, dapur_hangus: { img: 'assets/hazards/burnt/kitchen_burnt.png', fw: 64, fh: 64 },
+  bengkel_hangus: { img: 'assets/hazards/burnt/workshop_burnt.png', fw: 96, fh: 64 }, lumbung_hangus: { img: 'assets/hazards/burnt/granary_burnt.png', fw: 64, fh: 96 },
+  pasar_hangus: { img: 'assets/hazards/burnt/market_burnt.png', fw: 96, fh: 64 }, balai_hangus: { img: 'assets/hazards/burnt/town_hall_burnt.png', fw: 128, fh: 96 },
+  // serigala: 32x32, baris = mode*4 + arah (mode diam 0, jalan 1, serang 2; arah bawah,kiri,kanan,atas); serang frame 2 = gigitan
+  serigala: { img: ['assets/characters/animals/wolf_grey.png', 'assets/characters/animals/wolf_brown.png'], frames: 4, color: '#6b6b74' },
+  jejak_kaki: { img: 'assets/characters/animals/paw_print.png', fw: 8, fh: 8 }, jejak_serigala: { img: 'assets/characters/animals/paw_trail.png', color: 'rgba(60,50,40,0.5)' },
+  // bangunan pertahanan & duka
+  pagar:  { color: '#8a5a32', img: 'assets/structures/fence_autotile.png' },   // indeks = N1+E2+S4+W8; kolom i%4, baris i//4
+  gerbang_h: { img: 'assets/structures/gate_h.png' }, gerbang_v: { img: 'assets/structures/gate_v.png' },
+  obor:   { color: '#ffb040', img: 'assets/structures/torch_post.png', fw: 32, fh: 64, frames: 4, ms: 120, frameMati: 4 },
+  menara_jaga: { color: '#7a5434', img: 'assets/structures/watchtower.png', fw: 64, fh: 96 },
+  makam:  { color: '#9a9a9a', img: ['assets/structures/graves/grave_mound_fresh.png', 'assets/structures/graves/grave_cross_wood.png', 'assets/structures/graves/grave_stone_round.png', 'assets/structures/graves/grave_stone_flowers.png', 'assets/structures/graves/grave_cairn.png'] },
+  makam_dingin: { img: 'assets/structures/graves/grave_stone_snow.png' },
+  // UI peringatan & status
+  WARN_DIR: 'assets/ui/warning/', STATUS_DIR: 'assets/icons/status/',
   blob47:   { json: 'assets/tiles/autotile_blob47.json' },
 };
 // Muat gambar dengan batas paralel (agar server sederhana tidak menolak koneksi) + coba ulang.

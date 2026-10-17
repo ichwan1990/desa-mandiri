@@ -88,3 +88,14 @@ body.mobile .v{padding:8px 0;font-size:13px}
 body.mobile select, body.mobile input[type=range], body.mobile input[type=number]{min-height:36px;font-size:15px}
 body.mobile #tut{left:6px!important;right:6px!important;bottom:8px!important;top:auto!important;width:auto!important}
 body.mobile #top>*, body.mobile #top button{flex:none;white-space:nowrap} body.mobile #top span{display:inline-flex;align-items:center;gap:2px}
+
+/* peringatan dini (tahap 4): banner 9-slice 8/4/8/5 di atas kanvas */
+#cwrap{position:relative;display:block}
+#warnbar{position:absolute;left:8px;top:8px;display:flex;flex-direction:column;gap:4px;pointer-events:none;z-index:5;max-width:60%}
+.warn{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:bold;padding:2px 10px 3px 6px;color:#2a1a10;border-style:solid;border-width:4px 8px 5px 8px;image-rendering:pixelated;pointer-events:auto;width:max-content;max-width:100%}
+.warn img{width:16px;height:16px;image-rendering:pixelated}
+.warn.w-yellow{border-image:url(assets/ui/warning/banner_yellow.png) 4 8 5 8 fill stretch;background:none}
+.warn.w-orange{border-image:url(assets/ui/warning/banner_orange.png) 4 8 5 8 fill stretch;background:none}
+.warn.w-red{border-image:url(assets/ui/warning/banner_red.png) 4 8 5 8 fill stretch;background:none;color:#fff;animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{50%{filter:brightness(1.25)}}
+body.mobile #warnbar{max-width:92%}

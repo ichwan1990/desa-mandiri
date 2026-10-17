@@ -42,6 +42,7 @@ window.AUDIO = (() => {
     event: t => { tone(880, t, 1.2, { gain: 0.18 }); tone(1320, t, 0.9, { gain: 0.08 }); tone(660, t + 0.25, 1.0, { gain: 0.1 }); },
     lonceng: t => { tone(1046.5, t, 0.8, { gain: 0.14 }); tone(1568, t + 0.12, 0.7, { gain: 0.1 }); },
     koin: t => { tone(1318.5, t, 0.12, { type: 'square', gain: 0.06 }); tone(1975.5, t + 0.07, 0.2, { type: 'square', gain: 0.05 }); },
+    lolong: t => { tone(330, t, 1.6, { type: 'sawtooth', gain: 0.05, attack: 0.3, slide: 1.35 }); tone(495, t + 0.2, 1.4, { type: 'sine', gain: 0.05, attack: 0.3, slide: 1.2 }); },
     klik: t => tone(1200, t, 0.04, { type: 'square', gain: 0.05 }),
   };
   function sfx(name) { if (!ctx || !SFX[name] || ctx.state !== 'running') return; const now = ctx.currentTime;
