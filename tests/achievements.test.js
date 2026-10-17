@@ -19,6 +19,7 @@ const { chromium } = require('playwright');
   r.sum = await p.evaluate(() => { const S = DESA.state; S.dayStats = { gathered: { kayu: 12 }, eaten: { makanan: 4 }, built: { Gubuk: 1 }, events: { 'Badai': 1 } }; S.day = 5;
     const s = DESA.endOfDaySummary(); return [s.day, S.log[0]]; });
   // simulasi musim dingin tanpa kelaparan lewat newDay di pergantian musim
+  r.achN = await p.evaluate(() => fetch(CONFIG.TEXT_FILE || 'TEKS-GAME.json').then(x => x.json()).then(t => t.pencapaian.length)); // TEKS v1.5.0: 34 pencapaian (dulu 24)
   await p.click('#achbtn'); await p.waitForTimeout(300);
   r.panel = await p.evaluate(() => ({ items: document.querySelectorAll('#achpanel .ach').length, open: document.querySelectorAll('#achpanel .ach.open').length, secret: [...document.querySelectorAll('#achpanel .ach.locked b')].filter(x => x.textContent === '???').length, head: document.querySelector('#achpanel h3').textContent }));
   await p.evaluate(() => DESA.toast('assets/icons/achievements/ach_first_fire.png', '🏅 Pencapaian terbuka: Api Pertama!', 'Percikan pertama menyala.'));
@@ -27,6 +28,6 @@ const { chromium } = require('playwright');
   r.persist = await p.evaluate(() => [Object.keys(DESA.ach.unlocked).length, !!localStorage.getItem('desaMandiriPencapaian'), !localStorage.getItem('desaMandiriSave')]);
   const ok = ['A01', 'A02', 'A03', 'A07'].every(x => r.a.after.includes(x)) && r.a.kayuGain >= 10 && r.toasts.length > 0
     && ['A22', 'A12', 'A04'].every(x => r.b.includes(x)) && !r.b.includes('A24') && r.sum[0] === 4 && /dikumpulkan kayu 12/.test(r.sum[1]) && /Badai/.test(r.sum[1])
-    && r.panel.items === 24 && r.panel.secret === 2 && r.persist[0] === r.panel.open && r.persist[1] && errs.length === 0;
+    && r.panel.items === r.achN && r.panel.secret >= 2 && r.persist[0] === r.panel.open && r.persist[1] && errs.length === 0;
   console.log(JSON.stringify({ ok, r, errs }, null, 1)); await b.close(); process.exit(ok ? 0 : 1);
 })();

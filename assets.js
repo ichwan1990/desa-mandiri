@@ -187,6 +187,7 @@ window.ASSETS = {
 // Tema: ganti sprite bangunan (CONFIG.ASSET_SWAP: id -> id aset tema, termasuk varian _malam/_mati) dan buang varian musim tema lain agar tidak ikut dimuat.
 (function applyThemeAssets() { const C = window.CONFIG || {}, A = window.ASSETS, swap = C.ASSET_SWAP || {};
   for (const [k, to] of Object.entries(swap)) for (const suf of ['', '_malam', '_mati']) { if (A[to + suf]) A[k + suf] = Object.assign({}, A[k + suf] || {}, A[to + suf]); else if (suf && A[k + suf] && A[k]) delete A[k + suf]; }
+  for (const [r, src] of Object.entries(C.RES_ICON || {})) { const i = A.res_ikon.keys.indexOf(r); if (i >= 0) A.res_ikon.img[i] = src; } // ikon sumber daya per tema (Padi)
   const tropis = C.THEME !== 'sedang', drop = tropis ? /_(semi|panas|gugur|dingin|winter)$/ : /_(hujan|mareng|kemarau|labuh)$/;
   for (const k of Object.keys(A)) if (drop.test(k) && !['makam_dingin', 'tanah_retak_panas', 'rumput_meadow_semi'].includes(k)) delete A[k];
   if (tropis) for (const k of ['cuaca_salju', 'tint_beku', 'vignette_beku']) delete A[k];

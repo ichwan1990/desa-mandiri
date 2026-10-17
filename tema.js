@@ -26,6 +26,8 @@ window.THEMES = {
     RES_LABEL: {}, EVENT_DISABLE: [], EVENT_SEASON_ALIAS: {}, EVENT_RULES: {},
     MARKET_MUSIM: { dingin: { jual: { makanan: 1.25, gandum: 1.25 }, beli: { makanan: 1.4, gandum: 1.4 } }, semi: { jual: { kayu: 0.9 } }, panas: { jual: { makanan: 0.85 } } },
     TXT: {}, TEXT_PATCH: {},
+    // TEKS-GAME.json v1.4.0 sudah Nusantara; tema empat musim memakai salinan v1.3.0 (teks lama, tanpa nasi bungkus/macan)
+    TEXT_FILE: 'TEKS-GAME-sedang.json',
   },
   // ---------- Nusantara: hujan, mareng, kemarau, labuh (tanpa salju) ----------
   indonesia: {
@@ -62,7 +64,8 @@ window.THEMES = {
     // sprite tropis (tahap 7) menggantikan sprite lama untuk id bangunan yang sama
     ASSET_SWAP: { gubuk: 'gubuk_bambu', lumbung: 'lumbung_padi', menara_jaga: 'pos_ronda', pagar: 'pagar_bambu', obor: 'obor_bambu' },
     BUILDING_NAMES: { gubuk: 'Gubuk Bambu', lumbung: 'Lumbung Padi', menara_jaga: 'Pos Ronda', pagar: 'Pagar Bambu', obor: 'Oncor', ladang: 'Ladang (Tegalan)' },
-    RES_LABEL: { gandum: 'Padi' }, // id internal tetap 'gandum' (save & quest tetap cocok)
+    RES_LABEL: { gandum: 'Padi' },
+    RES_ICON: { gandum: 'assets/icons/resources/icon_padi.png' }, // ikon sementara (tools/buat_ikon_padi.py) sampai ada ikon resmi // id internal tetap 'gandum' (save & quest tetap cocok)
     // TEKS v1.4.0 sudah melokalkan semua event (id lama tetap, teks Nusantara) -> tidak ada yang dimatikan; musim event lama dipetakan ke musim tropis
     EVENT_DISABLE: [],
     EVENT_SEASON_ALIAS: { semi: 'hujan', panas: 'kemarau', gugur: 'mareng', dingin: 'kemarau' }, // = TEKS meta.alias_id_v140.musim
@@ -72,6 +75,7 @@ window.THEMES = {
     TXT: {
       tahun_baru: [null, 'Tahun ke-{tahun} dimulai. Hujan pertama membasahi sawah.'],
       musim_mulai: [null, '{musim} dimulai.'],
+      musim_hujan: [null, 'Musim hujan tiba. Saatnya membajak sawah dan menanam padi.'], musim_mareng: [null, 'Mareng datang. Padi menguning dan sawah siap dipanen.'], musim_labuh: [null, 'Labuh datang. Mendung mulai menggantung, sumur perlahan berair lagi.'], // path TEKS diisi dari meta.txt_tema_nusantara saat TEKS dimuat
       hujan: [null, 'Hujan turun seharian. Yang tidak punya atap kebasahan.'],
       hujan_pertama: [null, 'Hujan pertama turun. Bau tanah basah membuat semua orang tersenyum.'],
       menuju_sulit: [null, 'Sisa {hari_sisa} hari sebelum kemarau. Stok {jumlah}/{jumlah2} hari.'],
@@ -106,7 +110,7 @@ CONFIG.THREAT.wolf.hardMult = CONFIG.THREAT.wolf.winterMult;
   try { const q = new URLSearchParams(location.search).get('tema'); if (q && THEMES[q]) id = q; } catch (e) { /* tanpa location */ }
   const T = THEMES[id]; CONFIG.THEME = id;
   for (const k of ['SEASONS', 'SEASON_LEN', 'SEASON_NAMES', 'SEASON_ICONS', 'HARD_SEASON', 'HARD_COLD', 'HARD_HUNGER_MULT', 'GRANARY_HARD_HUNGER_MULT', 'HARD_BUFFER_DAYS',
-    'SEASON_FX', 'NIGHT_THREAT', 'ART_SUFFIX', 'WINTER_ART', 'WEATHER', 'EVENT_DISABLE', 'EVENT_SEASON_ALIAS', 'TXT', 'TEXT_PATCH', 'TERMS', 'FIELD_ROTATION', 'ASSET_SWAP']) CONFIG[k] = T[k];
+    'SEASON_FX', 'NIGHT_THREAT', 'ART_SUFFIX', 'WINTER_ART', 'WEATHER', 'EVENT_DISABLE', 'EVENT_SEASON_ALIAS', 'TXT', 'TEXT_PATCH', 'TERMS', 'FIELD_ROTATION', 'ASSET_SWAP', 'RES_ICON', 'TEXT_FILE']) CONFIG[k] = T[k];
   for (const [b, n] of Object.entries(T.BUILDING_NAMES || {})) if (CONFIG.BUILDINGS[b]) CONFIG.BUILDINGS[b] = Object.assign({}, CONFIG.BUILDINGS[b], { nama: n });
   CONFIG.YEAR_SCALE = Object.assign({}, CONFIG.YEAR_SCALE, T.YEAR_SCALE);
   CONFIG.FIELD = Object.assign({}, CONFIG.FIELD, { crops: T.FIELD_CROPS });

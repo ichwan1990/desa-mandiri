@@ -150,6 +150,8 @@ function chooseTask(v) {
   const pop = S.villagers.length;
   if (foodTotal() < pop * 3) { const t = farmTask(v, true) || gatherTask(v, 'makanan'); if (t) return t; }
   if (S.res.air < pop * C.WATER.perDayPerPop) { const t = waterTask(v); if (t) return t; }
+  // 3b. Pengaman: hari >= 6 tanpa gubuk jadi -> bangun gubuk yang sudah ditaruh, atau kumpulkan kayu/batu yang kurang untuk biayanya (Asisten Analisa)
+  { const t = hutEmergencyTask(v); if (t) return t; }
   // 4. Prioritas kerja (utility: prioritas, jarak, skill)
   let best = null, bs = -1e9;
   for (const job of Object.keys(S.prio)) { const p = S.prio[job]; if (!p || EMERG.includes(job)) continue;
@@ -167,6 +169,10 @@ function gatherTask(v, res) {
   const nodes = S.nodes.filter(n => RES_OF[n.type] === res && n.amount > 0 && !taken.has(n) && !(n.unreachable > S.t));
   const n = nearest(nodes, v); return n ? { kind: 'kumpul', res, node: n, target: { x: n.x, y: n.y }, work: 0 } : null;
 }
+function hutEmergencyTask(v) { if (S.day < 6 || done('gubuk').length) return null;
+  const site = nearest(S.buildings.filter(b => b.type === 'gubuk' && !b.done), v, center); if (site) return { kind: 'bangun', b: site, target: center(site) };
+  const need = Object.entries(C.BUILDINGS.gubuk.cost).find(([k, n]) => (k === 'kayu' || k === 'batu') && S.res[k] < n);
+  return need ? gatherTask(v, need[0]) : null; }
 function buildTask(v) { const b = nearest(S.buildings.filter(b => !b.done || (b.hp ?? 100) < C.BUILDING_DAMAGE.repairBelow), v, center); return b ? { kind: 'bangun', b, target: center(b) } : null; }
 function farmTask(v, harvestOnly) {
   const taken = new Set(S.villagers.filter(o => o !== v && o.task && o.task.kind === 'tani').map(o => o.task.b));
@@ -251,7 +257,7 @@ function updateVillager(v, dt) {
         if (n.amount <= 0) n.regrow = n.type === 'semak' ? C.BUSH_REGROW_SEC : 0;
         v.skills[SKILL_OF[t.res]] += C.SKILL_GAIN; v.carry = { res: t.res, n: amt }; sfx(t.res === 'kayu' ? 'tebang' : t.res === 'batu' ? 'tambang' : 'klik');
         const st = storage(v); v.task = st ? { kind: 'setor', target: stPos(st) } : null; } break; }
-    case 'bangun': { const b = t.b; if (b.done || !S.buildings.includes(b)) { v.task = null; break; }
+    case 'bangun': { const b = t.b; if (!S.buildings.includes(b) || b.done && (b.hp ?? 100) >= 100) { v.task = null; break; } // bangunan rusak (hp<100) tetap diperbaiki (Asisten Analisa: dulu tugas langsung dibuang)
       if (b.done) { b.hp = Math.min(100, (b.hp ?? 100) + C.BUILDING_DAMAGE.repairPerSec * dt * workMult(v, 'membangun')); v.working = true;
         if (b.hp >= 100) { log(`${v.name} selesai memperbaiki ${C.BUILDINGS[b.type].nama}.`); v.working = false; v.task = null; } break; }
       v.working = true; b.progress += dt * workMult(v, 'membangun');
@@ -403,6 +409,10 @@ function fireEvent(ev) {
   const em = M().eventMods[ev.id]; if (em) for (const [side, items] of Object.entries(em)) for (const [res, pct] of Object.entries(items)) addPriceEvent(side, [res], pct, M().eventDays);
   S.event = ev.id; showEvent(); }
 const addsPop = ef => (ef && ef.penduduk) > 0;
+// 👥 penduduk/tempat tidur; sebelum ada rumah: "2 (belum ada rumah)" alih-alih "2/0"
+function popBadge() { const n = S.villagers.length, cap = capacity(), U = (TEXT && TEXT.ui) || {};
+  return cap > 0 ? `<span id="popBadge" title="${U.penduduk_tempat || 'Penduduk / tempat tidur di rumah'}">👥 <b>${n}/${cap}</b></span>`
+    : `<span id="popBadge" title="${U.penduduk_tanpa_rumah_tip || 'Bangun Gubuk agar penduduk punya tempat tidur'}">👥 <b>${n}</b> <small>(${U.penduduk_tanpa_rumah || 'belum ada rumah'})</small></span>`; }
 const housingOk = ef => !addsPop(ef) || capacity() >= S.villagers.length + ef.penduduk;
 function showEvent() { const e = allEvents().find(x => x.id === S.event); if (!e) { S.event = null; return; }
   // event pendatang: siapkan nama baru yang belum dipakai untuk {nama}
@@ -517,7 +527,7 @@ const STX = (kOld, kTheme, ex, fb) => C.THEME === 'sedang' ? TX(kOld, ex, fb) : 
 function seasonDaily() { const si = seasonInfo(), se = si.id, dis = si.day, F = FX(), pop = S.villagers.length, ic = (C.SEASON_ICONS || {})[se] || '';
   if (dis === 1) { if (F.newYear && S.day > 1) log('🌱 ' + STX('musim_pembuka.musim_tahun_baru', 'tahun_baru', { tahun: year() }, `Tahun ke-${year()} dimulai.`));
     const oldFb = { semi: 'Musim semi — saatnya menanam sebelum hujan deras.', panas: 'Musim panas datang. Jaga stok air!', gugur: 'Musim gugur tiba. Waktunya panen dan menyimpan bekal.', dingin: 'Musim dingin datang. Api unggun butuh kayu bakar.' }[se];
-    log(ic + ' ' + (C.THEME === 'sedang' ? TX('musim_pembuka.musim_' + se, { tahun: year() }, oldFb) : se === C.HARD_SEASON ? TT('sulit_mulai') : TT('musim_mulai', { musim: C.SEASON_NAMES[se] })));
+    log(ic + ' ' + (C.THEME === 'sedang' ? TX('musim_pembuka.musim_' + se, { tahun: year() }, oldFb) : se === C.HARD_SEASON ? TT('sulit_mulai') : (C.TXT || {})['musim_' + se] ? TT('musim_' + se, { musim: C.SEASON_NAMES[se], tahun: year() }) : TT('musim_mulai', { musim: C.SEASON_NAMES[se] })));
     if (F.newYear) S.droughtDone = false; S.floodDone = false; S.floodN = 0; S.firstRainDone = false; }
   // hujan (+ banjir)
   if (F.rainChance) { if (Math.random() < F.rainChance) { S.rainDay = S.day;
@@ -691,15 +701,17 @@ function biteVillager(o, v) { const W = TH(); if (!v || !S.villagers.includes(v)
   v.task = null; }
 // ---- sakit ----
 function makeSick(v, lvl, cause) { const K = C.SICKNESS; if (v.sick && v.sick.lvl === 'parah' && lvl === 'ringan') return;
-  v.sick = { lvl, until: S.day + rndInt(K.lightDays[0], K.lightDays[1]), cause, cared: false };
+  v.sick = { lvl, until: S.day + rndInt(K.lightDays[0], K.lightDays[1]), cause, cared: false, since: S.day };
   const pc = cause && TEXT && TEXT.penduduk_sakit && TEXT.penduduk_sakit.per_penyebab && TEXT.penduduk_sakit.per_penyebab[cause];
   log('🤒 ' + (pc ? TX('penduduk_sakit.per_penyebab.' + cause, { nama: v.name }) : TX(`penduduk_sakit.${lvl}.mulai`, { nama: v.name }, `${v.name} jatuh sakit${lvl === 'parah' ? ' parah' : ''}.`)));
   if (lvl === 'parah') { log('💊 ' + TX('penduduk_sakit.parah.butuh_rawat', { nama: v.name }, `${v.name} sakit parah dan perlu dirawat.`)); v.task = null; } }
 function sicknessDaily() { const K = C.SICKNESS, F = FX();
   for (const v of S.villagers.slice()) {
     if (v.sick) { const s = v.sick;
-      if (s.lvl === 'parah') { if (!s.cared && !(s.cause === 'serangan' && !isY2()) && Math.random() < K.severeDeathPerDay) { killVillager(v, s.cause === 'serangan' ? 'serangan' : 'sakit'); continue; }
-        if (!s.cared) log(TX('penduduk_sakit.parah.memburuk', { nama: v.name }, `Kondisi ${v.name} memburuk. Ia butuh perawatan.`)); s.cared = false; }
+      if (s.lvl === 'parah') { // tidak ada lemparan maut di hari mulai sakit parah atau saat ada yang sedang merawatnya (dulu: tes rawat gagal ~1/8)
+        const tended = S.villagers.some(c => c.task && c.task.kind === 'rawat' && c.task.pid === v.id) || s.since === S.day;
+        if (!s.cared && !tended && !(s.cause === 'serangan' && !isY2()) && Math.random() < K.severeDeathPerDay) { killVillager(v, s.cause === 'serangan' ? 'serangan' : 'sakit'); continue; }
+        if (!s.cared && !tended) log(TX('penduduk_sakit.parah.memburuk', { nama: v.name }, `Kondisi ${v.name} memburuk. Ia butuh perawatan.`)); s.cared = false; }
       else if (S.day >= s.until) { if (foodTotal() > 0) { v.sick = null; log('😊 ' + TX('penduduk_sakit.ringan.sembuh', { nama: v.name }, `${v.name} sudah sehat kembali!`)); } else s.until++; }
       continue; }
     let ch = 0;
@@ -853,9 +865,9 @@ function spoilDaily() { const P = C.SPOILAGE, pop = Math.max(1, S.villagers.leng
 
 // ---------- statistik harian ----------
 function dstat(cat, key, n) { const d = S.dayStats = S.dayStats || {}; (d[cat] = d[cat] || {})[key] = (d[cat][key] || 0) + n; }
-function endOfDaySummary() { const d = S.dayStats || {}, day = S.day - 1; S.dayStats = {};
+function endOfDaySummary() { const d = S.dayStats || {}, day = S.day - 1, from = Math.min(day, S.statsFrom ?? day); S.dayStats = {}; S.statsFrom = S.day; // from<day: hari dilompati (mis. tes/debug) -> label rentang, bukan 'kemarin' yang basi
   const fmt = o => Object.entries(o || {}).map(([k, n]) => `${RES_LABEL[k] ? RES_LABEL[k].toLowerCase() : k}${n > 1 || RES_LABEL[k] ? ' ' + Math.floor(n) : ''}`).join(', ');
-  const r = { day, gathered: d.gathered || {}, eaten: d.eaten || {}, built: d.built || {}, events: d.events || {}, deaths: d.deaths || {} };
+  const r = { day, from, gathered: d.gathered || {}, eaten: d.eaten || {}, built: d.built || {}, events: d.events || {}, deaths: d.deaths || {} };
   S.lastSummary = r; if (day < 1) return r;
   const parts = [];
   if (Object.keys(r.gathered).length) parts.push('dikumpulkan ' + fmt(r.gathered));
@@ -863,10 +875,10 @@ function endOfDaySummary() { const d = S.dayStats || {}, day = S.day - 1; S.dayS
   if (Object.keys(r.built).length) parts.push('dibangun ' + Object.entries(r.built).map(([k, n]) => n > 1 ? `${k} ×${n}` : k).join(', '));
   if (Object.keys(r.events).length) parts.push('kejadian: ' + Object.keys(r.events).join(', '));
   if (Object.keys(r.deaths).length) parts.push('berpulang: ' + Object.keys(r.deaths).join(', '));
-  log(`📊 Ringkasan hari ${day}: ${parts.length ? parts.join('; ') : 'hari yang tenang'}.`); return r; }
+  log(`📊 Ringkasan hari ${from < day ? from + '–' + day : day}: ${parts.length ? parts.join('; ') : 'hari yang tenang'}.`); return r; }
 function summaryUI() { const r = S.lastSummary; if (!r || r.day < 1) return '<i>Belum ada hari yang lewat.</i>';
   const row = (lbl, o) => { const e = Object.entries(o); return `<div><b>${lbl}:</b> ${e.length ? e.map(([k, n]) => `${RES_LABEL[k] || k} ${Math.floor(n)}`).join(', ') : '-'}</div>`; };
-  return `<div style="opacity:.8">Hari ${r.day}</div>` + row('Dikumpulkan', r.gathered) + row('Dimakan', r.eaten) + row('Dibangun', r.built) + `<div><b>Kejadian:</b> ${Object.keys(r.events).join(', ') || '-'}</div>`; }
+  return `<div style="opacity:.8">Hari ${r.from != null && r.from < r.day ? r.from + '–' + r.day : r.day}</div>` + row('Dikumpulkan', r.gathered) + row('Dimakan', r.eaten) + row('Dibangun', r.built) + `<div><b>Kejadian:</b> ${Object.keys(r.events).join(', ') || '-'}</div>`; }
 // ---------- pencapaian (A01-A24, disimpan terpisah dari save game) ----------
 const ACH_KEY = 'desaMandiriPencapaian';
 let ACH = (() => { try { return JSON.parse(localStorage.getItem(ACH_KEY)) || {}; } catch (e) { return {}; } })(); ACH.unlocked = ACH.unlocked || {};
@@ -1110,6 +1122,15 @@ function render() {
   drawWeather();
   ctx.setTransform(1, 0, 0, 1, 0, 0);
 }
+// sawah kering: kemarau tanpa irigasi (T04) -> air pada autotile diganti lumpur retak (dibuat sekali dari sawah_autotile, tanpa aset baru)
+const sawahDry = b => isHardSeason() && !irrigated(b);
+let _drySawah = null;
+function drySawahImg() { if (_drySawah) return _drySawah; const src = ASSETS.sawah.image, c = document.createElement('canvas'); c.width = src.width; c.height = src.height;
+  const g = c.getContext('2d'); g.drawImage(src, 0, 0); const d = g.getImageData(0, 0, c.width, c.height), p = d.data;
+  for (let k = 0; k < p.length; k += 4) { const r = p[k], gg = p[k + 1], bl = p[k + 2]; if (p[k + 3] < 8 || bl <= r + 10) continue; // hanya piksel air (kebiruan)
+    const x = (k / 4) % c.width, y = Math.floor(k / 4 / c.width), crack = (x * 7 + y * 13) % 17 === 0 || (x + y * 3) % 23 === 0, lite = bl > 200;
+    const col = crack ? [96, 66, 40] : lite ? [196, 160, 110] : (x + y) % 5 === 0 ? [160, 124, 82] : [176, 140, 94]; p[k] = col[0]; p[k + 1] = col[1]; p[k + 2] = col[2]; }
+  g.putImageData(d, 0, 0); return (_drySawah = c); }
 function drawBuilding(b, d) {
   ctx.globalAlpha = b.done ? 1 : 0.45;
   let hasImg;
@@ -1117,8 +1138,9 @@ function drawBuilding(b, d) {
     const fr = !b.done ? 0 : b.stage === 'siap' ? 4 : b.stage === 'tumbuh' ? 1 + Math.min(2, Math.floor(b.grow / growDaysOf(b) * 3)) : (b.grow === 0 && b.harvested ? 5 : 0);
     if (a.overSawah && ASSETS.sawah.image) { // padi: tile sawah 4-bit (tetangga padi = tersambung, pematang di sisi lain) + kilau air + overlay padi
       const nb = (x, y) => S.buildings.some(o => o.type === 'ladang' && o.x === x && o.y === y && cropId(o) === cid), i = (nb(b.x, b.y - 1) ? 1 : 0) + (nb(b.x + 1, b.y) ? 2 : 0) + (nb(b.x, b.y + 1) ? 4 : 0) + (nb(b.x - 1, b.y) ? 8 : 0);
-      ctx.drawImage(ASSETS.sawah.image, (i % 4) * T, Math.floor(i / 4) * T, T, T, b.x * T, b.y * T, T, T);
-      if (i === 15 && ASSETS.sawah_kilau.image && fr <= 1) sprite('sawah_kilau', b.x, b.y, 1, 1, frameAt(ASSETS.sawah_kilau, 2)); }
+      const dry = sawahDry(b);
+      ctx.drawImage(dry ? drySawahImg() : ASSETS.sawah.image, (i % 4) * T, Math.floor(i / 4) * T, T, T, b.x * T, b.y * T, T, T);
+      if (!dry && i === 15 && ASSETS.sawah_kilau.image && fr <= 1) sprite('sawah_kilau', b.x, b.y, 1, 1, frameAt(ASSETS.sawah_kilau, 2)); }
     hasImg = sprite(key, b.x, b.y, 1, 1, fr);
     if (!hasImg) { ctx.fillStyle = ['#8a5a32', '#8a7a32', '#7a9a3a', '#5aa03a', '#e0c040'][fr] || '#8a5a32'; ctx.fillRect(b.x * T + 2, b.y * T + 2, T - 4, T - 4); }
     if (b.done && (fr === 2 || fr === 3) && canGrow(b)) sprite('kilau', b.x, b.y, 1, 1, animFrame(ASSETS.kilau, ASSETS.kilau.fps));
@@ -1215,7 +1237,7 @@ function setHTML(id, h) { if (_html[id] !== h) { _html[id] = h; $(id).innerHTML 
 function ui() {
   const f = dayFrac(), h = Math.floor(f * 24), m = Math.floor((f * 24 % 1) * 60);
   $('res').innerHTML = Object.keys(RES_LABEL).filter(k => k in S.res && (S.res[k] >= 1 || ['kayu', 'batu', 'makanan', 'air'].includes(k)))
-    .map(k => `<span title="${RES_LABEL[k]}">${resIcon(k)} ${RES_LABEL[k]}: <b>${Math.floor(S.res[k])}</b></span>`).join(' &nbsp; ') + ` &nbsp; 👥 <b>${S.villagers.length}/${capacity()}</b>`;
+    .map(k => `<span title="${RES_LABEL[k]}">${resIcon(k)} ${RES_LABEL[k]}: <b>${Math.floor(S.res[k])}</b></span>`).join(' &nbsp; ') + ` &nbsp; ` + popBadge();
   const si = seasonInfo(), se = si.id;
   $('time').innerHTML = `${(C.SEASON_ICONS || {})[se] || ''} ${C.SEASON_NAMES[se]} (${si.day}/${si.len}) · Hari <b>${S.day}</b> — ${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')} ${isNight() ? '🌙 Malam' : '☀️ Siang'}`;
   const TL = { makan: 'Makan', tidur: 'Tidur', kumpul: 'Mengumpulkan', setor: 'Menyetor', bangun: 'Membangun', diam: 'Santai', tani: 'Bertani', air: 'Mengambil air', riset: 'Meneliti', padam: 'Memadamkan api', rawat: 'Merawat', makam: 'Makam', jaga: 'Berjaga' };
@@ -1355,12 +1377,16 @@ function frame(now) { const real = Math.min(0.25, (now - prev) / 1000); prev = n
   for (const n of notes) n.life -= real; while (notes.length && notes[0].life <= 0) notes.shift();
   let sim = menuOpen ? 0 : real * speed; while (sim > 0) { const d = Math.min(0.1, sim); step(d); sim -= d; }
   render(); ui(); requestAnimationFrame(frame); }
-window.DESA = { get state() { return S; }, maybeEvent, waterNeed, wellYieldNow, riverYieldNow, canGrow, growDaysOf, cropId, seasonInfo, isHardSeason, yearDays, eventAllowed, chooseTask, wreckField, fieldTarget, foodPerDay, hungerMultNow, RES_LABEL, isY2, updateVillager, loadGame, biteVillager, updateWolf, wolfCost, seasonDaily, stockpiles, pileTier, pileSpots, notify, get notes() { return notes; }, killVillager, makeSick, ignite, spawnWolf, startFlood, famineLevel, warnings, threatDaily, seasonStep, wolfDaily, leaveDaily, sicknessDaily, spoilDaily, year, foodDays, floodTiles, isFlooded, fitCanvas, get placing() { return placing; }, setPlacing(b) { placing = b; }, get ach() { return ACH; }, checkAch, achProgress, unlockAch, endOfDaySummary, newDay, toast, applyEffects, allEvents, eventEraOk, fill, marketNewDay, priceOf, tradeQuote, doTrade, spawnMerchant, marketOpen, quota, foodSellMult, openMarket, startResearch, techVal, techNodes, openTech, showEvent, validSpot, canAfford, addBuilding, season,  step, cam, findPath, setZoom, centerCam };
+window.DESA = { get state() { return S; }, bindThemeText, hutEmergencyTask, buildTask, sicknessDaily, sawahDry, drySawahImg, popBadge, maybeEvent, waterNeed, wellYieldNow, riverYieldNow, canGrow, growDaysOf, cropId, seasonInfo, isHardSeason, yearDays, eventAllowed, chooseTask, wreckField, fieldTarget, foodPerDay, hungerMultNow, RES_LABEL, isY2, updateVillager, loadGame, biteVillager, updateWolf, wolfCost, seasonDaily, stockpiles, pileTier, pileSpots, notify, get notes() { return notes; }, killVillager, makeSick, ignite, spawnWolf, startFlood, famineLevel, warnings, threatDaily, seasonStep, wolfDaily, leaveDaily, sicknessDaily, spoilDaily, year, foodDays, floodTiles, isFlooded, fitCanvas, get placing() { return placing; }, setPlacing(b) { placing = b; }, get ach() { return ACH; }, checkAch, achProgress, unlockAch, endOfDaySummary, newDay, toast, applyEffects, allEvents, eventEraOk, fill, marketNewDay, priceOf, tradeQuote, doTrade, spawnMerchant, marketOpen, quota, foodSellMult, openMarket, startResearch, techVal, techNodes, openTech, showEvent, validSpot, canAfford, addBuilding, season,  step, cam, findPath, setZoom, centerCam };
 // tambalan teks tema di memori (TEKS-GAME.json tidak diubah): 'event:<id>.<path>' atau '<path>'
+// TEKS meta.txt_tema_nusantara: isi path TEKS untuk THEMES.indonesia.TXT (cadangan di tema.js tetap dipakai bila path tidak ada)
+function bindThemeText(t) { const M = t && t.meta && t.meta.txt_tema_nusantara; if (!M || C.THEME === 'sedang') return;
+  for (const [k, path] of Object.entries(M)) { if (k[0] === '_' || !path) continue; let o = t; for (const x of path.split('.')) o = o && o[x];
+    if (!o) continue; const e = (C.TXT[k] = C.TXT[k] || [null, '']); if (!e[0]) e[0] = path; } }
 function applyTextPatch(t) { if (!t) return; for (const [k, val] of Object.entries(C.TEXT_PATCH || {})) { let o, path;
     if (k.startsWith('event:')) { const [id, ...rest] = k.slice(6).split('.'); o = ['event_acak', 'event_era_lanjut', 'event_musiman'].flatMap(x => t[x] || []).find(e => e.id === id); path = rest; } else { o = t; path = k.split('.'); }
     for (let i = 0; o && i < path.length - 1; i++) o = o[path[i]]; if (o && path.length) o[path[path.length - 1]] = val; } }
-fetch('TEKS-GAME.json').then(r => r.ok ? r.json() : null).catch(() => null).then(t => { TEXT = t; applyTextPatch(t);
+fetch(C.TEXT_FILE || 'TEKS-GAME.json').then(r => r.ok ? r.json() : null).catch(() => null).then(t => { TEXT = t; applyTextPatch(t); bindThemeText(t);
   if (!t) console.warn('TEKS-GAME.json tidak dapat dimuat; memakai teks bawaan.');
   loadAssets(() => { newGame(); lastDay = S.day; buildPrioUI(); buildBuildBar(); centerCam(CAMP.x, CAMP.y); applyMenuText(); openMenu(); requestAnimationFrame(frame); }); });
 // ---------- menu utama & pengaturan ----------

@@ -54,7 +54,15 @@ Tema bawaan sekarang **Nusantara**; tema empat musim lama tetap ada (buka `index
 - **Padi**: id internal tetap `gandum` (simpanan & misi tetap cocok), label tampil "Padi". Ladang (tegalan) bergiliran padi, jagung, padi, ubi, padi, singkong; padi berhenti di kemarau kecuali riset Irigasi (T04, lalu ×1.5 lebih lama), tanaman tegalan tetap tumbuh (×1.25). Padi digambar di atas tile sawah (autotile 4-bit).
 - **Babi hutan** menggantikan serigala (kode serigala dipakai ulang): jejak sore → dengusan → masuk desa → pergi saat fajar. Sasaran utama ladang (1–2 petak rusak); melukai penduduk baru mulai era Dusun, serangan fatal hanya tahun ke-2+. Pertahanan: Pagar Bambu (jalur ×3, langkah melambat), Oncor (peluang serang & rusak ladang ×0.4), Pos Ronda + prioritas Jaga (kentongan mengusir 1×/malam).
 - **Hari Jadi Desa** hanya muncul tepat di ulang tahun desa (hari 29, 57, …), sekali per tahun.
-- Event bersalju/serigala/empat musim dimatikan (`EVENT_DISABLE`) sampai teks Nusantara dari Asisten Dokumen tersedia; kait teks baru ada di `THEMES.indonesia.TXT` (path TEKS bisa diisi tanpa ubah kode).
+- Teks: TEKS v1.4.0+ sudah Nusantara, jadi semua event aktif lagi (musim event lama dipetakan: dingin→kemarau dst.); path `THEMES.indonesia.TXT` diisi otomatis dari `meta.txt_tema_nusantara` (termasuk pembuka musim hujan/mareng/labuh). Tema `?tema=sedang` memuat `TEKS-GAME-sedang.json` (salinan v1.3.0, teks empat musim lama) supaya log tidak bercampur teks Nusantara.
+- Sawah padi tampak kering (lumpur retak) di kemarau bila belum riset irigasi T04; ikon Padi sementara `assets/icons/resources/icon_padi.png` (dibuat `tools/buat_ikon_padi.py`, menunggu ikon resmi). Bilah atas menampilkan `👥 2 (belum ada rumah)` sebelum ada gubuk.
+
+### Perbaikan & tuning (sebelum siklus hidup)
+- Tugas `bangun` kini memperbaiki bangunan rusak sampai hp 100 (dulu langsung dibuang bila bangunan sudah jadi → gubuk hp<40 kehilangan kapasitas selamanya).
+- Rawat: tidak ada lemparan maut sakit parah pada hari mulai sakit atau selama ada yang sedang merawat (tes `threats` dulu gagal ±1/8).
+- Pengaman: hari ≥ 6 tanpa gubuk jadi → bangun gubuk yang sudah ditaruh / kumpulkan kayu-batu yang kurang.
+- Tuning teruji Asisten Analisa (wolf & babi hutan): `killChanceIfLowHp` 0.25, `killSafeRadius` 4, `severeDeathPerDay` 0.15, `starvePerDay` 30, `foodFreeDays` 16. Sim 31 run hari 24: Nusantara median 28, empat musim 44.
+- Ringkasan hari yang dilompati (debug/tes) diberi label rentang ("Hari 16–19"). Tes: `tests/perbaikan.test.js`.
 - Sprite tropis tahap 7: varian musim `seasons/tropis/<musim>/`, cuaca (hujan lebat + kilat, debu & tint kemarau, bayang awan labuh), gubuk bambu, lumbung padi, pos ronda, pagar bambu, obor bambu, babi hutan, kunang-kunang malam (`ASSET_SWAP` di tema).
 
 ## Struktur file

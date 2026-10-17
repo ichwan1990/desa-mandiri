@@ -49,7 +49,8 @@ window.CONFIG = {
            crops: { gandum: { res: 'gandum' }, wortel: { res: 'makanan' } } },
   // Air: konsumsi harian; ambil dari sumur (cepat) atau sungai (lambat)
   WATER: { perDayPerPop: 1, wellTime: 5, wellYield: 3, riverTime: 12, riverYield: 3, shortageMood: 8, shortageHealth: 8, wellMoodPerDay: 2 },
-  HEALTH: { regenPerDay: 4, starvePerDay: 20, lowMoodBelow: 40 },
+  // tuning teruji Asisten Analisa (docs/ANALISA-PLAYTEST.md v2.x): starvePerDay 20->30, foodFreeDays 20->16, wolf killChanceIfLowHp 0.10->0.25 & killSafeRadius 8->4, severeDeathPerDay 0.08->0.15
+  HEALTH: { regenPerDay: 4, starvePerDay: 30, lowMoodBelow: 40 },
   TOOLS: { bonus: 0.25, wearPerHaul: 0.03 },          // alat >=1 -> kerja +25%
   KITCHEN_EAT_BONUS: 0.25,
   WORKSHOP_DAILY: { in: { kayu: 6, batu: 4 }, out: { alat: 1, papan: 2, batu_bata: 2 } },
@@ -62,7 +63,7 @@ window.CONFIG = {
               clothesMoodPerDay: { tanpa: -8, dengan: -2 } },
   },
   // pembusukan stok & penguapan air (docs/ANALISA-PLAYTEST.md §3): makanan busuk di atas freeDays stok, lebih cepat di panas, Lumbung mengurangi
-  SPOILAGE: { foodFreeDays: 20, foodPerDay: 0.02, summerMult: 1.5, granaryMult: 0.5, waterFreeDays: 12, waterEvapPerDay: 0.10, waterCapDays: 30 },
+  SPOILAGE: { foodFreeDays: 16, foodPerDay: 0.02, summerMult: 1.5, granaryMult: 0.5, waterFreeDays: 12, waterEvapPerDay: 0.10, waterCapDays: 30 },
   YEAR_SCALE: { daysPerYear: 28, threatChanceMult: 1.25, winterBufferDays: 10, extremeChanceAdd: 0.04 }, // berlaku mulai tahun ke-2 (hari 29+)
   // jenjang peringatan kelaparan (hari stok pangan): aman >= 8, waspada 5-8, bahaya 3-5, kritis < 3, kolaps < 1 & stok 0
   FAMINE: { waspada: 8, bahaya: 5, kritis: 3, kolaps: 1, bahayaMoodPerDay: -5, graceDays: 7 }, // graceDays: awal game stok memang kecil -> jenjang maks 'waspada', tanpa penalti mood
@@ -73,7 +74,7 @@ window.CONFIG = {
       warnHoursBefore: 0.15,      // jejak muncul NIGHT_START - 0.15 (sore)
       attackFrac: [0.85, 0.95], count: [1, 2], speed: 3.2, hitRange: 0.7,
       damage: [25, 40], moodHit: 15, traumaChance: 0.3, traumaDays: 3, traumaMoodCap: 70,
-      killChanceIfLowHp: 0.10, killHpBelow: 20, killSafeRadius: 8,  // hanya tahun 2+
+      killChanceIfLowHp: 0.25, killHpBelow: 20, killSafeRadius: 4,  // hanya tahun 2+
       fencePathMult: 3, fenceSpeedMult: 0.33,
       torchSafeRadius: 3, torchHitMult: 0.4, torchWoodPerNights: 2,
       towerRadius: 10, towerScarePerNight: 1,
@@ -83,7 +84,7 @@ window.CONFIG = {
           waterPerAction: 5, actionSec: 4, actionsToPut: [2, 3], firebreakKayu: 10, stockLossChance: 0.15, stockLossFrac: 0.10 },
   FLOOD: { cols: 2, speedMult: 0.5, growDelayDays: 1, durationDays: 1 },
   SICKNESS: { lightDays: [2, 4], workMult: 0.7, energyRegenMult: 0.6, baseLowMoodChance: 0.02, lowMoodBelow: 35,
-              severeFromHpBelow: 40, severeFromExtremeChance: 0.25, severeDeathPerDay: 0.08, careCost: { makanan: 5 }, careSeconds: 80 },
+              severeFromHpBelow: 40, severeFromExtremeChance: 0.25, severeDeathPerDay: 0.15, careCost: { makanan: 5 }, careSeconds: 80 },
   LEAVE: { moodBelow: 35, days: 5, starveDays: 2, villageMoodHit: 10, minPop: 2, cooldownDays: 3 }, // tidak pergi bila desa jadi < minPop (hindari soft-lock); maks 1 kepergian per cooldownDays (hindari efek domino)
   DEATH: { griefMoodInstant: -20, griefDays: 5, griefPerDay: -3, graveCost: { kayu: 5 } },
   // tumpukan stok terlihat di peta: tingkat = stok 0 ? 0 : min(4, 1 + floor(3 * stok / kapasitas)); makanan = makanan + gandum
