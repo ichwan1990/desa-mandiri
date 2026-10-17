@@ -99,3 +99,6 @@ body.mobile #top>*, body.mobile #top button{flex:none;white-space:nowrap} body.m
 .warn.w-red{border-image:url(assets/ui/warning/banner_red.png) 4 8 5 8 fill stretch;background:none;color:#fff;animation:pulse 1.2s ease-in-out infinite}
 @keyframes pulse{50%{filter:brightness(1.25)}}
 body.mobile #warnbar{max-width:92%}
+
+/* ikon sumber daya (PNG, bukan emoji) */
+img.resico{width:16px;height:16px;image-rendering:pixelated;image-rendering:crisp-edges;vertical-align:-3px;display:inline-block}

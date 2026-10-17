@@ -8,6 +8,10 @@ const SKILL_OF = { kayu: 'menebang', batu: 'menambang', makanan: 'meramu', bangu
 const JOB_LABEL = { bangun: 'Membangun', makanan: 'Makanan', bertani: 'Bertani', air: 'Air', kayu: 'Kayu', batu: 'Batu', riset: 'Riset', jaga: 'Jaga', padam: 'Padam', rawat: 'Rawat', makam: 'Makam' };
 const RES_LABEL = { kayu: 'Kayu', batu: 'Batu', makanan: 'Makanan', gandum: 'Gandum', air: 'Air', alat: 'Alat', kulit: 'Kulit', papan: 'Papan', batu_bata: 'Batu bata' };
 const CAMP = C.CAMP;
+// ikon sumber daya sebagai <img> PNG (emoji kayu/batu/gergaji = Emoji 13, tampil kotak kosong di Windows 10)
+const resIconSrc = k => { const ik = ASSETS.res_ikon, i = ik ? ik.keys.indexOf(k) : -1; return i >= 0 ? [].concat(ik.img)[i] : null; };
+const resIcon = k => { const src = resIconSrc(k); return src ? `<img class="resico" src="${src}" alt="" title="${RES_LABEL[k] || k}">` : ''; };
+const withIcons = s => String(s).replace(/\{ikon:(\w+)\}/g, (_, k) => resIcon(k));
 let menuOpen = true;
 let S, speed = 1, placing = null, mouse = { x: 0, y: 0 };
 
@@ -372,7 +376,7 @@ function showEvent() { const e = allEvents().find(x => x.id === S.event); if (!e
   const box = $('modal'); box.style.display = 'block'; sfx('event'); const nm = S.eventName ? { nama: S.eventName } : {};
   const noHouse = e.pilihan.some(p => addsPop(p.efek) && !housingOk(p.efek)) ? '<p style="color:#ffb36b">🏠 Tidak ada tempat kosong di gubuk — bangun Gubuk untuk menerima pendatang.</p>' : '';
   box.innerHTML = `<h3>${e.judul}</h3><p>${fill(e.deskripsi, nm)}</p>${noHouse}` + e.pilihan.map((p, i) => { const can = q => affordable(q.efek) && housingOk(q.efek), ok = can(p) || !e.pilihan.some(can) && i === e.pilihan.length - 1 && !addsPop(p.efek);
-    const cost = Object.entries(p.efek || {}).map(([k, n]) => `${n > 0 ? '+' : ''}${n} ${RES_LABEL[resKeyOf(k)] || k.replace(/_/g, ' ')}`).join(', ');
+    const cost = Object.entries(p.efek || {}).map(([k, n]) => `${n > 0 ? '+' : ''}${n} ${resIcon(resKeyOf(k))} ${RES_LABEL[resKeyOf(k)] || k.replace(/_/g, ' ')}`).join(', ');
     return `<button data-ev="${i}" ${ok ? '' : `disabled title="${housingOk(p.efek) ? 'Sumber daya tidak cukup' : 'Tidak ada tempat kosong di gubuk'}" style="opacity:.45"`}>${p.teks}</button> <small>(${cost})</small>`; }).join('<br>'); }
 function chooseEvent(i) { const e = allEvents().find(x => x.id === S.event), p = e.pilihan[i];
   if (addsPop(p.efek) && !housingOk(p.efek)) { log(`${e.judul} — Tidak ada tempat untuk ${S.eventName || 'pendatang'}; ia melanjutkan perjalanan.`); }
@@ -490,7 +494,7 @@ function seasonDaily() { const se = season(), dis = (S.day - 1) % C.SEASON_DAYS 
     if (dis === C.SEASON_DAYS && d >= F.thanksFoodDays) { S.villagers.forEach(v => v.mood = Math.min(100, v.mood + F.thanksMood)); log('🙏 ' + TX('musim_pembuka.musim_gugur_syukur', {}, 'Lumbung penuh sebelum salju. Syukuran kecil!')); } }
   // dingin: kayu bakar & pakaian
   if (se === 'dingin') { const fires = done('apiunggun').length, need = Math.ceil(fires * F.campfireWoodPerDay * techVal('api_kayu_bakar', 1) * 10) / 10;
-    if (fires) { if (S.res.kayu >= need) { S.res.kayu -= need; if (S.fireOut) log('🔥 Api unggun menyala lagi.'); S.fireOut = false; if (dis === 1) log('🪵 ' + TX('musim_pembuka.musim_dingin_kayu_bakar', {}, `Api unggun memakai ${need} kayu bakar per hari di musim dingin.`)); }
+    if (fires) { if (S.res.kayu >= need) { S.res.kayu -= need; if (S.fireOut) log('🔥 Api unggun menyala lagi.'); S.fireOut = false; if (dis === 1) log('{ikon:kayu} ' + TX('musim_pembuka.musim_dingin_kayu_bakar', {}, `Api unggun memakai ${need} kayu bakar per hari di musim dingin.`)); }
       else { S.res.kayu = 0; if (!S.fireOut) log('⚠️ ' + TX('log_ancaman.kayu_bakar_habis', {}, 'Kayu bakar habis! Api unggun meredup.')); S.fireOut = true; } }
     if (S.extremeDay === S.day - 1) log('🌤️ ' + TX('peringatan_dini.ancaman_dingin_ekstrem.tingkat.reda.teks', {}, 'Angin beku sudah reda.')); }
   else S.fireOut = false;
@@ -627,7 +631,7 @@ function makeSick(v, lvl, cause) { const K = C.SICKNESS; if (v.sick && v.sick.lv
   v.sick = { lvl, until: S.day + rndInt(K.lightDays[0], K.lightDays[1]), cause, cared: false };
   const pc = cause && TEXT && TEXT.penduduk_sakit && TEXT.penduduk_sakit.per_penyebab && TEXT.penduduk_sakit.per_penyebab[cause];
   log('🤒 ' + (pc ? TX('penduduk_sakit.per_penyebab.' + cause, { nama: v.name }) : TX(`penduduk_sakit.${lvl}.mulai`, { nama: v.name }, `${v.name} jatuh sakit${lvl === 'parah' ? ' parah' : ''}.`)));
-  if (lvl === 'parah') { log('🩺 ' + TX('penduduk_sakit.parah.butuh_rawat', { nama: v.name }, `${v.name} sakit parah dan perlu dirawat.`)); v.task = null; } }
+  if (lvl === 'parah') { log('💊 ' + TX('penduduk_sakit.parah.butuh_rawat', { nama: v.name }, `${v.name} sakit parah dan perlu dirawat.`)); v.task = null; } }
 function sicknessDaily() { const K = C.SICKNESS, F = FX();
   for (const v of S.villagers.slice()) {
     if (v.sick) { const s = v.sick;
@@ -645,7 +649,7 @@ function careTask(v) { if (v.sick && v.sick.lvl === 'parah') return null;
   if (!p || !canAfford(C.SICKNESS.careCost)) return null; return { kind: 'rawat', pid: p.id, target: { x: p.x, y: p.y }, work: 0 }; }
 function finishCare(v, t) { const p = vById(t.pid); if (!p || !p.sick) return; for (const [k, n] of Object.entries(C.SICKNESS.careCost)) S.res[k] = Math.max(0, S.res[k] - n);
   p.sick = { lvl: 'ringan', until: S.day + 2, cause: p.sick.cause, cared: true };
-  log('🩺 ' + TX('penduduk_sakit.parah.dirawat', { nama: p.name, nama2: v.name }, `${v.name} merawat ${p.name} seharian. Ia mulai pulih.`)); }
+  log('💊 ' + TX('penduduk_sakit.parah.dirawat', { nama: p.name, nama2: v.name }, `${v.name} merawat ${p.name} seharian. Ia mulai pulih.`)); }
 // ---- pergi ----
 function leaveDaily() { const L = C.LEAVE;
   for (const v of S.villagers.slice()) {
@@ -1115,9 +1119,8 @@ const _html = {};
 function setHTML(id, h) { if (_html[id] !== h) { _html[id] = h; $(id).innerHTML = h; } }
 function ui() {
   const f = dayFrac(), h = Math.floor(f * 24), m = Math.floor((f * 24 % 1) * 60);
-  const ICONS = { kayu: '🪵', batu: '🪨', makanan: '🍎', gandum: '🌾', air: '💧', alat: '🔨', kulit: '🧥', papan: '🪚', batu_bata: '🧱' };
   $('res').innerHTML = Object.keys(RES_LABEL).filter(k => k in S.res && (S.res[k] >= 1 || ['kayu', 'batu', 'makanan', 'air'].includes(k)))
-    .map(k => `<span title="${RES_LABEL[k]}">${ICONS[k]} ${RES_LABEL[k]}: <b>${Math.floor(S.res[k])}</b></span>`).join(' &nbsp; ') + ` &nbsp; 👥 <b>${S.villagers.length}/${capacity()}</b>`;
+    .map(k => `<span title="${RES_LABEL[k]}">${resIcon(k)} ${RES_LABEL[k]}: <b>${Math.floor(S.res[k])}</b></span>`).join(' &nbsp; ') + ` &nbsp; 👥 <b>${S.villagers.length}/${capacity()}</b>`;
   const se = season(), dayInSeason = (S.day - 1) % C.SEASON_DAYS + 1;
   $('time').innerHTML = `${{ semi: '🌱', panas: '☀️', gugur: '🍂', dingin: '❄️' }[se]} ${C.SEASON_NAMES[se]} (${dayInSeason}/${C.SEASON_DAYS}) · Hari <b>${S.day}</b> — ${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')} ${isNight() ? '🌙 Malam' : '☀️ Siang'}`;
   const TL = { makan: 'Makan', tidur: 'Tidur', kumpul: 'Mengumpulkan', setor: 'Menyetor', bangun: 'Membangun', diam: 'Santai', tani: 'Bertani', air: 'Mengambil air', riset: 'Meneliti', padam: 'Memadamkan api', rawat: 'Merawat', makam: 'Makam', jaga: 'Berjaga' };
@@ -1129,12 +1132,12 @@ function ui() {
   setHTML('era', `<b>${era.nama}</b>` + (next ? `<br>Menuju <b>${next.nama}</b>:<br>` + eraReqStatus(next).map(([t, ok]) => `${ok ? '✅' : '▫️'} ${t}`).join('<br>') : '<br>Era tertinggi tercapai!'));
   document.querySelectorAll('[data-b]').forEach(bt => { const k = bt.dataset.b; if (k) bt.disabled = !unlocked(k) || !canAfford(C.BUILDINGS[k].cost); });
   warnUI(); setHTML('quest', questUI()); setHTML('summary', summaryUI()); villagerPanelUI(); techPanelUI(); marketUI(); $('marketbtn').classList.toggle('on', marketOpen());
-  setHTML('log', S.log.slice(0, 15).map(l => `<div>${l}</div>`).join(''));
+  setHTML('log', S.log.slice(0, 15).map(l => `<div>${withIcons(l)}</div>`).join(''));
 }
 function techPanelUI() { const el = $('techpanel'); if (!el || el.style.display !== 'block') return;
   const T = window.TECH || { cabang: {} }, nodes = techNodes(), R = S.research, rn = R && nodes.find(n => n.id === R.id);
   const ST = { done: 'Selesai ✔', active: 'Sedang diteliti', locked: 'Terkunci', busy: 'Tunggu riset lain', poor: 'Bahan kurang', available: 'Bisa diteliti' };
-  const cost = c => Object.entries(c || {}).map(([k, q]) => `${q} ${RES_LABEL[k] || k}`).join(', ') || 'gratis';
+  const cost = c => Object.entries(c || {}).map(([k, q]) => `${q} ${resIcon(k)} ${RES_LABEL[k] || k}`).join(', ') || 'gratis';
   const ico = n => { const a = n.ikon && ASSETS[n.ikon]; return a && a.ui ? `<img src="${a.ui}" width="32" height="32" style="float:left;margin-right:6px;image-rendering:pixelated">` : ''; };
   setHTML('techpanel', `<button class="close" id="techClose">✕</button><h3 style="margin-top:0">🔬 Pohon Teknologi</h3>
     <div style="font-size:12px;margin-bottom:8px">${rn ? `Sedang diteliti: <b>${rn.nama}</b> — ${Math.floor(R.progress)}/${rn.work}<div class="bar"><i class="f-purple" style="width:${100 * R.progress / rn.work}%;--c:var(--bar-energy)"></i></div>` : 'Belum ada riset berjalan. Pilih satu teknologi; biaya dibayar di muka.'}
@@ -1159,9 +1162,9 @@ function marketUI() { const el = $('market'); if (!el || el.style.display !== 'b
   setHTML('mkTable', `<table style="width:100%;font-size:12px;border-collapse:collapse"><tr><th align="left">${L.barang || 'Barang'}</th><th>${L.stok || 'Stok'}</th><th>${L.harga_jual || 'Jual'}</th><th>${L.harga_beli || 'Beli'}</th><th></th></tr>` +
     Object.keys(M().harga).map(k => { const mod = S.priceMod[k] || 1, pct = Math.round((mod - 1) * 100);
       const tip = fill(mod >= 1.35 ? TT.tertinggi : mod <= 0.75 ? TT.terendah : pct >= 5 ? TT.naik : pct <= -5 ? TT.turun : TT.stabil || '', { sumber_daya: RES_LABEL[k].toLowerCase(), persen: Math.abs(pct) });
-      return `<tr title="${tip}"><td>${RES_LABEL[k]}</td><td align="center">${Math.floor(S.res[k] || 0)}</td><td align="center">${priceOf(k, 'jual').toFixed(1)}</td><td align="center">${priceOf(k, 'beli').toFixed(1)}</td><td>${pct > 2 ? '▲' : pct < -2 ? '▼' : '•'}</td></tr>`; }).join('') + '</table>');
+      return `<tr title="${tip}"><td>${resIcon(k)} ${RES_LABEL[k]}</td><td align="center">${Math.floor(S.res[k] || 0)}</td><td align="center">${priceOf(k, 'jual').toFixed(1)}</td><td align="center">${priceOf(k, 'beli').toFixed(1)}</td><td>${pct > 2 ? '▲' : pct < -2 ? '▼' : '•'}</td></tr>`; }).join('') + '</table>');
   const g = $('mkGive'), t = $('mkGet'); if (!g) return; const r = tradeQuote(g.value, +$('mkQty').value, t.value);
-  setHTML('mkPreview', r.n != null && r.n >= 0 ? `${L.total || 'Total'}: ${r.qty} ${RES_LABEL[g.value]} (nilai ${r.value.toFixed(1)}) → <b>${r.n} ${RES_LABEL[t.value]}</b>${r.ok ? '' : ` — <span style="color:#a63e34">${r.why}</span>`}` : r.why || '');
+  setHTML('mkPreview', r.n != null && r.n >= 0 ? `${L.total || 'Total'}: ${r.qty} ${resIcon(g.value)} ${RES_LABEL[g.value]} (nilai ${r.value.toFixed(1)}) → <b>${r.n} ${resIcon(t.value)} ${RES_LABEL[t.value]}</b>${r.ok ? '' : ` — <span style="color:#a63e34">${r.why}</span>`}` : r.why || '');
   $('mkDo').disabled = !open || !r.ok; }
 function openTech() { $('techpanel').style.display = 'block'; delete _html.techpanel; techPanelUI(); tutAction('buka_riset'); }
 function buildBuildBar() {
