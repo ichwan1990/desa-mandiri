@@ -62,10 +62,10 @@ window.THEMES = {
     NIGHT_THREAT: 'babi', ART_SUFFIX: { hujan: '_hujan', mareng: '_mareng', kemarau: '_kemarau', labuh: '_labuh' }, WINTER_ART: null,
     WEATHER: { hujan: 'hujan_lebat', kemarau: 'debu', labuh: 'awan' }, // hujan lebat (+kilat) saat hari hujan; debu & tint kemarau; bayang awan pancaroba
     // sprite tropis (tahap 7) menggantikan sprite lama untuk id bangunan yang sama
-    ASSET_SWAP: { gubuk: 'gubuk_bambu', lumbung: 'lumbung_padi', menara_jaga: 'pos_ronda', pagar: 'pagar_bambu', obor: 'obor_bambu' },
-    BUILDING_NAMES: { gubuk: 'Gubuk Bambu', lumbung: 'Lumbung Padi', menara_jaga: 'Pos Ronda', pagar: 'Pagar Bambu', obor: 'Oncor', ladang: 'Ladang (Tegalan)' },
-    RES_LABEL: { gandum: 'Padi' },
-    RES_ICON: { gandum: 'assets/icons/resources/icon_padi.png' }, // ikon sementara (tools/buat_ikon_padi.py) sampai ada ikon resmi // id internal tetap 'gandum' (save & quest tetap cocok)
+    ASSET_SWAP: { gubuk: 'gubuk_bambu', rumah: 'rumah_panggung', lumbung: 'lumbung_padi', menara_jaga: 'pos_ronda', pagar: 'pagar_bambu', obor: 'obor_bambu' },
+    BUILDING_NAMES: { gubuk: 'Gubuk Bambu', rumah: 'Rumah Panggung', lumbung: 'Lumbung Padi', menara_jaga: 'Pos Ronda', pagar: 'Pagar Bambu', obor: 'Oncor', ladang: 'Ladang (Tegalan)' },
+    RES_LABEL: { gandum: 'Padi' }, // id internal tetap 'gandum' (save & quest tetap cocok)
+    RES_ICON: { gandum: 'assets/icons/resources/icon_padi.png' }, // ikon sementara (tools/buat_ikon_padi.py) sampai ada ikon resmi
     // TEKS v1.4.0 sudah melokalkan semua event (id lama tetap, teks Nusantara) -> tidak ada yang dimatikan; musim event lama dipetakan ke musim tropis
     EVENT_DISABLE: [],
     EVENT_SEASON_ALIAS: { semi: 'hujan', panas: 'kemarau', gugur: 'mareng', dingin: 'kemarau' }, // = TEKS meta.alias_id_v140.musim

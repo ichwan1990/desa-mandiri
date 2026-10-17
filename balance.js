@@ -100,6 +100,9 @@ window.CONFIG = {
     finishBuildBelowPct: 10,
     earlyWakeEnergy: 95,
     napEnergyCrit: true,      // pakai ENERGY_CRIT
+    // Kompensasi jam tidur tetap 21:00-05:00: dulu penduduk bangun ~83% hari, kini ~68% (x1.22), ditambah pengaruh jalan pulang/pergi -> kerja & langkah siang
+    // dipercepat agar produktivitas harian total mendekati sebelum jadwal (target median pangan hari 24: 25-50)
+    dayWorkMult: 1.35, daySpeedMult: 1.35,
   },
   SLEEP_OUTSIDE: {
     bedRegen: 1.0, bedMood: 2,
@@ -110,7 +113,7 @@ window.CONFIG = {
   PAIRING: { minAge: 18, maxAge: 50, minMood: 65, moodDays: 2, chancePerDay: 0.15, rematchDays: 14, widowGriefMult: 1.5 },
   PREGNANCY: {
     minEra: 'dusun',
-    motherAge: [18, 42], minMood: 70, minFoodDays: 12, famineLevels: ['aman'],
+    motherAge: [18, 45], minMood: 70, minFoodDays: 7, famineLevels: ['aman', 'waspada'], // sim 140 hari: foodDays 12 + hanya 'aman' membuat lahir pertama ~hari 65 (target 30-45)
     minHp: 70, cooldownDays: 21, perSeasonCapDiv: 5,
     chancePerDay: 0.10, winterMult: 0.5,
     lengthDays: 7, lateWorkMult: 0.85, lateDays: 3,

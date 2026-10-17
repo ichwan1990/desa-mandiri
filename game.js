@@ -127,7 +127,7 @@ function startResearch(id) { const n = techNodes().find(x => x.id === id); if (!
   log(`🔬 Riset dimulai: ${n.nama}. Penduduk berprioritas Riset akan mengerjakannya.`); techPanelUI(); return true; }
 function researchTask(v) { if (!S.research) return null; const st = storage(v); return { kind: 'riset', target: stPos(st), techName: (techNodes().find(n => n.id === S.research.id) || {}).nama }; }
 const foodPerDay = () => Math.max(1, S.villagers.reduce((a, v) => a + foodMultOf(v), 0) * C.SPAWN.foodPerDayPerPop * (isHardSeason() ? C.HARD_HUNGER_MULT : 1)); // AGE.foodMult
-const workMult = (v, sk) => (1 + (v.skills[sk] || 0) * 0.5 + (S.res.alat >= 1 ? C.TOOLS.bonus : 0)) * (v.sick ? C.SICKNESS.workMult : 1) * ageWorkMult(v);
+const workMult = (v, sk) => (1 + (v.skills[sk] || 0) * 0.5 + (S.res.alat >= 1 ? C.TOOLS.bonus : 0)) * (v.sick ? C.SICKNESS.workMult : 1) * ageWorkMult(v) * (C.SCHEDULE.dayWorkMult || 1); // dayWorkMult: kompensasi jam tidur 21-05
 function computeBanks() { S.banks = [];
   for (let y = 0; y < C.MAP_H; y++) for (let x = 0; x < C.MAP_W; x++) if (S.tiles[y][x] === 0 &&
     [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([a, b]) => S.tiles[y + b] && S.tiles[y + b][x + a] === 1)) S.banks.push({ x, y }); }
@@ -148,7 +148,7 @@ const canWork = v => ageOf(v) >= C.AGE.childHelpFrom;
 const childHelper = v => stageOf(v) === 'anak' && canWork(v);
 function ageWorkMult(v) { const A = C.AGE, st = stageOf(v); let m = st === 'anak' ? A.childWorkMult : st === 'remaja' ? A.teenWorkMult : st === 'lansia' ? A.elderWorkMult : 1;
   if (v.pregnantUntil && v.pregnantUntil - S.day <= C.PREGNANCY.lateDays) m *= C.PREGNANCY.lateWorkMult; return m; }
-const ageSpeed = v => C.VILLAGER_SPEED * ((C.AGE_LOOK[stageOf(v)] || {}).speedMult || 1);
+const ageSpeed = v => C.VILLAGER_SPEED * ((C.AGE_LOOK[stageOf(v)] || {}).speedMult || 1) * (C.SCHEDULE.daySpeedMult || 1);
 const partnerOf = v => v.partnerId != null ? S.villagers.find(o => o.id === v.partnerId) || null : null;
 const nameOf = id => { if (id == null) return null; const v = S.villagers.find(o => o.id === id); if (v) return v.name; const m = (S.memorials || []).find(x => x.id === id); return m ? m.name : null; };
 const childrenOf = v => S.villagers.filter(k => k.motherId === v.id || k.fatherId === v.id);
@@ -645,7 +645,7 @@ function TX(path, extra = {}, fb = '') { let o = TEXT; for (const k of path.spli
   if (o && !Array.isArray(o) && typeof o === 'object' && o.variasi) o = o.variasi;
   if (o && !Array.isArray(o) && typeof o === 'object' && o.teks) o = o.teks;
   if (Array.isArray(o)) o = o.length ? pick(o) : null;
-  const s = typeof o === 'string' ? o : fb; return s && S.villagers.length ? fill(s, extra) : s.replace(/^Hari \{hari\}:\s*/, ''); }
+  const s = typeof o === 'string' ? o : fb; return s && (S.villagers.length || Object.keys(extra).length) ? fill(s, extra) : s.replace(/^Hari \{hari\}:\s*/, ''); } // isi {nama} juga saat penduduk terakhir meninggal
 const FX = () => C.SEASON_FX[season()] || {};
 // kebutuhan air harian (kemarau x1.5, empat musim: panas x1.35)
 const waterNeed = () => S.villagers.length * C.WATER.perDayPerPop * (FX().waterMult || 1);
