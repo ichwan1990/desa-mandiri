@@ -3,7 +3,7 @@ const { chromium } = require('playwright');
 (async () => {
   const b = await chromium.launch(); const p = await b.newPage();
   const errs = []; p.on('console', m => m.type() === 'error' && errs.push(m.text())); p.on('pageerror', e => errs.push(String(e)));
-  await p.goto(process.env.GAME_URL || 'http://localhost:8080/'); await p.evaluate(() => localStorage.clear()); await p.reload(); await p.waitForTimeout(900);
+  await p.goto(process.env.GAME_URL || 'http://localhost:8095/'); await p.evaluate(() => localStorage.clear()); await p.reload(); await p.waitForTimeout(900);
   await p.click('#btnNew'); await p.click('#tutSkip');
   const r = await p.evaluate(() => { const S = DESA.state, out = {};
     // quest ke-15 (q15 riset semua 3)

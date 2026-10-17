@@ -4,7 +4,7 @@ const path = require('path');
 (async () => {
   const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1560, height: 860 } });
   const errs = []; p.on('console', m => m.type() === 'error' && errs.push(m.text())); p.on('pageerror', e => errs.push(String(e)));
-  await p.goto(process.env.GAME_URL || 'http://localhost:8080/'); await p.evaluate(() => localStorage.clear()); await p.reload(); await p.waitForTimeout(900);
+  await p.goto(process.env.GAME_URL || 'http://localhost:8095/'); await p.evaluate(() => localStorage.clear()); await p.reload(); await p.waitForTimeout(900);
   await p.click('#btnNew'); await p.click('#tutSkip'); await p.click('[data-s="0"]');
   await p.evaluate(() => { for (let i = 0; i < 900; i++) DESA.step(0.1); DESA.setZoom(2); const v = DESA.state.villagers[0]; DESA.centerCam(v.x, v.y); });
   await p.waitForTimeout(300);

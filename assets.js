@@ -94,16 +94,28 @@ window.ASSETS = {
     A22: 'first_fire', A23: 'master_skill', A24: 'population_10', _dir: 'assets/icons/achievements/ach_', _locked: 'locked' },
   blob47:   { json: 'assets/tiles/autotile_blob47.json' },
 };
-window.loadAssets = function (done) {
-  const jobs = [];
-  for (const [k, a] of Object.entries(ASSETS)) {
-    if (!a.img) continue;
+// Muat gambar dengan batas paralel (agar server sederhana tidak menolak koneksi) + coba ulang.
+window.loadAssets = function (done, opts = {}) {
+  const MAX = opts.parallel || 12, RETRY = opts.retry ?? 2, queue = [];
+  for (const [, a] of Object.entries(ASSETS)) {
+    if (!a || !a.img) continue;
     const list = Array.isArray(a.img) ? a.img : [a.img];
     a.images = [];
-    list.forEach((src, i) => jobs.push(new Promise(res => { const im = new Image();
-      im.onload = () => { a.images[i] = im; if (i === 0) a.image = im; res(); };
-      im.onerror = () => { console.warn('Aset tidak ditemukan, pakai placeholder:', src); res(); }; im.src = src; })));
+    list.forEach((src, i) => queue.push({ a, src, i, tries: 0 }));
   }
-  if (ASSETS.blob47.json) jobs.push(fetch(ASSETS.blob47.json).then(r => r.json()).then(j => { ASSETS.blob47.map = j.mask_to_index; }).catch(() => console.warn('autotile_blob47.json gagal dimuat')));
-  Promise.all(jobs).then(done);
+  let active = 0, idx = 0, waiting = 0, finished = false;
+  const extra = [];
+  if (ASSETS.blob47.json) extra.push(fetch(ASSETS.blob47.json).then(r => r.json()).then(j => { ASSETS.blob47.map = j.mask_to_index; }).catch(() => console.warn('autotile_blob47.json gagal dimuat')));
+  const finish = () => { if (finished) return; finished = true; Promise.all(extra).then(done); };
+  const next = () => {
+    if (idx >= queue.length && active === 0 && waiting === 0) return finish();
+    while (active < MAX && idx < queue.length) load(queue[idx++]);
+  };
+  const load = job => { active++; const im = new Image();
+    im.onload = () => { job.a.images[job.i] = im; if (job.i === 0) job.a.image = im; active--; next(); };
+    im.onerror = () => { active--;
+      if (job.tries++ < RETRY) { waiting++; setTimeout(() => { waiting--; queue.push(job); next(); }, 150 * job.tries); }
+      else { console.warn('Aset tidak ditemukan, pakai placeholder:', job.src); next(); } };
+    im.src = job.src + (job.tries ? (job.src.includes('?') ? '&' : '?') + 'r=' + job.tries : ''); };
+  next();
 };

@@ -3,7 +3,7 @@ const { chromium } = require('playwright');
 (async () => {
   const b = await chromium.launch({ args: ['--autoplay-policy=user-gesture-required'] }); const p = await b.newPage({ viewport: { width: 1280, height: 900 } });
   const errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); });
-  await p.goto('http://localhost:8080/index.html'); await p.waitForTimeout(1500);
+  await p.goto((process.env.GAME_URL || 'http://localhost:8095/')); await p.waitForTimeout(1500);
   const r = {};
   r.beforeGesture = await p.evaluate(() => AUDIO.started);
   r.menuText = await p.evaluate(() => [document.getElementById('btnNew').textContent, document.getElementById('lblMusik').textContent]);

@@ -6,7 +6,7 @@ const RUNS = +process.argv[2] || 3;
   const b = await chromium.launch(); const results = []; const errs = [];
   for (let run = 0; run < RUNS; run++) {
     const p = await b.newPage(); p.on('pageerror', e => errs.push(String(e))); p.on('console', m => m.type() === 'error' && errs.push(m.text()));
-    await p.goto(process.env.GAME_URL || 'http://localhost:8080/'); await p.evaluate(() => localStorage.clear()); await p.reload(); await p.waitForTimeout(800);
+    await p.goto(process.env.GAME_URL || 'http://localhost:8095/'); await p.evaluate(() => localStorage.clear()); await p.reload(); await p.waitForTimeout(800);
     const nonFood = run === 1 || run === 3;
     results.push(await p.evaluate((nonFood) => {
       const S = DESA.state, C = CONFIG, D = DESA;

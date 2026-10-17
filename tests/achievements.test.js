@@ -3,7 +3,7 @@ const { chromium } = require('playwright');
 (async () => {
   const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1280, height: 900 } });
   const errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); });
-  await p.goto('http://localhost:8080/index.html'); await p.evaluate(() => localStorage.removeItem('desaMandiriPencapaian')); await p.reload(); await p.waitForTimeout(1200);
+  await p.goto((process.env.GAME_URL || 'http://localhost:8095/')); await p.evaluate(() => localStorage.removeItem('desaMandiriPencapaian')); await p.reload(); await p.waitForTimeout(1200);
   await p.click('#btnNew'); await p.click('#tutSkip').catch(() => {}); await p.click('[data-s="0"]');
   const r = {};
   r.a = await p.evaluate(() => { const S = DESA.state; const ids = () => Object.keys(DESA.ach.unlocked).sort();

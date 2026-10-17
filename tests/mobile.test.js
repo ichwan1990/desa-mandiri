@@ -4,7 +4,7 @@ const { chromium } = require('playwright');
   const b = await chromium.launch();
   const c = await b.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
   const p = await c.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); });
-  await p.goto('http://localhost:8080/index.html'); await p.waitForTimeout(1500);
+  await p.goto((process.env.GAME_URL || 'http://localhost:8095/')); await p.waitForTimeout(1500);
   await p.tap('#btnNew'); await p.waitForTimeout(300); await p.tap('#tutSkip').catch(() => {});
   await p.evaluate(() => document.querySelector('[data-s="0"]').click());
   const cdp = await c.newCDPSession(p);

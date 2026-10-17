@@ -6,13 +6,15 @@ Game manajemen desa berbasis web (HTML5 Canvas + JavaScript murni, tanpa build/f
 Game memuat `TEKS-GAME.json` dan aset lewat `fetch`, jadi harus dijalankan dari server HTTP (bukan `file://`):
 ```bash
 cd village-game
-python3 -m http.server 8080
-# buka http://localhost:8080
+python serve.py          # Windows/Linux/macOS; bawaan port 8095 -> buka http://localhost:8095
+python serve.py 8096     # port lain (mis. bila 8095 terpakai)
+python serve.py --host 0.0.0.0   # agar bisa dibuka dari HP di jaringan yang sama
 ```
+`serve.py` memakai server multi-thread dengan antrean besar. Hindari `python -m http.server`: server itu menolak sebagian dari ~180 permintaan gambar saat game dimuat, sehingga sprite jatuh ke placeholder. Pemuat aset juga membatasi 12 unduhan paralel dan mencoba ulang gambar yang gagal.
 Kontrol: seret peta / WASD / panah untuk geser, roda mouse atau tombol −/+ untuk zoom, klik tombol bangunan lalu klik peta untuk menaruh rencana (klik kanan = batal).
 
 ## Tes (Playwright)
-Server harus berjalan di `http://localhost:8080` (atau set `GAME_URL`).
+Server harus berjalan di `http://localhost:8095` (`python serve.py`), atau set `GAME_URL` (mis. `GAME_URL=http://localhost:8096/ npm test`).
 ```bash
 cd tests
 npm install
