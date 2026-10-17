@@ -1,6 +1,6 @@
 // Semua konstanta balancing (sesuai RISET-MEKANIK.md, V1). Satuan waktu: detik game pada 1x.
 window.CONFIG = {
-  TILE: 32, MAP_W: 60, MAP_H: 40, VIEW_W: 1280, VIEW_H: 800,
+  TILE: 32, MAP_W: 60, MAP_H: 40, VIEW_W: 1280, VIEW_H: 800, VIEW_MIN_W: 560, SIDE_MIN_W: 280, SIDE_MAX_W: 320, // kanvas menyusut di layar sedang agar panel samping >= SIDE_MIN_W
   ZOOM_LEVELS: [1, 2, 3], START_ZOOM: 1, CAMP: { x: 22, y: 20 },
   RIVER_X: 34, BRIDGE_ROWS: [20, 33], // baris jembatan yang melintasi sungai
   DAY_LENGTH_SEC: 120, NIGHT_START: 0.75, NIGHT_END: 0.25,
@@ -33,6 +33,8 @@ window.CONFIG = {
     obor:      { nama: 'Obor', w: 1, h: 1, cost: { kayu: 3, batu: 1 }, work: 5, era: 'perkemahan', light: 'kecil' },
     menara_jaga: { nama: 'Menara Jaga', w: 2, h: 1, cost: { kayu: 30, batu: 20, papan: 10 }, work: 70, era: 'desa_pertanian', light: 'kecil' },
     makam:     { nama: 'Makam', w: 1, h: 1, cost: { kayu: 5 }, work: 15, era: 'perkemahan' },
+    // rumah keluarga (docs/RISET-SIKLUS-HIDUP.md): kapasitas 4, untuk pasangan + anak
+    rumah:     { nama: 'Rumah Kayu', w: 3, h: 3, cost: { kayu: 40, batu: 15, papan: 8 }, work: 60, kapasitas: 4, era: 'dusun', light: 'kecil' },
   },
   // Era: syarat naik (semua harus terpenuhi). foodDays = stok (makanan+gandum) / konsumsi harian.
   ERAS: [
@@ -89,6 +91,45 @@ window.CONFIG = {
   DEATH: { griefMoodInstant: -20, griefDays: 5, griefPerDay: -3, graveCost: { kayu: 5 } },
   // tumpukan stok terlihat di peta: tingkat = stok 0 ? 0 : min(4, 1 + floor(3 * stok / kapasitas)); makanan = makanan + gandum
   STOCKPILE: { capacity: { kayu: 150, batu: 80, makanan: 100, air: 60 } },
+  // ---------- jadwal harian & siklus hidup (docs/RISET-SIKLUS-HIDUP.md) ----------
+  SCHEDULE: {
+    wakeFrac: 0.208,          // 05:00
+    sleepFrac: 0.875,         // 21:00
+    lateToleranceFrac: 0.0625,// +1.5 jam -> 22:30 untuk kerja darurat
+    urgentJobs: ['padam', 'rawat', 'jaga'],
+    finishBuildBelowPct: 10,
+    earlyWakeEnergy: 95,
+    napEnergyCrit: true,      // pakai ENERGY_CRIT
+  },
+  SLEEP_OUTSIDE: {
+    bedRegen: 1.0, bedMood: 2,
+    fireRegen: 0.75, fireMood: -3, fireRadius: 3,
+    bareRegen: 0.6, bareMood: -6,
+    winterMood: -12, winterSickAdd: 0.05,
+  },
+  PAIRING: { minAge: 18, maxAge: 50, minMood: 65, moodDays: 2, chancePerDay: 0.15, rematchDays: 14, widowGriefMult: 1.5 },
+  PREGNANCY: {
+    minEra: 'dusun',
+    motherAge: [18, 42], minMood: 70, minFoodDays: 12, famineLevels: ['aman'],
+    minHp: 70, cooldownDays: 21, perSeasonCapDiv: 5,
+    chancePerDay: 0.10, winterMult: 0.5,
+    lengthDays: 7, lateWorkMult: 0.85, lateDays: 3,
+    birthRiskCritical: 0.10, birthMood: 10, parentMood: 15,
+    newcomerCooldownMult: 1.5,
+  },
+  AGE: {
+    daysPerYear: 3.5,
+    babyUntil: 2, childUntil: 12, teenUntil: 16, elderFrom: 55,
+    foodMult: { bayi: 0.5, anak: 0.75, dewasa: 1.0, lansia: 0.9 },
+    childHelpFrom: 8, childWorkMult: 0.4, childCarryMult: 0.5,
+    childJobs: ['makanan', 'air', 'angkut'],
+    teenWorkMult: 0.8,
+    elderWorkMult: 0.7, elderEnergyDecayMult: 1.2, elderSickMult: 1.5, mentorSkillMult: 1.25,
+    oldDeathFrom: 60, oldDeathPerYear: 0.004, oldDeathMaxPerDay: 0.08, maxAge: 80,
+    oldDeathGriefMult: 0.6, frailWarnChance: 0.03,
+  },
+  // tampilan per umur (assets/README.md "Siklus hidup"): kecepatan gerak & ms per frame jalan
+  AGE_LOOK: { anak: { speedMult: 0.9, walkMs: 110 }, lansia: { speedMult: 0.7, walkMs: 180, idleMs: 400 } },
   // layar sentuh & tata letak responsif
   TOUCH: { tapSlop: 10, pinchStep: 1.35, mobileMaxWidth: 900 },
   MARKET_DAILY: { minKayu: 60, in: { kayu: 10 }, out: { makanan: 2 } },
