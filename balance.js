@@ -108,6 +108,7 @@ window.CONFIG = {
     hewan_buas:        { bobot: 1.0 },
     wabah:             { bobot: 1.2 },
     pendatang:         { bobot: 0.8 },
+    festival_desa:     { hariJadi: true }, // 'Hari Jadi Desa': hanya tepat di ulang tahun desa (hari 29, 57, ...), sekali per tahun
   },
   // Tutorial interaktif: per langkah (urutan sama dengan TEKS-GAME.json tutorial) elemen yang disorot & aksi pemain
   // yang otomatis melanjutkan. Langkah di JSON boleh punya 'target'/'aksi' sendiri (menimpa ini).

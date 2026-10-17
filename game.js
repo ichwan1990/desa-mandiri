@@ -352,6 +352,7 @@ function applyEffects(ef, src) {
 }
 // pilih event berbobot sesuai C.EVENT_RULES (musim, maks per tahun, cooldown)
 function eventAllowed(e) { const r = (C.EVENT_RULES || {})[e.id] || {}, year = Math.floor((S.day - 1) / (C.SEASON_DAYS * C.SEASONS.length));
+  if (r.hariJadi) return false; // hanya lewat anniversaryEvent()
   if (r.musim && !r.musim.includes(season())) return false;
   if (e.musim && ![].concat(e.musim).includes(season())) return false;
   if (r.maksPerTahun && ((S.eventYearCount || {})[e.id + '@' + year] || 0) >= r.maksPerTahun) return false;
@@ -360,9 +361,15 @@ function eventAllowed(e) { const r = (C.EVENT_RULES || {})[e.id] || {}, year = M
 const eventWeight = e => { const r = (C.EVENT_RULES || {})[e.id]; return (r && r.bobot != null ? r.bobot : e.bobot ?? 1) * (e.id === 'panen_raya' && season() === 'gugur' ? C.SEASON_FX.gugur.panenRayaWeightMult : 1); };
 const allEvents = () => !TEXT ? [] : [...(TEXT.event_acak || []), ...(TEXT.event_era_lanjut || []), ...(TEXT.event_musiman || [])];
 const eventEraOk = e => !e.era || eraIndex(e.era) <= (S.era | 0);
-function maybeEvent() { if (!TEXT || !TEXT.event_acak || S.day < C.EVENT_MIN_DAY || Math.random() > ((S.era | 0) >= 1 ? C.EVENT_CHANCE_PER_DAY_DUSUN : C.EVENT_CHANCE_PER_DAY)) return;
+// Hari Jadi Desa (EVENT_RULES[id].hariJadi): bukan event acak; muncul tepat di awal tahun ke-2, ke-3, ... (hari 29, 57, ...), sekali per tahun
+function anniversaryEvent() { const yr = Math.floor((S.day - 1) / (C.SEASON_DAYS * C.SEASONS.length)); if (yr < 1 || (S.annivDone || {})[yr]) return null;
+  const ev = allEvents().find(e => ((C.EVENT_RULES || {})[e.id] || {}).hariJadi); if (!ev) return null; (S.annivDone = S.annivDone || {})[yr] = S.day; return ev; }
+function maybeEvent() { if (!TEXT || !TEXT.event_acak) return; const anniv = anniversaryEvent(); if (anniv) return fireEvent(anniv);
+  if (S.day < C.EVENT_MIN_DAY || Math.random() > ((S.era | 0) >= 1 ? C.EVENT_CHANCE_PER_DAY_DUSUN : C.EVENT_CHANCE_PER_DAY)) return;
   const pool = allEvents().filter(e => eventEraOk(e) && eventAllowed(e)), total = pool.reduce((a, e) => a + eventWeight(e), 0); if (!total) return;
   let r = Math.random() * total, ev = pool[pool.length - 1]; for (const e of pool) { r -= eventWeight(e); if (r <= 0) { ev = e; break; } }
+  fireEvent(ev); }
+function fireEvent(ev) {
   const year = Math.floor((S.day - 1) / (C.SEASON_DAYS * C.SEASONS.length));
   S.eventLastDay = S.eventLastDay || {}; S.eventYearCount = S.eventYearCount || {}; S.eventCount = S.eventCount || {};
   S.eventLastDay[ev.id] = S.day; S.eventYearCount[ev.id + '@' + year] = (S.eventYearCount[ev.id + '@' + year] || 0) + 1; S.eventCount[ev.id] = (S.eventCount[ev.id] || 0) + 1;
@@ -1260,7 +1267,7 @@ function frame(now) { const real = Math.min(0.25, (now - prev) / 1000); prev = n
   for (const n of notes) n.life -= real; while (notes.length && notes[0].life <= 0) notes.shift();
   let sim = menuOpen ? 0 : real * speed; while (sim > 0) { const d = Math.min(0.1, sim); step(d); sim -= d; }
   render(); ui(); requestAnimationFrame(frame); }
-window.DESA = { get state() { return S; }, stockpiles, pileTier, pileSpots, notify, get notes() { return notes; }, killVillager, makeSick, ignite, spawnWolf, startFlood, famineLevel, warnings, threatDaily, seasonStep, wolfDaily, leaveDaily, sicknessDaily, spoilDaily, year, foodDays, floodTiles, isFlooded, fitCanvas, get placing() { return placing; }, setPlacing(b) { placing = b; }, get ach() { return ACH; }, checkAch, achProgress, unlockAch, endOfDaySummary, newDay, toast, applyEffects, allEvents, eventEraOk, fill, marketNewDay, priceOf, tradeQuote, doTrade, spawnMerchant, marketOpen, quota, foodSellMult, openMarket, startResearch, techVal, techNodes, openTech, showEvent, validSpot, canAfford, addBuilding, season,  step, cam, findPath, setZoom, centerCam };
+window.DESA = { get state() { return S; }, maybeEvent, loadGame, biteVillager, updateWolf, wolfCost, seasonDaily, stockpiles, pileTier, pileSpots, notify, get notes() { return notes; }, killVillager, makeSick, ignite, spawnWolf, startFlood, famineLevel, warnings, threatDaily, seasonStep, wolfDaily, leaveDaily, sicknessDaily, spoilDaily, year, foodDays, floodTiles, isFlooded, fitCanvas, get placing() { return placing; }, setPlacing(b) { placing = b; }, get ach() { return ACH; }, checkAch, achProgress, unlockAch, endOfDaySummary, newDay, toast, applyEffects, allEvents, eventEraOk, fill, marketNewDay, priceOf, tradeQuote, doTrade, spawnMerchant, marketOpen, quota, foodSellMult, openMarket, startResearch, techVal, techNodes, openTech, showEvent, validSpot, canAfford, addBuilding, season,  step, cam, findPath, setZoom, centerCam };
 fetch('TEKS-GAME.json').then(r => r.ok ? r.json() : null).catch(() => null).then(t => { TEXT = t;
   if (!t) console.warn('TEKS-GAME.json tidak dapat dimuat; memakai teks bawaan.');
   loadAssets(() => { newGame(); lastDay = S.day; buildPrioUI(); buildBuildBar(); centerCam(CAMP.x, CAMP.y); applyMenuText(); openMenu(); requestAnimationFrame(frame); }); });
