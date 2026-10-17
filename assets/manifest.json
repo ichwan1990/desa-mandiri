@@ -11562,6 +11562,51 @@
    "note": "64x64 meja posyandu: taplak merah muda, buku KMS, dacin (timbangan gantung bersarung), papan tanda posyandu; kader berdiri di depan/kiri",
    "stage": 8,
    "sub": "8b"
+  },
+  {
+   "file": "icons/resources/icon_padi_ikat.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "ikon sumber daya Padi resmi 32x32 (seikat padi menguning diikat pita); format sama dengan icons/resources/icon_*.png. icon_padi.png (sementara dari Asisten Koding) TIDAK ditimpa",
+   "stage": 8,
+   "sub": "8c"
+  },
+  {
+   "file": "tiles/tropis/sawah_kering_autotile.png",
+   "size": [
+    128,
+    128
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 16,
+   "note": "sawah kering (kemarau tanpa irigasi): lumpur retak tanpa air, pematang identik; format & indeks PERSIS sawah_autotile (N1+E2+S4+W8, kolom i%4, baris i//4); retak seamless antar tile",
+   "stage": 8,
+   "sub": "8c"
+  },
+  {
+   "file": "nature/crops/crop_padi_kering.png",
+   "size": [
+    192,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 6,
+   "note": "OVERLAY padi layu di atas sawah_kering_autotile, indeks frame sama dengan crop_padi: 0 diolah (bongkah kering), 1 bibit layu, 2 tumbuh layu, 3 bunting layu, 4 menguning hampa (merunduk, pucat), 5 dipanen (jerami)",
+   "stage": 8,
+   "sub": "8c"
   }
  ]
 }

@@ -1253,3 +1253,18 @@ Penamaan: `buildings/monuments/<id>_tahap<N>.png` untuk tahap N yang sudah seles
 - Pengunjung tidak punya animasi kerja/bicara. Reog belum punya animasi tari khusus (hanya diam/jalan) dan belum ada penari jathil/bujang ganong.
 - Belum ada lampu hias malam Agustusan, papan gelar Teladan per tingkat, maupun versi malam untuk monumen tahap.
 - Ikon keinginan 16px untuk wayang, gamelan, dan haji (Ka'bah) bersifat simbolik dan paling jelas bila disertai judul gelembung di tooltip.
+
+## Tahap 8c: ikon Padi & sawah kering kemarau (permintaan Asisten Koding)
+
+Hanya file baru. Semua file lama tidak berubah: md5 dicek pada 726 file di manifest, ditambah `icons/resources/icon_padi.png`. Di manifest, entri tahap ini memakai `stage: 8, sub: "8c"`. Generator: fungsi `stage8c()`. Preview: `preview_8c.png` (`tools/make_preview_8c.py`).
+
+| File | Ukuran | Frame | Catatan |
+|---|---|---|---|
+| `icons/resources/icon_padi_ikat.png` | 32x32 | 1 | Ikon resmi sumber daya Padi (`gandum`): seikat padi menguning diikat pita. Gayanya sama dengan `icons/resources/icon_*.png` (outline 1px, tanpa bingkai). |
+| `tiles/tropis/sawah_kering_autotile.png` | 128x128 | 16 | Sawah kering untuk kemarau tanpa irigasi: lumpur retak tanpa air, pematang identik. **Format dan indeks persis `sawah_autotile.png`**: 16-tile 4-bit, indeks = N1+E2+S4+W8 (tetangga yang juga sawah), kolom i%4, baris i//4, indeks 0 = petak tunggal. Pola retak periodik 32px sehingga menyambung antar tile. |
+| `nature/crops/crop_padi_kering.png` | 192x32 | 6 | Overlay padi layu, indeks frame sama dengan `crop_padi`: 0 diolah (bongkah kering), 1 bibit layu, 2 tumbuh layu, 3 bunting layu, 4 menguning hampa, 5 dipanen (jerami). |
+
+Catatan:
+- **`icons/resources/icon_padi.png` sengaja tidak ditimpa.** Path itu sudah berisi ikon sementara buatan Asisten Koding (`tools/buat_ikon_padi.py`, dipakai di `tema.js` `RES_ICON`). Ikon resmi ada di `icon_padi_ikat.png`. Untuk memakainya, ubah `RES_ICON.gandum` ke path baru, atau salin file itu ke `icon_padi.png` bila pemilik proyek setuju menimpa.
+- **Tidak ada `icon_padi_16.png`.** Ikon sumber daya lain di `icons/resources/` tidak punya versi 16px.
+- Di kode, `sawah_kering_autotile` dapat menggantikan `drySawahImg()` (game.js) cukup dengan memakai indeks yang sama. Saat sawah kering, `sawah_water_anim` (kilau) jangan digambar.
