@@ -595,6 +595,551 @@
    120,
    140,
    96
+  ],
+  "tr_leaf_d": [
+   38,
+   104,
+   58
+  ],
+  "tr_leaf": [
+   60,
+   146,
+   70
+  ],
+  "tr_leaf_l": [
+   118,
+   190,
+   80
+  ],
+  "palm_d": [
+   70,
+   120,
+   50
+  ],
+  "palm": [
+   108,
+   160,
+   62
+  ],
+  "palm_l": [
+   166,
+   200,
+   90
+  ],
+  "coco": [
+   120,
+   82,
+   46
+  ],
+  "coco_l": [
+   170,
+   124,
+   66
+  ],
+  "banana": [
+   240,
+   208,
+   70
+  ],
+  "banana_g": [
+   176,
+   196,
+   70
+  ],
+  "mango": [
+   246,
+   170,
+   50
+  ],
+  "mango_g": [
+   170,
+   190,
+   70
+  ],
+  "rambutan": [
+   214,
+   48,
+   52
+  ],
+  "rambutan_l": [
+   250,
+   110,
+   90
+  ],
+  "hibiscus": [
+   230,
+   44,
+   70
+  ],
+  "hibiscus_l": [
+   255,
+   120,
+   140
+  ],
+  "frangi": [
+   252,
+   246,
+   232
+  ],
+  "frangi_y": [
+   250,
+   214,
+   90
+  ],
+  "bamboo_d": [
+   110,
+   140,
+   50
+  ],
+  "bamboo": [
+   160,
+   184,
+   70
+  ],
+  "bamboo_l": [
+   206,
+   220,
+   120
+  ],
+  "teak_bark": [
+   122,
+   96,
+   72
+  ],
+  "banyan_bark": [
+   110,
+   92,
+   80
+  ],
+  "cassava_stem": [
+   176,
+   104,
+   110
+  ],
+  "corn": [
+   250,
+   214,
+   80
+  ],
+  "corn_husk": [
+   196,
+   206,
+   120
+  ],
+  "coffee": [
+   196,
+   40,
+   48
+  ],
+  "coffee_g": [
+   120,
+   170,
+   70
+  ],
+  "paddy_w": [
+   110,
+   170,
+   180
+  ],
+  "paddy_wl": [
+   170,
+   214,
+   214
+  ],
+  "paddy_d": [
+   80,
+   130,
+   140
+  ],
+  "rice_g": [
+   96,
+   180,
+   70
+  ],
+  "rice_y": [
+   230,
+   200,
+   80
+  ],
+  "rice_yd": [
+   196,
+   160,
+   60
+  ],
+  "ijuk": [
+   70,
+   56,
+   52
+  ],
+  "ijuk_l": [
+   104,
+   86,
+   76
+  ],
+  "tile_roof": [
+   196,
+   88,
+   56
+  ],
+  "tile_roof_d": [
+   150,
+   62,
+   48
+  ],
+  "tile_roof_l": [
+   228,
+   128,
+   84
+  ],
+  "ubi": [
+   150,
+   70,
+   120
+  ],
+  "ubi_l": [
+   190,
+   110,
+   160
+  ],
+  "ubi_leaf": [
+   90,
+   150,
+   60
+  ],
+  "chick_w": [
+   250,
+   244,
+   230
+  ],
+  "chick_b": [
+   196,
+   120,
+   60
+  ],
+  "comb": [
+   222,
+   50,
+   50
+  ],
+  "beak": [
+   246,
+   170,
+   50
+  ],
+  "duck_g": [
+   60,
+   130,
+   90
+  ],
+  "goat": [
+   236,
+   230,
+   220
+  ],
+  "goat_d": [
+   170,
+   160,
+   150
+  ],
+  "cow": [
+   196,
+   150,
+   100
+  ],
+  "cow_d": [
+   150,
+   104,
+   70
+  ],
+  "buff": [
+   96,
+   92,
+   100
+  ],
+  "buff_d": [
+   64,
+   60,
+   72
+  ],
+  "buff_l": [
+   140,
+   136,
+   146
+  ],
+  "deer": [
+   176,
+   112,
+   64
+  ],
+  "deer_d": [
+   132,
+   80,
+   48
+  ],
+  "boar": [
+   96,
+   70,
+   56
+  ],
+  "boar_d": [
+   66,
+   48,
+   40
+  ],
+  "monkey": [
+   150,
+   110,
+   80
+  ],
+  "monkey_l": [
+   220,
+   190,
+   150
+  ],
+  "snake": [
+   110,
+   160,
+   60
+  ],
+  "snake_d": [
+   70,
+   110,
+   46
+  ],
+  "snake_l": [
+   200,
+   214,
+   110
+  ],
+  "leo": [
+   232,
+   170,
+   70
+  ],
+  "leo_d": [
+   150,
+   96,
+   40
+  ],
+  "leo_l": [
+   250,
+   226,
+   170
+  ],
+  "spot": [
+   70,
+   50,
+   40
+  ],
+  "heron": [
+   244,
+   244,
+   240
+  ],
+  "sparrow": [
+   150,
+   104,
+   70
+  ],
+  "butter": [
+   250,
+   170,
+   60
+  ],
+  "butter2": [
+   110,
+   170,
+   240
+  ],
+  "firefly": [
+   230,
+   255,
+   120
+  ],
+  "hj_grass_d": [
+   40,
+   112,
+   58
+  ],
+  "hj_grass": [
+   64,
+   150,
+   66
+  ],
+  "hj_grass_l": [
+   108,
+   184,
+   76
+  ],
+  "hj_leaf_d": [
+   30,
+   96,
+   56
+  ],
+  "hj_leaf": [
+   50,
+   134,
+   66
+  ],
+  "hj_leaf_l": [
+   96,
+   176,
+   78
+  ],
+  "mr_grass_d": [
+   120,
+   150,
+   58
+  ],
+  "mr_grass": [
+   164,
+   184,
+   72
+  ],
+  "mr_grass_l": [
+   206,
+   206,
+   96
+  ],
+  "km_grass_d": [
+   150,
+   120,
+   64
+  ],
+  "km_grass": [
+   192,
+   160,
+   84
+  ],
+  "km_grass_l": [
+   222,
+   196,
+   120
+  ],
+  "km_leaf_d": [
+   96,
+   110,
+   52
+  ],
+  "km_leaf": [
+   136,
+   140,
+   62
+  ],
+  "km_leaf_l": [
+   184,
+   170,
+   86
+  ],
+  "km_dirt": [
+   186,
+   130,
+   80
+  ],
+  "lb_grass_d": [
+   96,
+   164,
+   74
+  ],
+  "lb_grass": [
+   140,
+   206,
+   92
+  ],
+  "lb_grass_l": [
+   196,
+   232,
+   124
+  ],
+  "lb_leaf_d": [
+   70,
+   140,
+   70
+  ],
+  "lb_leaf": [
+   110,
+   180,
+   80
+  ],
+  "lb_leaf_l": [
+   170,
+   214,
+   100
+  ],
+  "dust": [
+   214,
+   180,
+   130
+  ],
+  "bolt": [
+   255,
+   252,
+   200
+  ],
+  "merah": [
+   214,
+   40,
+   48
+  ],
+  "merah_d": [
+   160,
+   28,
+   40
+  ],
+  "putih": [
+   248,
+   246,
+   240
+  ],
+  "pos_c": [
+   110,
+   180,
+   90
+  ],
+  "neg_c": [
+   150,
+   120,
+   150
+  ],
+  "neu_c": [
+   220,
+   180,
+   90
+  ],
+  "sirap": [
+   120,
+   78,
+   52
+  ],
+  "sirap_l": [
+   160,
+   108,
+   70
+  ],
+  "wall_w": [
+   240,
+   232,
+   214
+  ],
+  "wall_d": [
+   206,
+   194,
+   170
+  ],
+  "mustaka": [
+   232,
+   190,
+   70
+  ],
+  "batik": [
+   120,
+   64,
+   40
+  ],
+  "batik_l": [
+   200,
+   150,
+   90
   ]
  },
  "files": [
@@ -5505,6 +6050,2848 @@
    "frames": 3,
    "note": "pintu: 0 tertutup, 1 setengah, 2 terbuka (~100ms/frame; balik urutan untuk menutup); frame = ukuran/anchor hut.png (versi salju)",
    "stage": 6
+  },
+  {
+   "file": "nature/tropis/tree_kelapa.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "32x64 anchor bawah; berbuah",
+   "stage": 7
+  },
+  {
+   "file": "nature/tropis/tree_kelapa_empty.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "32x64 tanpa buah",
+   "stage": 7
+  },
+  {
+   "file": "nature/tropis/tree_pisang.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "32x64 berbuah (tandan)",
+   "stage": 7
+  },
+  {
+   "file": "nature/tropis/tree_pisang_empty.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "32x64",
+   "stage": 7
+  },
+  {
+   "file": "nature/tropis/bambu.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "rumpun bambu 32x64",
+   "stage": 7
+  },
+  {
+   "file": "nature/tropis/tree_jati.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "32x64",
+   "stage": 7
+  },
+  {
+   "file": "nature/tropis/tree_beringin.png",
+   "size": [
+    64,
+    64
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 1,
+   "note": "64x64 (2x2 tile), akar gantung",
+   "stage": 7
+  },
+  {
+   "file": "nature/tropis/tree_mangga.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "32x64 berbuah",
+   "stage": 7
+  },
+  {
+   "file": "nature/tropis/tree_mangga_empty.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "32x64",
+   "stage": 7
+  },
+  {
+   "file": "nature/tropis/tree_rambutan.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "32x64 berbuah",
+   "stage": 7
+  },
+  {
+   "file": "nature/tropis/tree_rambutan_empty.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "32x64",
+   "stage": 7
+  },
+  {
+   "file": "nature/tropis/bush_tropis.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "perdu tropis 32x32",
+   "stage": 7
+  },
+  {
+   "file": "nature/tropis/bush_kembang_sepatu.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "bunga sepatu 32x32",
+   "stage": 7
+  },
+  {
+   "file": "nature/tropis/tree_kamboja.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "kamboja 32x64",
+   "stage": 7
+  },
+  {
+   "file": "nature/crops/crop_padi.png",
+   "size": [
+    192,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 6,
+   "note": "OVERLAY tanaman padi di atas tiles/tropis/sawah_autotile: 0 tergenang (diolah), 1 bibit, 2 tumbuh, 3 bunting, 4 menguning (panen), 5 dipanen (jerami)",
+   "stage": 7
+  },
+  {
+   "file": "tiles/tropis/sawah_autotile.png",
+   "size": [
+    128,
+    128
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 16,
+   "note": "sawah tergenang + pematang; 16-tile 4-bit: indeks = N1+E2+S4+W8 (tetangga yang juga sawah, sisi tanpa pematang); kolom i%4, baris i//4; indeks 0 = petak tunggal",
+   "stage": 7
+  },
+  {
+   "file": "tiles/tropis/sawah_water_anim.png",
+   "size": [
+    64,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 2,
+   "note": "kilau air tile sawah penuh (indeks 15), 2 frame ~600ms (opsional)",
+   "stage": 7
+  },
+  {
+   "file": "nature/crops/crop_singkong.png",
+   "size": [
+    192,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 6,
+   "note": "urutan: diolah, bibit, tunas, tumbuh, siap panen, sudah dipanen",
+   "stage": 7
+  },
+  {
+   "file": "nature/crops/crop_jagung.png",
+   "size": [
+    192,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 6,
+   "note": "urutan: diolah, bibit, tunas, tumbuh, siap panen, sudah dipanen",
+   "stage": 7
+  },
+  {
+   "file": "nature/crops/crop_kopi.png",
+   "size": [
+    192,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 6,
+   "note": "urutan: diolah, bibit, tunas, tumbuh, siap panen, sudah dipanen (kopi: tanaman tetap, panen = buah merah)",
+   "stage": 7
+  },
+  {
+   "file": "nature/crops/crop_ubi.png",
+   "size": [
+    192,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 6,
+   "note": "ubi jalar; urutan: diolah, bibit, tunas, tumbuh, siap panen (umbi terlihat), sudah dipanen",
+   "stage": 7
+  },
+  {
+   "file": "tiles/tropis/sawah_terrace_riser.png",
+   "size": [
+    96,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 3,
+   "note": "dinding undakan sawah bertingkat (tinggi 15px di atas tile, sisa transparan): ujung kiri, tengah, ujung kanan; taruh di baris tile tepat di bawah petak sawah atas, menimpa bagian atas tile sawah bawah",
+   "stage": 7
+  },
+  {
+   "file": "characters/fauna/kambing.png",
+   "size": [
+    128,
+    256
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 32,
+   "note": "32x32/frame, 4 kolom; baris 0-3 diam, 4-7 jalan; arah bawah,kiri,kanan,atas; anchor tengah-bawah",
+   "stage": 7
+  },
+  {
+   "file": "characters/fauna/sapi.png",
+   "size": [
+    256,
+    512
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 32,
+   "note": "64x64/frame, 4 kolom; baris 0-3 diam, 4-7 jalan; arah bawah,kiri,kanan,atas; anchor tengah-bawah",
+   "stage": 7
+  },
+  {
+   "file": "characters/fauna/kerbau.png",
+   "size": [
+    256,
+    512
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 32,
+   "note": "64x64/frame, 4 kolom; baris 0-3 diam, 4-7 jalan; arah bawah,kiri,kanan,atas; anchor tengah-bawah",
+   "stage": 7
+  },
+  {
+   "file": "characters/fauna/rusa.png",
+   "size": [
+    128,
+    256
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 32,
+   "note": "32x32/frame, 4 kolom; baris 0-3 diam, 4-7 jalan; arah bawah,kiri,kanan,atas; anchor tengah-bawah",
+   "stage": 7
+  },
+  {
+   "file": "characters/fauna/babi_hutan.png",
+   "size": [
+    128,
+    384
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 48,
+   "note": "32x32/frame, 4 kolom; baris 0-3 diam, 4-7 jalan, 8-11 serang (frame 2 = kena); arah bawah,kiri,kanan,atas; anchor tengah-bawah",
+   "stage": 7
+  },
+  {
+   "file": "characters/fauna/monyet.png",
+   "size": [
+    128,
+    384
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 48,
+   "note": "32x32; baris 0-3 diam, 4-7 jalan, 8-11 serang/mencuri (frame 2 = sambar pisang); arah bawah,kiri,kanan,atas",
+   "stage": 7
+  },
+  {
+   "file": "characters/fauna/macan_tutul.png",
+   "size": [
+    256,
+    768
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 48,
+   "note": "64x64/frame, 4 kolom; baris 0-3 diam, 4-7 jalan, 8-11 serang (frame 2 = kena); arah bawah,kiri,kanan,atas; anchor tengah-bawah",
+   "stage": 7
+  },
+  {
+   "file": "characters/fauna/ayam.png",
+   "size": [
+    128,
+    256
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 32,
+   "note": "32x32; baris 0-3 diam (frame 2 = mematuk), 4-7 jalan; arah bawah,kiri,kanan,atas",
+   "stage": 7
+  },
+  {
+   "file": "characters/fauna/bebek.png",
+   "size": [
+    128,
+    256
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 32,
+   "note": "32x32; baris 0-3 diam (frame 2 = mematuk), 4-7 jalan; arah bawah,kiri,kanan,atas",
+   "stage": 7
+  },
+  {
+   "file": "characters/fauna/ular.png",
+   "size": [
+    128,
+    384
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 48,
+   "note": "32x32; baris 0-3 diam (lidah), 4-7 merayap, 8-11 serang (kepala terangkat); arah bawah,kiri,kanan,atas",
+   "stage": 7
+  },
+  {
+   "file": "characters/fauna/ambient/burung_pipit_terbang.png",
+   "size": [
+    64,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 4,
+   "note": "burung pipit terbang (menghadap kanan; flip untuk kiri), 4 frame ~90ms",
+   "stage": 7
+  },
+  {
+   "file": "characters/fauna/ambient/bangau.png",
+   "size": [
+    128,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 4,
+   "note": "bangau (menghadap kanan): 0 berdiri, 1 mematuk (di sawah), 2-3 terbang kepak ~150ms",
+   "stage": 7
+  },
+  {
+   "file": "characters/fauna/ambient/kupu_kupu.png",
+   "size": [
+    64,
+    32
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 8,
+   "note": "2 baris warna (oranye, biru) x 4 frame kepak ~100ms",
+   "stage": 7
+  },
+  {
+   "file": "characters/fauna/ambient/ikan_lompat.png",
+   "size": [
+    192,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 6,
+   "note": "ikan melompat di sungai (tile air): 0 riak, 1-4 lompat (kiri\u2192kanan), 5 cipratan; ~90ms; tempel di tile air",
+   "stage": 7
+  },
+  {
+   "file": "characters/fauna/ambient/kunang_kunang.png",
+   "size": [
+    32,
+    8
+   ],
+   "frame": [
+    8,
+    8
+   ],
+   "frames": 4,
+   "note": "kunang-kunang malam: kedip 4 frame ~200ms; gambar setelah night_overlay (additive) + light_glow_small skala 0.25 opsional",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/hujan/grass_hujan.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "musim hujan; format/indeks identik dengan tiles/grass.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/hujan/grass_flowers_hujan.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "musim hujan; format/indeks identik dengan tiles/grass_flowers.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/hujan/dirt_hujan.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "musim hujan; format/indeks identik dengan tiles/dirt.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/hujan/edge_grass_dirt_hujan.png",
+   "size": [
+    256,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 8,
+   "note": "musim hujan; format/indeks identik dengan tiles/edge_grass_dirt.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/hujan/edge_grass_sand_hujan.png",
+   "size": [
+    256,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 8,
+   "note": "musim hujan; format/indeks identik dengan tiles/edge_grass_sand.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/hujan/autotile_water_grass_hujan.png",
+   "size": [
+    256,
+    384
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 94,
+   "note": "musim hujan; format/indeks identik dengan tiles/autotile_water_grass.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/hujan/autotile_path_grass_hujan.png",
+   "size": [
+    256,
+    192
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 47,
+   "note": "musim hujan; format/indeks identik dengan tiles/autotile_path_grass.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/hujan/tree_hujan.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "musim hujan; format/indeks identik dengan nature/tree.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/hujan/berry_bush_full_hujan.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "musim hujan; format/indeks identik dengan nature/berry_bush_full.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/hujan/berry_bush_empty_hujan.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "musim hujan; format/indeks identik dengan nature/berry_bush_empty.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/hujan/tree_mangga_hujan.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "musim hujan; format/indeks identik dengan nature/tropis/tree_mangga.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/hujan/tree_rambutan_hujan.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "musim hujan; format/indeks identik dengan nature/tropis/tree_rambutan.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/hujan/tree_jati_hujan.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "musim hujan; format/indeks identik dengan nature/tropis/tree_jati.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/hujan/bush_tropis_hujan.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "musim hujan; format/indeks identik dengan nature/tropis/bush_tropis.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/hujan/tree_beringin_hujan.png",
+   "size": [
+    64,
+    64
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 1,
+   "note": "musim hujan; format/indeks identik dengan nature/tropis/tree_beringin.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/hujan/tree_pisang_hujan.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "musim hujan; format/indeks identik dengan nature/tropis/tree_pisang.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/hujan/bambu_hujan.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "musim hujan; format/indeks identik dengan nature/tropis/bambu.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/mareng/grass_mareng.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "musim mareng; format/indeks identik dengan tiles/grass.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/mareng/grass_flowers_mareng.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "musim mareng; format/indeks identik dengan tiles/grass_flowers.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/mareng/dirt_mareng.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "musim mareng; format/indeks identik dengan tiles/dirt.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/mareng/edge_grass_dirt_mareng.png",
+   "size": [
+    256,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 8,
+   "note": "musim mareng; format/indeks identik dengan tiles/edge_grass_dirt.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/mareng/edge_grass_sand_mareng.png",
+   "size": [
+    256,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 8,
+   "note": "musim mareng; format/indeks identik dengan tiles/edge_grass_sand.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/mareng/autotile_water_grass_mareng.png",
+   "size": [
+    256,
+    384
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 94,
+   "note": "musim mareng; format/indeks identik dengan tiles/autotile_water_grass.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/mareng/autotile_path_grass_mareng.png",
+   "size": [
+    256,
+    192
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 47,
+   "note": "musim mareng; format/indeks identik dengan tiles/autotile_path_grass.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/mareng/tree_mareng.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "musim mareng; format/indeks identik dengan nature/tree.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/mareng/berry_bush_full_mareng.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "musim mareng; format/indeks identik dengan nature/berry_bush_full.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/mareng/berry_bush_empty_mareng.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "musim mareng; format/indeks identik dengan nature/berry_bush_empty.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/mareng/tree_mangga_mareng.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "musim mareng; format/indeks identik dengan nature/tropis/tree_mangga.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/mareng/tree_rambutan_mareng.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "musim mareng; format/indeks identik dengan nature/tropis/tree_rambutan.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/mareng/tree_jati_mareng.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "musim mareng; format/indeks identik dengan nature/tropis/tree_jati.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/mareng/bush_tropis_mareng.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "musim mareng; format/indeks identik dengan nature/tropis/bush_tropis.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/mareng/tree_beringin_mareng.png",
+   "size": [
+    64,
+    64
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 1,
+   "note": "musim mareng; format/indeks identik dengan nature/tropis/tree_beringin.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/mareng/tree_pisang_mareng.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "musim mareng; format/indeks identik dengan nature/tropis/tree_pisang.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/mareng/bambu_mareng.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "musim mareng; format/indeks identik dengan nature/tropis/bambu.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/kemarau/grass_kemarau.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "musim kemarau; format/indeks identik dengan tiles/grass.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/kemarau/grass_flowers_kemarau.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "musim kemarau; format/indeks identik dengan tiles/grass_flowers.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/kemarau/dirt_kemarau.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "musim kemarau; format/indeks identik dengan tiles/dirt.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/kemarau/edge_grass_dirt_kemarau.png",
+   "size": [
+    256,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 8,
+   "note": "musim kemarau; format/indeks identik dengan tiles/edge_grass_dirt.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/kemarau/edge_grass_sand_kemarau.png",
+   "size": [
+    256,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 8,
+   "note": "musim kemarau; format/indeks identik dengan tiles/edge_grass_sand.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/kemarau/autotile_water_grass_kemarau.png",
+   "size": [
+    256,
+    384
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 94,
+   "note": "musim kemarau; format/indeks identik dengan tiles/autotile_water_grass.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/kemarau/autotile_path_grass_kemarau.png",
+   "size": [
+    256,
+    192
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 47,
+   "note": "musim kemarau; format/indeks identik dengan tiles/autotile_path_grass.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/kemarau/tree_kemarau.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "musim kemarau; format/indeks identik dengan nature/tree.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/kemarau/berry_bush_full_kemarau.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "musim kemarau; format/indeks identik dengan nature/berry_bush_full.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/kemarau/berry_bush_empty_kemarau.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "musim kemarau; format/indeks identik dengan nature/berry_bush_empty.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/kemarau/tree_mangga_kemarau.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "musim kemarau; format/indeks identik dengan nature/tropis/tree_mangga.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/kemarau/tree_rambutan_kemarau.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "musim kemarau; format/indeks identik dengan nature/tropis/tree_rambutan.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/kemarau/tree_jati_kemarau.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "musim kemarau; format/indeks identik dengan nature/tropis/tree_jati.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/kemarau/bush_tropis_kemarau.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "musim kemarau; format/indeks identik dengan nature/tropis/bush_tropis.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/kemarau/tree_beringin_kemarau.png",
+   "size": [
+    64,
+    64
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 1,
+   "note": "musim kemarau; format/indeks identik dengan nature/tropis/tree_beringin.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/kemarau/tree_pisang_kemarau.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "musim kemarau; format/indeks identik dengan nature/tropis/tree_pisang.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/kemarau/bambu_kemarau.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "musim kemarau; format/indeks identik dengan nature/tropis/bambu.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/labuh/grass_labuh.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "musim labuh; format/indeks identik dengan tiles/grass.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/labuh/grass_flowers_labuh.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "musim labuh; format/indeks identik dengan tiles/grass_flowers.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/labuh/dirt_labuh.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "musim labuh; format/indeks identik dengan tiles/dirt.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/labuh/edge_grass_dirt_labuh.png",
+   "size": [
+    256,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 8,
+   "note": "musim labuh; format/indeks identik dengan tiles/edge_grass_dirt.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/labuh/edge_grass_sand_labuh.png",
+   "size": [
+    256,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 8,
+   "note": "musim labuh; format/indeks identik dengan tiles/edge_grass_sand.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/labuh/autotile_water_grass_labuh.png",
+   "size": [
+    256,
+    384
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 94,
+   "note": "musim labuh; format/indeks identik dengan tiles/autotile_water_grass.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/labuh/autotile_path_grass_labuh.png",
+   "size": [
+    256,
+    192
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 47,
+   "note": "musim labuh; format/indeks identik dengan tiles/autotile_path_grass.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/labuh/tree_labuh.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "musim labuh; format/indeks identik dengan nature/tree.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/labuh/berry_bush_full_labuh.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "musim labuh; format/indeks identik dengan nature/berry_bush_full.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/labuh/berry_bush_empty_labuh.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "musim labuh; format/indeks identik dengan nature/berry_bush_empty.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/labuh/tree_mangga_labuh.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "musim labuh; format/indeks identik dengan nature/tropis/tree_mangga.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/labuh/tree_rambutan_labuh.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "musim labuh; format/indeks identik dengan nature/tropis/tree_rambutan.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/labuh/tree_jati_labuh.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "musim labuh; format/indeks identik dengan nature/tropis/tree_jati.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/labuh/bush_tropis_labuh.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "musim labuh; format/indeks identik dengan nature/tropis/bush_tropis.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/labuh/tree_beringin_labuh.png",
+   "size": [
+    64,
+    64
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 1,
+   "note": "musim labuh; format/indeks identik dengan nature/tropis/tree_beringin.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/labuh/tree_pisang_labuh.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "musim labuh; format/indeks identik dengan nature/tropis/tree_pisang.png",
+   "stage": 7
+  },
+  {
+   "file": "seasons/tropis/labuh/bambu_labuh.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "musim labuh; format/indeks identik dengan nature/tropis/bambu.png",
+   "stage": 7
+  },
+  {
+   "file": "effects/weather/rain_heavy_overlay.png",
+   "size": [
+    256,
+    64
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 4,
+   "note": "hujan deras, 64x64 seamless, 4 frame ~60ms; pakai bersama rain_tint",
+   "stage": 7
+  },
+  {
+   "file": "effects/weather/lightning_flash.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "kilat: overlay putih, tampilkan 2 frame (60ms) lalu fade 200ms",
+   "stage": 7
+  },
+  {
+   "file": "effects/weather/lightning_bolt.png",
+   "size": [
+    96,
+    96
+   ],
+   "frame": [
+    32,
+    96
+   ],
+   "frames": 3,
+   "note": "sambaran petir 32x96: 0 terang, 1 cabang, 2 memudar (~60ms/frame); ujung bawah = titik sambar",
+   "stage": 7
+  },
+  {
+   "file": "effects/weather/dust_overlay.png",
+   "size": [
+    256,
+    64
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 4,
+   "note": "debu kemarau tertiup angin (ke kanan), 64x64 seamless 4 frame ~120ms",
+   "stage": 7
+  },
+  {
+   "file": "effects/weather/kemarau_tint.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "tint kemarau panas berdebu",
+   "stage": 7
+  },
+  {
+   "file": "effects/weather/particle_dust.png",
+   "size": [
+    32,
+    8
+   ],
+   "frame": [
+    8,
+    8
+   ],
+   "frames": 4,
+   "note": "kepulan debu (langkah/angin): membesar & memudar",
+   "stage": 7
+  },
+  {
+   "file": "effects/weather/cloud_shadow_overlay.png",
+   "size": [
+    128,
+    128
+   ],
+   "frame": [
+    128,
+    128
+   ],
+   "frames": 1,
+   "note": "bayangan awan labuh, 128x128 seamless; geser pelan (scroll ~4px/detik)",
+   "stage": 7
+  },
+  {
+   "file": "buildings/tropis/rumah_panggung.png",
+   "size": [
+    96,
+    96
+   ],
+   "frame": [
+    96,
+    96
+   ],
+   "frames": 1,
+   "note": "96x96 (3x3), anchor tengah-bawah",
+   "stage": 7
+  },
+  {
+   "file": "buildings/tropis/gubuk_bambu.png",
+   "size": [
+    64,
+    64
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 1,
+   "note": "64x64 (2x2), atap ijuk",
+   "stage": 7
+  },
+  {
+   "file": "buildings/tropis/night/rumah_panggung_night.png",
+   "size": [
+    96,
+    96
+   ],
+   "frame": [
+    96,
+    96
+   ],
+   "frames": 1,
+   "note": "96x96 (3x3), anchor tengah-bawah; jendela menyala",
+   "stage": 7
+  },
+  {
+   "file": "buildings/tropis/night/gubuk_bambu_night.png",
+   "size": [
+    64,
+    64
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 1,
+   "note": "64x64 (2x2), atap ijuk; menyala",
+   "stage": 7
+  },
+  {
+   "file": "buildings/tropis/night/rumah_panggung_night_off.png",
+   "size": [
+    96,
+    96
+   ],
+   "frame": [
+    96,
+    96
+   ],
+   "frames": 1,
+   "note": "96x96 (3x3), anchor tengah-bawah; lampu mati",
+   "stage": 7
+  },
+  {
+   "file": "buildings/tropis/night/gubuk_bambu_night_off.png",
+   "size": [
+    64,
+    64
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 1,
+   "note": "64x64 (2x2), atap ijuk; lampu mati",
+   "stage": 7
+  },
+  {
+   "file": "buildings/tropis/lumbung_padi.png",
+   "size": [
+    64,
+    96
+   ],
+   "frame": [
+    64,
+    96
+   ],
+   "frames": 1,
+   "note": "64x96 (2x3), lumbung panggung atap ijuk",
+   "stage": 7
+  },
+  {
+   "file": "buildings/tropis/kandang.png",
+   "size": [
+    96,
+    64
+   ],
+   "frame": [
+    96,
+    64
+   ],
+   "frames": 1,
+   "note": "96x64 (3x2), kandang ternak berpagar bambu + naungan",
+   "stage": 7
+  },
+  {
+   "file": "structures/tropis/pagar_bambu_autotile.png",
+   "size": [
+    128,
+    128
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 16,
+   "note": "16-tile 4-bit sama dengan fence_autotile: indeks = N1+E2+S4+W8; indeks 0 = pagar 1-tile",
+   "stage": 7
+  },
+  {
+   "file": "structures/tropis/kentongan.png",
+   "size": [
+    96,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 3,
+   "note": "tiang kentongan: 0 diam, 1 dipukul, 2 ayun balik (~100ms; ulang 3x = tanda bahaya)",
+   "stage": 7
+  },
+  {
+   "file": "buildings/tropis/pos_ronda.png",
+   "size": [
+    192,
+    64
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 3,
+   "note": "pos ronda (gardu) + kentongan: frame = animasi kentongan seperti kentongan.png; frame 0 = diam",
+   "stage": 7
+  },
+  {
+   "file": "buildings/tropis/night/pos_ronda_night.png",
+   "size": [
+    192,
+    64
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 3,
+   "note": "pos ronda (gardu) + kentongan: frame = animasi kentongan seperti kentongan.png; frame 0 = diam; pelita menyala",
+   "stage": 7
+  },
+  {
+   "file": "structures/tropis/tanggul_autotile.png",
+   "size": [
+    128,
+    128
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 16,
+   "note": "tanggul tanah + karung; 16-tile 4-bit (N1+E2+S4+W8); taruh di tepi sungai untuk menahan banjir",
+   "stage": 7
+  },
+  {
+   "file": "buildings/tropis/embung.png",
+   "size": [
+    96,
+    64
+   ],
+   "frame": [
+    96,
+    64
+   ],
+   "frames": 1,
+   "note": "96x64 (3x2) embung/kolam tampung air berbatu",
+   "stage": 7
+  },
+  {
+   "file": "structures/tropis/orang_orangan_sawah.png",
+   "size": [
+    64,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 2,
+   "note": "orang-orangan sawah, 2 frame goyang ~500ms",
+   "stage": 7
+  },
+  {
+   "file": "structures/tropis/obor_bambu.png",
+   "size": [
+    160,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 5,
+   "note": "obor bambu: 0-3 nyala (~120ms), 4 mati; glow: light_glow_small",
+   "stage": 7
+  },
+  {
+   "file": "icons/traits/trait_rajin.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "sifat rajin (positif, bingkai hijau)",
+   "stage": 8
+  },
+  {
+   "file": "icons/traits/trait_rajin_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16",
+   "stage": 8
+  },
+  {
+   "file": "icons/traits/trait_malas.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "sifat malas (negatif, bingkai ungu-abu)",
+   "stage": 8
+  },
+  {
+   "file": "icons/traits/trait_malas_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16",
+   "stage": 8
+  },
+  {
+   "file": "icons/traits/trait_pemberani.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "sifat pemberani (positif, bingkai hijau)",
+   "stage": 8
+  },
+  {
+   "file": "icons/traits/trait_pemberani_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16",
+   "stage": 8
+  },
+  {
+   "file": "icons/traits/trait_penakut.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "sifat penakut (negatif, bingkai ungu-abu)",
+   "stage": 8
+  },
+  {
+   "file": "icons/traits/trait_penakut_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16",
+   "stage": 8
+  },
+  {
+   "file": "icons/traits/trait_ramah.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "sifat ramah (positif, bingkai hijau)",
+   "stage": 8
+  },
+  {
+   "file": "icons/traits/trait_ramah_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16",
+   "stage": 8
+  },
+  {
+   "file": "icons/traits/trait_pemarah.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "sifat pemarah (negatif, bingkai ungu-abu)",
+   "stage": 8
+  },
+  {
+   "file": "icons/traits/trait_pemarah_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16",
+   "stage": 8
+  },
+  {
+   "file": "icons/traits/trait_cerdas.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "sifat cerdas (positif, bingkai hijau)",
+   "stage": 8
+  },
+  {
+   "file": "icons/traits/trait_cerdas_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16",
+   "stage": 8
+  },
+  {
+   "file": "icons/traits/trait_religius.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "sifat religius (positif, bingkai hijau)",
+   "stage": 8
+  },
+  {
+   "file": "icons/traits/trait_religius_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16",
+   "stage": 8
+  },
+  {
+   "file": "icons/traits/trait_dermawan.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "sifat dermawan (positif, bingkai hijau)",
+   "stage": 8
+  },
+  {
+   "file": "icons/traits/trait_dermawan_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16",
+   "stage": 8
+  },
+  {
+   "file": "icons/traits/trait_pelit.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "sifat pelit (negatif, bingkai ungu-abu)",
+   "stage": 8
+  },
+  {
+   "file": "icons/traits/trait_pelit_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16",
+   "stage": 8
+  },
+  {
+   "file": "icons/traits/trait_jujur.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "sifat jujur (positif, bingkai hijau)",
+   "stage": 8
+  },
+  {
+   "file": "icons/traits/trait_jujur_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16",
+   "stage": 8
+  },
+  {
+   "file": "icons/traits/trait_jahil.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "sifat jahil (negatif, bingkai ungu-abu)",
+   "stage": 8
+  },
+  {
+   "file": "icons/traits/trait_jahil_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16",
+   "stage": 8
+  },
+  {
+   "file": "icons/traits/trait_sabar.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "sifat sabar (positif, bingkai hijau)",
+   "stage": 8
+  },
+  {
+   "file": "icons/traits/trait_sabar_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16",
+   "stage": 8
+  },
+  {
+   "file": "icons/traits/trait_periang.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "sifat periang (positif, bingkai hijau)",
+   "stage": 8
+  },
+  {
+   "file": "icons/traits/trait_periang_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16",
+   "stage": 8
+  },
+  {
+   "file": "icons/traits/trait_pemurung.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "sifat pemurung (negatif, bingkai ungu-abu)",
+   "stage": 8
+  },
+  {
+   "file": "icons/traits/trait_pemurung_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16",
+   "stage": 8
+  },
+  {
+   "file": "icons/traits/trait_suka_menolong.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "sifat suka_menolong (positif, bingkai hijau)",
+   "stage": 8
+  },
+  {
+   "file": "icons/traits/trait_suka_menolong_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16",
+   "stage": 8
+  },
+  {
+   "file": "icons/relations/rel_teman.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "hubungan 32x32",
+   "stage": 8
+  },
+  {
+   "file": "icons/relations/rel_teman_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16",
+   "stage": 8
+  },
+  {
+   "file": "icons/relations/rel_rival.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "hubungan 32x32",
+   "stage": 8
+  },
+  {
+   "file": "icons/relations/rel_rival_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16",
+   "stage": 8
+  },
+  {
+   "file": "icons/relations/rel_pasangan.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "hubungan 32x32",
+   "stage": 8
+  },
+  {
+   "file": "icons/relations/rel_pasangan_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16",
+   "stage": 8
+  },
+  {
+   "file": "icons/emotes/emote_senang.png",
+   "size": [
+    64,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 4,
+   "note": "gelembung emosi: 0 muncul kecil, 1 membesar, 2 normal, 3 bob (loop 2-3); ~80ms lalu tahan ~1.5s",
+   "stage": 8
+  },
+  {
+   "file": "icons/emotes/emote_marah.png",
+   "size": [
+    64,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 4,
+   "note": "gelembung emosi: 0 muncul kecil, 1 membesar, 2 normal, 3 bob (loop 2-3); ~80ms lalu tahan ~1.5s",
+   "stage": 8
+  },
+  {
+   "file": "icons/emotes/emote_sedih.png",
+   "size": [
+    64,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 4,
+   "note": "gelembung emosi: 0 muncul kecil, 1 membesar, 2 normal, 3 bob (loop 2-3); ~80ms lalu tahan ~1.5s",
+   "stage": 8
+  },
+  {
+   "file": "icons/emotes/emote_cinta.png",
+   "size": [
+    64,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 4,
+   "note": "gelembung emosi: 0 muncul kecil, 1 membesar, 2 normal, 3 bob (loop 2-3); ~80ms lalu tahan ~1.5s",
+   "stage": 8
+  },
+  {
+   "file": "icons/emotes/emote_ide.png",
+   "size": [
+    64,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 4,
+   "note": "gelembung emosi: 0 muncul kecil, 1 membesar, 2 normal, 3 bob (loop 2-3); ~80ms lalu tahan ~1.5s",
+   "stage": 8
+  },
+  {
+   "file": "icons/emotes/emote_bingung.png",
+   "size": [
+    64,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 4,
+   "note": "gelembung emosi: 0 muncul kecil, 1 membesar, 2 normal, 3 bob (loop 2-3); ~80ms lalu tahan ~1.5s",
+   "stage": 8
+  },
+  {
+   "file": "buildings/monuments/masjid_stages.png",
+   "size": [
+    512,
+    128
+   ],
+   "frame": [
+    128,
+    128
+   ],
+   "frames": 4,
+   "note": "masjid atap tumpang 3 (Nusantara) 128x128 (4x4 tile); 4 tahap: 0 fondasi, 1 rangka, 2 setengah jadi, 3 selesai; anchor tengah-bawah",
+   "stage": 8
+  },
+  {
+   "file": "buildings/monuments/masjid.png",
+   "size": [
+    128,
+    128
+   ],
+   "frame": [
+    128,
+    128
+   ],
+   "frames": 1,
+   "note": "masjid atap tumpang 3 (Nusantara) 128x128 (4x4 tile) (selesai)",
+   "stage": 8
+  },
+  {
+   "file": "buildings/monuments/langgar_stages.png",
+   "size": [
+    256,
+    64
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 4,
+   "note": "langgar panggung atap tumpang 2, 64x64 (2x2); 4 tahap: 0 fondasi, 1 rangka, 2 setengah jadi, 3 selesai; anchor tengah-bawah",
+   "stage": 8
+  },
+  {
+   "file": "buildings/monuments/langgar.png",
+   "size": [
+    64,
+    64
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 1,
+   "note": "langgar panggung atap tumpang 2, 64x64 (2x2) (selesai)",
+   "stage": 8
+  },
+  {
+   "file": "buildings/monuments/balai_desa_megah_stages.png",
+   "size": [
+    512,
+    128
+   ],
+   "frame": [
+    128,
+    128
+   ],
+   "frames": 4,
+   "note": "balai desa megah (pendopo bertingkat) 128x128 (4x4); 4 tahap: 0 fondasi, 1 rangka, 2 setengah jadi, 3 selesai; anchor tengah-bawah",
+   "stage": 8
+  },
+  {
+   "file": "buildings/monuments/balai_desa_megah.png",
+   "size": [
+    128,
+    128
+   ],
+   "frame": [
+    128,
+    128
+   ],
+   "frames": 1,
+   "note": "balai desa megah (pendopo bertingkat) 128x128 (4x4) (selesai)",
+   "stage": 8
+  },
+  {
+   "file": "buildings/monuments/bendungan_stages.png",
+   "size": [
+    384,
+    64
+   ],
+   "frame": [
+    96,
+    64
+   ],
+   "frames": 4,
+   "note": "bendungan kecil/irigasi 96x64 (3x2), letakkan melintang sungai; 4 tahap: 0 fondasi, 1 rangka, 2 setengah jadi, 3 selesai; anchor tengah-bawah",
+   "stage": 8
+  },
+  {
+   "file": "buildings/monuments/bendungan.png",
+   "size": [
+    96,
+    64
+   ],
+   "frame": [
+    96,
+    64
+   ],
+   "frames": 1,
+   "note": "bendungan kecil/irigasi 96x64 (3x2), letakkan melintang sungai (selesai)",
+   "stage": 8
+  },
+  {
+   "file": "tiles/tropis/saluran_irigasi_autotile.png",
+   "size": [
+    128,
+    256
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 32,
+   "note": "saluran irigasi batu 16-tile 4-bit (N1+E2+S4+W8); baris 0-3 frame 0, 4-7 frame 1 (air mengalir ~400ms)",
+   "stage": 8
+  },
+  {
+   "file": "decor/agustus/bendera_merah_putih.png",
+   "size": [
+    128,
+    96
+   ],
+   "frame": [
+    32,
+    96
+   ],
+   "frames": 4,
+   "note": "tiang bendera + merah putih berkibar 4 frame ~150ms; anchor tengah-bawah tiang di x\u22487",
+   "stage": 8
+  },
+  {
+   "file": "decor/agustus/umbul_umbul.png",
+   "size": [
+    128,
+    96
+   ],
+   "frame": [
+    32,
+    96
+   ],
+   "frames": 4,
+   "note": "umbul-umbul bambu, 4 frame ~200ms",
+   "stage": 8
+  },
+  {
+   "file": "decor/agustus/panjat_pinang.png",
+   "size": [
+    64,
+    128
+   ],
+   "frame": [
+    64,
+    128
+   ],
+   "frames": 1,
+   "note": "64x128 (2x4 tile), batang licin + hadiah di puncak; titik panjat x 31-32",
+   "stage": 8
+  },
+  {
+   "file": "decor/agustus/balap_karung_villager_1.png",
+   "size": [
+    128,
+    128
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 16,
+   "note": "penduduk dalam karung: 4 baris arah (bawah,kiri,kanan,atas) x 4 frame lompat ~110ms; maju ~6px per siklus saat frame 1-2",
+   "stage": 8
+  },
+  {
+   "file": "decor/agustus/balap_karung_villager_2.png",
+   "size": [
+    128,
+    128
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 16,
+   "note": "penduduk dalam karung: 4 baris arah (bawah,kiri,kanan,atas) x 4 frame lompat ~110ms; maju ~6px per siklus saat frame 1-2",
+   "stage": 8
+  },
+  {
+   "file": "decor/agustus/balap_karung_villager_3.png",
+   "size": [
+    128,
+    128
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 16,
+   "note": "penduduk dalam karung: 4 baris arah (bawah,kiri,kanan,atas) x 4 frame lompat ~110ms; maju ~6px per siklus saat frame 1-2",
+   "stage": 8
+  },
+  {
+   "file": "decor/agustus/balap_karung_villager_4.png",
+   "size": [
+    128,
+    128
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 16,
+   "note": "penduduk dalam karung: 4 baris arah (bawah,kiri,kanan,atas) x 4 frame lompat ~110ms; maju ~6px per siklus saat frame 1-2",
+   "stage": 8
+  },
+  {
+   "file": "decor/agustus/bunting_merah_putih.png",
+   "size": [
+    64,
+    16
+   ],
+   "frame": [
+    32,
+    16
+   ],
+   "frames": 2,
+   "note": "untaian bendera segitiga, tile horizontal seamless (ujung y=2), 2 frame ayun ~400ms",
+   "stage": 8
+  },
+  {
+   "file": "decor/agustus/gapura_agustus.png",
+   "size": [
+    96,
+    96
+   ],
+   "frame": [
+    96,
+    96
+   ],
+   "frames": 1,
+   "note": "96x96 (3x3) gapura bambu & janur, merah putih; jalan lewat di tengah (x 20-76)",
+   "stage": 8
+  },
+  {
+   "file": "ui/dilemma/panel_dilema.png",
+   "size": [
+    64,
+    64
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 1,
+   "note": "9-slice 64x64, margin 14 semua sisi (bingkai kayu ukir + pita batik kawung halus + ornamen sudut emas); konten mulai inset 14",
+   "stage": 8
+  },
+  {
+   "file": "ui/dilemma/button_choice_normal.png",
+   "size": [
+    96,
+    28
+   ],
+   "frame": [
+    96,
+    28
+   ],
+   "frames": 1,
+   "note": "9-slice margin kiri/kanan 10, atas 4, bawah 6; teks mulai x+12",
+   "stage": 8
+  },
+  {
+   "file": "ui/dilemma/button_choice_hover.png",
+   "size": [
+    96,
+    28
+   ],
+   "frame": [
+    96,
+    28
+   ],
+   "frames": 1,
+   "note": "9-slice margin kiri/kanan 10, atas 4, bawah 6; teks mulai x+12",
+   "stage": 8
+  },
+  {
+   "file": "ui/dilemma/button_choice_pressed.png",
+   "size": [
+    96,
+    28
+   ],
+   "frame": [
+    96,
+    28
+   ],
+   "frames": 1,
+   "note": "9-slice margin kiri/kanan 10, atas 4, bawah 6; teks mulai x+12",
+   "stage": 8
+  },
+  {
+   "file": "ui/dilemma/button_choice_disabled.png",
+   "size": [
+    96,
+    28
+   ],
+   "frame": [
+    96,
+    28
+   ],
+   "frames": 1,
+   "note": "9-slice margin kiri/kanan 10, atas 4, bawah 6; teks mulai x+12",
+   "stage": 8
+  },
+  {
+   "file": "ui/dilemma/portrait_frame_48.png",
+   "size": [
+    48,
+    48
+   ],
+   "frame": [
+    48,
+    48
+   ],
+   "frames": 1,
+   "note": "bingkai potret; jendela transparan 32x32 di offset (8,8); gambar potret di bawah bingkai",
+   "stage": 8
+  },
+  {
+   "file": "ui/dilemma/portrait_frame_80.png",
+   "size": [
+    80,
+    80
+   ],
+   "frame": [
+    80,
+    80
+   ],
+   "frames": 1,
+   "note": "bingkai potret; jendela transparan 64x64 di offset (8,8); gambar potret di bawah bingkai",
+   "stage": 8
+  },
+  {
+   "file": "ui/dilemma/portraits/portrait_villager_1.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "potret 32x32 (kepala villager_N 2x); 64x64 = skala 2 nearest untuk portrait_frame_80",
+   "stage": 8
+  },
+  {
+   "file": "ui/dilemma/portraits/portrait_villager_2.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "potret 32x32 (kepala villager_N 2x); 64x64 = skala 2 nearest untuk portrait_frame_80",
+   "stage": 8
+  },
+  {
+   "file": "ui/dilemma/portraits/portrait_villager_3.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "potret 32x32 (kepala villager_N 2x); 64x64 = skala 2 nearest untuk portrait_frame_80",
+   "stage": 8
+  },
+  {
+   "file": "ui/dilemma/portraits/portrait_villager_4.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "potret 32x32 (kepala villager_N 2x); 64x64 = skala 2 nearest untuk portrait_frame_80",
+   "stage": 8
+  },
+  {
+   "file": "icons/traits/icon_kepala_desa.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "ikon kepala desa (peci + baju batik) 32x32",
+   "stage": 8
+  },
+  {
+   "file": "icons/traits/icon_kepala_desa_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16",
+   "stage": 8
   }
  ]
 }

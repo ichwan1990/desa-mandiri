@@ -660,3 +660,313 @@ Saat penduduk jalan, ikuti bob frame 1 & 3 (y −1). Pintu: posisi pintu hut x 2
 | `buildings/hut_door_winter.png` | 192x64 | pintu: 0 tertutup, 1 setengah, 2 terbuka (~100ms/frame; balik urutan untuk menutup); frame = ukuran/anchor hut.png (versi salju) |
 
 Keterbatasan: anak & lansia diturunkan dari rig dewasa (anak = baris badan dipadatkan, lansia = kepala digeser + tongkat), jadi proporsi mirip; bayi tidak berjalan; overlay gendong memakai satu warna bedong (biru) untuk semua penduduk (warna sama dengan baju villager_2); arah atas bayi hanya terlihat sebagian di bahu; tidak ada animasi tidur di kasur (pakai Zzz + sembunyikan sprite di dalam rumah); pintu hanya untuk hut & wooden_house.
+
+---
+# Tahap 7 — Desa Mandiri bernuansa Indonesia (tropis)
+Mengikuti `docs/RISET-INDONESIA.md` §6. Hanya file baru; file lama tidak berubah (md5). Palet ditambah warna tropis (tidak memengaruhi output lama). Regenerasi: `cd tools && python3 generate_assets.py && python3 make_preview_stage7.py`. Preview: `preview_stage7.png` (daftar aset + scene desa tropis 2x + mini-scene musim hujan, mareng, kemarau, labuh, dan malam). Manifest: `stage: 7`.
+
+> **Salju tidak dipakai lagi.** File salju/winter (`tiles/winter/`, `nature/winter/`, `buildings/winter/`, `*_winter.png` stockpile/pintu/lampu, `autotile_ice_snow`, `autotile_path_snow`, `snow_overlay`, `particle_snow`, `frost_*`, `ach_survive_winter`, status `cold`/`thermometer_cold`) **tidak dihapus** tetapi sudah usang (deprecated). Musim keras = **kemarau**. Musim lama semi/panas/gugur juga digantikan musim tropis di bawah.
+
+## Musim tropis (`seasons/tropis/<hujan|mareng|kemarau|labuh>/`)
+Nama `<nama_asli>_<musim>.png`, format/frame/indeks **identik** dengan aslinya: grass, grass_flowers, dirt, edge_grass_dirt, edge_grass_sand, autotile_water_grass (47-blob, 2 frame), autotile_path_grass, tree, berry_bush_full/empty, dan pohon tropis mangga, rambutan, jati, beringin, pisang, bambu, bush_tropis.
+- hujan: hijau pekat basah + genangan di rumput. mareng: rumput kuning-hijau (padi menguning → pakai `crop_padi` frame 4). kemarau: cokelat, tanah/rumput retak, daun kusam (+ `dust_overlay`, `kemarau_tint`). labuh: hijau muda segar (+ `cloud_shadow_overlay`).
+- Pohon tropis tanpa nama di daftar (kelapa, kamboja, kembang sepatu) dipakai sama di semua musim.
+
+## Efek cuaca baru (`effects/weather/`)
+`rain_heavy_overlay` (64x64×4, ~60ms) + `rain_tint`; `lightning_flash` (tile putih, tampilkan 60ms lalu fade) + `lightning_bolt` 32x96×3 (ujung bawah = titik sambar); `dust_overlay` 64x64×4, `particle_dust` 8x8×4, `kemarau_tint`; `cloud_shadow_overlay` 128x128 seamless (geser pelan).
+
+## Flora (`nature/tropis/`, `nature/crops/`, `tiles/tropis/`)
+- Pohon 32x64 (anchor tengah-bawah, alas di 32px bawah): kelapa (+`_empty`), pisang (+`_empty`), bambu, jati, mangga (+`_empty`), rambutan (+`_empty`), kamboja. Beringin 64x64 (2x2). Perdu 32x32: bush_tropis, bush_kembang_sepatu. Versi berbuah = nama tanpa sufiks; tidak berbuah = `_empty`.
+- Tanaman 192x32, 6 frame (format crop_wheat): `crop_singkong`, `crop_jagung`, `crop_ubi`, `crop_kopi` — 0 diolah, 1 bibit, 2 tunas, 3 tumbuh, 4 siap panen, 5 dipanen.
+- **Sawah**: `tiles/tropis/sawah_autotile.png` 16-tile 4-bit (indeks = N1+E2+S4+W8, tetangga yang juga sawah; pematang tergambar di sisi yang tidak tersambung). `crop_padi.png` = **overlay transparan** di atas tile sawah: 0 tergenang, 1 bibit, 2 tumbuh, 3 bunting, 4 menguning (panen), 5 dipanen. `sawah_water_anim.png` 2 frame kilau (opsional, tile penuh).
+- **Sawah bertingkat**: `sawah_terrace_riser.png` 96x32 (ujung kiri, tengah, ujung kanan); dinding undakan setinggi 15px di bagian atas frame — gambar di tile baris bawah sebuah petak atas, setelah tile sawah & sebelum tanaman.
+
+## Fauna (`characters/fauna/`)
+Format seperti serigala: 4 kolom (frame), baris = mode*4 + arah (arah: bawah, kiri, kanan, atas). Anchor tengah-bawah, bayangan oval.
+
+| File | Frame | Mode (baris) |
+|---|---|---|
+| ayam, bebek | 32x32 | diam 0-3 (frame 2 = mematuk), jalan 4-7 |
+| kambing, rusa | 32x32 | diam 0-3, jalan 4-7 |
+| sapi, kerbau | 64x64 | diam 0-3, jalan 4-7 |
+| babi_hutan, monyet, ular | 32x32 | diam 0-3, jalan 4-7, serang 8-11 (frame 2 = kena; monyet = sambar/curi) |
+| macan_tutul (macan tutul jawa) | 64x64 | diam 0-3, jalan 4-7, serang 8-11 |
+
+Saran timing: jalan 120ms (ternak besar 160ms, ular 100ms), diam 300-400ms, serang 100ms.
+
+Ambien (`characters/fauna/ambient/`): `burung_pipit_terbang` 16x16×4 (hadap kanan, flip untuk kiri), `bangau` 32x32×4 (0 berdiri, 1 mematuk, 2-3 terbang), `kupu_kupu` 16x16, 2 baris warna × 4 frame, `ikan_lompat` 32x32×6 (tempel di tile air), `kunang_kunang` 8x8×4 (malam, gambar setelah night_overlay; blend additive).
+
+## Bangunan & struktur lokal
+| File | Ukuran | Catatan |
+|---|---|---|
+| `buildings/tropis/rumah_panggung.png` (+`night/rumah_panggung_night.png`, `_night_off`) | 96x96 | rumah panggung genteng, tangga |
+| `buildings/tropis/gubuk_bambu.png` (+`night/..._night`, `_night_off`) | 64x64 | gubuk bambu atap ijuk |
+| `buildings/tropis/lumbung_padi.png` | 64x96 | lumbung padi panggung |
+| `buildings/tropis/kandang.png` | 96x64 | kandang ternak |
+| `buildings/tropis/pos_ronda.png` (+`night/pos_ronda_night.png`) | 192x64, frame 64x64 ×3 | pos ronda + kentongan; frame 0 diam, 1-2 kentongan dipukul (pengganti menara jaga) |
+| `buildings/tropis/embung.png` | 96x64 | kolam tampung air |
+| `structures/tropis/kentongan.png` | 96x64, frame 32x64 ×3 | kentongan berdiri sendiri; 0 diam, 1 pukul, 2 ayun |
+| `structures/tropis/pagar_bambu_autotile.png` | 128x128 | 16-tile 4-bit seperti fence_autotile (indeks 0 = pagar 1-tile); gerbang pakai `structures/gate_*` |
+| `structures/tropis/tanggul_autotile.png` | 128x128 | tanggul tanah/karung 16-tile 4-bit |
+| `structures/tropis/orang_orangan_sawah.png` | 64x64, frame 32x64 ×2 | goyang ~500ms |
+| `structures/tropis/obor_bambu.png` | 160x64, frame 32x64 ×5 | 0-3 nyala, 4 mati |
+
+## Daftar file tahap 7
+| File | Ukuran | Frame | Jumlah | Catatan |
+|---|---|---|---|---|
+| `nature/tropis/tree_kelapa.png` | 32x64 | 32x64 | 1 | 32x64 anchor bawah; berbuah |
+| `nature/tropis/tree_kelapa_empty.png` | 32x64 | 32x64 | 1 | 32x64 tanpa buah |
+| `nature/tropis/tree_pisang.png` | 32x64 | 32x64 | 1 | 32x64 berbuah (tandan) |
+| `nature/tropis/tree_pisang_empty.png` | 32x64 | 32x64 | 1 | 32x64 |
+| `nature/tropis/bambu.png` | 32x64 | 32x64 | 1 | rumpun bambu 32x64 |
+| `nature/tropis/tree_jati.png` | 32x64 | 32x64 | 1 | 32x64 |
+| `nature/tropis/tree_beringin.png` | 64x64 | 64x64 | 1 | 64x64 (2x2 tile), akar gantung |
+| `nature/tropis/tree_mangga.png` | 32x64 | 32x64 | 1 | 32x64 berbuah |
+| `nature/tropis/tree_mangga_empty.png` | 32x64 | 32x64 | 1 | 32x64 |
+| `nature/tropis/tree_rambutan.png` | 32x64 | 32x64 | 1 | 32x64 berbuah |
+| `nature/tropis/tree_rambutan_empty.png` | 32x64 | 32x64 | 1 | 32x64 |
+| `nature/tropis/bush_tropis.png` | 32x32 | 32x32 | 1 | perdu tropis 32x32 |
+| `nature/tropis/bush_kembang_sepatu.png` | 32x32 | 32x32 | 1 | bunga sepatu 32x32 |
+| `nature/tropis/tree_kamboja.png` | 32x64 | 32x64 | 1 | kamboja 32x64 |
+| `nature/crops/crop_padi.png` | 192x32 | 32x32 | 6 | OVERLAY tanaman padi di atas tiles/tropis/sawah_autotile: 0 tergenang (diolah), 1 bibit, 2 tumbuh, 3 bunting, 4 menguning (panen), 5 dipanen (jerami) |
+| `tiles/tropis/sawah_autotile.png` | 128x128 | 32x32 | 16 | sawah tergenang + pematang; 16-tile 4-bit: indeks = N1+E2+S4+W8 (tetangga yang juga sawah, sisi tanpa pematang); kolom i%4, baris i//4; indeks 0 = petak tunggal |
+| `tiles/tropis/sawah_water_anim.png` | 64x32 | 32x32 | 2 | kilau air tile sawah penuh (indeks 15), 2 frame ~600ms (opsional) |
+| `nature/crops/crop_singkong.png` | 192x32 | 32x32 | 6 | urutan: diolah, bibit, tunas, tumbuh, siap panen, sudah dipanen |
+| `nature/crops/crop_jagung.png` | 192x32 | 32x32 | 6 | urutan: diolah, bibit, tunas, tumbuh, siap panen, sudah dipanen |
+| `nature/crops/crop_kopi.png` | 192x32 | 32x32 | 6 | urutan: diolah, bibit, tunas, tumbuh, siap panen, sudah dipanen (kopi: tanaman tetap, panen = buah merah) |
+| `nature/crops/crop_ubi.png` | 192x32 | 32x32 | 6 | ubi jalar; urutan: diolah, bibit, tunas, tumbuh, siap panen (umbi terlihat), sudah dipanen |
+| `tiles/tropis/sawah_terrace_riser.png` | 96x32 | 32x32 | 3 | dinding undakan sawah bertingkat (tinggi 15px di atas tile, sisa transparan): ujung kiri, tengah, ujung kanan; taruh di baris tile tepat di bawah petak sawah atas, menimpa bagian atas tile sawah bawah |
+| `characters/fauna/kambing.png` | 128x256 | 32x32 | 32 | 32x32/frame, 4 kolom; baris 0-3 diam, 4-7 jalan; arah bawah,kiri,kanan,atas; anchor tengah-bawah |
+| `characters/fauna/sapi.png` | 256x512 | 64x64 | 32 | 64x64/frame, 4 kolom; baris 0-3 diam, 4-7 jalan; arah bawah,kiri,kanan,atas; anchor tengah-bawah |
+| `characters/fauna/kerbau.png` | 256x512 | 64x64 | 32 | 64x64/frame, 4 kolom; baris 0-3 diam, 4-7 jalan; arah bawah,kiri,kanan,atas; anchor tengah-bawah |
+| `characters/fauna/rusa.png` | 128x256 | 32x32 | 32 | 32x32/frame, 4 kolom; baris 0-3 diam, 4-7 jalan; arah bawah,kiri,kanan,atas; anchor tengah-bawah |
+| `characters/fauna/babi_hutan.png` | 128x384 | 32x32 | 48 | 32x32/frame, 4 kolom; baris 0-3 diam, 4-7 jalan, 8-11 serang (frame 2 = kena); arah bawah,kiri,kanan,atas; anchor tengah-bawah |
+| `characters/fauna/monyet.png` | 128x384 | 32x32 | 48 | 32x32; baris 0-3 diam, 4-7 jalan, 8-11 serang/mencuri (frame 2 = sambar pisang); arah bawah,kiri,kanan,atas |
+| `characters/fauna/macan_tutul.png` | 256x768 | 64x64 | 48 | 64x64/frame, 4 kolom; baris 0-3 diam, 4-7 jalan, 8-11 serang (frame 2 = kena); arah bawah,kiri,kanan,atas; anchor tengah-bawah |
+| `characters/fauna/ayam.png` | 128x256 | 32x32 | 32 | 32x32; baris 0-3 diam (frame 2 = mematuk), 4-7 jalan; arah bawah,kiri,kanan,atas |
+| `characters/fauna/bebek.png` | 128x256 | 32x32 | 32 | 32x32; baris 0-3 diam (frame 2 = mematuk), 4-7 jalan; arah bawah,kiri,kanan,atas |
+| `characters/fauna/ular.png` | 128x384 | 32x32 | 48 | 32x32; baris 0-3 diam (lidah), 4-7 merayap, 8-11 serang (kepala terangkat); arah bawah,kiri,kanan,atas |
+| `characters/fauna/ambient/burung_pipit_terbang.png` | 64x16 | 16x16 | 4 | burung pipit terbang (menghadap kanan; flip untuk kiri), 4 frame ~90ms |
+| `characters/fauna/ambient/bangau.png` | 128x32 | 32x32 | 4 | bangau (menghadap kanan): 0 berdiri, 1 mematuk (di sawah), 2-3 terbang kepak ~150ms |
+| `characters/fauna/ambient/kupu_kupu.png` | 64x32 | 16x16 | 8 | 2 baris warna (oranye, biru) x 4 frame kepak ~100ms |
+| `characters/fauna/ambient/ikan_lompat.png` | 192x32 | 32x32 | 6 | ikan melompat di sungai (tile air): 0 riak, 1-4 lompat (kiri→kanan), 5 cipratan; ~90ms; tempel di tile air |
+| `characters/fauna/ambient/kunang_kunang.png` | 32x8 | 8x8 | 4 | kunang-kunang malam: kedip 4 frame ~200ms; gambar setelah night_overlay (additive) + light_glow_small skala 0.25 opsional |
+| `seasons/tropis/hujan/grass_hujan.png` | 32x32 | 32x32 | 1 | musim hujan; format/indeks identik dengan tiles/grass.png |
+| `seasons/tropis/hujan/grass_flowers_hujan.png` | 32x32 | 32x32 | 1 | musim hujan; format/indeks identik dengan tiles/grass_flowers.png |
+| `seasons/tropis/hujan/dirt_hujan.png` | 32x32 | 32x32 | 1 | musim hujan; format/indeks identik dengan tiles/dirt.png |
+| `seasons/tropis/hujan/edge_grass_dirt_hujan.png` | 256x32 | 32x32 | 8 | musim hujan; format/indeks identik dengan tiles/edge_grass_dirt.png |
+| `seasons/tropis/hujan/edge_grass_sand_hujan.png` | 256x32 | 32x32 | 8 | musim hujan; format/indeks identik dengan tiles/edge_grass_sand.png |
+| `seasons/tropis/hujan/autotile_water_grass_hujan.png` | 256x384 | 32x32 | 94 | musim hujan; format/indeks identik dengan tiles/autotile_water_grass.png |
+| `seasons/tropis/hujan/autotile_path_grass_hujan.png` | 256x192 | 32x32 | 47 | musim hujan; format/indeks identik dengan tiles/autotile_path_grass.png |
+| `seasons/tropis/hujan/tree_hujan.png` | 32x64 | 32x64 | 1 | musim hujan; format/indeks identik dengan nature/tree.png |
+| `seasons/tropis/hujan/berry_bush_full_hujan.png` | 32x32 | 32x32 | 1 | musim hujan; format/indeks identik dengan nature/berry_bush_full.png |
+| `seasons/tropis/hujan/berry_bush_empty_hujan.png` | 32x32 | 32x32 | 1 | musim hujan; format/indeks identik dengan nature/berry_bush_empty.png |
+| `seasons/tropis/hujan/tree_mangga_hujan.png` | 32x64 | 32x64 | 1 | musim hujan; format/indeks identik dengan nature/tropis/tree_mangga.png |
+| `seasons/tropis/hujan/tree_rambutan_hujan.png` | 32x64 | 32x64 | 1 | musim hujan; format/indeks identik dengan nature/tropis/tree_rambutan.png |
+| `seasons/tropis/hujan/tree_jati_hujan.png` | 32x64 | 32x64 | 1 | musim hujan; format/indeks identik dengan nature/tropis/tree_jati.png |
+| `seasons/tropis/hujan/bush_tropis_hujan.png` | 32x32 | 32x32 | 1 | musim hujan; format/indeks identik dengan nature/tropis/bush_tropis.png |
+| `seasons/tropis/hujan/tree_beringin_hujan.png` | 64x64 | 64x64 | 1 | musim hujan; format/indeks identik dengan nature/tropis/tree_beringin.png |
+| `seasons/tropis/hujan/tree_pisang_hujan.png` | 32x64 | 32x64 | 1 | musim hujan; format/indeks identik dengan nature/tropis/tree_pisang.png |
+| `seasons/tropis/hujan/bambu_hujan.png` | 32x64 | 32x64 | 1 | musim hujan; format/indeks identik dengan nature/tropis/bambu.png |
+| `seasons/tropis/mareng/grass_mareng.png` | 32x32 | 32x32 | 1 | musim mareng; format/indeks identik dengan tiles/grass.png |
+| `seasons/tropis/mareng/grass_flowers_mareng.png` | 32x32 | 32x32 | 1 | musim mareng; format/indeks identik dengan tiles/grass_flowers.png |
+| `seasons/tropis/mareng/dirt_mareng.png` | 32x32 | 32x32 | 1 | musim mareng; format/indeks identik dengan tiles/dirt.png |
+| `seasons/tropis/mareng/edge_grass_dirt_mareng.png` | 256x32 | 32x32 | 8 | musim mareng; format/indeks identik dengan tiles/edge_grass_dirt.png |
+| `seasons/tropis/mareng/edge_grass_sand_mareng.png` | 256x32 | 32x32 | 8 | musim mareng; format/indeks identik dengan tiles/edge_grass_sand.png |
+| `seasons/tropis/mareng/autotile_water_grass_mareng.png` | 256x384 | 32x32 | 94 | musim mareng; format/indeks identik dengan tiles/autotile_water_grass.png |
+| `seasons/tropis/mareng/autotile_path_grass_mareng.png` | 256x192 | 32x32 | 47 | musim mareng; format/indeks identik dengan tiles/autotile_path_grass.png |
+| `seasons/tropis/mareng/tree_mareng.png` | 32x64 | 32x64 | 1 | musim mareng; format/indeks identik dengan nature/tree.png |
+| `seasons/tropis/mareng/berry_bush_full_mareng.png` | 32x32 | 32x32 | 1 | musim mareng; format/indeks identik dengan nature/berry_bush_full.png |
+| `seasons/tropis/mareng/berry_bush_empty_mareng.png` | 32x32 | 32x32 | 1 | musim mareng; format/indeks identik dengan nature/berry_bush_empty.png |
+| `seasons/tropis/mareng/tree_mangga_mareng.png` | 32x64 | 32x64 | 1 | musim mareng; format/indeks identik dengan nature/tropis/tree_mangga.png |
+| `seasons/tropis/mareng/tree_rambutan_mareng.png` | 32x64 | 32x64 | 1 | musim mareng; format/indeks identik dengan nature/tropis/tree_rambutan.png |
+| `seasons/tropis/mareng/tree_jati_mareng.png` | 32x64 | 32x64 | 1 | musim mareng; format/indeks identik dengan nature/tropis/tree_jati.png |
+| `seasons/tropis/mareng/bush_tropis_mareng.png` | 32x32 | 32x32 | 1 | musim mareng; format/indeks identik dengan nature/tropis/bush_tropis.png |
+| `seasons/tropis/mareng/tree_beringin_mareng.png` | 64x64 | 64x64 | 1 | musim mareng; format/indeks identik dengan nature/tropis/tree_beringin.png |
+| `seasons/tropis/mareng/tree_pisang_mareng.png` | 32x64 | 32x64 | 1 | musim mareng; format/indeks identik dengan nature/tropis/tree_pisang.png |
+| `seasons/tropis/mareng/bambu_mareng.png` | 32x64 | 32x64 | 1 | musim mareng; format/indeks identik dengan nature/tropis/bambu.png |
+| `seasons/tropis/kemarau/grass_kemarau.png` | 32x32 | 32x32 | 1 | musim kemarau; format/indeks identik dengan tiles/grass.png |
+| `seasons/tropis/kemarau/grass_flowers_kemarau.png` | 32x32 | 32x32 | 1 | musim kemarau; format/indeks identik dengan tiles/grass_flowers.png |
+| `seasons/tropis/kemarau/dirt_kemarau.png` | 32x32 | 32x32 | 1 | musim kemarau; format/indeks identik dengan tiles/dirt.png |
+| `seasons/tropis/kemarau/edge_grass_dirt_kemarau.png` | 256x32 | 32x32 | 8 | musim kemarau; format/indeks identik dengan tiles/edge_grass_dirt.png |
+| `seasons/tropis/kemarau/edge_grass_sand_kemarau.png` | 256x32 | 32x32 | 8 | musim kemarau; format/indeks identik dengan tiles/edge_grass_sand.png |
+| `seasons/tropis/kemarau/autotile_water_grass_kemarau.png` | 256x384 | 32x32 | 94 | musim kemarau; format/indeks identik dengan tiles/autotile_water_grass.png |
+| `seasons/tropis/kemarau/autotile_path_grass_kemarau.png` | 256x192 | 32x32 | 47 | musim kemarau; format/indeks identik dengan tiles/autotile_path_grass.png |
+| `seasons/tropis/kemarau/tree_kemarau.png` | 32x64 | 32x64 | 1 | musim kemarau; format/indeks identik dengan nature/tree.png |
+| `seasons/tropis/kemarau/berry_bush_full_kemarau.png` | 32x32 | 32x32 | 1 | musim kemarau; format/indeks identik dengan nature/berry_bush_full.png |
+| `seasons/tropis/kemarau/berry_bush_empty_kemarau.png` | 32x32 | 32x32 | 1 | musim kemarau; format/indeks identik dengan nature/berry_bush_empty.png |
+| `seasons/tropis/kemarau/tree_mangga_kemarau.png` | 32x64 | 32x64 | 1 | musim kemarau; format/indeks identik dengan nature/tropis/tree_mangga.png |
+| `seasons/tropis/kemarau/tree_rambutan_kemarau.png` | 32x64 | 32x64 | 1 | musim kemarau; format/indeks identik dengan nature/tropis/tree_rambutan.png |
+| `seasons/tropis/kemarau/tree_jati_kemarau.png` | 32x64 | 32x64 | 1 | musim kemarau; format/indeks identik dengan nature/tropis/tree_jati.png |
+| `seasons/tropis/kemarau/bush_tropis_kemarau.png` | 32x32 | 32x32 | 1 | musim kemarau; format/indeks identik dengan nature/tropis/bush_tropis.png |
+| `seasons/tropis/kemarau/tree_beringin_kemarau.png` | 64x64 | 64x64 | 1 | musim kemarau; format/indeks identik dengan nature/tropis/tree_beringin.png |
+| `seasons/tropis/kemarau/tree_pisang_kemarau.png` | 32x64 | 32x64 | 1 | musim kemarau; format/indeks identik dengan nature/tropis/tree_pisang.png |
+| `seasons/tropis/kemarau/bambu_kemarau.png` | 32x64 | 32x64 | 1 | musim kemarau; format/indeks identik dengan nature/tropis/bambu.png |
+| `seasons/tropis/labuh/grass_labuh.png` | 32x32 | 32x32 | 1 | musim labuh; format/indeks identik dengan tiles/grass.png |
+| `seasons/tropis/labuh/grass_flowers_labuh.png` | 32x32 | 32x32 | 1 | musim labuh; format/indeks identik dengan tiles/grass_flowers.png |
+| `seasons/tropis/labuh/dirt_labuh.png` | 32x32 | 32x32 | 1 | musim labuh; format/indeks identik dengan tiles/dirt.png |
+| `seasons/tropis/labuh/edge_grass_dirt_labuh.png` | 256x32 | 32x32 | 8 | musim labuh; format/indeks identik dengan tiles/edge_grass_dirt.png |
+| `seasons/tropis/labuh/edge_grass_sand_labuh.png` | 256x32 | 32x32 | 8 | musim labuh; format/indeks identik dengan tiles/edge_grass_sand.png |
+| `seasons/tropis/labuh/autotile_water_grass_labuh.png` | 256x384 | 32x32 | 94 | musim labuh; format/indeks identik dengan tiles/autotile_water_grass.png |
+| `seasons/tropis/labuh/autotile_path_grass_labuh.png` | 256x192 | 32x32 | 47 | musim labuh; format/indeks identik dengan tiles/autotile_path_grass.png |
+| `seasons/tropis/labuh/tree_labuh.png` | 32x64 | 32x64 | 1 | musim labuh; format/indeks identik dengan nature/tree.png |
+| `seasons/tropis/labuh/berry_bush_full_labuh.png` | 32x32 | 32x32 | 1 | musim labuh; format/indeks identik dengan nature/berry_bush_full.png |
+| `seasons/tropis/labuh/berry_bush_empty_labuh.png` | 32x32 | 32x32 | 1 | musim labuh; format/indeks identik dengan nature/berry_bush_empty.png |
+| `seasons/tropis/labuh/tree_mangga_labuh.png` | 32x64 | 32x64 | 1 | musim labuh; format/indeks identik dengan nature/tropis/tree_mangga.png |
+| `seasons/tropis/labuh/tree_rambutan_labuh.png` | 32x64 | 32x64 | 1 | musim labuh; format/indeks identik dengan nature/tropis/tree_rambutan.png |
+| `seasons/tropis/labuh/tree_jati_labuh.png` | 32x64 | 32x64 | 1 | musim labuh; format/indeks identik dengan nature/tropis/tree_jati.png |
+| `seasons/tropis/labuh/bush_tropis_labuh.png` | 32x32 | 32x32 | 1 | musim labuh; format/indeks identik dengan nature/tropis/bush_tropis.png |
+| `seasons/tropis/labuh/tree_beringin_labuh.png` | 64x64 | 64x64 | 1 | musim labuh; format/indeks identik dengan nature/tropis/tree_beringin.png |
+| `seasons/tropis/labuh/tree_pisang_labuh.png` | 32x64 | 32x64 | 1 | musim labuh; format/indeks identik dengan nature/tropis/tree_pisang.png |
+| `seasons/tropis/labuh/bambu_labuh.png` | 32x64 | 32x64 | 1 | musim labuh; format/indeks identik dengan nature/tropis/bambu.png |
+| `effects/weather/rain_heavy_overlay.png` | 256x64 | 64x64 | 4 | hujan deras, 64x64 seamless, 4 frame ~60ms; pakai bersama rain_tint |
+| `effects/weather/lightning_flash.png` | 32x32 | 32x32 | 1 | kilat: overlay putih, tampilkan 2 frame (60ms) lalu fade 200ms |
+| `effects/weather/lightning_bolt.png` | 96x96 | 32x96 | 3 | sambaran petir 32x96: 0 terang, 1 cabang, 2 memudar (~60ms/frame); ujung bawah = titik sambar |
+| `effects/weather/dust_overlay.png` | 256x64 | 64x64 | 4 | debu kemarau tertiup angin (ke kanan), 64x64 seamless 4 frame ~120ms |
+| `effects/weather/kemarau_tint.png` | 32x32 | 32x32 | 1 | tint kemarau panas berdebu |
+| `effects/weather/particle_dust.png` | 32x8 | 8x8 | 4 | kepulan debu (langkah/angin): membesar & memudar |
+| `effects/weather/cloud_shadow_overlay.png` | 128x128 | 128x128 | 1 | bayangan awan labuh, 128x128 seamless; geser pelan (scroll ~4px/detik) |
+| `buildings/tropis/rumah_panggung.png` | 96x96 | 96x96 | 1 | 96x96 (3x3), anchor tengah-bawah |
+| `buildings/tropis/gubuk_bambu.png` | 64x64 | 64x64 | 1 | 64x64 (2x2), atap ijuk |
+| `buildings/tropis/night/rumah_panggung_night.png` | 96x96 | 96x96 | 1 | 96x96 (3x3), anchor tengah-bawah; jendela menyala |
+| `buildings/tropis/night/gubuk_bambu_night.png` | 64x64 | 64x64 | 1 | 64x64 (2x2), atap ijuk; menyala |
+| `buildings/tropis/night/rumah_panggung_night_off.png` | 96x96 | 96x96 | 1 | 96x96 (3x3), anchor tengah-bawah; lampu mati |
+| `buildings/tropis/night/gubuk_bambu_night_off.png` | 64x64 | 64x64 | 1 | 64x64 (2x2), atap ijuk; lampu mati |
+| `buildings/tropis/lumbung_padi.png` | 64x96 | 64x96 | 1 | 64x96 (2x3), lumbung panggung atap ijuk |
+| `buildings/tropis/kandang.png` | 96x64 | 96x64 | 1 | 96x64 (3x2), kandang ternak berpagar bambu + naungan |
+| `structures/tropis/pagar_bambu_autotile.png` | 128x128 | 32x32 | 16 | 16-tile 4-bit sama dengan fence_autotile: indeks = N1+E2+S4+W8; indeks 0 = pagar 1-tile |
+| `structures/tropis/kentongan.png` | 96x64 | 32x64 | 3 | tiang kentongan: 0 diam, 1 dipukul, 2 ayun balik (~100ms; ulang 3x = tanda bahaya) |
+| `buildings/tropis/pos_ronda.png` | 192x64 | 64x64 | 3 | pos ronda (gardu) + kentongan: frame = animasi kentongan seperti kentongan.png; frame 0 = diam |
+| `buildings/tropis/night/pos_ronda_night.png` | 192x64 | 64x64 | 3 | pos ronda (gardu) + kentongan: frame = animasi kentongan seperti kentongan.png; frame 0 = diam; pelita menyala |
+| `structures/tropis/tanggul_autotile.png` | 128x128 | 32x32 | 16 | tanggul tanah + karung; 16-tile 4-bit (N1+E2+S4+W8); taruh di tepi sungai untuk menahan banjir |
+| `buildings/tropis/embung.png` | 96x64 | 96x64 | 1 | 96x64 (3x2) embung/kolam tampung air berbatu |
+| `structures/tropis/orang_orangan_sawah.png` | 64x64 | 32x64 | 2 | orang-orangan sawah, 2 frame goyang ~500ms |
+| `structures/tropis/obor_bambu.png` | 160x64 | 32x64 | 5 | obor bambu: 0-3 nyala (~120ms), 4 mati; glow: light_glow_small |
+
+## Keterbatasan tahap 7
+- Musim tropis = recolor palet (+ genangan/retak sederhana yang berulang per tile); bangunan tidak punya varian musim.
+- Hewan memakai rig prosedural: tampak depan/belakang hewan besar sederhana; monyet memakai rig manusia kecil. Tidak ada animasi mati/kabur/makan (selain ayam mematuk).
+- `crop_padi` hanya overlay; pematang dari autotile sawah. Undakan sawah hanya tampak dari selatan (dinding menghadap bawah).
+- Ternak 64x64 cukup besar dibanding penduduk (sengaja agar terbaca); skala boleh 0.75 di kode bila terasa terlalu besar.
+- Belum ada gerbang bambu khusus (pakai gate_h/gate_v kayu).
+- Salju lama tetap ada di folder namun deprecated.
+
+
+## Tahap 8: tokoh, sifat, cerita, monumen, 17 Agustus, dilema
+
+Semua file di sini baru. File tahap 1–7 tidak berubah (dicek md5). Generator: `tools/generate_assets.py` (fungsi `stage8()`). Preview: `preview_stage8.png` (`tools/make_preview_stage8.py`).
+
+**Sumber daftar sifat:** di `docs/` belum ada riset khusus sifat/cerita/dilema, dan `game.js` baru punya placeholder `sifat: 'yang baik hati'`. Daftar di bawah mengikuti contoh pada brief, ditambah pasangan yang seimbang.
+- Positif (bingkai hijau): rajin, pemberani, ramah, cerdas, religius, dermawan, jujur, sabar, periang, suka_menolong
+- Negatif (bingkai ungu-abu): malas, penakut, pemarah, pelit, jahil, pemurung
+- Pola nama: `icons/traits/trait_<nama>.png` (32) dan `trait_<nama>_16.png` (16). Ikon kepala desa: `icons/traits/icon_kepala_desa(_16).png`.
+- Hubungan: `icons/relations/rel_<teman|rival|pasangan>(_16).png`.
+
+**Gelembung emosi** (`icons/emotes/emote_<senang|marah|sedih|cinta|ide|bingung>.png`)
+- Ukuran 64x16: 4 frame 16x16 dalam satu baris.
+- Urutan frame: 0 muncul kecil, 1 membesar, 2 normal, 3 bob.
+- Putar 0→1→2 masing-masing ~80ms, lalu ulang 2↔3 (~300ms) selama ~1.5 s.
+- Offset tempel (relatif kiri-atas frame penduduk 32x32), sama dengan ikon hati: dewasa (+8, −14), anak (+8, −10), lansia (+8, −13), bayi (+8, 0).
+
+**Monumen bertahap** (`buildings/monuments/<nama>_stages.png` + `<nama>.png` untuk bangunan jadi)
+- Frame horizontal: 0 fondasi, 1 rangka, 2 setengah jadi (dengan perancah bambu), 3 selesai.
+- Anchor di tengah bawah. Ukuran: masjid 128x128 (atap tumpang 3 + mustaka + menara), balai_desa_megah 128x128 (pendopo joglo), langgar 64x64 (panggung, tumpang 2), bendungan 96x64 (letakkan melintang sungai).
+- `tiles/tropis/saluran_irigasi_autotile.png`: 16-tile 4-bit (N1+E2+S4+W8, kolom = i%4, baris = i//4). Baris 0–3 adalah frame air 0, baris 4–7 frame 1 (~400ms).
+
+**17 Agustus** (`decor/agustus/`)
+- Bendera dan umbul-umbul: frame 32x96 ×4, anchor kaki tiang di tengah bawah.
+- Bunting: 32x16 ×2, tile horizontal seamless.
+- Panjat pinang: 64x128.
+- Gapura: 96x96, jalan lewat di tengah.
+- Balap karung: 128x128 dengan format seperti spritesheet villager. 4 baris arah (bawah, kiri, kanan, atas) × 4 frame lompat (~120ms), kaki y≈29.
+
+**Panel dilema** (`ui/dilemma/`)
+- `panel_dilema.png`: 9-slice margin 14.
+- `button_choice_<normal|hover|pressed|disabled>.png`: 96x28, margin kiri/kanan 10, atas 4, bawah 6.
+- `portrait_frame_48.png` punya jendela 32x32 di (8,8). `portrait_frame_80.png` punya jendela 64x64 di (8,8). Gambar potret dulu, lalu bingkai di atasnya.
+- `portraits/portrait_villager_N.png`: 32x32. Untuk bingkai 80, skala 2 nearest.
+
+| File | Ukuran | Frame | Catatan |
+|---|---|---|---|
+| `icons/traits/trait_rajin.png` | 32x32 | 1 | sifat rajin (positif, bingkai hijau) |
+| `icons/traits/trait_rajin_16.png` | 16x16 | 1 | 16x16 |
+| `icons/traits/trait_malas.png` | 32x32 | 1 | sifat malas (negatif, bingkai ungu-abu) |
+| `icons/traits/trait_malas_16.png` | 16x16 | 1 | 16x16 |
+| `icons/traits/trait_pemberani.png` | 32x32 | 1 | sifat pemberani (positif, bingkai hijau) |
+| `icons/traits/trait_pemberani_16.png` | 16x16 | 1 | 16x16 |
+| `icons/traits/trait_penakut.png` | 32x32 | 1 | sifat penakut (negatif, bingkai ungu-abu) |
+| `icons/traits/trait_penakut_16.png` | 16x16 | 1 | 16x16 |
+| `icons/traits/trait_ramah.png` | 32x32 | 1 | sifat ramah (positif, bingkai hijau) |
+| `icons/traits/trait_ramah_16.png` | 16x16 | 1 | 16x16 |
+| `icons/traits/trait_pemarah.png` | 32x32 | 1 | sifat pemarah (negatif, bingkai ungu-abu) |
+| `icons/traits/trait_pemarah_16.png` | 16x16 | 1 | 16x16 |
+| `icons/traits/trait_cerdas.png` | 32x32 | 1 | sifat cerdas (positif, bingkai hijau) |
+| `icons/traits/trait_cerdas_16.png` | 16x16 | 1 | 16x16 |
+| `icons/traits/trait_religius.png` | 32x32 | 1 | sifat religius (positif, bingkai hijau) |
+| `icons/traits/trait_religius_16.png` | 16x16 | 1 | 16x16 |
+| `icons/traits/trait_dermawan.png` | 32x32 | 1 | sifat dermawan (positif, bingkai hijau) |
+| `icons/traits/trait_dermawan_16.png` | 16x16 | 1 | 16x16 |
+| `icons/traits/trait_pelit.png` | 32x32 | 1 | sifat pelit (negatif, bingkai ungu-abu) |
+| `icons/traits/trait_pelit_16.png` | 16x16 | 1 | 16x16 |
+| `icons/traits/trait_jujur.png` | 32x32 | 1 | sifat jujur (positif, bingkai hijau) |
+| `icons/traits/trait_jujur_16.png` | 16x16 | 1 | 16x16 |
+| `icons/traits/trait_jahil.png` | 32x32 | 1 | sifat jahil (negatif, bingkai ungu-abu) |
+| `icons/traits/trait_jahil_16.png` | 16x16 | 1 | 16x16 |
+| `icons/traits/trait_sabar.png` | 32x32 | 1 | sifat sabar (positif, bingkai hijau) |
+| `icons/traits/trait_sabar_16.png` | 16x16 | 1 | 16x16 |
+| `icons/traits/trait_periang.png` | 32x32 | 1 | sifat periang (positif, bingkai hijau) |
+| `icons/traits/trait_periang_16.png` | 16x16 | 1 | 16x16 |
+| `icons/traits/trait_pemurung.png` | 32x32 | 1 | sifat pemurung (negatif, bingkai ungu-abu) |
+| `icons/traits/trait_pemurung_16.png` | 16x16 | 1 | 16x16 |
+| `icons/traits/trait_suka_menolong.png` | 32x32 | 1 | sifat suka_menolong (positif, bingkai hijau) |
+| `icons/traits/trait_suka_menolong_16.png` | 16x16 | 1 | 16x16 |
+| `icons/relations/rel_teman.png` | 32x32 | 1 | hubungan 32x32 |
+| `icons/relations/rel_teman_16.png` | 16x16 | 1 | 16x16 |
+| `icons/relations/rel_rival.png` | 32x32 | 1 | hubungan 32x32 |
+| `icons/relations/rel_rival_16.png` | 16x16 | 1 | 16x16 |
+| `icons/relations/rel_pasangan.png` | 32x32 | 1 | hubungan 32x32 |
+| `icons/relations/rel_pasangan_16.png` | 16x16 | 1 | 16x16 |
+| `icons/emotes/emote_senang.png` | 64x16 | 4 | gelembung emosi: 0 muncul kecil, 1 membesar, 2 normal, 3 bob (loop 2-3); ~80ms lalu tahan ~1.5s |
+| `icons/emotes/emote_marah.png` | 64x16 | 4 | gelembung emosi: 0 muncul kecil, 1 membesar, 2 normal, 3 bob (loop 2-3); ~80ms lalu tahan ~1.5s |
+| `icons/emotes/emote_sedih.png` | 64x16 | 4 | gelembung emosi: 0 muncul kecil, 1 membesar, 2 normal, 3 bob (loop 2-3); ~80ms lalu tahan ~1.5s |
+| `icons/emotes/emote_cinta.png` | 64x16 | 4 | gelembung emosi: 0 muncul kecil, 1 membesar, 2 normal, 3 bob (loop 2-3); ~80ms lalu tahan ~1.5s |
+| `icons/emotes/emote_ide.png` | 64x16 | 4 | gelembung emosi: 0 muncul kecil, 1 membesar, 2 normal, 3 bob (loop 2-3); ~80ms lalu tahan ~1.5s |
+| `icons/emotes/emote_bingung.png` | 64x16 | 4 | gelembung emosi: 0 muncul kecil, 1 membesar, 2 normal, 3 bob (loop 2-3); ~80ms lalu tahan ~1.5s |
+| `buildings/monuments/masjid_stages.png` | 512x128 | 4 | masjid atap tumpang 3 (Nusantara) 128x128 (4x4 tile); 4 tahap: 0 fondasi, 1 rangka, 2 setengah jadi, 3 selesai; anchor tengah-bawah |
+| `buildings/monuments/masjid.png` | 128x128 | 1 | masjid atap tumpang 3 (Nusantara) 128x128 (4x4 tile) (selesai) |
+| `buildings/monuments/langgar_stages.png` | 256x64 | 4 | langgar panggung atap tumpang 2, 64x64 (2x2); 4 tahap: 0 fondasi, 1 rangka, 2 setengah jadi, 3 selesai; anchor tengah-bawah |
+| `buildings/monuments/langgar.png` | 64x64 | 1 | langgar panggung atap tumpang 2, 64x64 (2x2) (selesai) |
+| `buildings/monuments/balai_desa_megah_stages.png` | 512x128 | 4 | balai desa megah (pendopo bertingkat) 128x128 (4x4); 4 tahap: 0 fondasi, 1 rangka, 2 setengah jadi, 3 selesai; anchor tengah-bawah |
+| `buildings/monuments/balai_desa_megah.png` | 128x128 | 1 | balai desa megah (pendopo bertingkat) 128x128 (4x4) (selesai) |
+| `buildings/monuments/bendungan_stages.png` | 384x64 | 4 | bendungan kecil/irigasi 96x64 (3x2), letakkan melintang sungai; 4 tahap: 0 fondasi, 1 rangka, 2 setengah jadi, 3 selesai; anchor tengah-bawah |
+| `buildings/monuments/bendungan.png` | 96x64 | 1 | bendungan kecil/irigasi 96x64 (3x2), letakkan melintang sungai (selesai) |
+| `tiles/tropis/saluran_irigasi_autotile.png` | 128x256 | 32 | saluran irigasi batu 16-tile 4-bit (N1+E2+S4+W8); baris 0-3 frame 0, 4-7 frame 1 (air mengalir ~400ms) |
+| `decor/agustus/bendera_merah_putih.png` | 128x96 | 4 | tiang bendera + merah putih berkibar 4 frame ~150ms; anchor tengah-bawah tiang di x≈7 |
+| `decor/agustus/umbul_umbul.png` | 128x96 | 4 | umbul-umbul bambu, 4 frame ~200ms |
+| `decor/agustus/panjat_pinang.png` | 64x128 | 1 | 64x128 (2x4 tile), batang licin + hadiah di puncak; titik panjat x 31-32 |
+| `decor/agustus/balap_karung_villager_1.png` | 128x128 | 16 | penduduk dalam karung: 4 baris arah (bawah,kiri,kanan,atas) x 4 frame lompat ~110ms; maju ~6px per siklus saat frame 1-2 |
+| `decor/agustus/balap_karung_villager_2.png` | 128x128 | 16 | penduduk dalam karung: 4 baris arah (bawah,kiri,kanan,atas) x 4 frame lompat ~110ms; maju ~6px per siklus saat frame 1-2 |
+| `decor/agustus/balap_karung_villager_3.png` | 128x128 | 16 | penduduk dalam karung: 4 baris arah (bawah,kiri,kanan,atas) x 4 frame lompat ~110ms; maju ~6px per siklus saat frame 1-2 |
+| `decor/agustus/balap_karung_villager_4.png` | 128x128 | 16 | penduduk dalam karung: 4 baris arah (bawah,kiri,kanan,atas) x 4 frame lompat ~110ms; maju ~6px per siklus saat frame 1-2 |
+| `decor/agustus/bunting_merah_putih.png` | 64x16 | 2 | untaian bendera segitiga, tile horizontal seamless (ujung y=2), 2 frame ayun ~400ms |
+| `decor/agustus/gapura_agustus.png` | 96x96 | 1 | 96x96 (3x3) gapura bambu & janur, merah putih; jalan lewat di tengah (x 20-76) |
+| `ui/dilemma/panel_dilema.png` | 64x64 | 1 | 9-slice 64x64, margin 14 semua sisi (bingkai kayu ukir + pita batik kawung halus + ornamen sudut emas); konten mulai inset 14 |
+| `ui/dilemma/button_choice_normal.png` | 96x28 | 1 | 9-slice margin kiri/kanan 10, atas 4, bawah 6; teks mulai x+12 |
+| `ui/dilemma/button_choice_hover.png` | 96x28 | 1 | 9-slice margin kiri/kanan 10, atas 4, bawah 6; teks mulai x+12 |
+| `ui/dilemma/button_choice_pressed.png` | 96x28 | 1 | 9-slice margin kiri/kanan 10, atas 4, bawah 6; teks mulai x+12 |
+| `ui/dilemma/button_choice_disabled.png` | 96x28 | 1 | 9-slice margin kiri/kanan 10, atas 4, bawah 6; teks mulai x+12 |
+| `ui/dilemma/portrait_frame_48.png` | 48x48 | 1 | bingkai potret; jendela transparan 32x32 di offset (8,8); gambar potret di bawah bingkai |
+| `ui/dilemma/portrait_frame_80.png` | 80x80 | 1 | bingkai potret; jendela transparan 64x64 di offset (8,8); gambar potret di bawah bingkai |
+| `ui/dilemma/portraits/portrait_villager_1.png` | 32x32 | 1 | potret 32x32 (kepala villager_N 2x); 64x64 = skala 2 nearest untuk portrait_frame_80 |
+| `ui/dilemma/portraits/portrait_villager_2.png` | 32x32 | 1 | potret 32x32 (kepala villager_N 2x); 64x64 = skala 2 nearest untuk portrait_frame_80 |
+| `ui/dilemma/portraits/portrait_villager_3.png` | 32x32 | 1 | potret 32x32 (kepala villager_N 2x); 64x64 = skala 2 nearest untuk portrait_frame_80 |
+| `ui/dilemma/portraits/portrait_villager_4.png` | 32x32 | 1 | potret 32x32 (kepala villager_N 2x); 64x64 = skala 2 nearest untuk portrait_frame_80 |
+| `icons/traits/icon_kepala_desa.png` | 32x32 | 1 | ikon kepala desa (peci + baju batik) 32x32 |
+| `icons/traits/icon_kepala_desa_16.png` | 16x16 | 1 | 16x16 |
+
+**Keterbatasan tahap 8**
+- Potret hanya untuk villager_1–4 dewasa. Belum ada potret anak/lansia, dan belum ada ekspresi wajah berbeda di potret.
+- Tahap konstruksi dibuat otomatis dari siluet bangunan jadi, sehingga rangka/perancah generik. Bendungan rangka tampak seperti kisi kayu.
+- Ikon 16px yang detailnya kecil (religius, cerdas) hanya terbaca bersama tooltip.
+- Belum ada animasi peserta panjat pinang memanjat, dan belum ada lomba lain (makan kerupuk, tarik tambang).
+- Belum ada versi malam untuk monumen dan dekorasi Agustus.
