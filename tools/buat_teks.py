@@ -114,8 +114,8 @@ event = [
   C("Lanjutkan bekerja seperti biasa",{"kesehatan_bangunan":-20,"kayu":10,"suasana_hati":-10},"Beberapa dahan tumbang bisa dijadikan kayu, tapi bangunan rusak dan penduduk basah kuyup.")
  ],"cuaca"),
  E("pedagang_keliling","Pedagang Keliling","Seorang pedagang berpikul tiba di desa sambil membunyikan lonceng kecil. \"Barang bagus, harga bersahabat!\" katanya.",[
-  C("Tukar kayu dengan makanan",{"kayu":-20,"makanan":25},"Pedagang mengangguk puas. Lumbung desa terasa sedikit lebih penuh."),
-  C("Beli perkakas dengan batu",{"batu":-25,"alat":3},"Perkakas baru berkilau di tangan penduduk. Kerja jadi lebih cepat!"),
+  C("Tukar kayu dengan makanan",{"kayu":-15,"makanan":10},"Pedagang mengangguk puas. Lumbung desa terasa sedikit lebih penuh."),
+  C("Beli perkakas dengan batu",{"batu":-15,"alat":2},"Perkakas baru berkilau di tangan penduduk. Kerja jadi lebih cepat!"),
   C("Tawarkan teh hangat saja",{"suasana_hati":5},"Pedagang berterima kasih dan berjanji akan mampir lagi. Ia juga meninggalkan cerita lucu dari desa seberang.")
  ],"perdagangan"),
  E("pendatang","Pendatang Mengetuk","Seorang pengembara lelah berhenti di tepi desa. Ia bertanya apakah ada tempat untuknya bernaung.",[
@@ -133,9 +133,9 @@ event = [
   C("Jaga bergantian sepanjang malam",{"energi":-20,"suasana_hati":5},"Para penjaga mengantuk esok harinya, tapi semua merasa aman.")
  ],"bahaya"),
  E("panen_raya","Panen Raya!","Ladang menguning dan buah bergelantungan di mana-mana. Ini panen terbaik tahun ini!",[
-  C("Simpan semua di Lumbung",{"gandum":40,"makanan":30},"Lumbung penuh sesak. Musim dingin tidak lagi menakutkan."),
-  C("Adakan pesta panen",{"makanan":15,"suasana_hati":20},"Penduduk menari dan bernyanyi semalaman. Ini malam yang akan dikenang lama."),
-  C("Jual sebagian ke pedagang",{"gandum":20,"alat":2,"batu_bata":10},"Sebagian hasil panen ditukar dengan barang berguna untuk membangun.")
+  C("Simpan semua di Lumbung",{"gandum":12,"makanan":8},"Lumbung penuh sesak. Musim dingin tidak lagi menakutkan."),
+  C("Adakan pesta panen",{"makanan":8,"suasana_hati":15},"Penduduk menari dan bernyanyi semalaman. Ini malam yang akan dikenang lama."),
+  C("Jual sebagian ke pedagang",{"gandum":6,"alat":1,"batu":8},"Sebagian hasil panen ditukar dengan barang berguna untuk membangun.")
  ],"musim"),
  E("wabah","Wabah Batuk","Beberapa penduduk mulai batuk dan demam. Penyakit menyebar perlahan di desa.",[
   C("Rawat dengan ramuan daun obat",{"makanan":-15,"kesehatan":10},"Ramuan pahit itu ampuh. Satu per satu penduduk mulai pulih."),

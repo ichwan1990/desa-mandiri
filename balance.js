@@ -77,6 +77,8 @@ window.CONFIG = {
     { target: '#buildbar', aksi: 'taruh_bangunan' },
     { target: '#log' },
   ],
+  FAV_TASK_BONUS: 12,   // bonus utilitas untuk tugas favorit penduduk (tidak menimpa kebutuhan kritis)
+  VILLAGER_HISTORY: 10, // panjang riwayat per penduduk
   MAX_LOG: 40, MAX_NOTES: 6,
   FOOD_SURPLUS_FACTOR: 1.2, FOOD_SURPLUS_PENALTY: 25, // jika stok makanan melimpah, kerja makanan turun prioritas
   DEFAULT_PRIO: { bangun: 3, makanan: 3, bertani: 2, air: 2, kayu: 2, batu: 2 }, // 0=mati .. 3=tinggi

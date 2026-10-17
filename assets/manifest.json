@@ -343,6 +343,58 @@
    246,
    236,
    210
+  ],
+  "dusk": [
+   150,
+   70,
+   120,
+   90
+  ],
+  "dawn": [
+   250,
+   186,
+   140,
+   70
+  ],
+  "parch": [
+   246,
+   230,
+   190
+  ],
+  "parch_d": [
+   222,
+   196,
+   146
+  ],
+  "leather": [
+   160,
+   98,
+   60
+  ],
+  "brick": [
+   196,
+   92,
+   64
+  ],
+  "brick_d": [
+   150,
+   64,
+   52
+  ],
+  "gold": [
+   246,
+   196,
+   64
+  ],
+  "gold_d": [
+   196,
+   138,
+   40
+  ],
+  "silver": [
+   214,
+   214,
+   226
   ]
  },
  "files": [
@@ -1403,6 +1455,1392 @@
    "frames": 1,
    "note": "versi malam tahap-1, jendela/pintu menyala",
    "stage": 2
+  },
+  {
+   "file": "ui/logo/logo_1x.png",
+   "size": [
+    184,
+    81
+   ],
+   "frame": [
+    184,
+    81
+   ],
+   "frames": 1,
+   "note": "logo 1x (nearest)",
+   "stage": 3
+  },
+  {
+   "file": "ui/logo/logo_2x.png",
+   "size": [
+    368,
+    162
+   ],
+   "frame": [
+    368,
+    162
+   ],
+   "frames": 1,
+   "note": "logo 2x (nearest)",
+   "stage": 3
+  },
+  {
+   "file": "ui/logo/logo_4x.png",
+   "size": [
+    736,
+    324
+   ],
+   "frame": [
+    736,
+    324
+   ],
+   "frames": 1,
+   "note": "logo 4x (nearest)",
+   "stage": 3
+  },
+  {
+   "file": "ui/logo/logo_icon_32.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "ikon/favicon 32x32",
+   "stage": 3
+  },
+  {
+   "file": "ui/logo/logo_icon_64.png",
+   "size": [
+    64,
+    64
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 1,
+   "note": "ikon 64x64",
+   "stage": 3
+  },
+  {
+   "file": "ui/title/title_640x360.png",
+   "size": [
+    640,
+    360
+   ],
+   "frame": [
+    640,
+    360
+   ],
+   "frames": 1,
+   "note": "layar judul",
+   "stage": 3
+  },
+  {
+   "file": "ui/title/title_1280x720.png",
+   "size": [
+    1280,
+    720
+   ],
+   "frame": [
+    1280,
+    720
+   ],
+   "frames": 1,
+   "note": "layar judul (2x nearest)",
+   "stage": 3
+  },
+  {
+   "file": "ui/title/title_bg_640x360.png",
+   "size": [
+    640,
+    360
+   ],
+   "frame": [
+    640,
+    360
+   ],
+   "frames": 1,
+   "note": "scene tanpa logo/teks (untuk disusun sendiri)",
+   "stage": 3
+  },
+  {
+   "file": "ui/skin/panel.png",
+   "size": [
+    48,
+    48
+   ],
+   "frame": [
+    48,
+    48
+   ],
+   "frames": 1,
+   "note": "9-slice, margin 8px semua sisi (inset konten 6px)",
+   "stage": 3
+  },
+  {
+   "file": "ui/skin/panel_wood.png",
+   "size": [
+    48,
+    48
+   ],
+   "frame": [
+    48,
+    48
+   ],
+   "frames": 1,
+   "note": "9-slice, margin 8px; varian kayu (HUD)",
+   "stage": 3
+  },
+  {
+   "file": "ui/skin/button_normal.png",
+   "size": [
+    64,
+    24
+   ],
+   "frame": [
+    64,
+    24
+   ],
+   "frames": 1,
+   "note": "9-slice, margin kiri/kanan 6, atas 4, bawah 6",
+   "stage": 3
+  },
+  {
+   "file": "ui/skin/button_hover.png",
+   "size": [
+    64,
+    24
+   ],
+   "frame": [
+    64,
+    24
+   ],
+   "frames": 1,
+   "note": "9-slice, margin kiri/kanan 6, atas 4, bawah 6",
+   "stage": 3
+  },
+  {
+   "file": "ui/skin/button_pressed.png",
+   "size": [
+    64,
+    24
+   ],
+   "frame": [
+    64,
+    24
+   ],
+   "frames": 1,
+   "note": "9-slice, margin kiri/kanan 6, atas 4, bawah 6",
+   "stage": 3
+  },
+  {
+   "file": "ui/skin/button_disabled.png",
+   "size": [
+    64,
+    24
+   ],
+   "frame": [
+    64,
+    24
+   ],
+   "frames": 1,
+   "note": "9-slice, margin kiri/kanan 6, atas 4, bawah 6",
+   "stage": 3
+  },
+  {
+   "file": "ui/skin/button_states.png",
+   "size": [
+    256,
+    24
+   ],
+   "frame": [
+    64,
+    24
+   ],
+   "frames": 4,
+   "note": "urutan: normal, hover, pressed, disabled",
+   "stage": 3
+  },
+  {
+   "file": "ui/skin/tab_active.png",
+   "size": [
+    64,
+    24
+   ],
+   "frame": [
+    64,
+    24
+   ],
+   "frames": 1,
+   "note": "9-slice margin 6 (bawah 0, menyatu dengan panel)",
+   "stage": 3
+  },
+  {
+   "file": "ui/skin/tab_inactive.png",
+   "size": [
+    64,
+    24
+   ],
+   "frame": [
+    64,
+    24
+   ],
+   "frames": 1,
+   "note": "9-slice margin 6",
+   "stage": 3
+  },
+  {
+   "file": "ui/skin/tooltip.png",
+   "size": [
+    24,
+    24
+   ],
+   "frame": [
+    24,
+    24
+   ],
+   "frames": 1,
+   "note": "9-slice, margin 4px; teks putih",
+   "stage": 3
+  },
+  {
+   "file": "ui/skin/tooltip_arrow.png",
+   "size": [
+    8,
+    5
+   ],
+   "frame": [
+    8,
+    5
+   ],
+   "frames": 1,
+   "note": "taruh di bawah tooltip, menunjuk ke bawah",
+   "stage": 3
+  },
+  {
+   "file": "ui/skin/bar_frame.png",
+   "size": [
+    64,
+    12
+   ],
+   "frame": [
+    64,
+    12
+   ],
+   "frames": 1,
+   "note": "9-slice margin 3; area isi x2..61, y2..9",
+   "stage": 3
+  },
+  {
+   "file": "ui/skin/bar_fill_red.png",
+   "size": [
+    8,
+    8
+   ],
+   "frame": [
+    8,
+    8
+   ],
+   "frames": 1,
+   "note": "stretch horizontal mengisi area bar",
+   "stage": 3
+  },
+  {
+   "file": "ui/skin/bar_fill_blue.png",
+   "size": [
+    8,
+    8
+   ],
+   "frame": [
+    8,
+    8
+   ],
+   "frames": 1,
+   "note": "stretch horizontal mengisi area bar",
+   "stage": 3
+  },
+  {
+   "file": "ui/skin/bar_fill_yellow.png",
+   "size": [
+    8,
+    8
+   ],
+   "frame": [
+    8,
+    8
+   ],
+   "frames": 1,
+   "note": "stretch horizontal mengisi area bar",
+   "stage": 3
+  },
+  {
+   "file": "ui/skin/bar_fill_green.png",
+   "size": [
+    8,
+    8
+   ],
+   "frame": [
+    8,
+    8
+   ],
+   "frames": 1,
+   "note": "stretch horizontal mengisi area bar",
+   "stage": 3
+  },
+  {
+   "file": "ui/skin/bar_fill_purple.png",
+   "size": [
+    8,
+    8
+   ],
+   "frame": [
+    8,
+    8
+   ],
+   "frames": 1,
+   "note": "stretch horizontal mengisi area bar",
+   "stage": 3
+  },
+  {
+   "file": "ui/skin/checkbox_off.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 3
+  },
+  {
+   "file": "ui/skin/checkbox_on.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 3
+  },
+  {
+   "file": "icons/needs/need_hunger.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 3
+  },
+  {
+   "file": "icons/needs/need_thirst.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 3
+  },
+  {
+   "file": "icons/needs/need_energy.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 3
+  },
+  {
+   "file": "icons/needs/need_mood.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 3
+  },
+  {
+   "file": "icons/needs/need_mood_sad.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 3
+  },
+  {
+   "file": "icons/needs/need_health.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 3
+  },
+  {
+   "file": "icons/needs/need_warmth.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 3
+  },
+  {
+   "file": "icons/needs/need_sleep.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 3
+  },
+  {
+   "file": "icons/skills/skill_chop.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 3
+  },
+  {
+   "file": "icons/skills/skill_mine.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 3
+  },
+  {
+   "file": "icons/skills/skill_gather.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 3
+  },
+  {
+   "file": "icons/skills/skill_build.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 3
+  },
+  {
+   "file": "icons/skills/skill_farm.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 3
+  },
+  {
+   "file": "icons/skills/skill_hunt.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 3
+  },
+  {
+   "file": "icons/tech/tech_tools.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 3
+  },
+  {
+   "file": "icons/tech/tech_planks.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 3
+  },
+  {
+   "file": "icons/tech/tech_bricks.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 3
+  },
+  {
+   "file": "icons/tech/tech_bread.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 3
+  },
+  {
+   "file": "icons/tech/tech_leather.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 3
+  },
+  {
+   "file": "icons/tech/tech_farming.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 3
+  },
+  {
+   "file": "icons/tech/tech_well.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 3
+  },
+  {
+   "file": "icons/tech/tech_storage.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 3
+  },
+  {
+   "file": "icons/tech/tech_era_camp.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 3
+  },
+  {
+   "file": "icons/tech/tech_era_hamlet.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 3
+  },
+  {
+   "file": "icons/tech/tech_era_farm_village.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 3
+  },
+  {
+   "file": "icons/tech/tech_era_town.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 3
+  },
+  {
+   "file": "icons/resources/icon_wheat.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 3
+  },
+  {
+   "file": "icons/resources/icon_bread.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 3
+  },
+  {
+   "file": "icons/resources/icon_planks.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 3
+  },
+  {
+   "file": "icons/resources/icon_bricks.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 3
+  },
+  {
+   "file": "icons/resources/icon_tools.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 3
+  },
+  {
+   "file": "icons/resources/icon_leather.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 3
+  },
+  {
+   "file": "icons/resources/icon_fish.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 3
+  },
+  {
+   "file": "icons/resources/icon_meat.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 3
+  },
+  {
+   "file": "icons/resources/icon_fruit.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "",
+   "stage": 3
+  },
+  {
+   "file": "icons/achievements/ach_first_fire.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "medali; ach_locked = belum terbuka",
+   "stage": 3
+  },
+  {
+   "file": "icons/achievements/ach_first_house.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "medali; ach_locked = belum terbuka",
+   "stage": 3
+  },
+  {
+   "file": "icons/achievements/ach_first_harvest.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "medali; ach_locked = belum terbuka",
+   "stage": 3
+  },
+  {
+   "file": "icons/achievements/ach_population_10.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "medali; ach_locked = belum terbuka",
+   "stage": 3
+  },
+  {
+   "file": "icons/achievements/ach_survive_winter.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "medali; ach_locked = belum terbuka",
+   "stage": 3
+  },
+  {
+   "file": "icons/achievements/ach_master_skill.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "medali; ach_locked = belum terbuka",
+   "stage": 3
+  },
+  {
+   "file": "icons/achievements/ach_town_founded.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "medali; ach_locked = belum terbuka",
+   "stage": 3
+  },
+  {
+   "file": "icons/achievements/ach_rich_storage.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "medali; ach_locked = belum terbuka",
+   "stage": 3
+  },
+  {
+   "file": "icons/achievements/ach_locked.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "medali; ach_locked = belum terbuka",
+   "stage": 3
+  },
+  {
+   "file": "buildings/winter/hut_winter.png",
+   "size": [
+    64,
+    64
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 1,
+   "note": "atap bersalju; ukuran/anchor sama dengan buildings/hut.png",
+   "stage": 3
+  },
+  {
+   "file": "buildings/winter/warehouse_winter.png",
+   "size": [
+    96,
+    64
+   ],
+   "frame": [
+    96,
+    64
+   ],
+   "frames": 1,
+   "note": "atap bersalju; ukuran/anchor sama dengan buildings/warehouse.png",
+   "stage": 3
+  },
+  {
+   "file": "buildings/winter/well_winter.png",
+   "size": [
+    32,
+    64
+   ],
+   "frame": [
+    32,
+    64
+   ],
+   "frames": 1,
+   "note": "atap bersalju; ukuran/anchor sama dengan buildings/well.png",
+   "stage": 3
+  },
+  {
+   "file": "buildings/winter/mine_winter.png",
+   "size": [
+    64,
+    64
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 1,
+   "note": "atap bersalju; ukuran/anchor sama dengan buildings/mine.png",
+   "stage": 3
+  },
+  {
+   "file": "buildings/winter/wooden_house_winter.png",
+   "size": [
+    96,
+    96
+   ],
+   "frame": [
+    96,
+    96
+   ],
+   "frames": 1,
+   "note": "atap bersalju; ukuran/anchor sama dengan buildings/wooden_house.png",
+   "stage": 3
+  },
+  {
+   "file": "buildings/winter/kitchen_winter.png",
+   "size": [
+    64,
+    64
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 1,
+   "note": "atap bersalju; ukuran/anchor sama dengan buildings/kitchen.png",
+   "stage": 3
+  },
+  {
+   "file": "buildings/winter/workshop_winter.png",
+   "size": [
+    96,
+    64
+   ],
+   "frame": [
+    96,
+    64
+   ],
+   "frames": 1,
+   "note": "atap bersalju; ukuran/anchor sama dengan buildings/workshop.png",
+   "stage": 3
+  },
+  {
+   "file": "buildings/winter/granary_winter.png",
+   "size": [
+    64,
+    96
+   ],
+   "frame": [
+    64,
+    96
+   ],
+   "frames": 1,
+   "note": "atap bersalju; ukuran/anchor sama dengan buildings/granary.png",
+   "stage": 3
+  },
+  {
+   "file": "buildings/winter/market_winter.png",
+   "size": [
+    96,
+    64
+   ],
+   "frame": [
+    96,
+    64
+   ],
+   "frames": 1,
+   "note": "atap bersalju; ukuran/anchor sama dengan buildings/market.png",
+   "stage": 3
+  },
+  {
+   "file": "buildings/winter/town_hall_winter.png",
+   "size": [
+    128,
+    96
+   ],
+   "frame": [
+    128,
+    96
+   ],
+   "frames": 1,
+   "note": "atap bersalju; ukuran/anchor sama dengan buildings/town_hall.png",
+   "stage": 3
+  },
+  {
+   "file": "buildings/winter/campfire_winter.png",
+   "size": [
+    128,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 4,
+   "note": "atap bersalju; ukuran/anchor sama dengan buildings/campfire.png",
+   "stage": 3
+  },
+  {
+   "file": "buildings/winter/wooden_house_night_winter.png",
+   "size": [
+    96,
+    96
+   ],
+   "frame": [
+    96,
+    96
+   ],
+   "frames": 1,
+   "note": "malam + salju",
+   "stage": 3
+  },
+  {
+   "file": "buildings/winter/hut_night_winter.png",
+   "size": [
+    64,
+    64
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 1,
+   "note": "malam + salju",
+   "stage": 3
+  },
+  {
+   "file": "buildings/winter/kitchen_night_winter.png",
+   "size": [
+    64,
+    64
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 1,
+   "note": "malam + salju",
+   "stage": 3
+  },
+  {
+   "file": "buildings/winter/town_hall_night_winter.png",
+   "size": [
+    128,
+    96
+   ],
+   "frame": [
+    128,
+    96
+   ],
+   "frames": 1,
+   "note": "malam + salju",
+   "stage": 3
+  },
+  {
+   "file": "buildings/winter/granary_night_winter.png",
+   "size": [
+    64,
+    96
+   ],
+   "frame": [
+    64,
+    96
+   ],
+   "frames": 1,
+   "note": "malam + salju",
+   "stage": 3
+  },
+  {
+   "file": "buildings/bridge_rail_h_back.png",
+   "size": [
+    96,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 3,
+   "note": "pagar sisi utara; gambar SEBELUM karakter; tile = bridge_h",
+   "stage": 3
+  },
+  {
+   "file": "buildings/bridge_rail_h_front.png",
+   "size": [
+    96,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 3,
+   "note": "pagar sisi selatan; gambar SETELAH karakter",
+   "stage": 3
+  },
+  {
+   "file": "buildings/bridge_rail_v.png",
+   "size": [
+    32,
+    96
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 3,
+   "note": "pagar kiri+kanan; tumpuk di atas bridge_v; gambar setelah karakter",
+   "stage": 3
+  },
+  {
+   "file": "effects/night/dusk_overlay.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "senja RGBA (150,70,120,90)",
+   "stage": 3
+  },
+  {
+   "file": "effects/night/dawn_overlay.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "fajar RGBA (250,186,140,70)",
+   "stage": 3
+  },
+  {
+   "file": "effects/night/dusk_gradient.png",
+   "size": [
+    320,
+    180
+   ],
+   "frame": [
+    320,
+    180
+   ],
+   "frames": 1,
+   "note": "opsional, stretch ke layar; tambahan langit sore di atas dusk_overlay",
+   "stage": 3
+  },
+  {
+   "file": "characters/villager_1_carry.png",
+   "size": [
+    128,
+    512
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 64,
+   "note": "16 baris x 4 kolom: 0-3 kayu, 4-7 batu, 8-11 makanan, 12-15 air; arah tiap kelompok bawah,kiri,kanan,atas; siklus jalan",
+   "stage": 3
+  },
+  {
+   "file": "characters/villager_2_carry.png",
+   "size": [
+    128,
+    512
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 64,
+   "note": "16 baris x 4 kolom: 0-3 kayu, 4-7 batu, 8-11 makanan, 12-15 air; arah tiap kelompok bawah,kiri,kanan,atas; siklus jalan",
+   "stage": 3
+  },
+  {
+   "file": "characters/villager_3_carry.png",
+   "size": [
+    128,
+    512
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 64,
+   "note": "16 baris x 4 kolom: 0-3 kayu, 4-7 batu, 8-11 makanan, 12-15 air; arah tiap kelompok bawah,kiri,kanan,atas; siklus jalan",
+   "stage": 3
+  },
+  {
+   "file": "characters/villager_4_carry.png",
+   "size": [
+    128,
+    512
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 64,
+   "note": "16 baris x 4 kolom: 0-3 kayu, 4-7 batu, 8-11 makanan, 12-15 air; arah tiap kelompok bawah,kiri,kanan,atas; siklus jalan",
+   "stage": 3
+  },
+  {
+   "file": "characters/merchant.png",
+   "size": [
+    128,
+    256
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 32,
+   "note": "format = villager_N.png: baris 0-3 diam, 4-7 jalan (bawah,kiri,kanan,atas)",
+   "stage": 3
+  },
+  {
+   "file": "characters/merchant_cart.png",
+   "size": [
+    256,
+    128
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 8,
+   "note": "4 kolom arah (bawah,kiri,kanan,atas) x 2 baris frame roda; ~200ms/frame; pegangan menunjuk arah gerak (pedagang berjalan di depan gerobak)",
+   "stage": 3
   }
  ]
 }

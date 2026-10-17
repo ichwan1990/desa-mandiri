@@ -94,7 +94,7 @@ function chooseTask(v) {
     const t = job === 'bangun' ? buildTask(v) : job === 'bertani' ? farmTask(v) : job === 'air' ? waterTask(v) : gatherTask(v, job); if (!t) continue;
     const full = job === 'air' ? S.res.air >= S.villagers.length * C.WATER.perDayPerPop * C.WATER_SURPLUS_DAYS : job === 'makanan' && foodTotal() >= S.villagers.length * C.SPAWN.foodDaysPerPop * C.SPAWN.foodPerDayPerPop * C.FOOD_SURPLUS_FACTOR;
     const capped = C.RES_SOFT_CAP[job] && S.res[job] >= C.RES_SOFT_CAP[job] * Math.max(1, S.villagers.length / 2);
-    const sc = p * 10 - (full || capped ? C.FOOD_SURPLUS_PENALTY : 0) + (S.villagers.filter(o => o.task && o.task.res === job).length ? -4 : 0) - dist(v, t.target) * 0.3 + v.skills[SKILL_OF[job]] * 5;
+    const sc = (v.fav === job ? C.FAV_TASK_BONUS : 0) + p * 10 - (full || capped ? C.FOOD_SURPLUS_PENALTY : 0) + (S.villagers.filter(o => o.task && o.task.res === job).length ? -4 : 0) - dist(v, t.target) * 0.3 + v.skills[SKILL_OF[job]] * 5;
     if (sc > bs) { bs = sc; best = t; } }
   if (best) return best;
   // 5. Fallback: meramu
@@ -168,7 +168,9 @@ function updateVillager(v, dt) {
   v.mood = Math.max(0, Math.min(100, v.mood));
   // interupsi kebutuhan kritis
   if (v.task && !['makan', 'tidur'].includes(v.task.kind) && (v.hunger <= C.HUNGER_CRIT && foodTotal() > 0 || v.energy <= C.ENERGY_CRIT)) { deposit(v, true); v.task = null; }
-  if (!v.task) v.task = chooseTask(v);
+  if (!v.task) { v.task = chooseTask(v); const k = v.task.kind;
+    if (k !== 'diam' && k !== 'setor' && (v._lastKind !== k || k === 'kumpul' && v._lastRes !== v.task.res)) vhist(v, TASK_TEXT(v.task));
+    v._lastKind = k; v._lastRes = v.task.res; }
   const t = v.task;
   if (t.kind === 'setor') { const m = moveTo(v, t.target, dt); if (m) { deposit(v); v.task = null; } else if (m === null) { deposit(v, true); v.task = null; } return; }
   const mv = moveTo(v, t.target, dt);
@@ -192,12 +194,12 @@ function updateVillager(v, dt) {
         if (b.hp >= 100) { log(`${v.name} selesai memperbaiki ${C.BUILDINGS[b.type].nama}.`); v.working = false; v.task = null; } break; }
       v.working = true; b.progress += dt * workMult(v, 'membangun');
       if (b.progress >= C.BUILDINGS[b.type].work) { b.done = true; v.skills.membangun += C.SKILL_GAIN * 5;
-        log(`${v.name} selesai membangun ${C.BUILDINGS[b.type].nama}.`); v.working = false; v.task = null; } break; }
+        log(`${v.name} selesai membangun ${C.BUILDINGS[b.type].nama}.`); vhist(v, `Selesai membangun ${C.BUILDINGS[b.type].nama}`); v.working = false; v.task = null; } break; }
     case 'tani': { const b = t.b; if (!S.buildings.includes(b) || (t.harvest ? b.stage !== 'siap' : b.stage !== 'kosong')) { v.task = null; break; }
       v.working = true; t.work += dt * workMult(v, 'bertani');
       if (t.work >= (t.harvest ? C.FIELD.harvestTime : C.FIELD.plantTime)) { v.working = false; v.skills.bertani += C.SKILL_GAIN;
         if (t.harvest) { const F = C.FIELD, res = F.crops[b.crop].res, n = Math.round(F.yieldMin + Math.random() * (F.yieldMax - F.yieldMin));
-          b.stage = 'kosong'; b.grow = 0; b.harvested = true; v.carry = { res, n }; log(`${v.name} memanen ${n} ${RES_LABEL[res].toLowerCase()} dari ladang ${b.crop}.`);
+          b.stage = 'kosong'; b.grow = 0; b.harvested = true; v.carry = { res, n }; vhist(v, `Memanen ${n} ${RES_LABEL[res].toLowerCase()}`); log(`${v.name} memanen ${n} ${RES_LABEL[res].toLowerCase()} dari ladang ${b.crop}.`);
           const st = storage(v); v.task = { kind: 'setor', target: stPos(st) }; }
         else { b.stage = 'tumbuh'; b.grow = 0; b.harvested = false; v.task = null; } } break; }
     case 'air': { v.working = true; t.work += dt * workMult(v, 'meramu');
@@ -296,7 +298,35 @@ function tutorialUI() { const t = TEXT && TEXT.tutorial && TEXT.tutorial[S.tutor
   const h = tutHook(S.tutorialStep), tgt = h.target && document.querySelector(h.target); if (tgt) tgt.classList.add('tut-hl');
   el.innerHTML = `<small>Tutorial ${S.tutorialStep + 1}/${TEXT.tutorial.length}</small><br><b>${t.judul}</b><br>${t.teks}` +
     (h.aksi ? `<br><i>👉 ${AKSI_LABEL[h.aksi] || h.aksi}</i>` : '') + `<br><button id="tutNext">Lanjut</button> <button id="tutSkip">Lewati</button>`; }
-function openVillager(id) { tutAction('klik_penduduk'); }
+// ---------- panel detail penduduk ----------
+let selVid = null;
+function vhist(v, msg) { const f = dayFrac(), hh = String(Math.floor(f * 24)).padStart(2, '0');
+  (v.history = v.history || []).unshift(`H${S.day} ${hh}:00 — ${msg}`); v.history.length = Math.min(v.history.length, C.VILLAGER_HISTORY); }
+function TASK_TEXT(t) { if (!t) return 'Menunggu';
+  switch (t.kind) {
+    case 'makan': return 'Makan'; case 'tidur': return 'Tidur'; case 'diam': return 'Santai'; case 'setor': return 'Menyetor ke gudang';
+    case 'kumpul': return 'Mengumpulkan ' + String(RES_LABEL[t.res] || t.res).toLowerCase();
+    case 'bangun': return (t.b && t.b.done ? 'Memperbaiki ' : 'Membangun ') + (t.b ? C.BUILDINGS[t.b.type].nama : '');
+    case 'tani': return t.harvest ? 'Memanen ladang' : 'Menanam ladang';
+    case 'air': return 'Mengambil air dari ' + (t.src === 'sumur' ? 'sumur' : 'sungai');
+    case 'riset': return 'Meneliti ' + (t.techName || '');
+    default: return t.kind; } }
+function openVillager(id) { const v = S.villagers.find(x => x.id === id); if (!v) return; selVid = id; tutAction('klik_penduduk');
+  const el = $('vpanel'); el.style.display = 'block';
+  el.innerHTML = `<button class="close" id="vpClose">✕</button><h3 style="margin-top:0">${v.name}</h3>
+    <label>Tugas favorit: <select id="favSel"><option value="">— Tidak ada —</option>${Object.entries(JOB_LABEL).map(([k, l]) => `<option value="${k}" ${v.fav === k ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
+    <div style="font-size:11px;opacity:.75">Favorit memberi bonus saat memilih kerja, tapi makan/tidur/darurat tetap didahulukan.</div><div id="vpDyn"></div>`;
+  delete _html.vpDyn; villagerPanelUI(); }
+function closeVillager() { selVid = null; $('vpanel').style.display = 'none'; }
+function villagerPanelUI() { if (selVid == null) return; const v = S.villagers.find(x => x.id === selVid); if (!v) { closeVillager(); return; }
+  const bar = (label, val, col) => `${label} <b>${val | 0}</b><div class="bar"><i style="width:${Math.max(0, Math.min(100, val))}%;background:var(${col})"></i></div>`;
+  const SK = { menebang: 'Menebang', menambang: 'Menambang', meramu: 'Meramu', membangun: 'Membangun', bertani: 'Bertani' };
+  setHTML('vpDyn', `<div style="font-size:12px;margin:6px 0">${v.age} th · ${role(v)}<br>Sedang: <b>${TASK_TEXT(v.task)}</b>${v.carry ? ` (membawa ${v.carry.n} ${RES_LABEL[v.carry.res].toLowerCase()})` : ''}</div>
+    ${bar('Lapar', v.hunger, '--bar-hunger')}${bar('Energi', v.energy, '--bar-energy')}${bar('Suasana hati', v.mood, '--bar-mood')}${bar('Kesehatan', v.health ?? 100, '--bar-health')}
+    <h3>Keahlian</h3>${Object.entries(SK).map(([k, l]) => `<div class="row"><span>${l}</span><span>${'★'.repeat(Math.min(5, Math.floor((v.skills[k] || 0) * 2)))}${'☆'.repeat(5 - Math.min(5, Math.floor((v.skills[k] || 0) * 2)))} ${(v.skills[k] || 0).toFixed(2)}</span></div>`).join('')}
+    <h3>Riwayat</h3><ul>${(v.history || []).map(h => `<li>${h}</li>`).join('') || '<li>Belum ada catatan.</li>'}</ul>`); }
+document.addEventListener('change', e => { if (e.target.id === 'favSel' && selVid != null) { const v = S.villagers.find(x => x.id === selVid); if (!v) return;
+  v.fav = e.target.value || null; vhist(v, v.fav ? `Tugas favorit diatur: ${JOB_LABEL[v.fav]}` : 'Tugas favorit dihapus'); } });
 function tutAction(name) { if (tutHook(S.tutorialStep).aksi === name) { S.tutorialStep++; tutorialUI(); } }
 // ---------- dunia ----------
 let lastDay = 1;
@@ -466,6 +496,7 @@ function drawBuilding(b, d) {
   else if ((b.hp ?? 100) < 100) bar(b.hp / 100, '#e05050');
 }
 function drawVillager(v, off = 0) {
+  if (v.id === selVid) { ctx.strokeStyle = '#ffe14a'; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(v.x * T + 16 + off, v.y * T + 29, 11, 5, 0, 0, 7); ctx.stroke(); }
   const a = ASSETS.penduduk, wk = ASSETS.penduduk_kerja, variant = v.color % 4, px = v.x * T + 16 + off, py = v.y * T + 16;
   const im = a.images && (a.images[variant] || a.image), wim = wk.images && (wk.images[variant] || wk.image);
   const asleep = v.task && v.task.asleep, t = performance.now() / 1000 + v.id * 0.37, dir = v.dir || 0;
@@ -509,7 +540,7 @@ function ui() {
   const era = C.ERAS[S.era | 0], next = C.ERAS[(S.era | 0) + 1];
   setHTML('era', `<b>${era.nama}</b>` + (next ? `<br>Menuju <b>${next.nama}</b>:<br>` + eraReqStatus(next).map(([t, ok]) => `${ok ? '✅' : '▫️'} ${t}`).join('<br>') : '<br>Era tertinggi tercapai!'));
   document.querySelectorAll('[data-b]').forEach(bt => { const k = bt.dataset.b; if (k) bt.disabled = !unlocked(k) || !canAfford(C.BUILDINGS[k].cost); });
-  setHTML('quest', questUI());
+  setHTML('quest', questUI()); villagerPanelUI();
   setHTML('log', S.log.slice(0, 15).map(l => `<div>${l}</div>`).join(''));
 }
 function buildBuildBar() {
@@ -520,6 +551,7 @@ function buildPrioUI() {
     `<button data-p="${k}" data-n="${n}" class="${S.prio[k] === n ? 'on' : ''}">${n ? n : 'Off'}</button>`).join('')}</span></div>`).join('');
 }
 document.addEventListener('click', e => { const d = e.target.dataset; if (!d) return;
+  if (e.target.id === 'vpClose') closeVillager();
   if (d.ev !== undefined) chooseEvent(+d.ev);
   const vrow = e.target.closest && e.target.closest('[data-vid]'); if (vrow) openVillager(+vrow.dataset.vid);
   if (e.target.id === 'tutNext') { S.tutorialStep++; tutorialUI(); }
@@ -542,7 +574,9 @@ window.addEventListener('keydown', e => { const k = { ArrowLeft: [-1, 0], a: [-1
 $('zin').onclick = () => { const Z = C.ZOOM_LEVELS, i = Z.indexOf(cam.zoom); setZoom(Z[Math.min(Z.length - 1, i + 1)]); };
 $('zout').onclick = () => { const Z = C.ZOOM_LEVELS, i = Z.indexOf(cam.zoom); setZoom(Z[Math.max(0, i - 1)]); };
 cv.addEventListener('click', e => { if (drag && drag.moved) return; const p = scr(e), t = screenToTile(p.x, p.y); mouse.x = t.x; mouse.y = t.y;
-  if (!placing) return; const d = C.BUILDINGS[placing];
+  if (!placing) { const wx = (cam.x + p.x / cam.zoom) / T - 0.5, wy = (cam.y + p.y / cam.zoom) / T - 0.4;
+    const v = nearest(S.villagers.filter(o => Math.hypot(o.x - wx, o.y - wy) < 0.8), { x: wx, y: wy }); if (v) openVillager(v.id); return; }
+  const d = C.BUILDINGS[placing];
   if (!canAfford(d.cost)) return log(`Bahan tidak cukup untuk ${d.nama}.`);
   if (!validSpot(placing, mouse.x, mouse.y)) return;
   for (const [k, n] of Object.entries(d.cost)) S.res[k] -= n;

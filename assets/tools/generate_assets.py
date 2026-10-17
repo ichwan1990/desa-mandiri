@@ -607,11 +607,365 @@ def night():
         if src=='hut': rect(im,29,43,35,56,'fire'); rect(im,30,48,34,56,'fire_l')
         else: rect(im,43,65,53,88,'fire'); rect(im,45,70,51,88,'fire_l')
         save(im,f'buildings/night/{src}_night.png',note='versi malam tahap-1, jendela/pintu menyala')
+# =====================================================================
+# TAHAP 3 (hanya menambah file baru; output tahap 1-2 tidak berubah)
+# =====================================================================
+PALETTE.update({'dusk':(150,70,120,90),'dawn':(250,186,140,70),'parch':(246,230,190),'parch_d':(222,196,146),
+                'leather':(160,98,60),'brick':(196,92,64),'brick_d':(150,64,52),'gold':(246,196,64),'gold_d':(196,138,40),'silver':(214,214,226)})
+FONT={  # 5x7, '#'=isi
+'A':[" ### ","#   #","#   #","#####","#   #","#   #","#   #"],'B':["#### ","#   #","#   #","#### ","#   #","#   #","#### "],
+'D':["#### ","#   #","#   #","#   #","#   #","#   #","#### "],'E':["#####","#    ","#    ","#### ","#    ","#    ","#####"],
+'G':[" ####","#    ","#    ","#  ##","#   #","#   #"," ### "],'H':["#   #","#   #","#   #","#####","#   #","#   #","#   #"],
+'I':["#####","  #  ","  #  ","  #  ","  #  ","  #  ","#####"],'K':["#   #","#  # ","# #  ","##   ","# #  ","#  # ","#   #"],
+'L':["#    ","#    ","#    ","#    ","#    ","#    ","#####"],'M':["#   #","## ##","# # #","# # #","#   #","#   #","#   #"],
+'N':["#   #","##  #","# # #","#  ##","#   #","#   #","#   #"],'O':[" ### ","#   #","#   #","#   #","#   #","#   #"," ### "],
+'P':["#### ","#   #","#   #","#### ","#    ","#    ","#    "],'R':["#### ","#   #","#   #","#### ","# #  ","#  # ","#   #"],
+'S':[" ####","#    ","#    "," ### ","    #","    #","#### "],'T':["#####","  #  ","  #  ","  #  ","  #  ","  #  ","  #  "],
+'U':["#   #","#   #","#   #","#   #","#   #","#   #"," ### "],' ':["     "]*7,'.':["     "]*6+["  #  "],
+}
+def text_mask(txt,sc,gap=1):
+    w=(len(txt)*(5+gap)-gap)*sc; m=Image.new('L',(w,7*sc),0); d=ImageDraw.Draw(m)
+    for i,ch in enumerate(txt):
+        g=FONT[ch]
+        for y,row in enumerate(g):
+            for x,c in enumerate(row):
+                if c=='#': d.rectangle([(i*(5+gap)+x)*sc,y*sc,(i*(5+gap)+x)*sc+sc-1,y*sc+sc-1],fill=255)
+    return m
+def text_img(txt,sc,cols,outline_px=1,shadow_px=1):
+    m=text_mask(txt,sc); pad=outline_px+shadow_px+1
+    im=new(m.width+pad*2,m.height+pad*2); fill=new(m.width,m.height)
+    for y in range(m.height):
+        c=cols[min(len(cols)-1,y*len(cols)//m.height)]; ImageDraw.Draw(fill).line([(0,y),(m.width,y)],fill=P(c))
+    # highlight
+    for y in range(m.height):
+        for x in range(m.width):
+            if m.getpixel((x,y)) and (y==0 or not m.getpixel((x,y-1))) and len(cols)>2: fill.putpixel((x,y),P('white') if sc>2 else fill.getpixel((x,y)))
+    body=new(m.width,m.height); body.paste(fill,(0,0),m); im.paste(body,(pad-shadow_px//2*0,pad))
+    for _ in range(outline_px): im=outline(im)
+    if shadow_px:
+        sh=new(im.width,im.height); a=im.split()[3]; s=Image.new('RGBA',im.size,P('outline')); sh.paste(s,(0,shadow_px),a)
+        im=Image.alpha_composite(sh,im)
+    return im
+def logo_img():
+    top=text_img('DESA',3,['leaf_l','leaf','leaf_d'],2,2); bot=text_img('MANDIRI',4,['fire_l','fire','roof','roof_d'],2,3)
+    W=max(top.width,bot.width)+8; H=top.height+bot.height+10
+    im=new(W,H); im.alpha_composite(top,((W-top.width)//2,6)); im.alpha_composite(bot,((W-bot.width)//2,top.height+2))
+    # tunas daun di atas huruf D
+    sp=new(16,12); d=ImageDraw.Draw(sp); rect(sp,7,5,8,11,'leaf_d'); ell(sp,(1,2,7,7),'leaf_l'); ell(sp,(8,0,14,6),'leaf'); px(sp,3,3,'white')
+    sp=outline(sp); im.alpha_composite(sp,((W-top.width)//2+2,0))
+    # sparkle magis
+    for x,y in((W-14,8),(10,H-14),(W-26,H-10)):
+        px(im,x,y,'white'); [px(im,x+a,y+b,'magic_l') for a,b in((1,0),(-1,0),(0,1),(0,-1))]; [px(im,x+2*a,y+2*b,'magic') for a,b in((1,0),(-1,0),(0,1),(0,-1))]
+    return im
+def logos():
+    lg=logo_img()
+    for s in(1,2,4): save(lg.resize((lg.width*s,lg.height*s),Image.NEAREST),f'ui/logo/logo_{s}x.png',note=f'logo {s}x (nearest)')
+    ic=new(); ell(ic,(2,4,29,30),'leaf'); ell(ic,(4,5,27,22),'leaf_l')
+    t=text_img('DM',2,['fire_l','fire','roof_d'],1,1) if 'M' in FONT else None
+    ic=outline(ic); ic.alpha_composite(t,((32-t.width)//2,10)); save(ic,'ui/logo/logo_icon_32.png',note='ikon/favicon 32x32')
+    save(ic.resize((64,64),Image.NEAREST),'ui/logo/logo_icon_64.png',note='ikon 64x64'); return lg
+def build_title_scene():
+    """640x360 scene desa dari aset tahap 1-2."""
+    W,H=20,12; R=lambda p:Image.open(os.path.join(ROOT,p)).convert('RGBA')
+    idx={m:i for i,m in enumerate(BLOB_MASKS)}
+    water=[[1 if (x>=16 or (x==15 and y>=7)) else 0 for x in range(W)] for y in range(H)]
+    path=[[1 if (y==8 and 2<=x<=15) or (x==8 and 4<=y<=11) else 0 for x in range(W)] for y in range(H)]
+    def bt(sheet,grid,x,y):
+        m=0
+        for k,(dx,dy) in OFF.items():
+            X,Y=x+dx,y+dy
+            if not(0<=Y<H and 0<=X<W) or grid[Y][X]: m|=BIT[k]
+        i=idx[blob_normalize(m)]; return sheet.crop(((i%8)*32,(i//8)*32,(i%8)*32+32,(i//8)*32+32))
+    sc=Image.new('RGBA',(640,384)); g=R('tiles/grass.png'); gf=R('tiles/grass_flowers.png')
+    ws=R('tiles/autotile_water_grass.png'); ps=R('tiles/autotile_path_grass.png'); r=random.Random(2)
+    for y in range(H):
+        for x in range(W):
+            t=bt(ws,water,x,y) if water[y][x] else bt(ps,path,x,y) if path[y][x] else (gf if r.random()<.15 else g)
+            sc.paste(t,(x*32,y*32))
+    def put(p,tx,ty,crop=None,dy=0):
+        im=R(p); im=im.crop(crop) if crop else im; sc.alpha_composite(im,(tx*32,ty*32+32-im.height+dy))
+    for tx,ty in((0,5),(1,10),(18,1) if False else (14,5),(0,8),(19,11) if False else (13,11)): put('nature/tree.png',tx,ty)
+    put('buildings/wooden_house.png',3,7); put('buildings/hut.png',10,7); put('buildings/kitchen.png',12,7)
+    put('buildings/bridge_h.png',15,8,(0,0,32,32)); put('buildings/bridge_h.png',16,8,(32,0,64,32)); put('buildings/bridge_h.png',17,8,(32,0,64,32)); put('buildings/bridge_h.png',18,8,(32,0,64,32)); put('buildings/bridge_h.png',19,8,(64,0,96,32))
+    sc.alpha_composite(R('effects/campfire_glow.png'),(7*32-32,9*32-32)); put('buildings/campfire.png',8,9,(32,0,64,32))
+    for i,x in enumerate(range(2,6)): put('nature/crops/crop_wheat.png',x,10,(128,0,160,32)); put('nature/crops/crop_carrot.png',x,11,(96,0,128,32))
+    put('characters/villager_1.png',7,9,(0,64,32,96)); put('characters/villager_2.png',9,9,(0,32,32,64)); put('characters/villager_3_work.png',11,10,(0,32*8,32,32*9))
+    put('nature/berry_bush_full.png',1,7); put('nature/rock.png',14,10); put('nature/tree.png',6,6)
+    return sc.crop((0,24,640,384))
+def title_screens(lg):
+    sc=build_title_scene()
+    # pita gelap lembut di atas agar logo terbaca
+    band=new(640,360); d=ImageDraw.Draw(band)
+    for y in range(150): d.line([(0,y),(640,y)],fill=(40,30,50,int(130*(1-y/150))))
+    sc=Image.alpha_composite(sc,band)
+    l2=lg.resize((lg.width*2,lg.height*2),Image.NEAREST); sc.alpha_composite(l2,((640-l2.width)//2,18))
+    t=text_img('TEKAN UNTUK MULAI',1,['white'],1,1); t=t.resize((t.width*2,t.height*2),Image.NEAREST)
+    pn=new(t.width+16,t.height+8); rect(pn,0,0,pn.width-1,pn.height-1,'outline'); rect(pn,1,1,pn.width-2,pn.height-2,'wood_d')
+    pn.alpha_composite(t,(8,4)); sc.alpha_composite(pn,((640-pn.width)//2,318))
+    save(sc,'ui/title/title_640x360.png',note='layar judul')
+    save(sc.resize((1280,720),Image.NEAREST),'ui/title/title_1280x720.png',note='layar judul (2x nearest)')
+    bg=build_title_scene(); save(bg,'ui/title/title_bg_640x360.png',note='scene tanpa logo/teks (untuk disusun sendiri)')
+# ---------- UI SKIN ----------
+def panel(fill='parch',fill_d='parch_d',frame=('wood_d','wood','wood_l'),size=48):
+    im=new(size,size); s=size-1
+    rect(im,0,0,s,s,'outline'); rect(im,1,1,s-1,s-1,frame[0]); rect(im,2,2,s-2,s-2,frame[1]); rect(im,2,2,s-2,2,frame[2]); rect(im,2,2,2,s-2,frame[2])
+    rect(im,5,5,s-5,s-5,frame[0]); rect(im,6,6,s-6,s-6,fill); rect(im,6,6,s-6,7,fill_d); rect(im,6,6,7,s-6,fill_d)
+    for x,y in((3,3),(s-3,3),(3,s-3),(s-3,s-3)): px(im,x,y,'gold'); px(im,x+1 if x<9 else x-1,y,'gold_d')
+    for p_ in((0,0),(s,0),(0,s),(s,s)): im.putpixel(p_,(0,0,0,0))
+    return im
+def button(state):
+    im=new(64,24); face={'normal':('wood_l','straw_l'),'hover':('straw','straw_l'),'pressed':('wood','wood_l'),'disabled':('stone','stone_l')}[state]
+    lip='stone_d' if state=='disabled' else 'wood_d'; off=2 if state=='pressed' else 0
+    rect(im,0,off,63,23,'outline'); rect(im,1,1+off,62,22,lip); rect(im,1,1+off,62,19 if state!='pressed' else 21,face[0]); rect(im,2,2+off,61,2+off,face[1])
+    for p_ in((0,off),(63,off),(0,23),(63,23)): im.putpixel(p_,(0,0,0,0))
+    return im
+def tab(active):
+    im=new(64,24); y0=0 if active else 4
+    rect(im,0,y0,63,23,'outline'); rect(im,1,y0+1,62,23,'parch' if active else 'wood'); rect(im,2,y0+1,61,y0+2,'white' if active else 'wood_l')
+    if active: rect(im,1,23,62,23,'parch')
+    im.putpixel((0,y0),(0,0,0,0)); im.putpixel((63,y0),(0,0,0,0)); return im
+def ui_skin():
+    save(panel(),'ui/skin/panel.png',note='9-slice, margin 8px semua sisi (inset konten 6px)')
+    save(panel('wood_l','wood',('outline','wood_d','wood')),'ui/skin/panel_wood.png',note='9-slice, margin 8px; varian kayu (HUD)')
+    sh=new(256,24)
+    for i,s in enumerate(['normal','hover','pressed','disabled']):
+        b=button(s); save(b,f'ui/skin/button_{s}.png',note='9-slice, margin kiri/kanan 6, atas 4, bawah 6'); sh.paste(b,(i*64,0))
+    save(sh,'ui/skin/button_states.png',(64,24),4,'urutan: normal, hover, pressed, disabled')
+    save(tab(True),'ui/skin/tab_active.png',note='9-slice margin 6 (bawah 0, menyatu dengan panel)'); save(tab(False),'ui/skin/tab_inactive.png',note='9-slice margin 6')
+    tt=new(24,24); rect(tt,0,0,23,23,'outline'); rect(tt,1,1,22,22,'cloth_d'); rect(tt,2,2,21,2,'magic'); [tt.putpixel(p_,(0,0,0,0)) for p_ in((0,0),(23,0),(0,23),(23,23))]
+    save(tt,'ui/skin/tooltip.png',note='9-slice, margin 4px; teks putih')
+    ar=new(8,5); ImageDraw.Draw(ar).polygon([(0,0),(7,0),(3.5,4)],fill=P('outline')); ImageDraw.Draw(ar).polygon([(1,0),(6,0),(3.5,3)],fill=P('cloth_d'))
+    save(ar,'ui/skin/tooltip_arrow.png',note='taruh di bawah tooltip, menunjuk ke bawah')
+    bf=new(64,12); rect(bf,0,0,63,11,'outline'); rect(bf,1,1,62,10,'wood_d'); rect(bf,2,2,61,9,'cloth_d'); [bf.putpixel(p_,(0,0,0,0)) for p_ in((0,0),(63,0),(0,11),(63,11))]
+    save(bf,'ui/skin/bar_frame.png',note='9-slice margin 3; area isi x2..61, y2..9')
+    for n,c,cl in(('red','berry','berry_l'),('blue','water','water_l'),('yellow','fire_l','fire_w'),('green','grass','grass_l'),('purple','magic','magic_l')):
+        f=new(8,8); rect(f,0,0,7,7,c); rect(f,0,0,7,1,cl); rect(f,0,7,7,7,'outline') if False else None; save(f,f'ui/skin/bar_fill_{n}.png',note='stretch horizontal mengisi area bar')
+    cb=new(16,16); rect(cb,0,0,15,15,'outline'); rect(cb,1,1,14,14,'parch'); save(cb,'ui/skin/checkbox_off.png')
+    cb2=cb.copy(); d=ImageDraw.Draw(cb2); d.line([(3,8),(6,11),(12,4)],fill=P('leaf_d'),width=2); save(cb2,'ui/skin/checkbox_on.png')
+# ---------- ICONS ----------
+def icon_draw(fn):
+    im=new(); fn(im,ImageDraw.Draw(im)); return outline(im)
+def I_hunger(im,d):  # paha ayam / makanan
+    ell(im,(6,6,22,22),'wood_l'); ell(im,(8,7,18,15),'dirt_l'); d.line([(19,19),(26,26)],fill=P('white'),width=3); ell(im,(24,22,29,27),'white'); ell(im,(22,25,27,30),'white')
+def I_thirst(im,d):
+    d.polygon([(8,8),(24,8),(22,28),(10,28)],fill=P('stone_l')); d.polygon([(10,14),(22,14),(21,27),(11,27)],fill=P('water')); rect(im,11,15,13,24,'water_l'); rect(im,7,6,25,8,'stone')
+def I_energy(im,d):
+    ell(im,(5,5,25,27),'fire_l'); ell(im,(11,2,29,22),(0,0,0,0)) if False else None
+    m=new(); ell(m,(11,1,29,21),'white'); a=m.split()[3]; im.paste((0,0,0,0),(0,0),a)
+    ell(im,(8,10,12,14),'fire_w');
+    for x,y in((22,18),(26,12)): d.line([(x,y),(x+3,y),(x,y+3),(x+3,y+3)],fill=P('water_l'))
+def I_mood(im,d):
+    ell(im,(4,4,27,27),'fire_l'); ell(im,(6,5,20,15),'fire_w'); rect(im,10,11,11,14,'black'); rect(im,20,11,21,14,'black'); d.arc((9,12,22,23),20,160,fill=P('black'),width=2); px(im,8,17,'berry_l'); px(im,23,17,'berry_l')
+def I_mood_sad(im,d):
+    ell(im,(4,4,27,27),'water_l'); rect(im,10,11,11,14,'black'); rect(im,20,11,21,14,'black'); d.arc((9,18,22,28),200,340,fill=P('black'),width=2); rect(im,21,15,21,18,'water')
+def I_health(im,d):
+    ell(im,(4,6,16,18),'berry'); ell(im,(15,6,27,18),'berry'); d.polygon([(5,14),(26,14),(16,26)],fill=P('berry')); ell(im,(7,8,12,12),'berry_l'); px(im,8,9,'white')
+def I_warmth(im,d):
+    d.polygon([(8,26),(16,4),(24,26)],fill=P('fire_d')); d.polygon([(11,26),(16,10),(21,26)],fill=P('fire')); d.polygon([(13,26),(16,16),(19,26)],fill=P('fire_l'))
+def I_sleep(im,d):
+    rect(im,4,16,27,24,'wood'); rect(im,4,13,10,18,'white'); rect(im,10,15,27,20,'cloth2'); rect(im,4,24,5,27,'wood_d'); rect(im,26,24,27,27,'wood_d')
+    for x,y in((16,4),(22,8)): d.line([(x,y),(x+3,y),(x,y+3),(x+3,y+3)],fill=P('magic'))
+def axe(d,ox=0,oy=0):
+    d.line([(8+ox,26+oy),(22+ox,8+oy)],fill=P('wood'),width=3); d.polygon([(18+ox,4+oy),(27+ox,7+oy),(25+ox,15+oy),(20+ox,11+oy)],fill=P('stone_l'))
+def S_chop(im,d): axe(d); ell(im,(3,22,13,30),'leaf')
+def S_mine(im,d):
+    d.line([(7,27),(21,9)],fill=P('wood'),width=3); d.arc((6,2,30,22),190,320,fill=P('stone_l'),width=3); ell(im,(18,22,28,30),'stone')
+def S_gather(im,d):
+    d.arc((7,4,25,22),180,360,fill=P('wood_d'),width=2); d.polygon([(5,14),(27,14),(24,28),(8,28)],fill=P('straw')); [d.line([(x,15),(x,27)],fill=P('straw_d')) for x in(11,16,21)]
+    for x,y in((9,10),(14,8),(19,10),(23,12)): ell(im,(x-2,y,x+2,y+4),'berry'); px(im,x-1,y+1,'berry_l')
+def S_build(im,d):
+    rect(im,4,22,27,27,'wood_l'); rect(im,4,22,27,22,'wood'); d.line([(10,20),(22,8)],fill=P('wood'),width=3); rect(im,17,3,27,9,'stone'); rect(im,17,3,27,4,'stone_l')
+def S_farm(im,d):
+    for x in(10,16,22): d.line([(x,28),(x+(x-16)//3,10)],fill=P('straw_d'),width=2); ell(im,(x-3+(x-16)//3,4,x+2+(x-16)//3,13),'wheat')
+    rect(im,8,20,24,22,'leaf')
+def S_hunt(im,d):
+    d.arc((2,2,22,30),300,60,fill=P('wood'),width=3); d.line([(14,3),(14,29)],fill=P('white')); d.line([(6,16),(28,16)],fill=P('wood_d'),width=2); d.polygon([(26,13),(30,16),(26,19)],fill=P('stone_l')); rect(im,4,14,7,18,'roof')
+def T_tools(im,d):
+    d.line([(6,26),(24,8)],fill=P('wood'),width=3); rect(im,19,3,28,9,'stone_d'); d.line([(6,8),(24,26)],fill=P('wood_l'),width=3); d.polygon([(3,4),(10,3),(11,9),(5,11)],fill=P('stone_l'))
+def T_planks(im,d):
+    for i,y in enumerate((8,15,22)): rect(im,4+i,y,27-i,y+5,'wood_l' if i%2 else 'wood'); rect(im,4+i,y,27-i,y,'dirt_l'); px(im,8+i*4,y+2,'wood_d')
+def T_bricks(im,d):
+    for r_,y in enumerate((8,15,22)):
+        for x in range(4 - (r_%2)*5, 28, 10):
+            x0=max(4,x); x1=min(27,x+8); rect(im,x0,y,x1,y+5,'brick'); rect(im,x0,y,x1,y,'roof_l'); rect(im,x0,y+5,x1,y+5,'brick_d')
+def T_bread(im,d):
+    ell(im,(3,10,28,26),'wood_l'); ell(im,(5,10,26,20),'straw'); [d.line([(x,12),(x+3,18)],fill=P('wood_l'),width=1) for x in(9,14,19)]; ell(im,(7,11,13,14),'straw_l')
+def T_leather(im,d):
+    d.polygon([(10,5),(22,5),(28,11),(24,14),(23,28),(9,28),(8,14),(4,11)],fill=P('leather')); rect(im,13,5,19,8,'wood_d'); d.line([(16,10),(16,26)],fill=P('wood'))
+def T_farming(im,d): S_farm(im,d); rect(im,4,26,27,28,'dirt')
+def T_wheat(im,d):
+    for x in(11,16,21): d.line([(16,28),(x,8)],fill=P('straw_d'),width=2); ell(im,(x-3,3,x+3,13),'wheat'); px(im,x-1,5,'straw_l')
+    rect(im,12,19,20,21,'roof')
+def T_well(im,d):
+    ell(im,(5,16,26,28),'stone_d'); ell(im,(5,13,26,24),'stone_l'); ell(im,(8,15,23,22),'water'); rect(im,6,4,7,18,'wood_d'); rect(im,24,4,25,18,'wood_d'); rect(im,4,3,27,5,'roof')
+def T_storage(im,d):
+    rect(im,5,10,26,27,'wood_l'); rect(im,5,10,26,12,'wood'); d.line([(5,12),(26,27)],fill=P('wood_d'),width=2); d.line([(26,12),(5,27)],fill=P('wood_d'),width=2)
+def E_tent(im,d):
+    d.polygon([(3,27),(16,5),(29,27)],fill=P('cloth4')); d.polygon([(13,27),(16,15),(19,27)],fill=P('wood_d')); d.line([(16,5),(3,27)],fill=P('straw_l'))
+def E_hamlet(im,d):
+    rect(im,7,16,25,27,'wood_l'); d.polygon([(3,17),(16,5),(29,17)],fill=P('straw')); rect(im,14,20,18,27,'wood_d')
+def E_farmv(im,d):
+    rect(im,4,18,18,27,'wood_l'); d.polygon([(2,19),(11,10),(20,19)],fill=P('roof')); T_wheat_small(im,d)
+def T_wheat_small(im,d):
+    for x in(22,26): d.line([(x,28),(x,14)],fill=P('straw_d'),width=1); ell(im,(x-2,10,x+2,16),'wheat')
+def E_town(im,d):
+    rect(im,4,14,27,27,'wood_l'); d.polygon([(2,15),(16,5),(30,15)],fill=P('roof')); rect(im,13,2,18,8,'wood_l'); ell(im,(13,8,18,13),'white'); rect(im,13,19,18,27,'wood_d'); rect(im,6,18,9,21,'water_l'); rect(im,22,18,25,21,'water_l')
+RES_EXTRA={'wheat':T_wheat,'bread':T_bread,'planks':T_planks,'bricks':T_bricks,'tools':T_tools,'leather':T_leather}
+def S_fish(im,d):
+    ell(im,(4,10,24,22),'water'); ell(im,(6,11,20,16),'water_l'); d.polygon([(22,16),(29,9),(29,23)],fill=P('water_d')); rect(im,8,14,9,15,'black')
+def S_meat(im,d):
+    ell(im,(5,7,23,25),'berry'); ell(im,(8,9,18,17),'berry_l'); ell(im,(11,12,16,17),'white'); d.line([(20,20),(27,27)],fill=P('white'),width=3)
+def S_fruit(im,d):
+    for x,y in((10,16),(18,18),(14,10)): ell(im,(x-5,y-5,x+5,y+5),'berry'); px(im,x-2,y-2,'berry_l'); px(im,x-1,y-3,'white')
+    ell(im,(15,2,24,7),'leaf')
+def icons3():
+    sets={'needs':{'hunger':I_hunger,'thirst':I_thirst,'energy':I_energy,'mood':I_mood,'mood_sad':I_mood_sad,'health':I_health,'warmth':I_warmth,'sleep':I_sleep},
+          'skills':{'chop':S_chop,'mine':S_mine,'gather':S_gather,'build':S_build,'farm':S_farm,'hunt':S_hunt},
+          'tech':{'tools':T_tools,'planks':T_planks,'bricks':T_bricks,'bread':T_bread,'leather':T_leather,'farming':T_farming,'well':T_well,'storage':T_storage,
+                  'era_camp':E_tent,'era_hamlet':E_hamlet,'era_farm_village':E_farmv,'era_town':E_town},
+          'resources':{'wheat':T_wheat,'bread':T_bread,'planks':T_planks,'bricks':T_bricks,'tools':T_tools,'leather':T_leather,'fish':S_fish,'meat':S_meat,'fruit':S_fruit}}
+    names={'needs':'need','skills':'skill','tech':'tech','resources':'icon'}
+    for grp,fs in sets.items():
+        for k,fn in fs.items(): save(icon_draw(fn),f'icons/{grp}/{names[grp]}_{k}.png')
+    return sets
+# ---------- ACHIEVEMENTS ----------
+def medal(inner_fn,col,coll,cold):
+    im=new(); d=ImageDraw.Draw(im)
+    d.polygon([(9,18),(5,30),(10,27),(13,31),(15,20)],fill=P('roof')); d.polygon([(23,18),(27,30),(22,27),(19,31),(17,20)],fill=P('cloth2'))
+    ell(im,(4,1,27,24),cold); ell(im,(5,1,26,22),col); ell(im,(8,4,23,19),coll)
+    ins=new(); inner_fn(ins,ImageDraw.Draw(ins)); ins=ins.resize((16,16),Image.NEAREST)
+    im.alpha_composite(ins,(8,4)); return outline(im)
+def achievements():
+    lst=[('first_fire',I_warmth,'gold'),('first_house',E_hamlet,'gold'),('first_harvest',T_wheat,'gold'),('population_10',I_mood,'silver'),
+         ('survive_winter',lambda im,d:(ell(im,(6,6,26,26),'snow'),[d.line(l,fill=P('ice_d'),width=2) for l in(((16,4),(16,28)),((4,16),(28,16)),((7,7),(25,25)),((25,7),(7,25)))]),'silver'),
+         ('master_skill',S_build,'gold'),('town_founded',E_town,'gold'),('rich_storage',T_storage,'silver'),('locked',lambda im,d:(rect(im,9,14,22,26,'stone_d'),d.arc((10,5,21,20),180,360,fill=P('stone_d'),width=3)),'stone')]
+    for n,fn,c in lst:
+        cols={'gold':('gold','fire_w','gold_d'),'silver':('silver','white','stone'),'stone':('stone','stone_l','stone_d')}[c]
+        save(medal(fn,*cols),f'icons/achievements/ach_{n}.png',note='medali; ach_locked = belum terbuka')
+# ---------- SNOW ROOFS ----------
+ROOFC={k:PALETTE[k] for k in('roof','roof_d','roof_l','straw','straw_d','straw_l')}
+def snowify(src,roof_bottom,extra=()):
+    im=Image.open(os.path.join(ROOT,src)).convert('RGBA'); o=im.copy(); pxs=o.load(); w,h=im.size
+    mp={PALETTE['roof_l']:'snow_l',PALETTE['roof']:'snow',PALETTE['roof_d']:'snow_d',PALETTE['straw_l']:'snow_l',PALETTE['straw']:'snow',PALETTE['straw_d']:'snow_d'}
+    for c in extra: mp[PALETTE[c]]='snow_d' if c.endswith('_d') else 'snow'
+    for y in range(min(roof_bottom,h)):
+        for x in range(w):
+            c=im.getpixel((x,y))
+            if c[3]==255 and c[:3] in mp:
+                below=im.getpixel((x,y+1)) if y+1<h else (0,0,0,0)
+                if y+1<roof_bottom and (below[3]==255 and below[:3] in mp): pxs[x,y]=P(mp[c[:3]])
+    for y in range(1,h):
+        for x in range(w):
+            c=im.getpixel((x,y)); a=im.getpixel((x,y-1))
+            if c[3]==255 and c[:3]!=PALETTE['outline'] and a[:3]==PALETTE['outline'] and y<h*0.75:
+                pxs[x,y]=P('snow_l')
+                if y+1<h and o.getpixel((x,y+1))[3]==255 and o.getpixel((x,y+1))[:3]!=PALETTE['outline']: pxs[x,y+1]=P('snow')
+    r=random.Random(len(src))  # es menggantung di tepi atap
+    for x in range(w):
+        y=roof_bottom
+        if y<h and r.random()<.12 and o.getpixel((x,y-1))[3]==255:
+            for k in range(r.randrange(1,4)): pxs[x,min(h-1,y+k)]=P('ice_l')
+    return o
+def snow_roofs():
+    for src,rb,ex in(('buildings/hut.png',41,()),('buildings/warehouse.png',27,()),('buildings/well.png',21,()),('buildings/mine.png',30,('stone','stone_d','stone_l')),
+                     ('buildings/wooden_house.png',54,()),('buildings/kitchen.png',38,()),('buildings/workshop.png',30,('wood','wood_d')),('buildings/granary.png',42,()),
+                     ('buildings/market.png',28,()),('buildings/town_hall.png',55,()),('buildings/campfire.png',0,())):
+        name=os.path.basename(src)[:-4]; im=snowify(src,rb,ex)
+        f=[o for o in OUT if o['file']==src][0]
+        save(im,f'buildings/winter/{name}_winter.png',f['frame'],f['frames'],'atap bersalju; ukuran/anchor sama dengan '+src)
+    for src,rb in(('buildings/night/wooden_house_night.png',54),('buildings/night/hut_night.png',41),('buildings/night/kitchen_night.png',38),('buildings/night/town_hall_night.png',55),('buildings/night/granary_night.png',42)):
+        name=os.path.basename(src)[:-4]; save(snowify(src,rb),f'buildings/winter/{name}_winter.png',note='malam + salju')
+def bridge_rails():
+    back=new(96,32); front=new(96,32)
+    for im,y in((back,0),(front,22)):
+        rect(im,0,y+3,95,y+4,'wood_l'); rect(im,0,y+5,95,y+5,'wood_d')
+        for x in(1,31,63,93): rect(im,x,y,x+2,y+8,'wood'); rect(im,x,y,x+2,y,'wood_l')
+    save(outline(back),'buildings/bridge_rail_h_back.png',(32,32),3,'pagar sisi utara; gambar SEBELUM karakter; tile = bridge_h')
+    save(outline(front),'buildings/bridge_rail_h_front.png',(32,32),3,'pagar sisi selatan; gambar SETELAH karakter')
+    v=new(32,96)
+    for x in(3,26):
+        rect(v,x,0,x+1,95,'wood_l'); rect(v,x+2,0,x+2,95,'wood_d')
+        for y in(0,30,62,90): rect(v,x-1,y,x+3,y+4,'wood')
+    save(outline(v),'buildings/bridge_rail_v.png',(32,32),3,'pagar kiri+kanan; tumpuk di atas bridge_v; gambar setelah karakter')
+def dusk_dawn():
+    save(Image.new('RGBA',(32,32),PALETTE['dusk']),'effects/night/dusk_overlay.png',note='senja RGBA (150,70,120,90)')
+    save(Image.new('RGBA',(32,32),PALETTE['dawn']),'effects/night/dawn_overlay.png',note='fajar RGBA (250,186,140,70)')
+    g=new(320,180); d=ImageDraw.Draw(g)
+    for y in range(180): d.line([(0,y),(320,y)],fill=(250,150,90,int(90*(1-y/180))))
+    save(g,'effects/night/dusk_gradient.png',note='opsional, stretch ke layar; tambahan langit sore di atas dusk_overlay')
+# ---------- CARRY VARIANTS ----------
+def carry_item(kind,bob):
+    t=new(); y=1-bob
+    if kind=='wood':
+        for i,yy in enumerate((y+3,y)): rect(t,8,yy,23,yy+3,'wood'); rect(t,8,yy,23,yy,'wood_l'); ell(t,(20,yy,24,yy+3),'dirt_l')
+    elif kind=='stone':
+        ImageDraw.Draw(t).polygon([(9,y+7),(10,y+1),(16,y-1),(22,y+1),(23,y+7)],fill=P('stone')); rect(t,10,y+5,22,y+7,'stone_d'); px(t,13,y+1,'stone_l'); px(t,14,y+1,'stone_l')
+    elif kind=='food':
+        ImageDraw.Draw(t).polygon([(8,y+2),(23,y+2),(21,y+8),(10,y+8)],fill=P('straw')); rect(t,8,y+2,23,y+2,'straw_d')
+        for x in(10,13,16,19,21): ell(t,(x-1,y-1,x+2,y+2),'berry' if x%2 else 'carrot'); 
+    elif kind=='water':
+        ImageDraw.Draw(t).polygon([(10,y),(21,y),(20,y+8),(11,y+8)],fill=P('wood')); rect(t,10,y,21,y+1,'water_l'); rect(t,10,y+4,21,y+4,'wood_d'); rect(t,10,y,21,y,'water')
+    return outline(t)
+def villagers_carry():
+    dirs=['down','left','right','up']; kinds=['wood','stone','food','water']
+    for i,v in enumerate(VARS):
+        sh=new(128,512)
+        for k,kind in enumerate(kinds):
+            for r_,dn in enumerate(dirs):
+                for f in range(4):
+                    bob=1 if f in(1,3) else 0; im=villager_frame(v,dn,f,True); it=carry_item(kind,bob)
+                    rect(it,8,7-bob,9,9-bob,v[0]); rect(it,22,7-bob,23,9-bob,v[0]); im.alpha_composite(it); sh.paste(im,(f*32,(k*4+r_)*32))
+        save(sh,f'characters/villager_{i+1}_carry.png',(32,32),64,'16 baris x 4 kolom: 0-3 kayu, 4-7 batu, 8-11 makanan, 12-15 air; arah tiap kelompok bawah,kiri,kanan,atas; siklus jalan')
+# ---------- MERCHANT ----------
+def merchant():
+    v=('skin2','hair4','magic'); sh=new(128,256)
+    def hat(im,oy):
+        h=new(); ell(h,(5,4+oy,26,11+oy),'straw'); ell(h,(10,0+oy,21,8+oy),'straw_l'); rect(h,10,5+oy,21,6+oy,'roof'); im.alpha_composite(outline(h))
+    for r_,dn in enumerate(['down','left','right','up']):
+        for f in range(4):
+            for walk,row in((False,r_),(True,r_+4)):
+                if not walk and f%2: im=villager_frame(v,dn,0,False); im2=new(); im2.paste(im.crop((0,0,32,27)),(0,1)); im2.paste(im.crop((0,27,32,32)),(0,27)); im=im2; oy=1
+                else: im=villager_frame(v,dn,f if walk else 0,walk); oy=-(1 if walk and f in(1,3) else 0)
+                bp=new()
+                if dn=='up': rect(bp,10,15+oy,21,24+oy,'leather'); rect(bp,10,15+oy,21,16+oy,'wood_d')
+                elif dn=='left': rect(bp,20,15+oy,24,24+oy,'leather')
+                elif dn=='right': rect(bp,7,15+oy,11,24+oy,'leather')
+                if dn=='up': im.alpha_composite(outline(bp))
+                else: b2=outline(bp); b2.alpha_composite(im); im=b2
+                hat(im,oy); sh.paste(im,(f*32,row*32))
+    save(sh,'characters/merchant.png',(32,32),32,'format = villager_N.png: baris 0-3 diam, 4-7 jalan (bawah,kiri,kanan,atas)')
+    cs=new(256,128)
+    for f in range(2):
+        for di,dn in enumerate(['down','left','right','up']):
+            im=new(64,64); d=ImageDraw.Draw(im)
+            if dn in('left','right'):
+                rect(im,8,26,52,46,'wood'); rect(im,8,26,52,28,'wood_l'); [rect(im,x,28,x,46,'wood_d') for x in(18,30,42)]
+                d.polygon([(6,26),(10,10),(50,10),(54,26)],fill=P('cloth_l')); [d.line([(x,10),(x-2+ (x-30)//10,26)],fill=P('roof'),width=3) for x in(16,30,44)]
+                for x in(14,22,40): ell(im,(x,20,x+5,26),'berry' if x<30 else 'wheat')
+                wx=20; ell(im,(wx-7,38,wx+7,52),'wood_d'); ell(im,(wx-5,40,wx+5,50),'wood_l'); a=f*45
+                d.line([(wx-4,45),(wx+4,45)] if f==0 else [(wx,41),(wx,49)],fill=P('wood_d'))
+                hx=(54,62) if dn=='right' else (0,8); d.line([(hx[0],42),(hx[1],44)],fill=P('wood_d'),width=2)
+                if dn=='left': im=im.transpose(Image.FLIP_LEFT_RIGHT) if False else im
+                if dn=='left':
+                    im2=im.transpose(Image.FLIP_LEFT_RIGHT); im=im2
+                    d=ImageDraw.Draw(im)
+            else:
+                rect(im,14,22,49,52,'wood'); rect(im,14,22,49,24,'wood_l'); [rect(im,14,y,49,y,'wood_d') for y in(32,42)]
+                d.polygon([(12,24),(16,8),(48,8),(52,24)],fill=P('cloth_l')); [d.line([(x,8),(x,24)],fill=P('roof'),width=3) for x in(22,32,42)]
+                for x in(10,48): rect(im,x,40,x+5,56,'wood_d'); rect(im,x+1,42+f*2,x+4,43+f*2,'wood_l'); rect(im,x+1,50-f*2,x+4,51-f*2,'wood_l')
+                if dn=='down': d.line([(28,52),(26,62)],fill=P('wood_d'),width=2); d.line([(36,52),(38,62)],fill=P('wood_d'),width=2)
+                else: d.line([(28,22),(26,4)],fill=P('wood_d'),width=2); d.line([(36,22),(38,4)],fill=P('wood_d'),width=2)
+            im=shadow(outline(im),32,54,24,4); cs.paste(im,(di*64,f*64))
+    save(cs,'characters/merchant_cart.png',(64,64),8,'4 kolom arah (bawah,kiri,kanan,atas) x 2 baris frame roda; ~200ms/frame; pegangan menunjuk arah gerak (pedagang berjalan di depan gerobak)')
+def stage3():
+    lg=logos(); title_screens(lg); ui_skin(); icons3(); achievements(); snow_roofs(); bridge_rails(); dusk_dawn(); villagers_carry(); merchant()
 
 if __name__=='__main__':
     tiles(); tree(); rock(); bush(True); bush(False); fields(); villagers(); campfire(); hut(); warehouse(); well(); mine(); wooden_house(); effects(); icons()
     for o in OUT: o['stage']=1
     winter_tiles(); autotiles(); winter_trees(); crops(); villagers_work(); adv_buildings(); night()
     for o in OUT: o.setdefault('stage',2)
+    stage3()
+    for o in OUT: o.setdefault('stage',3)
     json.dump(dict(palette=PALETTE,files=OUT),open(os.path.join(ROOT,'manifest.json'),'w'),indent=1)
     print(len(OUT),'files')
