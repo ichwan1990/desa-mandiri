@@ -63,10 +63,9 @@ window.THEMES = {
     ASSET_SWAP: { gubuk: 'gubuk_bambu', lumbung: 'lumbung_padi', menara_jaga: 'pos_ronda', pagar: 'pagar_bambu', obor: 'obor_bambu' },
     BUILDING_NAMES: { gubuk: 'Gubuk Bambu', lumbung: 'Lumbung Padi', menara_jaga: 'Pos Ronda', pagar: 'Pagar Bambu', obor: 'Oncor', ladang: 'Ladang (Tegalan)' },
     RES_LABEL: { gandum: 'Padi' }, // id internal tetap 'gandum' (save & quest tetap cocok)
-    // event bertema salju/serigala/empat musim dimatikan sampai TEKS versi Nusantara datang
-    EVENT_DISABLE: ['serigala_malam', 'musim_dingin_keras', 'embun_beku', 'pilek_musim_gugur', 'harga_pangan_melambung', 'bunga_semi', 'angin_gugur', 'jamur_hutan',
-      'burung_migrasi', 'dingin_ekstrem', 'badai_salju', 'malam_terpanjang', 'serigala_lapar', 'kelinci_ladang'],
-    EVENT_SEASON_ALIAS: { semi: 'hujan', panas: 'kemarau', gugur: 'mareng' },
+    // TEKS v1.4.0 sudah melokalkan semua event (id lama tetap, teks Nusantara) -> tidak ada yang dimatikan; musim event lama dipetakan ke musim tropis
+    EVENT_DISABLE: [],
+    EVENT_SEASON_ALIAS: { semi: 'hujan', panas: 'kemarau', gugur: 'mareng', dingin: 'kemarau' }, // = TEKS meta.alias_id_v140.musim
     EVENT_RULES: { panen_raya: { musim: ['mareng'] }, kekeringan: { musim: ['kemarau'] }, badai: { musim: ['mareng', 'labuh'] } },
     MARKET_MUSIM: { kemarau: { jual: { makanan: 1.25, gandum: 1.25 }, beli: { makanan: 1.4, gandum: 1.4 } }, hujan: { jual: { kayu: 0.9 } }, mareng: { jual: { makanan: 0.85, gandum: 0.9 } } },
     // teks bawaan (bahasa Indonesia) per kait; [pathTEKS atau null, cadangan]. Asisten Dokumen mengisi path saat TEKS Nusantara siap.
@@ -81,14 +80,14 @@ window.THEMES = {
       kayu_bakar: [null, 'Malam lembap: api unggun memakai {jumlah} kayu bakar per hari selama musim hujan.'],
       api_padam: [null, 'Kayu bakar habis! Api unggun meredup, malam terasa lembap.'],
       sulit_mulai: [null, 'Kemarau tiba. Sawah tanpa irigasi berhenti tumbuh, air cepat habis.'],
-      jejak: [null, 'Tanah teraduk dan jejak babi hutan terlihat di tepi hutan.'],
-      mendekat: [null, 'Suara dengusan babi hutan makin dekat. Penduduk bergegas pulang.'],
-      mengintai: [null, 'Babi hutan hanya mengendus di tepi hutan malam ini.'],
-      usai: [null, 'Fajar menyingsing. Babi hutan sudah kembali ke hutan.'],
-      serang: [null, 'Babi hutan menyeruduk {nama}! Kesehatannya turun {jumlah}.'],
-      rusak_ladang: [null, 'Babi hutan mengobrak-abrik ladang {tanaman}. Tanamannya rusak.'],
-      diusir: [null, 'Cahaya obor membuat babi hutan ragu. Ia berbalik ke hutan.'],
-      menara: [null, 'Dari menara, {nama} memukul kentongan. Babi hutan lari ke hutan.'],
+      jejak: ['log_ancaman.babi_hutan_jejak', 'Tanah teraduk dan jejak babi hutan terlihat di tepi hutan.'],
+      mendekat: ['log_ancaman.babi_hutan_mendekat', 'Suara dengusan babi hutan makin dekat. Penduduk bergegas pulang.'],
+      mengintai: ['log_ancaman.babi_hutan_mengintai', 'Babi hutan hanya mengendus di tepi hutan malam ini.'],
+      usai: ['log_ancaman.babi_hutan_usai', 'Fajar menyingsing. Babi hutan sudah kembali ke hutan.'],
+      serang: ['log_ancaman.babi_hutan_serang', 'Babi hutan menyeruduk {nama}! Kesehatannya turun {jumlah}.'],
+      rusak_ladang: ['log_ancaman.babi_hutan_rusak_ladang', 'Babi hutan mengobrak-abrik ladang {tanaman}. Tanamannya rusak.'],
+      diusir: ['log_ancaman.babi_hutan_diusir', 'Cahaya obor membuat babi hutan ragu. Ia berbalik ke hutan.'],
+      menara: ['log_ancaman.pos_ronda_usir', 'Dari menara, {nama} memukul kentongan. Babi hutan lari ke hutan.'],
     },
     TERMS: { hewan: 'babi hutan', ancaman: 'Babi hutan' },
     // tambalan teks di memori (file TEKS-GAME.json tidak diubah): path -> teks

@@ -1,5 +1,5 @@
 // Tema Nusantara P0 (docs/RISET-INDONESIA.md): musim hujan(9) mareng(5) kemarau(9) labuh(5), isHardSeason = kemarau, label Padi (id gandum),
-// tanaman tegalan (padi berhenti di kemarau tanpa irigasi; jagung/singkong tetap tumbuh x1.25), babi hutan merusak ladang, event bersalju mati,
+// tanaman tegalan (padi berhenti di kemarau tanpa irigasi; jagung/singkong tetap tumbuh x1.25), babi hutan merusak ladang, teks event tanpa salju/serigala,
 // panen raya hanya di mareng, aset tropis (tanpa salju). Simpan screenshot musim hujan, kemarau & malam.
 const { chromium } = require('playwright');
 const path = require('path'); const SHOT = n => path.join(__dirname, '..', 'docs', 'screenshots', n);
@@ -30,7 +30,7 @@ const path = require('path'); const SHOT = n => path.join(__dirname, '..', 'docs
     setDay(3, 0.3); out.hujanPadiDays = DESA.growDaysOf(padi); padi.stage = jag.stage = 'kosong'; padi.grow = jag.grow = 0;
     // event
     setDay(11); const ev = id => DESA.allEvents().find(e => e.id === id); out.panenMareng = DESA.eventAllowed(ev('panen_raya')); setDay(3); out.panenHujan = DESA.eventAllowed(ev('panen_raya'));
-    out.snowOff = ['serigala_malam', 'serigala_lapar', 'badai_salju', 'musim_dingin_keras'].every(id => !ev(id) || !DESA.eventAllowed(ev(id)));
+    out.snowOff = DESA.allEvents().every(e => !/salju|serigala|musim dingin/i.test(JSON.stringify({ ...e, id: '' }))); // TEKS v1.4.0: semua teks event sudah Nusantara
     // babi hutan: era perkemahan -> hanya merusak ladang, tidak melukai
     S.era = 0; setDay(6, 0.88); S.villagers.forEach(v => { v.task = null; v.health = 100; });
     L.forEach(x => { x.stage = 'tumbuh'; x.grow = 1; });
