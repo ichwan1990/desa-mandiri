@@ -215,19 +215,19 @@ function updateVillager(v, dt) {
       v.dir = 2; v.working = true; t.work += dt * workMult(v, SKILL_OF[t.res]);
       if (t.work >= C.GATHER_TIME[t.res]) { v.working = false; if (S.res.alat > 0) S.res.alat = Math.max(0, S.res.alat - C.TOOLS.wearPerHaul); const amt = Math.min(C.CARRY[t.res] + Math.round(techVal('carry_' + t.res, 0)), n.amount); n.amount -= amt;
         if (n.amount <= 0) n.regrow = n.type === 'semak' ? C.BUSH_REGROW_SEC : 0;
-        v.skills[SKILL_OF[t.res]] += C.SKILL_GAIN; v.carry = { res: t.res, n: amt };
+        v.skills[SKILL_OF[t.res]] += C.SKILL_GAIN; v.carry = { res: t.res, n: amt }; sfx(t.res === 'kayu' ? 'tebang' : t.res === 'batu' ? 'tambang' : 'klik');
         const st = storage(v); v.task = st ? { kind: 'setor', target: stPos(st) } : null; } break; }
     case 'bangun': { const b = t.b; if (b.done || !S.buildings.includes(b)) { v.task = null; break; }
       if (b.done) { b.hp = Math.min(100, (b.hp ?? 100) + C.BUILDING_DAMAGE.repairPerSec * dt * workMult(v, 'membangun')); v.working = true;
         if (b.hp >= 100) { log(`${v.name} selesai memperbaiki ${C.BUILDINGS[b.type].nama}.`); v.working = false; v.task = null; } break; }
       v.working = true; b.progress += dt * workMult(v, 'membangun');
       if (b.progress >= C.BUILDINGS[b.type].work) { b.done = true; v.skills.membangun += C.SKILL_GAIN * 5;
-        log(`${v.name} selesai membangun ${C.BUILDINGS[b.type].nama}.`); vhist(v, `Selesai membangun ${C.BUILDINGS[b.type].nama}`); v.working = false; v.task = null; } break; }
+        log(`${v.name} selesai membangun ${C.BUILDINGS[b.type].nama}.`); vhist(v, `Selesai membangun ${C.BUILDINGS[b.type].nama}`); sfx('bangun'); v.working = false; v.task = null; } break; }
     case 'tani': { const b = t.b; if (!S.buildings.includes(b) || (t.harvest ? b.stage !== 'siap' : b.stage !== 'kosong')) { v.task = null; break; }
       v.working = true; t.work += dt * workMult(v, 'bertani');
       if (t.work >= (t.harvest ? C.FIELD.harvestTime : C.FIELD.plantTime) * techVal('tani_waktu', 1)) { v.working = false; v.skills.bertani += C.SKILL_GAIN;
         if (t.harvest) { const F = C.FIELD, res = F.crops[b.crop].res, n = Math.round(F.yieldMin + Math.random() * (F.yieldMax - F.yieldMin) + techVal('ladang_hasil', 0));
-          b.stage = 'kosong'; b.grow = 0; b.harvested = true; S.harvests = (S.harvests || 0) + 1; v.carry = { res, n }; vhist(v, `Memanen ${n} ${RES_LABEL[res].toLowerCase()}`); log(`${v.name} memanen ${n} ${RES_LABEL[res].toLowerCase()} dari ladang ${b.crop}.`);
+          b.stage = 'kosong'; b.grow = 0; b.harvested = true; S.harvests = (S.harvests || 0) + 1; v.carry = { res, n }; vhist(v, `Memanen ${n} ${RES_LABEL[res].toLowerCase()}`); sfx('panen'); log(`${v.name} memanen ${n} ${RES_LABEL[res].toLowerCase()} dari ladang ${b.crop}.`);
           const st = storage(v); v.task = { kind: 'setor', target: stPos(st) }; }
         else { b.stage = 'tumbuh'; b.grow = 0; b.harvested = false; v.task = null; } } break; }
     case 'air': { v.working = true; t.work += dt * workMult(v, 'meramu');
@@ -355,7 +355,7 @@ const housingOk = ef => !addsPop(ef) || capacity() >= S.villagers.length + ef.pe
 function showEvent() { const e = allEvents().find(x => x.id === S.event); if (!e) { S.event = null; return; }
   // event pendatang: siapkan nama baru yang belum dipakai untuk {nama}
   if (e.pilihan.some(p => addsPop(p.efek)) && !S.eventName) { const keep = S.nameIdx; S.eventName = freshName(); S.nameIdx = keep; }
-  const box = $('modal'); box.style.display = 'block'; const nm = S.eventName ? { nama: S.eventName } : {};
+  const box = $('modal'); box.style.display = 'block'; sfx('event'); const nm = S.eventName ? { nama: S.eventName } : {};
   const noHouse = e.pilihan.some(p => addsPop(p.efek) && !housingOk(p.efek)) ? '<p style="color:#ffb36b">🏠 Tidak ada tempat kosong di gubuk — bangun Gubuk untuk menerima pendatang.</p>' : '';
   box.innerHTML = `<h3>${e.judul}</h3><p>${fill(e.deskripsi, nm)}</p>${noHouse}` + e.pilihan.map((p, i) => { const can = q => affordable(q.efek) && housingOk(q.efek), ok = can(p) || !e.pilihan.some(can) && i === e.pilihan.length - 1 && !addsPop(p.efek);
     const cost = Object.entries(p.efek || {}).map(([k, n]) => `${n > 0 ? '+' : ''}${n} ${RES_LABEL[resKeyOf(k)] || k.replace(/_/g, ' ')}`).join(', ');
@@ -418,7 +418,7 @@ function openVillager(id) { const v = S.villagers.find(x => x.id === id); if (!v
 function closeVillager() { selVid = null; $('vpanel').style.display = 'none'; }
 function villagerPanelUI() { if (selVid == null) return; const v = S.villagers.find(x => x.id === selVid); if (!v) { closeVillager(); return; }
   const uiIco = k => ASSETS[k] && ASSETS[k].ui ? `<img class="ico" src="${ASSETS[k].ui}">` : '';
-  const bar = (label, val, col, fill, ik) => `${uiIco(ik)}${label} <b>${val | 0}</b><div class="bar"><i class="${fill}" style="width:${Math.max(0, Math.min(100, val))}%;background:var(${col})"></i></div>`;
+  const bar = (label, val, col, fill, ik) => `${uiIco(ik)}${label} <b>${val | 0}</b><div class="bar"><i class="${fill}" style="width:${Math.max(0, Math.min(100, val))}%;--c:var(${col})"></i></div>`;
   const SK = { menebang: 'Menebang', menambang: 'Menambang', meramu: 'Meramu', membangun: 'Membangun', bertani: 'Bertani', meneliti: 'Meneliti' };
   setHTML('vpDyn', `<div style="font-size:12px;margin:6px 0">${v.age} th · ${role(v)}<br>Sedang: <b>${TASK_TEXT(v.task)}</b>${v.carry ? ` (membawa ${v.carry.n} ${RES_LABEL[v.carry.res].toLowerCase()})` : ''}</div>
     ${bar('Kenyang', v.hunger, '--bar-hunger', 'f-red', 'ikon_need_hunger')}${bar('Energi', v.energy, '--bar-energy', 'f-blue', 'ikon_need_energy')}${bar('Suasana hati', v.mood, '--bar-mood', 'f-yellow', 'ikon_need_mood')}${bar('Kesehatan', v.health ?? 100, '--bar-health', 'f-green', 'ikon_need_health')}
@@ -673,7 +673,7 @@ function techPanelUI() { const el = $('techpanel'); if (!el || el.style.display 
   const cost = c => Object.entries(c || {}).map(([k, q]) => `${q} ${RES_LABEL[k] || k}`).join(', ') || 'gratis';
   const ico = n => { const a = n.ikon && ASSETS[n.ikon]; return a && a.ui ? `<img src="${a.ui}" width="32" height="32" style="float:left;margin-right:6px;image-rendering:pixelated">` : ''; };
   setHTML('techpanel', `<button class="close" id="techClose">✕</button><h3 style="margin-top:0">🔬 Pohon Teknologi</h3>
-    <div style="font-size:12px;margin-bottom:8px">${rn ? `Sedang diteliti: <b>${rn.nama}</b> — ${Math.floor(R.progress)}/${rn.work}<div class="bar"><i style="width:${100 * R.progress / rn.work}%;background:var(--bar-energy)"></i></div>` : 'Belum ada riset berjalan. Pilih satu teknologi; biaya dibayar di muka.'}
+    <div style="font-size:12px;margin-bottom:8px">${rn ? `Sedang diteliti: <b>${rn.nama}</b> — ${Math.floor(R.progress)}/${rn.work}<div class="bar"><i class="f-purple" style="width:${100 * R.progress / rn.work}%;--c:var(--bar-energy)"></i></div>` : 'Belum ada riset berjalan. Pilih satu teknologi; biaya dibayar di muka.'}
     Prioritas kerja <b>Riset</b>: ${S.prio.riset || 'mati'}</div>
     <div class="tech-grid">${Object.entries(T.cabang).map(([cb, nm]) => `<div><h3>${nm}</h3>${nodes.filter(n => n.cabang === cb).map(n => { const s = techStatus(n);
       return `<div class="tech ${s.st === 'done' ? 'done' : s.st === 'active' ? 'active' : s.st === 'locked' ? 'locked' : ''}" data-tech="${n.id}">${ico(n)}<b>${n.nama}</b> <small style="display:inline">${n.id}</small>
@@ -707,7 +707,7 @@ function buildPrioUI() {
   $('prio').innerHTML = Object.keys(S.prio).map(k => `<div class="row">${JOB_LABEL[k]} <span>${[0, 1, 2, 3].map(n =>
     `<button data-p="${k}" data-n="${n}" class="${S.prio[k] === n ? 'on' : ''}">${n ? n : 'Off'}</button>`).join('')}</span></div>`).join('');
 }
-document.addEventListener('click', e => { const d = e.target.dataset; if (!d) return;
+document.addEventListener('click', e => { if (e.target.tagName === 'BUTTON') sfx('klik'); const d = e.target.dataset; if (!d) return;
   if (e.target.id === 'vpClose') closeVillager();
   if (e.target.id === 'techbtn') openTech();
   if (e.target.id === 'marketbtn') openMarket();
@@ -762,10 +762,18 @@ function frame(now) { const real = Math.min(0.25, (now - prev) / 1000); prev = n
 window.DESA = { get state() { return S; }, applyEffects, allEvents, eventEraOk, fill, marketNewDay, priceOf, tradeQuote, doTrade, spawnMerchant, marketOpen, quota, foodSellMult, openMarket, startResearch, techVal, techNodes, openTech, showEvent, validSpot, canAfford, addBuilding, season,  step, cam, findPath, setZoom, centerCam };
 fetch('TEKS-GAME.json').then(r => r.ok ? r.json() : null).catch(() => null).then(t => { TEXT = t;
   if (!t) console.warn('TEKS-GAME.json tidak dapat dimuat; memakai teks bawaan.');
-  loadAssets(() => { newGame(); lastDay = S.day; buildPrioUI(); buildBuildBar(); centerCam(CAMP.x, CAMP.y); openMenu(); requestAnimationFrame(frame); }); });
+  loadAssets(() => { newGame(); lastDay = S.day; buildPrioUI(); buildBuildBar(); centerCam(CAMP.x, CAMP.y); applyMenuText(); openMenu(); requestAnimationFrame(frame); }); });
 // ---------- menu utama & pengaturan ----------
 const SET_KEY = 'desaMandiriSettings';
-const SET = Object.assign({ volume: 70, speed: 1, lang: 'id' }, (() => { try { return JSON.parse(localStorage.getItem(SET_KEY)) || {}; } catch (e) { return {}; } })());
+const SET = Object.assign({ musik: 60, efek: 70, mute: false, speed: 1, lang: 'id' }, (() => { try { return JSON.parse(localStorage.getItem(SET_KEY)) || {}; } catch (e) { return {}; } })());
+function applyAudio() { if (SET.volume != null && SET.musik == null) SET.musik = SET.volume; AUDIO.setVolumes((SET.musik ?? 60) / 100, (SET.efek ?? 70) / 100); AUDIO.setMuted(SET.mute);
+  $('mutebtn').textContent = SET.mute ? '🔇' : '🔊'; }
+function applyMenuText() { if (!TEXT) return; const M_ = TEXT.menu || {}, T_ = M_.tombol || {}, K = M_.keterangan_tombol || {}, PG = TEXT.pengaturan || {}, O = PG.opsi || {};
+  if (T_.mulai) { $('btnNew').textContent = T_.mulai; $('btnNew').title = K.mulai || ''; } if (T_.lanjut) { $('btnContinue').textContent = T_.lanjut; $('btnContinue').title = K.lanjut || ''; }
+  if (T_.pengaturan) { $('btnSettings').textContent = T_.pengaturan; $('btnSettings').title = K.pengaturan || ''; } if (T_.kembali) $('btnBack').textContent = T_.kembali;
+  const sub = document.querySelector('#menu .sub'); if (sub && M_.subjudul) sub.innerHTML = M_.subjudul + (M_.slogan_acak ? `<br><i style="font-size:12px">${pick(M_.slogan_acak)}</i>` : '');
+  const h = document.querySelector('#menuSettings h1'); if (h && PG.judul) h.textContent = PG.judul;
+  [['lblMusik', 'volume_musik'], ['lblEfek', 'volume_efek'], ['lblSpeed', 'kecepatan_game'], ['lblLang', 'bahasa']].forEach(([id, k]) => { if (O[k] && $(id)) { $(id).textContent = O[k].label; $(id).parentNode.title = O[k].deskripsi || ''; } }); }
 function setSpeed(n) { speed = n; document.querySelectorAll('[data-s]').forEach(b => b.classList.toggle('on', +b.dataset.s === n)); }
 function hasSave() { try { const L = JSON.parse(localStorage.getItem(KEY)); return !!(L && L.tiles && L.tiles.length === C.MAP_H); } catch (e) { return false; } }
 function openMenu() { menuOpen = true; $('menu').style.display = 'flex'; $('menuMain').style.display = ''; $('menuSettings').style.display = 'none';
@@ -774,8 +782,11 @@ function closeMenu() { menuOpen = false; $('menu').style.display = 'none'; setSp
 $('btnNew').onclick = () => { newGame(); lastDay = S.day; buildPrioUI(); buildBuildBar(); centerCam(CAMP.x, CAMP.y); closeMenu(); };
 $('btnContinue').onclick = () => { if (loadGame(true)) { centerCam(CAMP.x, CAMP.y); closeMenu(); } };
 $('btnSettings').onclick = () => { $('menuMain').style.display = 'none'; $('menuSettings').style.display = '';
-  $('setVolume').value = SET.volume; $('setSpeed').value = SET.speed; $('setLang').value = SET.lang; };
-$('btnBack').onclick = () => { SET.volume = +$('setVolume').value; SET.speed = +$('setSpeed').value; SET.lang = $('setLang').value;
-  localStorage.setItem(SET_KEY, JSON.stringify(SET)); openMenu(); };
+  $('setMusik').value = SET.musik; $('setEfek').value = SET.efek; $('setSpeed').value = SET.speed; $('setLang').value = SET.lang; };
+['setMusik', 'setEfek'].forEach(id => $(id).addEventListener('input', () => { SET.musik = +$('setMusik').value; SET.efek = +$('setEfek').value; applyAudio(); sfx('klik'); }));
+$('mutebtn').onclick = () => { SET.mute = !SET.mute; localStorage.setItem(SET_KEY, JSON.stringify(SET)); applyAudio(); };
+$('btnBack').onclick = () => { SET.musik = +$('setMusik').value; SET.efek = +$('setEfek').value; SET.speed = +$('setSpeed').value; SET.lang = $('setLang').value;
+  localStorage.setItem(SET_KEY, JSON.stringify(SET)); applyAudio(); openMenu(); };
+applyAudio();
 $('menubtn').onclick = () => openMenu();
 })();

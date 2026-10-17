@@ -11,7 +11,7 @@ const path = require('path');
   const t0 = await p.evaluate(() => DESA.state.t); await p.waitForTimeout(600); r.pausedInMenu = (await p.evaluate(() => DESA.state.t)) === t0;
   await p.screenshot({ path: path.join(__dirname, '..', 'docs', 'screenshots', 'v4-menu.png') });
   // pengaturan
-  await p.click('#btnSettings'); await p.selectOption('#setSpeed', '2'); await p.fill('#setVolume', '40'); await p.click('#btnBack');
+  await p.click('#btnSettings'); await p.selectOption('#setSpeed', '2'); await p.fill('#setMusik', '40'); await p.click('#btnBack');
   r.settingsSaved = await p.evaluate(() => JSON.parse(localStorage.getItem('desaMandiriSettings')));
   // main baru -> tutorial langkah 1 menyorot canvas
   await p.click('#btnNew'); r.menuClosed = !(await p.isVisible('#menu'));

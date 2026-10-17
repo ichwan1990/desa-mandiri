@@ -29,7 +29,7 @@ h3{margin:8px 0 4px;color:var(--accent);font-size:14px} .row{display:flex;justif
 @keyframes tutpulse{from{box-shadow:0 0 0 0 rgba(255,225,74,.7)}to{box-shadow:0 0 14px 6px rgba(255,225,74,.35)}}
 /* Panel penduduk */
 #vpanel{right:280px;top:60px;width:300px;max-height:720px;overflow:auto}
-.bar{height:9px;background:var(--bar-bg);border-radius:4px;overflow:hidden;margin:2px 0 6px} .bar>i{display:block;height:100%}
+.bar{height:9px;background:var(--bar-bg);border-radius:4px;overflow:hidden;margin:2px 0 6px} .bar>i{display:block;height:100%;background:var(--c,var(--accent))}
 #vpanel .close,#techpanel .close{float:right}
 #vpanel ul{margin:4px 0;padding-left:16px;font-size:12px}
 /* Pohon teknologi */
@@ -51,10 +51,10 @@ body.skin button:hover:not(:disabled){border-image-source:url(assets/ui/skin/but
 body.skin button:active:not(:disabled), body.skin button.on{border-image-source:url(assets/ui/skin/button_pressed.png);padding-top:3px;padding-bottom:0}
 body.skin button:disabled{border-image-source:url(assets/ui/skin/button_disabled.png);opacity:1;color:#d8c8b0}
 body.skin .bar{height:12px;border-radius:0;background:none;border-style:solid;border-width:3px;border-image:url(assets/ui/skin/bar_frame.png) 3 fill / 3px / 0 stretch;box-sizing:border-box;overflow:hidden}
-body.skin .bar>i{background-size:100% 100%!important;image-rendering:pixelated}
-body.skin .bar>i.f-red{background:url(assets/ui/skin/bar_fill_red.png)} body.skin .bar>i.f-blue{background:url(assets/ui/skin/bar_fill_blue.png)}
-body.skin .bar>i.f-yellow{background:url(assets/ui/skin/bar_fill_yellow.png)} body.skin .bar>i.f-green{background:url(assets/ui/skin/bar_fill_green.png)}
-body.skin .bar>i.f-purple{background:url(assets/ui/skin/bar_fill_purple.png)}
+body.skin .bar>i{image-rendering:pixelated}
+body.skin .bar>i.f-red{background:url(assets/ui/skin/bar_fill_red.png) 0 0/100% 100% no-repeat} body.skin .bar>i.f-blue{background:url(assets/ui/skin/bar_fill_blue.png) 0 0/100% 100% no-repeat}
+body.skin .bar>i.f-yellow{background:url(assets/ui/skin/bar_fill_yellow.png) 0 0/100% 100% no-repeat} body.skin .bar>i.f-green{background:url(assets/ui/skin/bar_fill_green.png) 0 0/100% 100% no-repeat}
+body.skin .bar>i.f-purple{background:url(assets/ui/skin/bar_fill_purple.png) 0 0/100% 100% no-repeat}
 body.skin .tech{background:rgba(120,80,40,.08);border-color:#c49a6c} body.skin .tech.done{background:rgba(80,160,80,.15)}
 body.skin #menu{background:#1d1610 url(assets/ui/title/title_bg_640x360.png) center/cover no-repeat;image-rendering:pixelated}
 body.skin #menu .box{background:none}
