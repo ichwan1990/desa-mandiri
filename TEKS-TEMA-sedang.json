@@ -2983,8 +2983,24 @@
  "petunjuk": {
   "butuh_gubuk": "Pendatang dan anak-anak butuh tempat tidur. Bangun {gubuk} supaya desa bisa bertambah."
  },
+ "bangun_kategori": {
+  "tempat_tinggal": "Tempat Tinggal",
+  "pangan": "Pangan",
+  "bahan_produksi": "Bahan & Produksi",
+  "keamanan": "Keamanan",
+  "lainnya": "Lainnya",
+  "terkunci_era": "Terbuka di era {era}",
+  "terkunci_riset": "Butuh riset {riset}",
+  "monumen_tujuan": "Monumen dibangun lewat panel Tujuan"
+ },
+ "peta_kejadian": {
+  "pangan": "Pangan",
+  "kesehatan": "Kesehatan",
+  "kondisi": "Kondisi",
+  "lihat_lokasi": "Klik untuk melihat lokasinya"
+ },
  "_cerita_sedang": {
-  "versi": "1.7.3-sedang.1",
+  "versi": "1.7.4-sedang.1",
   "alat": "tools/buat_tema_sedang_cerita.py",
   "bagian": [
    "dilema",
@@ -3013,7 +3029,9 @@
    "hari_jadi_ringkasan",
    "dilema_ui.orang_orangan_teks_melayang",
    "petunjuk",
-   "otomatis.gubuk_tambahan"
+   "otomatis.gubuk_tambahan",
+   "bangun_kategori",
+   "peta_kejadian"
   ],
   "catatan": "Jalankan SETELAH node tools/buat_overlay_sedang.js (alat itu menulis ulang file ini dan menghapus bagian cerita)."
  },

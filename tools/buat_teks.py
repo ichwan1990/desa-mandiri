@@ -3580,6 +3580,33 @@ data = copy.deepcopy(data)  # lepas dari objek PATCH_V172
 terapkan_patch_v151(data, PATCH_V173)
 with open("/workspace/village-game/tools/patch-v1.7.3.json","w",encoding="utf-8") as f:
     json.dump(PATCH_V173,f,ensure_ascii=False,indent=2); f.write("\n")
+# ===================== v1.7.4 (aditif): v11 (00d3959) — bilah bangun berkategori & kejadian di peta =====================
+# bangun_kategori.<C.BUILD_CATS id>: buildCatLabel() -> teks tombol + title="" TANPA escape (innerHTML) -> tanpa kutip ganda/'<'.
+# '&' di 'Bahan & Produksi' ditulis polos: '& ' (diikuti spasi) bukan referensi karakter, aman di innerHTML & atribut; '&amp;' akan tampil mentah bila
+# suatu saat dipakai di canvas/textContent. terkunci_era {era} / terkunci_riset {riset} / monumen_tujuan -> title (di-escape q(): " -> &quot;).
+# peta_kejadian.pangan/kesehatan/kondisi -> floatText (canvas) `-N <label>`; lihat_lokasi -> title="" log TANPA escape.
+PATCH_V174 = {
+ "_patch": {"versi_dari": "1.7.3", "versi_ke": "1.7.4", "sifat": "hanya penambahan (tambah_key bangun_kategori + peta_kejadian; menolak menimpa)",
+            "sumber": "Asisten Koding 21-10 15:48: 00d3959 v11 bilah bangun berkategori + kejadian di peta"},
+ "tambah_key": {
+  "bangun_kategori": {"_catatan": "Label kategori bilah bangun (C.BUILD_CATS id) + alasan tombol terkunci (title). String tunggal; tanpa kutip ganda dan '<'.",
+   "tempat_tinggal": "Tempat Tinggal", "pangan": "Pangan", "bahan_produksi": "Bahan & Produksi", "keamanan": "Keamanan", "lainnya": "Lainnya",
+   "terkunci_era": "Terbuka di era {era}", "terkunci_riset": "Butuh riset {riset}", "monumen_tujuan": "Monumen dibangun lewat panel Tujuan"},
+  "peta_kejadian": {"_catatan": "Kejadian di peta: pangan/kesehatan/kondisi = label teks melayang setelah angka (-N Pangan); lihat_lokasi = title baris log berlokasi. String tunggal.",
+   "pangan": "Pangan", "kesehatan": "Kesehatan", "kondisi": "Kondisi", "lihat_lokasi": "Klik untuk melihat lokasinya"}},
+ "tambah_path": {},
+ "tambah_key_meta": {"catatan_v174": {
+   "bentuk": {"bangun_kategori.<id>": "string; teks tombol + title tanpa escape", "bangun_kategori.terkunci_era": "string; {era} = C.ERAS[].nama era bangunan (bukan era sekarang)",
+              "bangun_kategori.terkunci_riset": "string; {riset} = nama teknologi", "peta_kejadian.*": "string pendek"},
+   "catatan_koding": "'Bahan & Produksi' memakai '&' polos (bukan &amp;): aman di innerHTML/atribut karena diikuti spasi, dan tetap benar bila dipakai di canvas/textContent."}},
+ "tambah_entri_meta": {"placeholder": {"{riset}": "Nama teknologi yang membuka bangunan (bangun_kategori.terkunci_riset)"}},
+ "set_meta": {"versi": "1.7.4"},
+}
+PATCH_V174 = copy.deepcopy(PATCH_V174)
+data = copy.deepcopy(data)  # lepas dari objek PATCH_V173
+terapkan_patch_v151(data, PATCH_V174)
+with open("/workspace/village-game/tools/patch-v1.7.4.json","w",encoding="utf-8") as f:
+    json.dump(PATCH_V174,f,ensure_ascii=False,indent=2); f.write("\n")
 with open("/workspace/village-game/tools/patch-v1.5.1.json","w",encoding="utf-8") as f:
     json.dump(PATCH_V151,f,ensure_ascii=False,indent=2); f.write("\n")
 with open("/workspace/village-game/tools/patch-v1.5.0.json","w",encoding="utf-8") as f:
