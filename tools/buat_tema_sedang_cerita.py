@@ -13,7 +13,7 @@ ronda -> jaga malam, padi/singkong -> gandum/kentang, kerbau -> sapi, reog -> ro
 import json, sys
 ROOT = "/workspace/village-game/"
 FILE = ROOT + "TEKS-TEMA-sedang.json"
-VERSI = "1.7.1-sedang.1"
+VERSI = "1.7.2-sedang.1"
 
 def O(teks, hasil, *tunda):
     o = {"teks": teks, "teks_hasil": hasil}
@@ -654,8 +654,8 @@ UI_V170 = {
  "dilema_ui": {"orang_orangan_berdiri": ["Orang-orangan bertopi jerami berdiri di tepi ladang gandum, mantelnya berkibar ditiup angin.",
    "{nama} memasang orang-orangan berbaju lusuh di tengah ladang gandum. Burung-burung langsung menjaga jarak."]},
  "log_ancaman": {"diusir_orang_orangan": ["Orang-orangan di ladang gandum bergoyang ditiup angin. Seekor {hewan} ragu dan mundur ke hutan.",
-   "Mantel orang-orangan berkibar di bawah cahaya bulan. Seekor {hewan} yang mengendap-endap berbalik pergi.",
-   "Bayangan orang-orangan di tepi ladang membuat {hewan} ragu. Gandum selamat malam ini."]},
+   "Mantel orang-orangan berkibar-kibar. Seekor {hewan} yang mengintip dari semak urung mendekat.",  # v1.7.2: {hewan} = rubah (C.MONKEY.hewan), bukan serigala malam
+   "Orang-orangan di tepi ladang membuat {hewan} ragu. Gandum selamat hari ini."]},
 }
 # key baru v1.7.1 (sedang): Kandang Ayam + telur, nama bangunan lokal P1, ringkasan Hari Jadi (e64bda9)
 # bangunan_lokal di overlay -> game.js __localNames aktif: nama orang_orangan & kandang_ayam diambil dari sini (menggantikan TEMA.BUILDING_NAMES 'Orang-orangan Ladang')
@@ -667,10 +667,11 @@ UI_V171 = {
    "Ayam-ayam berkotek riang. {nama} pulang membawa {jumlah} butir telur untuk gudang desa."]}},
   "kandang": {"siap": "siap diambil", "ayam": "{jumlah} ekor ayam"}},
  "bangunan_lokal": {
-  "orang_orangan_sawah": {"nama": "Orang-orangan", "tooltip": "Bertopi jerami dan bermantel lusuh. Mengusir burung dan membuat serigala ragu."},
+  "orang_orangan_sawah": {"nama": "Orang-orangan", "tooltip": "Bertopi jerami dan bermantel lusuh. Mengusir burung dan membuat rubah urung mencuri gandum.",  # v1.7.2: koreksi (serigala tidak terpengaruh)
+   "tooltip_ancaman": "Membuat {pencuri} urung mencuri dari ladang. Tidak mempan melawan {hewan}; untuk itu pakai {pagar}."},
   "kandang_ayam": {"nama": "Kandang ayam", "tooltip": "Kandang kayu kecil beratap jerami. Telurnya menambah makanan."}},
  "hari_jadi_ringkasan": {
-  "log": ["Hari Jadi Desa ke-{tahun}! Setahun ini {lahir} bayi lahir, {pendatang} pendatang tiba, {bangunan} bangunan berdiri, dan {tahap} tahap monumen rampung.",
+  "log": ["Desa merayakan Hari Jadi ke-{tahun}! Setahun ini {lahir} bayi lahir, {pendatang} pendatang tiba, {bangunan} bangunan berdiri, dan {tahap} tahap monumen rampung.",
           "Selamat Hari Jadi Desa ke-{tahun}! Setahun penuh cerita: {lahir} bayi lahir, {pendatang} pendatang, {bangunan} bangunan baru, {tahap} tahap monumen."],
   "judul": "Hari Jadi Desa ke-{tahun}", "rentang": "Hari ke-{hari}–{hari2}", "statistik": "Setahun ini",
   "penduduk": "Penduduk", "lahir": "Lahir", "pendatang": "Pendatang", "wafat": "Berpulang", "pergi": "Pergi",
@@ -679,6 +680,8 @@ UI_V171 = {
   "piagam": "Piagam Tahunan diraih!", "tanpa_piagam": "Piagam butuh {jumlah} target. Tahun depan kita coba lagi bersama.",
   "gelar": "Gelar desa", "monumen": "Monumen", "tahap_tahun_ini": "Selesai tahun ini", "tutup": "Lanjutkan"},
 }
+# v1.7.2 (3019d47): teks melayang orang-orangan ({hewan} = rubah, sudah dikapitalkan kode -> hanya di awal)
+UI_V172 = {"dilema_ui": {"orang_orangan_teks_melayang": ["{hewan} kabur!", "{hewan} urung mencuri!"]}}
 
 def gabung(dst, src):  # gabung rekursif (dict) tanpa menghapus key lain di overlay (mis. log_ancaman dari buat_overlay_sedang.js)
     for k, v in src.items():
@@ -699,10 +702,11 @@ def main():
     for k, v in (("keinginan", KEINGINAN), ("monumen", MONUMEN), ("cerita", CERITA), ("teladan", TELADAN), ("rencana_tahun", RENCANA)): ov[k] = v
     gabung(ov, UI_V170)
     gabung(ov, UI_V171)
+    gabung(ov, UI_V172)
     ov["_cerita_sedang"] = {"versi": VERSI, "alat": "tools/buat_tema_sedang_cerita.py",
         "bagian": ["dilema", "dilema_ui", "momen_kecil", "agustusan", "kerja_bakti", "peringatan_dini.ancaman_monyet", "pangan", "otomatis", "keinginan", "monumen", "cerita", "teladan", "rencana_tahun",
                   "event_ui", "jenjang_kelaparan.tingkat.bahaya (masa awal)", "cerita_ui", "agustusan.pentas_reog", "dilema_ui.orang_orangan_berdiri", "log_ancaman.diusir_orang_orangan",
-                  "pangan.sumber.telur", "pangan.tugas.telur", "pangan.kandang", "bangunan_lokal (orang_orangan_sawah, kandang_ayam)", "hari_jadi_ringkasan"],
+                  "pangan.sumber.telur", "pangan.tugas.telur", "pangan.kandang", "bangunan_lokal (orang_orangan_sawah, kandang_ayam)", "hari_jadi_ringkasan", "dilema_ui.orang_orangan_teks_melayang"],
         "catatan": "Jalankan SETELAH node tools/buat_overlay_sedang.js (alat itu menulis ulang file ini dan menghapus bagian cerita)."}
     c = ov.get("_catatan", "")
     tambah = " Bagian cerita (dilema, momen_kecil, agustusan, kerja_bakti, dilema_ui, ancaman_monyet) serta pangan, otomatis, keinginan, monumen, cerita, teladan, rencana_tahun dari tools/buat_tema_sedang_cerita.py: jalankan sesudahnya."

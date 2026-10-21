@@ -3521,6 +3521,40 @@ data = copy.deepcopy(data)  # lepas dari objek PATCH_V170
 terapkan_patch_v151(data, PATCH_V171)
 with open("/workspace/village-game/tools/patch-v1.7.1.json","w",encoding="utf-8") as f:
     json.dump(PATCH_V171,f,ensure_ascii=False,indent=2); f.write("\n")
+# ===================== v1.7.2: orang-orangan (3019d47) — tooltip ancaman, teks melayang + KOREKSI hewan =====================
+# Kode: orang-orangan hanya membuat C.MONKEY.hewan (monyet / rubah di sedang) urung mencuri; babi hutan/serigala TIDAK terpengaruh (SCARECROW.boarFieldMult 1).
+# diusir_orang_orangan: {hewan} = C.MONKEY.hewan (scarecrowScare) -> teks v1.7.0 'cahaya bulan'/'malam ini'/'mengendap-endap' (gambaran babi hutan malam) dikoreksi.
+# tooltip_ancaman (buildTip, atribut title): {pencuri} = C.MONKEY.hewan, {hewan} = babi hutan/serigala (NIGHT_THREAT), {pagar} = C.BUILDINGS.pagar.nama.
+# orang_orangan_teks_melayang (floatText): {hewan} sudah cap1() oleh kode -> {hewan} hanya di awal teks; pendek.
+UBAH_V172 = {
+ "log_ancaman/diusir_orang_orangan/1": "Baju orang-orangan sawah berkibar-kibar. Seekor {hewan} yang mengintip dari pinggir hutan urung mendekat.",
+ "log_ancaman/diusir_orang_orangan/2": "Orang-orangan sawah di tepi ladang membuat {hewan} ragu. Hasil ladang selamat hari ini.",
+ "meta/catatan_v170/bentuk/log_ancaman.diusir_orang_orangan": "array variasi; {hewan} = C.MONKEY.hewan (monyet / rubah: pencuri ladang yang diusir orang-orangan), selalu didahului 'Seekor' atau di tengah kalimat. Koreksi v1.7.2: bukan babi hutan/serigala.",
+ "hari_jadi_ringkasan/log/0": "Desa merayakan Hari Jadi ke-{tahun}! Setahun ini {lahir} bayi lahir, {pendatang} pendatang tiba, {bangunan} bangunan berdiri, dan {tahap} tahap monumen rampung."}
+data = copy.deepcopy(data)  # lepas dari objek PATCH_V171
+UBAH_V172_HASIL = terapkan_ubah(data, UBAH_V172)
+PATCH_V172 = {
+ "_patch": {"versi_dari": "1.7.1", "versi_ke": "1.7.2", "sifat": "penambahan (tambah_path) + koreksi teks terdaftar (ubah_teks, 4 path; dikecualikan sempit di validator)",
+            "sumber": "Asisten Koding 21-10 14:51: 3019d47 orang-orangan usir monyet (log + teks melayang, tooltip: tidak mempan babi hutan)"},
+ "ubah_teks": UBAH_V172_HASIL,
+ "tambah_key": {},
+ "tambah_path": {
+  "bangunan_lokal.orang_orangan_sawah.tooltip_ancaman": "Membuat {pencuri} urung mencuri dari ladang. Tidak mempan melawan {hewan}; untuk itu pakai {pagar}.",
+  "dilema_ui.orang_orangan_teks_melayang": ["{hewan} kabur!", "{hewan} urung mencuri!"]},
+ "tambah_key_meta": {"catatan_v172": {
+   "bentuk": {"bangunan_lokal.orang_orangan_sawah.tooltip_ancaman": "string (atribut title): {pencuri} = C.MONKEY.hewan, {hewan} = babi hutan/serigala, {pagar} = nama bangunan pagar; tanpa kutip ganda dan '<'",
+              "dilema_ui.orang_orangan_teks_melayang": "array variasi pendek (teks melayang); {hewan} sudah dikapitalkan kode (cap1) -> hanya di awal teks"},
+   "koreksi": "log_ancaman.diusir_orang_orangan[1..2] & meta.catatan_v170: {hewan} di sana monyet/rubah (siang/kapan saja), bukan babi hutan/serigala malam. hari_jadi_ringkasan.log[0] tidak lagi diawali 'Hari ' (aturan log v1.7.2).",
+   "aturan_log": "Teks log baru/terkoreksi sejak v1.7.0 tidak boleh diawali 'Hari ' (log() menambahkan 'Hari X:'). Teks lama berawalan 'Hari {hari}:' tetap aman karena fill() membuangnya."}},
+ "tambah_entri_meta": {"placeholder": {
+   "{pencuri}": "Hewan pencuri ladang yang diusir orang-orangan (C.MONKEY.hewan: monyet / rubah); huruf kecil",
+   "{pagar}": "Nama bangunan pagar (C.BUILDINGS.pagar.nama) untuk tooltip orang-orangan"}},
+ "set_meta": {"versi": "1.7.2"},
+}
+PATCH_V172 = copy.deepcopy(PATCH_V172)
+terapkan_patch_v151(data, PATCH_V172)
+with open("/workspace/village-game/tools/patch-v1.7.2.json","w",encoding="utf-8") as f:
+    json.dump(PATCH_V172,f,ensure_ascii=False,indent=2); f.write("\n")
 with open("/workspace/village-game/tools/patch-v1.5.1.json","w",encoding="utf-8") as f:
     json.dump(PATCH_V151,f,ensure_ascii=False,indent=2); f.write("\n")
 with open("/workspace/village-game/tools/patch-v1.5.0.json","w",encoding="utf-8") as f:

@@ -1,4 +1,4 @@
-"""Validasi TEKS-GAME.json v1.7.1 terhadap backup v1.0.0 (+allowlist tuning), v1.1.0, v1.2.0, v1.3.0, v1.4.0, v1.5.0, v1.5.1, v1.6.0, v1.6.1, v1.7.0.
+"""Validasi TEKS-GAME.json v1.7.2 terhadap backup v1.0.0 (+allowlist tuning), v1.1.0, v1.2.0, v1.3.0, v1.4.0, v1.5.0, v1.5.1, v1.6.0, v1.6.1, v1.7.0, v1.7.1.
 Sejak v1.4.0 (lokalisasi Indonesia) teks tampilan boleh berubah, tetapi semua key/struktur, semua angka/boolean, dan semua
 string berjenis id (id, tipe, target, era, musim, prasyarat, event_terkait, ...) harus tetap sama; placeholder teks yang berubah
 tidak boleh bertambah. Ditambah: cek kata terlarang (salju, serigala, harimau, ...) di semua teks tampilan, dan bagian baru v1.4/v1.5.
@@ -9,6 +9,7 @@ tidak muncul di teks cerita yang aktif di tema sedang).
 v1.6.0 hanya menambah key top-level pangan (pangan v9 game.js) + placeholder {buah}: semua key wajib ada di kedua tema (TEKS dan hasil
 gabungan sedang), placeholder sesuai yang diisi kode, tanpa kata khas Indonesia di pangan tema sedang (kecuali yang tidak dipakai tema itu).
 v1.6.1 (v9c) hanya menambah: otomatis.api_unggun/gubuk (array 2-4, {nama}/{nama2}), 10 pangan.keluar baru, daya_tarik.bahagia_syarat/murung.
+v1.7.2 menambah tooltip_ancaman & orang_orangan_teks_melayang, mengoreksi 4 path terdaftar (KOREKSI_V172), dan melarang awalan 'Hari ' di teks log baru.
 v1.7.1 (P1b) hanya menambah pangan.sumber/tugas.telur, pangan.kandang, hari_jadi_ringkasan (+{lahir} {pendatang} {hari2}); sedang menulis bangunan_lokal.
 v1.7.0 (P1) hanya menambah key UI (event_ui, cerita_ui, banner/tooltip masa awal, pentas_reog, orang_orangan_berdiri, diusir_orang_orangan,
 keinginan._ui.otomatis) di kedua tema; overlay sedang mendapat keinginan/monumen/cerita/teladan/rencana_tahun (placeholder <= teks Nusantara path
@@ -49,7 +50,7 @@ def sub(a, b, p, idk=False):
             teks_diubah.append(p)
     elif type(a) != type(b) or a != b: err.append(f"nilai/id berubah: {p} ({a!r} -> {b!r})")
 sub(old, new, "")
-if new["meta"]["versi"] != "1.7.1": err.append("meta.versi bukan 1.7.1")
+if new["meta"]["versi"] != "1.7.2": err.append("meta.versi bukan 1.7.2")
 for k in old:
     if list(new).index(k) != list(old).index(k): err.append(f"urutan key top-level berubah: {k}")
 m = new["meta"]
@@ -789,7 +790,15 @@ tujuan_tetap = [x for x in TUJUAN_OFF if x not in tujuan_cabut]
 old170 = json.load(open(ROOT + "tools/TEKS-GAME.v1.7.0.json", encoding="utf-8"))
 teks_diubah.clear(); _n = len(err); sub(old170, new, "")
 if len(err) > _n: err.insert(_n, "^ perbedaan struktur/angka terhadap v1.7.0:")
-if teks_diubah: err.append(f"v1.7.1 hanya penambahan, tetapi {len(teks_diubah)} teks v1.7.0 berubah, mis. {teks_diubah[:3]}")
+# v1.7.2: koreksi sempit & terdokumentasi (patch-v1.7.2.json ubah_teks): {hewan} diusir_orang_orangan = monyet/rubah, bukan babi hutan/serigala malam;
+# hari_jadi_ringkasan.log[0] tidak diawali 'Hari '. Hanya path ini yang boleh berubah; nilai lama dicatat agar koreksi wajib terpasang.
+KOREKSI_V172 = {
+    "/log_ancaman/diusir_orang_orangan[1]": "Baju orang-orangan sawah berkibar di bawah cahaya bulan. Seekor {hewan} yang mengendap-endap berbalik pergi.",
+    "/log_ancaman/diusir_orang_orangan[2]": "Bayangan orang-orangan sawah di tepi ladang membuat {hewan} ragu. Tanaman selamat malam ini.",
+    "/meta/catatan_v170/bentuk/log_ancaman.diusir_orang_orangan": "array variasi; {hewan} = TERMS.hewan (babi hutan / serigala), selalu didahului 'Seekor' atau di tengah kalimat",
+    "/hari_jadi_ringkasan/log[0]": "Hari Jadi Desa ke-{tahun}! Setahun ini {lahir} bayi lahir, {pendatang} pendatang tiba, {bangunan} bangunan berdiri, dan {tahap} tahap monumen rampung."}
+_ubah = [p for p in teks_diubah if p not in KOREKSI_V172]
+if _ubah: err.append(f"v1.7.1 hanya penambahan (+ koreksi v1.7.2 terdaftar), tetapi {len(_ubah)} teks v1.7.0 berubah, mis. {_ubah[:3]}")
 for k in old170:
     if list(new).index(k) != list(old170).index(k): err.append(f"urutan key top-level v1.7.0 berubah: {k}")
 if "catatan_v171" not in m: err.append("meta.catatan_v171 hilang")
@@ -862,6 +871,85 @@ for path in ["pangan.sumber.telur", "pangan.tugas.telur", "pangan.kandang", "har
     _s(ambil(sd, path), path)
     if o: sed_err.append(f"kata khas Indonesia di tema sedang: {path}: " + ", ".join(f"'{w}' @ {p}" for p, w in o[:3]))
     cek_ph(ambil(sd, path), ambil(new, path), path); walk_s(ambil(sd, path), path)
+# ---------- v1.7.2: orang-orangan (3019d47) — tooltip_ancaman, teks melayang, koreksi hewan diusir_orang_orangan, aturan awalan 'Hari ' ----------
+old171 = json.load(open(ROOT + "tools/TEKS-GAME.v1.7.1.json", encoding="utf-8"))
+teks_diubah.clear(); _n = len(err); sub(old171, new, "")
+if len(err) > _n: err.insert(_n, "^ perbedaan struktur/angka terhadap v1.7.1:")
+_ubah = [p for p in teks_diubah if p not in KOREKSI_V172]
+if _ubah: err.append(f"v1.7.2 hanya penambahan + koreksi terdaftar, tetapi {len(_ubah)} teks v1.7.1 lain berubah, mis. {_ubah[:3]}")
+for k in old171:
+    if list(new).index(k) != list(old171).index(k): err.append(f"urutan key top-level v1.7.1 berubah: {k}")
+if "catatan_v172" not in m: err.append("meta.catatan_v172 hilang")
+for k in ("{pencuri}", "{pagar}"):
+    if k not in m["placeholder"]: err.append(f"placeholder v1.7.2 tidak terdaftar: {k}")
+# koreksi harus benar-benar terpasang (bukan sekadar diizinkan)
+for p, lama in KOREKSI_V172.items():
+    try: _v = eval("new" + "".join(f"[{int(x)}]" if x.isdigit() else f"[{x!r}]" for x in re.findall(r"[^/\[\]]+", p)))
+    except Exception: _v = None
+    if _v == lama: err.append(f"koreksi v1.7.2 belum diterapkan: {p}")
+try:
+    _g = open(ROOT + "game.js", encoding="utf-8").read()
+    _tt = re.search(r"TX\('bangunan_lokal\.orang_orangan_sawah\.tooltip_ancaman', \{([^}]*)\}", _g)
+    _tt_ph = set(re.findall(r"(\w+)(?=[,:]|\s*$)", _tt.group(1))) if _tt else None
+    if _tt_ph is not None and _tt_ph != {"hewan", "pagar", "pencuri"}: err.append(f"tooltip_ancaman: extra di game.js berubah: {sorted(_tt_ph)}")
+    if "TX('dilema_ui.orang_orangan_teks_melayang', { hewan: cap1(hewan) }" not in _g: sed_warn.append("orang_orangan_teks_melayang: game.js tidak lagi cap1({hewan}); periksa aturan {hewan} di awal teks")
+    if "scarecrowScare(M.hewan" not in _g: sed_warn.append("diusir_orang_orangan: {hewan} tidak lagi C.MONKEY.hewan (scarecrowScare); periksa teks hewan")
+except Exception as e: sed_warn.append(f"game.js tidak terbaca untuk cek v1.7.2 ({e})")
+def cek_v172(T, sumber, pencuri):
+    v = ambil(T, "bangunan_lokal.orang_orangan_sawah.tooltip_ancaman")
+    if not isinstance(v, str): err.append(f"{sumber}bangunan_lokal.orang_orangan_sawah.tooltip_ancaman harus string")
+    else:
+        cek_teks(v, "bangunan_lokal.orang_orangan_sawah.tooltip_ancaman", sumber, ("hewan", "pagar", "pencuri"), True)
+        for w in ("hewan", "pagar", "pencuri"):
+            if "{" + w + "}" not in v: err.append(f"{sumber}tooltip_ancaman harus memakai {{{w}}}")
+        if '"' in v or "<" in v: err.append(f"{sumber}tooltip_ancaman: tanpa kutip ganda / '<' (atribut title)")
+    v = ambil(T, "dilema_ui.orang_orangan_teks_melayang")
+    if not (isinstance(v, str) or (isinstance(v, list) and 1 <= len(v) <= 4 and all(isinstance(x, str) for x in v))): err.append(f"{sumber}dilema_ui.orang_orangan_teks_melayang harus string / array 1-4"); v = []
+    for x in (v if isinstance(v, list) else [v]):
+        cek_teks(x, "dilema_ui.orang_orangan_teks_melayang", sumber, ("hewan",), False)
+        if not x.startswith("{hewan}") or x.count("{hewan}") != 1: err.append(f"{sumber}orang_orangan_teks_melayang: {{hewan}} (sudah cap1) harus tepat sekali di awal: {x}")
+        if len(x.replace("{hewan}", "babi hutan")) > 28: err.append(f"{sumber}orang_orangan_teks_melayang terlalu panjang untuk teks melayang: {x}")
+    # orang-orangan hanya mengusir pencuri ladang (monyet / rubah): jangan sebut babi hutan / serigala sebagai yang diusir
+    for path in ("log_ancaman.diusir_orang_orangan", "bangunan_lokal.orang_orangan_sawah.tooltip", "dilema_ui.orang_orangan_berdiri", "dilema_ui.orang_orangan_teks_melayang"):
+        for x in (lambda y: y if isinstance(y, list) else [y])(ambil(T, path)):
+            if isinstance(x, str) and re.search(r"babi|serigala|cahaya bulan|malam ini|mengendap", x, re.I): err.append(f"{sumber}{path}: orang-orangan hanya mengusir {pencuri} (bukan babi hutan/serigala, bukan malam): {x}")
+        for x in (lambda y: y if isinstance(y, list) else [y])(ambil(T, path)):
+            if isinstance(x, str) and path == "bangunan_lokal.orang_orangan_sawah.tooltip" and pencuri not in x.lower(): err.append(f"{sumber}{path} harus menyebut {pencuri}")
+cek_v172(new, "", "monyet")
+cek_v172(sd, "sedang:", "rubah")
+for path in ("bangunan_lokal.orang_orangan_sawah.tooltip_ancaman", "dilema_ui.orang_orangan_teks_melayang"):
+    o = []; scan_t(ambil(sd, path), path, o)
+    if o: sed_err.append(f"kata khas Indonesia di tema sedang: {path}: " + ", ".join(f"'{w}' @ {p}" for p, w in o[:3]))
+    cek_ph(ambil(sd, path), ambil(new, path), path); walk_s(ambil(sd, path), path)
+# aturan awalan log: log() sudah menulis 'Hari X:' -> teks baru (path yang belum ada di v1.6.1, yaitu sejak v1.7.0) & teks koreksi tidak boleh diawali 'Hari ',
+# kecuali label (bukan log). Teks lama 'Hari {hari}:' dibiarkan (fill() membuangnya); awalan 'Hari <angka>' tidak pernah boleh (tidak dibuang).
+LABEL_HARI_OK = {"/hari_jadi_ringkasan/rentang", "/hari_jadi_ringkasan/judul"}
+def ada_di(T, p):
+    o = T
+    for x in re.findall(r"[^/\[\]]+", p):
+        if isinstance(o, list) and x.isdigit() and int(x) < len(o): o = o[int(x)]
+        elif isinstance(o, dict) and x in o: o = o[x]
+        else: return False
+    return True
+hari_baru, hari_lama = [], []
+def cek_hari(x, p, base, sumber):
+    if isinstance(x, str):
+        if p.startswith("/meta/") or "/_" in p: return
+        if re.match(r"Hari \d", x): err.append(f"{sumber}{p}: diawali 'Hari <angka>' (log() menambah awalan hari; tidak dibuang fill())")
+        elif x.startswith("Hari ") and p not in LABEL_HARI_OK and (not ada_di(base, p) or p in KOREKSI_V172): hari_baru.append(sumber + p)
+        elif x.startswith("Hari {hari}:"): hari_lama.append(sumber + p)
+    elif isinstance(x, dict): [cek_hari(v, f"{p}/{k}", base, sumber) for k, v in x.items()]
+    elif isinstance(x, list): [cek_hari(v, f"{p}[{i}]", base, sumber) for i, v in enumerate(x)]
+cek_hari(new, "", old161, "")
+_ov_baru = {k: v for k, v in ov.items() if not ada_di(old161, "/" + k) or k in ("dilema_ui", "log_ancaman", "pangan", "bangunan_lokal")}
+for k, v in _ov_baru.items():  # overlay sedang: hanya teks di path yang baru di TEKS sejak v1.7.0
+    def _sb(x, p):
+        if isinstance(x, str):
+            if x.startswith("Hari ") and p not in LABEL_HARI_OK and not ada_di(old161, p) and ada_di(new, p): hari_baru.append("sedang:" + p)
+        elif isinstance(x, dict): [_sb(y, f"{p}/{kk}") for kk, y in x.items() if not kk.startswith("_")]
+        elif isinstance(x, list): [_sb(y, f"{p}[{i}]") for i, y in enumerate(x)]
+    _sb(ambil(sd, k), "/" + k)
+for p in hari_baru: err.append(f"teks log baru/terkoreksi diawali 'Hari ' (log() sudah menambahkannya): {p}")
 err += sed_err
 # kata terlarang di SEMUA teks tampilan (bukan key, bukan string id, bukan meta teknis)
 META_TAMPIL = ("sumber_daya", "bangunan", "musim", "era", "hewan", "penyebab_kondisi", "bangunan_pertahanan", "tahap_usia", "status_hubungan",
@@ -918,9 +1006,10 @@ print(f"v1.6.1: otomatis {len(OTOMATIS)} ({', '.join(f'{k} {len(new['otomatis'][
 print(f"v1.7.0: key UI {len(V170)} | sedang tujuan: keinginan {len([k for k in ov.get('keinginan', {}) if not k.startswith('_')])}, monumen {len([k for k in ov.get('monumen', {}) if k != 'ui'])}, cerita {len(ov.get('cerita', {}))}, teladan/rencana_tahun {'ada' if 'teladan' in ov and 'rencana_tahun' in ov else 'BELUM'}")
 print(f"tema sedang: TUJUAN_DISABLE bisa dicabut: {tujuan_cabut or '-'}" + (f" | masih perlu disable: {tujuan_tetap}" if tujuan_tetap else ""))
 print(f"v1.7.1: pangan telur (sumber, tugas {len(new['pangan']['tugas']['telur']['log'])} log), kandang siap/ayam | hari_jadi_ringkasan {len(HJ_PH)} key | bangunan_lokal sedang: {', '.join(ambil(ov, f'bangunan_lokal.{b}.nama') or '-' for b in BANGUNAN_LOKAL_KODE.values())}")
+print(f"v1.7.2: tooltip_ancaman, orang_orangan_teks_melayang {len(ambil(new, 'dilema_ui.orang_orangan_teks_melayang'))} variasi | koreksi {len(KOREKSI_V172)} path | teks lama berawalan 'Hari {{hari}}:' (dibuang fill()): {len(hari_lama)}")
 print(f"tema sedang: overlay {len([k for k in ov if not k.startswith('_')])} bagian | cerita: dilema {len(ov.get('dilema', {}).get('__byId', []))}, momen {len([k for k in ov.get('momen_kecil', {}) if not k.startswith('_')])}, "
       f"lomba {len(ov.get('agustusan', {}).get('lomba', {}))} | kata khas Indonesia di cerita aktif: {sum(len(v) for k, v in kena.items() if k in aktif)}")
 print(f"tema sedang: STORY_DISABLE bisa dicabut: {bisa_cabut or '-'}" + (f" | masih perlu disable: {tetap}" if tetap else "") + f" | STORY_PATCH enabled:false bisa dicabut: {patch_cabut or '-'}")
 for w in sed_warn: print(" peringatan:", w)
 if err: print("GAGAL:"); [print(" -", e) for e in err]; sys.exit(1)
-print("OK: JSON valid, struktur/id/angka lama utuh (TUNING_V10 + 14 retuning, v1.0-v1.7.0), overlay sedang bersih, kata terlarang bersih, semua efek/tipe/target/placeholder terdaftar.")
+print("OK: JSON valid, struktur/id/angka lama utuh (TUNING_V10 + 14 retuning, v1.0-v1.7.1), overlay sedang bersih, kata terlarang bersih, semua efek/tipe/target/placeholder terdaftar.")

@@ -1,7 +1,7 @@
 {
   "meta": {
     "judul_game": "Desa Mandiri",
-    "versi": "1.7.1",
+    "versi": "1.7.2",
     "bahasa": "id-ID",
     "encoding": "UTF-8",
     "nuansa": "Hangat, santai, dan menggemaskan. Pemain menjaga penduduk kecil yang hidup mandiri. Ancaman nyata tapi ringan (badai, babi hutan, wabah, kekurangan makanan), dengan kehangatan kebersamaan sebagai penyeimbang.",
@@ -45,7 +45,9 @@
       "{buah}": "Nama buah/sumber pangan (pangan.sumber.<id>, mis. mangga); isi lewat extra fill(). pangan.pohon_buah: label apa adanya; pangan.tugas.buah.log: huruf kecil",
       "{lahir}": "Jumlah bayi lahir setahun (hari_jadi_ringkasan.log)",
       "{pendatang}": "Jumlah pendatang setahun (hari_jadi_ringkasan.log)",
-      "{hari2}": "Hari akhir rentang (hari_jadi_ringkasan.rentang)"
+      "{hari2}": "Hari akhir rentang (hari_jadi_ringkasan.rentang)",
+      "{pencuri}": "Hewan pencuri ladang yang diusir orang-orangan (C.MONKEY.hewan: monyet / rubah); huruf kecil",
+      "{pagar}": "Nama bangunan pagar (C.BUILDINGS.pagar.nama) untuk tooltip orang-orangan"
     },
     "sumber_daya": {
       "kayu": "Kayu",
@@ -852,7 +854,7 @@
         "cerita_ui.label / keinginan._ui.otomatis": "string",
         "agustusan.pentas_reog": "array variasi; boleh {nama}; tanpa awalan Hari {hari}:",
         "dilema_ui.orang_orangan_berdiri": "array variasi; boleh {nama}",
-        "log_ancaman.diusir_orang_orangan": "array variasi; {hewan} = TERMS.hewan (babi hutan / serigala), selalu didahului 'Seekor' atau di tengah kalimat"
+        "log_ancaman.diusir_orang_orangan": "array variasi; {hewan} = C.MONKEY.hewan (monyet / rubah: pencuri ladang yang diusir orang-orangan), selalu didahului 'Seekor' atau di tengah kalimat. Koreksi v1.7.2: bukan babi hutan/serigala."
       },
       "catatan_koding": "TT('diusir_orang_orangan') di game.js belum punya entri C.TXT di tema.js, jadi teks ini belum terbaca. Usul: diusir_orang_orangan: ['log_ancaman.diusir_orang_orangan', '<fallback>'] di TXT kedua tema. Tema sedang: TEKS-TEMA-sedang.json kini punya keinginan, monumen, cerita, teladan, rencana_tahun -> semua id TUJUAN_DISABLE bisa dicabut. Nama bangunan dari kode (tujuan.js MONUMENTS.*.nama & stages[].nama, BUILDINGS.orang_orangan.nama) masih Nusantara di tema sedang bila kode tidak membaca monumen.<id>.nama dari TEKS."
     },
@@ -865,6 +867,14 @@
         "hari_jadi_ringkasan.<label>": "string"
       },
       "catatan_koding": "bangunan_lokal.orang_orangan_sawah.nama ('Orang-orangan sawah') & kandang_ayam.nama ('Kandang ayam') sudah ada sejak v1.3 dan tidak diubah (aturan aditif). Tema sedang kini punya bangunan_lokal di overlay -> __localNames aktif. {bangunan}/{tahap} di hari_jadi_ringkasan.log berisi ANGKA (extra menimpa arti bawaan)."
+    },
+    "catatan_v172": {
+      "bentuk": {
+        "bangunan_lokal.orang_orangan_sawah.tooltip_ancaman": "string (atribut title): {pencuri} = C.MONKEY.hewan, {hewan} = babi hutan/serigala, {pagar} = nama bangunan pagar; tanpa kutip ganda dan '<'",
+        "dilema_ui.orang_orangan_teks_melayang": "array variasi pendek (teks melayang); {hewan} sudah dikapitalkan kode (cap1) -> hanya di awal teks"
+      },
+      "koreksi": "log_ancaman.diusir_orang_orangan[1..2] & meta.catatan_v170: {hewan} di sana monyet/rubah (siang/kapan saja), bukan babi hutan/serigala malam. hari_jadi_ringkasan.log[0] tidak lagi diawali 'Hari ' (aturan log v1.7.2).",
+      "aturan_log": "Teks log baru/terkoreksi sejak v1.7.0 tidak boleh diawali 'Hari ' (log() menambahkan 'Hari X:'). Teks lama berawalan 'Hari {hari}:' tetap aman karena fill() membuangnya."
     }
   },
   "penduduk": [
@@ -4993,8 +5003,8 @@
     ],
     "diusir_orang_orangan": [
       "Orang-orangan sawah bergoyang ditiup angin. Seekor {hewan} ragu dan mundur ke hutan.",
-      "Baju orang-orangan sawah berkibar di bawah cahaya bulan. Seekor {hewan} yang mengendap-endap berbalik pergi.",
-      "Bayangan orang-orangan sawah di tepi ladang membuat {hewan} ragu. Tanaman selamat malam ini."
+      "Baju orang-orangan sawah berkibar-kibar. Seekor {hewan} yang mengintip dari pinggir hutan urung mendekat.",
+      "Orang-orangan sawah di tepi ladang membuat {hewan} ragu. Hasil ladang selamat hari ini."
     ]
   },
   "penduduk_sakit": {
@@ -6443,7 +6453,8 @@
     "orang_orangan_sawah": {
       "nama": "Orang-orangan sawah",
       "tooltip": "Bertopi caping dan berbaju lusuh. Mengusir pipit dan membuat monyet ragu.",
-      "id_kode": null
+      "id_kode": null,
+      "tooltip_ancaman": "Membuat {pencuri} urung mencuri dari ladang. Tidak mempan melawan {hewan}; untuk itu pakai {pagar}."
     },
     "pos_ronda": {
       "nama": "Pos ronda + kentongan",
@@ -10052,6 +10063,10 @@
     "orang_orangan_berdiri": [
       "Orang-orangan sawah berdiri di tepi ladang, bajunya berkibar ditiup angin.",
       "{nama} memasang orang-orangan sawah bercaping di tengah ladang. Burung pipit langsung menjaga jarak."
+    ],
+    "orang_orangan_teks_melayang": [
+      "{hewan} kabur!",
+      "{hewan} urung mencuri!"
     ]
   },
   "momen_kecil": {
@@ -10459,7 +10474,7 @@
   "hari_jadi_ringkasan": {
     "_catatan": "Modal ringkasan Hari Jadi (game.js hariJadiHTML/hariJadiDaily). Placeholder persis seperti kode: log {hari} {tahun} {lahir} {pendatang} {bangunan} {tahap} (semua angka); judul {tahun}; rentang {hari} {hari2}; target {jumlah} {jumlah2}; tanpa_piagam {jumlah}. Label lain tanpa placeholder. Dipakai di innerHTML: tanpa '<'.",
     "log": [
-      "Hari Jadi Desa ke-{tahun}! Setahun ini {lahir} bayi lahir, {pendatang} pendatang tiba, {bangunan} bangunan berdiri, dan {tahap} tahap monumen rampung.",
+      "Desa merayakan Hari Jadi ke-{tahun}! Setahun ini {lahir} bayi lahir, {pendatang} pendatang tiba, {bangunan} bangunan berdiri, dan {tahap} tahap monumen rampung.",
       "Selamat Hari Jadi Desa ke-{tahun}! Setahun penuh cerita: {lahir} bayi lahir, {pendatang} pendatang, {bangunan} bangunan baru, {tahap} tahap monumen."
     ],
     "judul": "Hari Jadi Desa ke-{tahun}",

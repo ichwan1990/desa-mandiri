@@ -900,8 +900,8 @@
   ],
   "diusir_orang_orangan": [
    "Orang-orangan di ladang gandum bergoyang ditiup angin. Seekor {hewan} ragu dan mundur ke hutan.",
-   "Mantel orang-orangan berkibar di bawah cahaya bulan. Seekor {hewan} yang mengendap-endap berbalik pergi.",
-   "Bayangan orang-orangan di tepi ladang membuat {hewan} ragu. Gandum selamat malam ini."
+   "Mantel orang-orangan berkibar-kibar. Seekor {hewan} yang mengintip dari semak urung mendekat.",
+   "Orang-orangan di tepi ladang membuat {hewan} ragu. Gandum selamat hari ini."
   ]
  },
  "penduduk_sakit": {
@@ -1460,6 +1460,10 @@
   "orang_orangan_berdiri": [
    "Orang-orangan bertopi jerami berdiri di tepi ladang gandum, mantelnya berkibar ditiup angin.",
    "{nama} memasang orang-orangan berbaju lusuh di tengah ladang gandum. Burung-burung langsung menjaga jarak."
+  ],
+  "orang_orangan_teks_melayang": [
+   "{hewan} kabur!",
+   "{hewan} urung mencuri!"
   ]
  },
  "momen_kecil": {
@@ -2937,7 +2941,8 @@
  "bangunan_lokal": {
   "orang_orangan_sawah": {
    "nama": "Orang-orangan",
-   "tooltip": "Bertopi jerami dan bermantel lusuh. Mengusir burung dan membuat serigala ragu."
+   "tooltip": "Bertopi jerami dan bermantel lusuh. Mengusir burung dan membuat rubah urung mencuri gandum.",
+   "tooltip_ancaman": "Membuat {pencuri} urung mencuri dari ladang. Tidak mempan melawan {hewan}; untuk itu pakai {pagar}."
   },
   "kandang_ayam": {
    "nama": "Kandang ayam",
@@ -2946,7 +2951,7 @@
  },
  "hari_jadi_ringkasan": {
   "log": [
-   "Hari Jadi Desa ke-{tahun}! Setahun ini {lahir} bayi lahir, {pendatang} pendatang tiba, {bangunan} bangunan berdiri, dan {tahap} tahap monumen rampung.",
+   "Desa merayakan Hari Jadi ke-{tahun}! Setahun ini {lahir} bayi lahir, {pendatang} pendatang tiba, {bangunan} bangunan berdiri, dan {tahap} tahap monumen rampung.",
    "Selamat Hari Jadi Desa ke-{tahun}! Setahun penuh cerita: {lahir} bayi lahir, {pendatang} pendatang, {bangunan} bangunan baru, {tahap} tahap monumen."
   ],
   "judul": "Hari Jadi Desa ke-{tahun}",
@@ -2971,7 +2976,7 @@
   "tutup": "Lanjutkan"
  },
  "_cerita_sedang": {
-  "versi": "1.7.1-sedang.1",
+  "versi": "1.7.2-sedang.1",
   "alat": "tools/buat_tema_sedang_cerita.py",
   "bagian": [
    "dilema",
@@ -2997,7 +3002,8 @@
    "pangan.tugas.telur",
    "pangan.kandang",
    "bangunan_lokal (orang_orangan_sawah, kandang_ayam)",
-   "hari_jadi_ringkasan"
+   "hari_jadi_ringkasan",
+   "dilema_ui.orang_orangan_teks_melayang"
   ],
   "catatan": "Jalankan SETELAH node tools/buat_overlay_sedang.js (alat itu menulis ulang file ini dan menghapus bagian cerita)."
  },

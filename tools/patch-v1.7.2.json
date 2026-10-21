@@ -1,0 +1,57 @@
+{
+  "_patch": {
+    "versi_dari": "1.7.1",
+    "versi_ke": "1.7.2",
+    "sifat": "penambahan (tambah_path) + koreksi teks terdaftar (ubah_teks, 4 path; dikecualikan sempit di validator)",
+    "sumber": "Asisten Koding 21-10 14:51: 3019d47 orang-orangan usir monyet (log + teks melayang, tooltip: tidak mempan babi hutan)"
+  },
+  "ubah_teks": [
+    {
+      "path": "log_ancaman/diusir_orang_orangan/1",
+      "lama": "Baju orang-orangan sawah berkibar di bawah cahaya bulan. Seekor {hewan} yang mengendap-endap berbalik pergi.",
+      "baru": "Baju orang-orangan sawah berkibar-kibar. Seekor {hewan} yang mengintip dari pinggir hutan urung mendekat."
+    },
+    {
+      "path": "log_ancaman/diusir_orang_orangan/2",
+      "lama": "Bayangan orang-orangan sawah di tepi ladang membuat {hewan} ragu. Tanaman selamat malam ini.",
+      "baru": "Orang-orangan sawah di tepi ladang membuat {hewan} ragu. Hasil ladang selamat hari ini."
+    },
+    {
+      "path": "meta/catatan_v170/bentuk/log_ancaman.diusir_orang_orangan",
+      "lama": "array variasi; {hewan} = TERMS.hewan (babi hutan / serigala), selalu didahului 'Seekor' atau di tengah kalimat",
+      "baru": "array variasi; {hewan} = C.MONKEY.hewan (monyet / rubah: pencuri ladang yang diusir orang-orangan), selalu didahului 'Seekor' atau di tengah kalimat. Koreksi v1.7.2: bukan babi hutan/serigala."
+    },
+    {
+      "path": "hari_jadi_ringkasan/log/0",
+      "lama": "Hari Jadi Desa ke-{tahun}! Setahun ini {lahir} bayi lahir, {pendatang} pendatang tiba, {bangunan} bangunan berdiri, dan {tahap} tahap monumen rampung.",
+      "baru": "Desa merayakan Hari Jadi ke-{tahun}! Setahun ini {lahir} bayi lahir, {pendatang} pendatang tiba, {bangunan} bangunan berdiri, dan {tahap} tahap monumen rampung."
+    }
+  ],
+  "tambah_key": {},
+  "tambah_path": {
+    "bangunan_lokal.orang_orangan_sawah.tooltip_ancaman": "Membuat {pencuri} urung mencuri dari ladang. Tidak mempan melawan {hewan}; untuk itu pakai {pagar}.",
+    "dilema_ui.orang_orangan_teks_melayang": [
+      "{hewan} kabur!",
+      "{hewan} urung mencuri!"
+    ]
+  },
+  "tambah_key_meta": {
+    "catatan_v172": {
+      "bentuk": {
+        "bangunan_lokal.orang_orangan_sawah.tooltip_ancaman": "string (atribut title): {pencuri} = C.MONKEY.hewan, {hewan} = babi hutan/serigala, {pagar} = nama bangunan pagar; tanpa kutip ganda dan '<'",
+        "dilema_ui.orang_orangan_teks_melayang": "array variasi pendek (teks melayang); {hewan} sudah dikapitalkan kode (cap1) -> hanya di awal teks"
+      },
+      "koreksi": "log_ancaman.diusir_orang_orangan[1..2] & meta.catatan_v170: {hewan} di sana monyet/rubah (siang/kapan saja), bukan babi hutan/serigala malam. hari_jadi_ringkasan.log[0] tidak lagi diawali 'Hari ' (aturan log v1.7.2).",
+      "aturan_log": "Teks log baru/terkoreksi sejak v1.7.0 tidak boleh diawali 'Hari ' (log() menambahkan 'Hari X:'). Teks lama berawalan 'Hari {hari}:' tetap aman karena fill() membuangnya."
+    }
+  },
+  "tambah_entri_meta": {
+    "placeholder": {
+      "{pencuri}": "Hewan pencuri ladang yang diusir orang-orangan (C.MONKEY.hewan: monyet / rubah); huruf kecil",
+      "{pagar}": "Nama bangunan pagar (C.BUILDINGS.pagar.nama) untuk tooltip orang-orangan"
+    }
+  },
+  "set_meta": {
+    "versi": "1.7.2"
+  }
+}
