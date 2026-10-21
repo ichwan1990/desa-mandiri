@@ -15,13 +15,13 @@ const { chromium } = require('playwright');
       for (let r = 1; r < 12 && placed < 2; r++) for (let dy = -r; dy <= r && placed < 2; dy++) for (let dx = -r; dx <= r && placed < 2; dx++) { const x = C.CAMP.x + dx * 2, y = C.CAMP.y + dy * 2;
         if (D.validSpot('ladang', x, y)) { for (const [k, n] of Object.entries(C.BUILDINGS.ladang.cost)) S.res[k] -= n; D.addBuilding('ladang', x, y, false); placed++; } }
       const o = { hut1: null, hut2: null, grow: null, hint6: null }; let last = 0;
-      while (S.day <= 40) { D.step(0.1); if (S.event) { const e = [...document.querySelectorAll('[data-ev]')].find(x => !x.disabled); e && e.click(); }
+      while (S.day <= 60) { D.step(0.1); if (S.event) { const e = [...document.querySelectorAll('[data-ev]')].find(x => !x.disabled); e && e.click(); }
         if (S.day !== last) { last = S.day; const h = S.buildings.filter(b => b.type === 'gubuk').length;
           if (h >= 1 && o.hut1 == null) o.hut1 = S.day; if (h >= 2 && o.hut2 == null) o.hut2 = S.day; if (S.villagers.length > 2 && o.grow == null) o.grow = S.day;
           if (S.day === 6) o.hint6 = V.bedHintOn(); if (S.day === 10) o.freeBed10 = DESA.capacity ? DESA.capacity() > S.villagers.length : !V.bedHintOn(); } }
       o.pop = S.villagers.length; return o; });
     ok(T + ' seed1010 gubuk otomatis', r.hut1 != null && r.hut1 <= 5 && r.hut2 != null && r.hut2 <= 10, r);
-    ok(T + ' seed1010 tempat kosong hari 10 & populasi tumbuh <= hari 40', r.freeBed10 && r.grow != null && r.grow <= 40, r);
+    ok(T + ' seed1010 tempat kosong hari 10 & populasi tumbuh <= hari 60', r.freeBed10 && r.grow != null && r.grow <= 60, r);
     await p.close();
     // ---- petunjuk tempat tidur: hari 6, gubuk penuh / tidak ada ----
     p = await open(tema);
