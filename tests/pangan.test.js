@@ -66,7 +66,7 @@ const { chromium } = require('playwright');
     return { A0: { ok: A0.ok, chance: A0.chance, happy: A0.happy }, normal: normal.spawned, A1: { ok: A1.ok, chance: A1.chance, happy: A1.happy, needFd: A1.needFd }, bahagia, murung: murung.spawned, murungDays, Am: { happy: Am.happy, minMood: Am.minMood }, htmlMurung: /murung/.test(htmlMurung), prog: (prog.replace(/<[^>]+>/g, '').match(/\d+\/\d+ hari/) || [''])[0], A2: { ok: A2.ok, foodOk: A2.foodOk }, panel: !!el && /Daya tarik desa/.test(el.innerHTML), html: html.replace(/^.*?<b>/, '<b>').slice(0, 160), happySpawns: S.happySpawns || 0, cfg: C.SPAWN }; });
   ok('pendatang biasa 0.5', happy.A0.ok && !happy.A0.happy && happy.A0.chance === happy.cfg.chancePerDay && happy.normal === 0, happy);
   ok('pendatang bahagia', happy.A1.ok && happy.A1.happy && happy.A1.chance === happy.cfg.happy.chancePerDay && happy.A1.chance > happy.A0.chance && happy.bahagia.spawned === 1 && /💌/.test(happy.bahagia.log) /* teks fallback 'Kabar desa yang bahagia...' atau variasi TEKS pangan.daya_tarik.pendatang */ && happy.happySpawns === 1, happy);
-  ok('desa bahagia: syarat ketat', happy.cfg.happy.mood === 80 && happy.cfg.happy.days === 5 && happy.cfg.happy.minMood === 50, happy.cfg);
+  ok('desa bahagia: syarat ketat', happy.cfg.happy.mood === 81 && happy.cfg.happy.days === 5 && happy.cfg.happy.minMood === 50, happy.cfg);
   ok('warga murung membatalkan', happy.murung === 0 && happy.murungDays === 0 && !happy.Am.happy && happy.htmlMurung, happy);
   ok('progres 3/5 hari', happy.prog === '3/5 hari', happy.prog);
   ok('pendatang butuh 12 hari stok', happy.A1.needFd === 12 && !happy.A2.ok && !happy.A2.foodOk, happy);

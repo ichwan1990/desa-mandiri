@@ -149,7 +149,7 @@ window.THEMES = {
 THEMES.sedang.TERMS = { hewan: 'serigala', ancaman: 'Serigala', ikon: '🐺' };
 // babi hutan: kerangka serigala (jejak -> mendekat -> beraksi -> pergi), sasaran utama ladang; melukai penduduk baru mulai era Dusun
 CONFIG.THREAT.babi = Object.assign({}, CONFIG.THREAT.wolf, {
-  minEra: 'perkemahan', injureFromEra: 'dusun', baseNightChance: 0.07, hardMult: 1.3, plotsDamaged: [1, 2], damage: [15, 30], speed: 2.8, count: [1, 2],
+  minEra: 'perkemahan', injureFromEra: 'dusun', baseNightChance: 0.07, hardMult: 1.3, plotsDamaged: [1, 2], damage: [30, 50], killHpBelow: 70, killChanceIfLowHp: 0.3, speed: 2.8, count: [1, 2],
   fencePathMult: 3, torchHitMult: 0.4, torchSafeRadius: 3, fieldFirst: true,
 });
 CONFIG.THREAT.wolf.hardMult = CONFIG.THREAT.wolf.winterMult;
