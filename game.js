@@ -946,7 +946,7 @@ function questProgress(q) { const g = q.tujuan;
 function checkQuest() { const q = quest(); if (!q) return; const pr = questProgress(q);
   if (pr === null) { console.info(`[quest] tujuan "${q.tujuan.tipe}:${q.tujuan.target}" belum didukung, dilewati.`); log(`Misi "${q.judul}" belum tersedia di versi ini, dilewati.`); S.questIdx++; return; }
   if (pr >= q.tujuan.jumlah) { applyEffects(q.hadiah, 'quest ' + q.id); log(`✅ Misi selesai: ${q.judul}. ${q.teks_selesai || ''}`); S.questIdx++; } }
-function questUI() { const hint = bedHintOn() ? `<div class="bedhint">🛖 ${bedHintText()}</div>` : ''; const q = quest(); if (!q) return hint + (TEXT ? 'Semua misi selesai!' : '-'); const pr = questProgress(q) ?? 0;
+function questUI() { const hint = bedHintOn() ? `<div class="bedhint">${bedHintText()}</div>` : ''; const q = quest(); if (!q) return hint + (TEXT ? 'Semua misi selesai!' : '-'); const pr = questProgress(q) ?? 0;
   return hint + `<b>${q.judul}</b><br>${q.deskripsi}<br>Progres: ${Math.min(pr, q.tujuan.jumlah)}/${q.tujuan.jumlah}`; }
 // tutorial interaktif: sorot elemen target, lanjut saat pemain melakukan aksi atau klik Lanjut
 const tutHook = i => { const t = TEXT && TEXT.tutorial && TEXT.tutorial[i]; const h = (C.TUTORIAL_HOOKS || [])[i] || {};
