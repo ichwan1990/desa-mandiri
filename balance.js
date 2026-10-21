@@ -85,6 +85,10 @@ window.CONFIG = {
     { id: 'keamanan', nama: 'Keamanan', items: ['obor', 'pagar', 'orang_orangan', 'menara_jaga'] },
     { id: 'lainnya', nama: 'Lainnya', items: ['balai', 'makam', 'masjid', 'bendungan', 'pendopo_reog'] },
   ],
+  // v12: angin kencang (peluang & kerusakan per musim di SEASON_FX windChance/windHp). shelter: pagar/menara jaga dalam shelterRadius -> kerusakan x shelterMult.
+  // events: id event angin -> indeks pilihan 'Ikat atap' (atap bertahan tieDays hari; pilihan lain: angin benar-benar merusak satu bangunan)
+  WIND: { targets: ['gubuk', 'rumah', 'dapur', 'gudang', 'lumbung', 'bengkel', 'pasar', 'balai', 'kandang_ayam', 'menara_jaga'], shelter: ['pagar', 'menara_jaga'], shelterRadius: 4, shelterMult: 0.5, tieDays: 3,
+    events: { angin_gugur: 0, angin_mareng: 1 } },
   AUTO_BUILD: { fireDay: 2, hutDay: 4, hutTaskDay: 4, hutMoreDay: 8, hutMax: 2, bedHintDay: 6 }, // v10: gubuk ke-2 hari 8 bila penuh; petunjuk tempat tidur hari 6     // warga menaruh api unggun / gubuk pertama sendiri bila belum ada sama sekali
   FOOD_PRIORITY_DAYS: 4, FOOD_TILT_DAYS: 5, FOOD_DAYS_SMOOTH: 0.35,              // utamakan pangan bila stok < 4 hari; angka hari di lencana dihaluskan ~0.35 hari
   THREAT: {

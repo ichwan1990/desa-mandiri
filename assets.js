@@ -206,6 +206,8 @@ window.ASSETS = {
   tanaman_kopi: { color: '#7a2a2a', img: 'assets/nature/crops/crop_kopi.png', frames: 6 },
   // fauna: baris = mode*4 + arah (diam 0, jalan 1, serang 2; bawah, kiri, kanan, atas)
   babi_hutan: { img: 'assets/characters/fauna/babi_hutan.png', frames: 4, color: '#4a3324' },
+  monyet: { img: 'assets/characters/fauna/monyet.png', frames: 4, color: '#7a5a3a' }, // v12: pencuri pangan Nusantara (128x384, 32x32; baris = mode*4 + arah; diam/jalan/sambar)
+  rubah: { img: 'assets/characters/animals/fox.png', frames: 4, color: '#c8642a' },   // v12: pencuri pangan tema sedang (format sama, tahap 10)
   kunang_kunang: { img: 'assets/characters/fauna/ambient/kunang_kunang.png', fw: 8, fh: 8, frames: 4, ms: 200 },
   // bangunan & struktur lokal (pengganti lewat ASSET_SWAP)
   gubuk_bambu: { color: '#c9a25a', roof: '#7a6a3a', img: 'assets/buildings/tropis/gubuk_bambu.png', fw: 64, fh: 64 },

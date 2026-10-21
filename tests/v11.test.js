@@ -58,12 +58,12 @@ const SHOT = process.env.SHOTS !== '0';
       const rnd = Math.random; Math.random = () => 0.99; V.wreckField(o, f); Math.random = rnd;
       r.fieldMarker = V.activeMarkers().some(m => m.k === 'ladang' && m.x === f.x && m.y === f.y); r.logPos = !!(S.logPos && S.logPos[S.log[0]]); r.float = DESA.p1.textNotes().some(t => t.startsWith('-1'));
       // pencuri pangan berjalan ke sasaran
-      V.spawnRaider(3, 'monyet'); const rd = S.raiders[S.raiders.length - 1], e0 = Math.hypot(rd.x - rd.goal.x, rd.y - rd.goal.y); V.updateRaiders(0.5); r.raidMove = Math.hypot(rd.x - rd.goal.x, rd.y - rd.goal.y) < e0;
-      r.raidMarker = V.activeMarkers().some(m => m.k === 'curi');
+      V.spawnRaider(3, (CONFIG.MONKEY && CONFIG.MONKEY.hewan) || 'monyet'); const rd = S.raiders[S.raiders.length - 1], e0 = Math.hypot(rd.x - rd.goal.x, rd.y - rd.goal.y); V.updateRaiders(0.5); r.raidMove = Math.hypot(rd.x - rd.goal.x, rd.y - rd.goal.y) < e0;
+      r.raidMarker = V.activeMarkers().some(m => m.k === 'curi'); r.raidKind = rd.kind; r.raidSprite = !!(ASSETS[rd.kind] && ASSETS[rd.kind].image);
       // kamera jauh dari kejadian, lalu klik spanduk
       P.view(2, 2, 1); DESA.pangan.ui(); r.wolfPos = { x: o.x, y: o.y }; return r; });
     ok(T + ' penyerang mendekati sasaran', ev.spawned && ev.d1 < ev.d0 - 1, ev);
-    ok(T + ' penanda serangan, ladang, pencuri', ev.wolfMarker && ev.fieldMarker && ev.raidMarker && ev.logPos && ev.float && ev.raidMove, ev);
+    ok(T + ' penanda serangan, ladang, pencuri', ev.wolfMarker && ev.fieldMarker && ev.raidMarker && ev.logPos && ev.float && ev.raidMove && ev.raidSprite && ev.raidKind === (tema ? 'rubah' : 'monyet'), ev);
     const before = await p.evaluate(() => DESA.v11.cam());
     await p.click('#warnbar [data-warn="howl"]');
     const after = await p.evaluate(() => { const c = DESA.v11.cam(); return { x0: c.x / 32, y0: c.y / 32, x1: (c.x + c.w / c.zoom) / 32, y1: (c.y + c.h / c.zoom) / 32 }; });
