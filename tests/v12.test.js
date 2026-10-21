@@ -25,6 +25,12 @@ const { chromium } = require('playwright');
       const ev = () => { S.event = 'angin_gugur'; document.getElementById('modal').style.display = 'block'; };
       g.hp = 100; S.roofTiedUntil = null; ev(); W.chooseEvent(0); r.tiedHp = g.hp; r.tiedLog = S.log.slice(0, 2).join(' | ');
       g.hp = 100; S.roofTiedUntil = null; S.windDay = null; ev(); W.chooseEvent(2); r.otherHp = g.hp; r.otherLog = S.log.slice(0, 2).join(' | ');
+      // v14: badai = event angin yang sama (Nusantara): ikat atap -> bertahan, berlindung/lanjut kerja -> satu bangunan rusak windHp (bukan -20 semua); sedang: badai lama tak berubah
+      const g2 = S.buildings.find(b => b.type === 'pagar'); const evb = () => { S.event = 'badai'; S.windDay = null; S.roofTiedUntil = null; g.hp = 100; document.getElementById('modal').style.display = 'block'; };
+      const others = () => S.buildings.filter(b => b !== g && b.done).map(b => b.hp ?? 100);
+      evb(); W.chooseEvent(1); r.badaiTied = g.hp; evb(); const o0 = others(); W.chooseEvent(2); r.badaiHit = 100 - g.hp; r.badaiOthers = others().every((h, i) => h === o0[i]); r.badaiLog = S.log.slice(0, 2).join(' | ');
+      // satu slot angin: setelah badai, angin_mareng tidak boleh dalam 10 hari
+      const E = DESA.v13, am = E.allEvents().find(e => e.id === 'angin_mareng'), bd = E.allEvents().find(e => e.id === 'badai'); S.day = 70; S.windDay = null; S.eventGroup = {}; const allowed0 = am ? E.eventAllowed(am) : null; E.fireEvent(bd); S.event = null; document.getElementById('modal').style.display = 'none'; r.slot = { before: allowed0, after: am ? E.eventAllowed(am) : null, badaiAfter: E.eventAllowed(bd) };
       // angin harian di musim berangin
       S.roofTiedUntil = null; S.windDay = null; g.hp = 100; const rnd = Math.random; Math.random = () => 0; const fx = DESA.v11 && C.SEASON_FX; let hit = null;
       for (let d = 30; d < 140 && hit == null; d++) { S.day = d; S.windDay = null; const h0 = g.hp; W.windDaily(); if (g.hp < h0) hit = d; } Math.random = rnd; r.dailyHit = hit;
@@ -37,7 +43,9 @@ const { chromium } = require('playwright');
       ok(T + ' event angin: ikat atap -> bertahan', r.tiedHp >= 100 && /terikat/i.test(r.tiedLog), r);
       ok(T + ' event angin: pilihan lain -> rusak & teks sesuai', r.otherHp < 100 && /atap .*\(-\d+ Kondisi\)|-\d+/.test(r.otherLog), r);
       ok(T + ' angin harian di mareng/labuh', r.dailyHit != null, r);
-    } else ok(T + ' tanpa angin', !r.hasWind && !/Angin kencang/.test(r.otherLog) && r.dailyHit == null, r);
+      ok(T + ' badai tergabung ke mekanik angin', r.badaiTied >= 100 && r.badaiHit > 0 && r.badaiHit <= 20 && r.badaiOthers && /Angin kencang|atap/i.test(r.badaiLog), r);
+      ok(T + ' satu slot event angin', r.slot.after === false && r.slot.badaiAfter === false, r);
+    } else { ok(T + ' tanpa angin', !r.hasWind && !/Angin kencang/.test(r.otherLog) && r.dailyHit == null, r); ok(T + ' badai lama tak berubah (-20 semua bangunan, tanpa angin)', r.badaiHit === 20 && !/Angin kencang/.test(r.badaiLog), r); }
     await p.close(); }
   await b.close();
   if (errs.length) fails.push('console: ' + errs.slice(0, 3).join(' | '));

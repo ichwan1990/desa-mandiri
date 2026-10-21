@@ -942,6 +942,8 @@ function eventAllowed(e) { const r = (C.EVENT_RULES || {})[e.id] || {}, year = y
   if (e.musim && [].concat(e.musim).length && ![].concat(e.musim).map(m => (C.EVENT_SEASON_ALIAS || {})[m] || m).includes(season())) return false;
   if (r.maksPerTahun && ((S.eventYearCount || {})[e.id + '@' + year] || 0) >= r.maksPerTahun) return false;
   if (r.cooldownHari && S.day - ((S.eventLastDay || {})[e.id] ?? -999) < r.cooldownHari) return false;
+  if (r.grup) { const G = S.eventGroup || {}; if (r.grupMaksPerTahun && (G[r.grup + '@' + year] || 0) >= r.grupMaksPerTahun) return false; if (r.grupCooldown && S.day - (G[r.grup + '@last'] ?? -999) < r.grupCooldown) return false;
+    if (r.grup === 'angin' && S.windDay != null && S.day - S.windDay < (r.grupCooldown || 3)) return false; } // v14: satu slot event angin (badai + angin_mareng), tidak menumpuk dengan angin harian
   if (r.era && eraIndex(r.era) > (S.era | 0)) return false; if (r.butuh && !r.butuh.every(t => done(t).length)) return false; if (r.kecuali && S[r.kecuali]) return false; // v13: syarat dari teks event (bangunan/era/flag)
   return true; }
 const eventWeight = e => { const r = (C.EVENT_RULES || {})[e.id]; return (r && r.bobot != null ? r.bobot : e.bobot ?? 1) * (e.id === 'panen_raya' ? FX().panenRayaWeightMult || 1 : 1); };
@@ -963,6 +965,7 @@ function maybeEvent() { const anniv = TEXT && TEXT.event_acak ? anniversaryEvent
 function fireEvent(ev) {
   const year = yearIdx();
   S.eventLastDay = S.eventLastDay || {}; S.eventYearCount = S.eventYearCount || {}; S.eventCount = S.eventCount || {};
+  { const rg = ((C.EVENT_RULES || {})[ev.id] || {}).grup; if (rg) { const G = S.eventGroup = S.eventGroup || {}; G[rg + '@' + year] = (G[rg + '@' + year] || 0) + 1; G[rg + '@last'] = S.day; } }
   S.eventLastDay[ev.id] = S.day; S.eventYearCount[ev.id + '@' + year] = (S.eventYearCount[ev.id + '@' + year] || 0) + 1; S.eventCount[ev.id] = (S.eventCount[ev.id] || 0) + 1;
   const em = M().eventMods[ev.id]; if (em) for (const [side, items] of Object.entries(em)) for (const [res, pct] of Object.entries(items)) addPriceEvent(side, [res], pct, M().eventDays);
   S.event = ev.id; countModal('event'); markMeaningful(ev.id === 'hari_jadi' || /jadi/.test(ev.id) ? 'hari_jadi' : 'event'); showEvent(); }

@@ -114,11 +114,11 @@ window.THEMES = {
     // angin_gugur ('Angin Mareng yang Usil') digabung ke angin_mareng (event lokal, tersambung ke mekanik angin)
     EVENT_DISABLE: ['angin_gugur', 'banjir_kiriman', 'longsor', 'panen_padi_raya', 'sumur_menyusut'],
     EVENT_SEASON_ALIAS: { semi: 'hujan', panas: 'kemarau', gugur: 'mareng', dingin: 'kemarau' }, // = TEKS meta.alias_id_v140.musim
-    EVENT_RULES: { panen_raya: { musim: ['mareng'] }, kekeringan: { musim: ['kemarau'] }, badai: { musim: ['mareng', 'labuh'] },
+    EVENT_RULES: { panen_raya: { musim: ['mareng'] }, kekeringan: { musim: ['kemarau'] }, badai: { musim: ['mareng', 'labuh'], bobot: 0.5, grup: 'angin', grupMaksPerTahun: 2, grupCooldown: 10 }, // v14: badai + angin_mareng = satu slot event angin (bobot total 1 = badai lama), kerusakan lewat windStrike
       // v13 event_lokal: bobot 0.5 (kolam undian sama, peluang harian tetap); syarat sesuai teks: butuh bangunan / era / flag
       ular_di_sawah: { bobot: 0.5, butuh: ['ladang'] }, hujan_pertama: { bobot: 0.5, maksPerTahun: 1, kecuali: 'firstRainDone', setel: 'firstRainDone' },
       monyet_pencuri: { bobot: 0.5, butuh: ['gudang'], cooldownHari: 14 }, dbd_pancaroba: { bobot: 0.5, maksPerTahun: 1 }, ispa_asap: { bobot: 0.5, maksPerTahun: 1 },
-      kebakaran_ilalang: { bobot: 0.5, butuh: ['gubuk'], maksPerTahun: 1 }, angin_mareng: { bobot: 0.5, maksPerTahun: 2 }, tanam_serentak: { bobot: 0.5, butuh: ['ladang'], maksPerTahun: 1 },
+      kebakaran_ilalang: { bobot: 0.5, butuh: ['gubuk'], maksPerTahun: 1 }, angin_mareng: { bobot: 0.5, grup: 'angin', grupMaksPerTahun: 2, grupCooldown: 10 }, tanam_serentak: { bobot: 0.5, butuh: ['ladang'], maksPerTahun: 1 },
       gotong_royong: { bobot: 0.5, era: 'dusun', cooldownHari: 20 }, kenduri_panen: { bobot: 0.5, butuh: ['ladang'], maksPerTahun: 1 }, ronda_malam: { bobot: 0.5, butuh: ['menara_jaga'], cooldownHari: 20 },
       hari_pasar: { bobot: 0.5, era: 'desa_pertanian', cooldownHari: 14 }, tamu_desa_sebelah: { bobot: 0.5, cooldownHari: 20 } },
     MARKET_MUSIM: { kemarau: { jual: { makanan: 1.25, gandum: 1.25 }, beli: { makanan: 1.4, gandum: 1.4 } }, hujan: { jual: { kayu: 0.9 } }, mareng: { jual: { makanan: 0.85, gandum: 0.9 } } },
@@ -152,7 +152,8 @@ window.THEMES = {
     TERMS: { hewan: 'babi hutan', ancaman: 'Babi hutan', ikon: '🐗' },
     // tambalan teks di memori (file TEKS-GAME.json tidak diubah): path -> teks
     TEXT_PATCH: { 'event:panen_raya.pilihan.0.teks_hasil': 'Lumbung penuh gabah. Kemarau tidak lagi menakutkan.',
-      'event:monyet_pencuri.pilihan.2.efek': { suasana_hati: -2, monyet_curi: 3 } }, // v13: teks 'berpesta pisang' -> pangan benar-benar hilang (kecil) + monyet terlihat
+      'event:monyet_pencuri.pilihan.2.efek': { suasana_hati: -2, monyet_curi: 3 },
+      'event:badai.pilihan.2.efek': { kayu: 10, suasana_hati: -10 } }, // v14: kerusakan atap badai kini dari windStrike (windHp), bukan -20 ke semua bangunan // v13: teks 'berpesta pisang' -> pangan benar-benar hilang (kecil) + monyet terlihat
   },
 };
 THEMES.sedang.TERMS = { hewan: 'serigala', ancaman: 'Serigala', ikon: '🐺' };
