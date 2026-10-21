@@ -6,9 +6,9 @@ Object.assign(CONFIG, {
   DIRECTOR: {
     startDay: 3, checkFrac: 0.375, scheduleCutoffFrac: 0.75,
     fillEarly: { untilDay: 14, chances: [0.45, 0.75, 1.0] },
-    fill: [0.75, 0.95, 1.0],                          // indeks = hari kosong berturut-turut sebelumnya. Spes: [0.60, 0.90, 1.0]; dinaikkan karena keinginan/target tahunan/rantai (P1) belum ada -> cakupan 73% < 80% (§7)
+    fill: [0.65, 0.90, 1.0],                          // indeks = hari kosong berturut-turut sebelumnya. Spes: [0.60, 0.90, 1.0]; 0.60 -> cerita.test (bot pasif, tanpa keinginan/monumen) cakupan 77% (P1: keinginan/monumen/kerja bakti/rantai/target tahunan mengisi hari -> cakupan tetap >= 80%)
     mixEarly: { untilDay: 24, momen: 0.70, dilemaR: 0.30 },
-    mix: { dilema: 0.55, cerita: 0.25, momen: 0.20 },  // 'cerita' (rantai, P1) belum ada -> jatuh ke momen kecil
+    mix: { dilema: 0.55, cerita: 0.25, momen: 0.20 },  // 'cerita' = mulai rantai cerita berantai (P1); tak ada yang cocok -> momen kecil
     maxDilemmaPerDay: 1, maxModalPerDay: 2, minGapDays: 0.25,
     defaultRepeatDays: 28, sameCategoryGapDays: 3, nightBlock: true,
     weight: { stateBoost: 2.0, traitBoost: 1.3, novelty: 1.5 },

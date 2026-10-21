@@ -4,7 +4,7 @@
   "description": "Tes Playwright untuk Desa Mandiri (butuh server di http://localhost:8095 — python serve.py — atau set GAME_URL)",
   "scripts": {
     "setup": "npx playwright install chromium",
-    "test": "node menu-tutorial.test.js && node villager-panel.test.js && node tech-tree.test.js && node market.test.js && node text-v11.test.js && node audio.test.js && node achievements.test.js && node mobile.test.js && node smoke.test.js && node pathfinding-camera.test.js && node seasons-farming.test.js && node newcomer.test.js && node threats.test.js && node stockpile.test.js && node threats-extra.test.js && node nusantara.test.js && node perbaikan.test.js && node siklus-hidup.test.js && node perbaikan-a.test.js && node cerita.test.js && node pangan.test.js && node v9c.test.js && node alami.test.js"
+    "test": "node menu-tutorial.test.js && node villager-panel.test.js && node tech-tree.test.js && node market.test.js && node text-v11.test.js && node audio.test.js && node achievements.test.js && node mobile.test.js && node smoke.test.js && node pathfinding-camera.test.js && node seasons-farming.test.js && node newcomer.test.js && node threats.test.js && node stockpile.test.js && node threats-extra.test.js && node nusantara.test.js && node perbaikan.test.js && node siklus-hidup.test.js && node perbaikan-a.test.js && node cerita.test.js && node pangan.test.js && node v9c.test.js && node alami.test.js && node p1.test.js"
   },
   "devDependencies": {
     "playwright": "^1.50.0"

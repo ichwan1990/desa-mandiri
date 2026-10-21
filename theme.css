@@ -146,3 +146,27 @@ body.mobile #modal.story{width:auto}
 #fieldTip{position:fixed;display:none;pointer-events:none;z-index:30;padding:6px 9px;font-size:12px;line-height:1.35;max-width:260px}
 #fieldTip .why{color:#a63e34;font-weight:bold}
 #dayaTarik{font-size:12px;line-height:1.35;cursor:help}
+/* P1: keinginan warga (panel samping) */
+#wish h4 { margin: 8px 0 4px; font-size: 13px; }
+#wish .wcard { display: flex; gap: 6px; align-items: flex-start; padding: 3px 4px; margin: 2px 0; border-radius: 6px; background: rgba(255,255,255,.05); }
+#wish .wcard.hampir { background: rgba(255,120,80,.14); }
+#wish .wcard img { image-rendering: pixelated; flex: none; }
+#wish .wbtn { font-size: 11px; padding: 1px 6px; margin-top: 2px; }
+#wish .wbtn img.resico { width: 12px; height: 12px; vertical-align: -2px; }
+#wish .dim { opacity: .7; }
+/* P1: panel Tujuan Desa (monumen, kerja bakti, gelar, rencana tahun) */
+#tujuanpanel{display:none;position:absolute;left:50%;top:70px;transform:translateX(-50%);width:min(640px,94vw);max-height:80vh;overflow:auto;z-index:30;padding:12px;font-size:12px}
+#tujuanpanel .x{float:right}
+#tujuanpanel h4{margin:10px 0 4px;font-size:13px}
+#tujuanpanel .mcard{display:flex;gap:10px;align-items:flex-start;padding:6px;margin:4px 0;border-radius:6px;background:rgba(255,255,255,.06)}
+#tujuanpanel .mthumb{width:64px;height:64px;object-fit:contain;object-position:bottom;image-rendering:pixelated;flex:none}
+#tujuanpanel .mrow{display:flex;align-items:center;gap:2px;margin:2px 0}
+#tujuanpanel .mpip{display:inline-block;width:8px;height:8px;background:url(assets/ui/progress/monument_stage_pip.png) 0 0/24px 8px;image-rendering:pixelated}
+#tujuanpanel .mbar{position:relative;width:96px;height:20px;background:url(assets/ui/progress/monument_bar_frame_panel.png);image-rendering:pixelated;margin:2px 0}
+#tujuanpanel .mfill{position:absolute;left:6px;top:6px;height:8px;background:url(assets/ui/progress/monument_bar_fill_panel.png) repeat-x;image-rendering:pixelated}
+#tujuanpanel .mdiv{position:absolute;top:4px;width:2px;height:12px;background:url(assets/ui/progress/monument_bar_divider_panel.png);image-rendering:pixelated}
+#tujuanpanel .mbtn img,#tujuanpanel #kbBtn img{width:16px;height:16px;vertical-align:-3px;image-rendering:pixelated}
+#tujuanpanel .cost{margin-left:6px}#tujuanpanel .cost img.resico{width:12px;height:12px;vertical-align:-2px}
+#tujuanpanel .why{display:block;color:#ffb36b}
+#tujuanpanel .dim{opacity:.75;display:block}
+#tujuanpanel .greq{margin:3px 0 3px 4px}

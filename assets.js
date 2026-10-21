@@ -252,6 +252,13 @@ window.ASSETS = {
   else for (const k of ['cuaca_hujan_lebat', 'kilat_flash', 'kilat', 'cuaca_debu', 'debu', 'tint_kemarau', 'bayang_awan', 'sawah', 'sawah_kilau', 'sawah_undakan', 'tanaman_padi', 'tanaman_jagung', 'tanaman_singkong', 'tanaman_ubi', 'tanaman_kopi',
     'babi_hutan', 'kunang_kunang', 'gubuk_bambu', 'gubuk_bambu_malam', 'gubuk_bambu_mati', 'rumah_panggung', 'rumah_panggung_malam', 'rumah_panggung_mati', 'lumbung_padi', 'pos_ronda', 'pos_ronda_malam', 'pagar_bambu', 'obor_bambu']) delete A[k];
 })();
+// P1 (aset tahap 8b): monumen bertahap (<id>_tahapN selesai, <id>_tahapN_stages 4 frame proses) & orang-orangan sawah (32x64 x2 goyang)
+(function () { const A = window.ASSETS, M = { masjid: [128, 128, 3], bendungan: [96, 64, 4], pendopo_reog: [128, 96, 3] };
+  for (const [id, [fw, fh, n]] of Object.entries(M)) for (let i = 1; i <= n; i++) {
+    A[id + '_tahap' + i] = { color: '#b08a5a', img: `assets/buildings/monuments/${id}_tahap${i}.png`, fw, fh };
+    A[id + '_tahap' + i + '_stages'] = { color: '#b08a5a', img: `assets/buildings/monuments/${id}_tahap${i}_stages.png`, fw, fh, frames: 4 }; }
+  A.orang_orangan = { color: '#c9a24a', img: 'assets/structures/tropis/orang_orangan_sawah.png', fw: 32, fh: 64, frames: 2, ms: 500 };
+})();
 // Muat gambar dengan batas paralel (agar server sederhana tidak menolak koneksi) + coba ulang.
 window.loadAssets = function (done, opts = {}) {
   const MAX = opts.parallel || 12, RETRY = opts.retry ?? 2, queue = [];

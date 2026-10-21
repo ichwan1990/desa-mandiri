@@ -57,12 +57,16 @@ window.THEMES = {
     STORY_DISABLE: [],
     AGUS_HIDE: ['agus_bendera', 'agus_bunting'],
     STORY_SEASON_ALIAS: { semi: 'hujan', panas: 'labuh', gugur: 'mareng', dingin: 'kemarau' },
+    // P1 tujuan: konten khas Nusantara dimatikan di tema sedang (TEKS-TEMA-sedang.json belum punya keinginan/monumen/cerita/teladan/rencana_tahun)
+    TUJUAN_DISABLE: ['makan_rendang', 'nasi_pecel', 'rumah_panggung', 'nonton_reog', 'tabungan_haji', 'wayang_semalam', 'belajar_gamelan', 'rujak_bareng', 'bancakan_weton', 'tumpeng_syukuran',
+      'sawah_menguning', 'main_layangan', 'jajan_pasar', 'ronda_malam',   // teksnya menyebut sawah/padi/layangan bambu/kelapa/ronda-kentongan
+      'masjid', 'pendopo_reog', 'warok_muda', 'penakut_babi', 'resep_nenek', 'teladan', 'rencana'],
     STORY_PATCH: { MONKEY: { icon: '🦊', fallback: 'Seekor rubah menyelinap ke ladang dan membawa lari makanan!' } },
     TRAITS_PATCH: { founderNeedOneOf: null }, // aturan pengaman RISET-CERITA-TUJUAN §5.1: median d24 > 48 setelah efek sifat (55) -> hapus syarat sifat kerja pendiri
     MOOD_COMFORT_PATCH: { base: 64 }, // v9b: musim dingin menekan mood -> batas nyaman sedikit lebih tinggi supaya desa bahagia aktif ~25-45% hari seperti Nusantara
     SCHEDULE_PATCH: { dayWorkMult: 1.12, daySpeedMult: 1.2 }, // kompensasi jam tidur per tema (sim d24: 1.35 -> ~56; 1.2 + efek sifat -> 51-55; 1.12 -> lihat README)
     // pangan v9: musim empat-musim untuk memancing & jamur; pohon buah tropis, umbi hutan & keong sawah tidak ada (null = mati). Kolam Ikan membeku sebagian di musim dingin.
-    FOOD_SOURCES_PATCH: { meramu: { label: 'Buah beri' }, memancing: { season: { semi: 1.1, panas: 0.85, gugur: 0.9, dingin: 0.4 }, pondSeasonMin: 0.6 }, jamur: { season: { semi: 1.0, panas: 0.2, gugur: 1.0, dingin: 0 } }, buah: null, keong: null,
+    FOOD_SOURCES_PATCH: { meramu: { label: 'Buah beri', time: 20 }, memancing: { season: { semi: 1.1, panas: 0.85, gugur: 0.9, dingin: 0.4 }, pondSeasonMin: 0.6 }, jamur: { season: { semi: 1.0, panas: 0.2, gugur: 1.0, dingin: 0 } }, buah: null, keong: null,
       // padanan iklim sedang: umbi liar (kentang/lobak liar) tetap ada, tanpa pohon buah tropis & keong sawah
       umbi: { label: 'Kentang liar', count: 7, season: { semi: 1.0, panas: 0.4, gugur: 0.7, dingin: 0.3 } } },
     // TEKS-GAME.json (v1.5) dipakai semua tema. Teks lama yang di v1.4+ ditulis ulang bernuansa Nusantara ditimpa dengan teks empat musim
@@ -157,7 +161,7 @@ CONFIG.THREAT.wolf.hardMult = CONFIG.THREAT.wolf.winterMult;
     'SEASON_FX', 'NIGHT_THREAT', 'ART_SUFFIX', 'WINTER_ART', 'WEATHER', 'EVENT_DISABLE', 'EVENT_SEASON_ALIAS', 'TXT', 'TEXT_PATCH', 'TERMS', 'FIELD_ROTATION', 'ASSET_SWAP', 'RES_ICON', 'TEXT_FILE', 'TEXT_OVERLAY', 'AGUS_HIDE']) CONFIG[k] = T[k];
   for (const [b, n] of Object.entries(T.BUILDING_NAMES || {})) if (CONFIG.BUILDINGS[b]) CONFIG.BUILDINGS[b] = Object.assign({}, CONFIG.BUILDINGS[b], { nama: n });
   CONFIG.YEAR_SCALE = Object.assign({}, CONFIG.YEAR_SCALE, T.YEAR_SCALE);
-  CONFIG.STORY_DISABLE = T.STORY_DISABLE || []; CONFIG.STORY_SEASON_ALIAS = T.STORY_SEASON_ALIAS || null;
+  CONFIG.STORY_DISABLE = T.STORY_DISABLE || []; CONFIG.TUJUAN_DISABLE = T.TUJUAN_DISABLE || []; CONFIG.STORY_SEASON_ALIAS = T.STORY_SEASON_ALIAS || null;
   for (const [k, v] of Object.entries(T.STORY_PATCH || {})) if (CONFIG[k]) CONFIG[k] = Object.assign({}, CONFIG[k], v); // cerita.js dimuat sebelum tema.js
   if (T.TRAITS_PATCH && CONFIG.TRAITS) CONFIG.TRAITS = Object.assign({}, CONFIG.TRAITS, T.TRAITS_PATCH);
   if (T.FOOD_SOURCES_PATCH && CONFIG.FOOD_SOURCES) { CONFIG.FOOD_SOURCES = Object.assign({}, CONFIG.FOOD_SOURCES);

@@ -7,7 +7,7 @@ const { chromium } = require('playwright');
   const trigger = () => p.evaluate(() => { const S = DESA.state; S.event = 'pendatang'; DESA.showEvent();
     const btn = document.querySelector('[data-ev="0"]'); return { disabled: btn.disabled, name: S.eventName }; });
   const noHouse = await trigger();
-  await p.evaluate(() => document.querySelector('[data-ev="2"]').click());
+  await p.evaluate(() => document.querySelector('[data-ev="1"]').click()); // P1: pendatang kini 2 pilihan (Terima / Tolak halus)
   await p.evaluate(() => { DESA.addBuilding('gubuk', 18, 21, true); DESA.addBuilding('gubuk', 26, 22, true); });
   const withHouse = await trigger();
   const after = await p.evaluate(() => { document.querySelector('[data-ev="0"]').click(); const S = DESA.state;
