@@ -3475,6 +3475,52 @@ data = copy.deepcopy(data)  # lepas dari objek PATCH_V161
 terapkan_patch_v151(data, PATCH_V170)
 with open("/workspace/village-game/tools/patch-v1.7.0.json","w",encoding="utf-8") as f:
     json.dump(PATCH_V170,f,ensure_ascii=False,indent=2); f.write("\n")
+# ===================== v1.7.1 (aditif): P1b (e64bda9) — Kandang Ayam (telur), ringkasan Hari Jadi =====================
+# pangan.sumber.telur -> panganLabel('telur'); pangan.tugas.telur.{nama,log} -> taskName()/vhist() (log: {nama} {jumlah}, sama dengan tugas lain);
+# pangan.kandang.siap / .ayam ({jumlah} = jumlah induk) -> coopInfo(); hari_jadi_ringkasan.<k> -> HJ(k) = TX('hari_jadi_ringkasan.'+k).
+# bangunan_lokal.orang_orangan_sawah / kandang_ayam .nama SUDAH ADA sejak v1.3 ('Orang-orangan sawah', 'Kandang ayam'); tidak diubah (aditif).
+HJ_V171 = {
+ "_catatan": "Modal ringkasan Hari Jadi (game.js hariJadiHTML/hariJadiDaily). Placeholder persis seperti kode: log {hari} {tahun} {lahir} {pendatang} {bangunan} {tahap} (semua angka); judul {tahun}; rentang {hari} {hari2}; target {jumlah} {jumlah2}; tanpa_piagam {jumlah}. Label lain tanpa placeholder. Dipakai di innerHTML: tanpa '<'.",
+ "log": ["Hari Jadi Desa ke-{tahun}! Setahun ini {lahir} bayi lahir, {pendatang} pendatang tiba, {bangunan} bangunan berdiri, dan {tahap} tahap monumen rampung.",
+         "Selamat Hari Jadi Desa ke-{tahun}! Setahun penuh cerita: {lahir} bayi lahir, {pendatang} pendatang, {bangunan} bangunan baru, {tahap} tahap monumen."],
+ "judul": "Hari Jadi Desa ke-{tahun}",
+ "rentang": "Hari ke-{hari}–{hari2}",
+ "statistik": "Setahun ini",
+ "penduduk": "Penduduk", "lahir": "Lahir", "pendatang": "Pendatang", "wafat": "Berpulang", "pergi": "Pergi",
+ "bangunan": "Bangunan selesai", "pangan_masuk": "Pangan masuk", "pangan_keluar": "Pangan keluar",
+ "keinginan": "Keinginan terwujud", "kejadian": "Kejadian",
+ "target": "Rencana Desa: {jumlah}/{jumlah2} tercapai",
+ "piagam": "Piagam Tahunan diraih!",
+ "tanpa_piagam": "Piagam butuh {jumlah} target. Tahun depan kita coba lagi bersama.",
+ "gelar": "Gelar desa", "monumen": "Monumen", "tahap_tahun_ini": "Selesai tahun ini", "tutup": "Lanjutkan"}
+PATCH_V171 = {
+ "_patch": {"versi_dari": "1.7.0", "versi_ke": "1.7.1", "sifat": "hanya penambahan (tambah_key hari_jadi_ringkasan + tambah_path pangan; menolak menimpa)",
+            "sumber": "Asisten Koding 21-10 14:30: P1b e64bda9 (Kandang Ayam + telur, modal ringkasan Hari Jadi)"},
+ "tambah_key": {"hari_jadi_ringkasan": HJ_V171},
+ "tambah_path": {
+  "pangan.sumber.telur": "Telur",
+  "pangan.tugas.telur": {"nama": "Mengambil telur", "log": [
+   "{nama} mengambil {jumlah} butir telur dari kandang ayam. Induknya berkotek protes.",
+   "{nama} merogoh sarang jerami dan menemukan {jumlah} telur yang masih hangat.",
+   "Ayam-ayam berkotek riang. {nama} pulang membawa {jumlah} butir telur untuk lumbung."]},
+  "pangan.kandang": {"_catatan": "Panel info Kandang Ayam (coopInfo). siap = label stok telur; ayam: {jumlah} = jumlah induk (BUILDINGS.kandang_ayam.hens).",
+   "siap": "siap diambil", "ayam": "{jumlah} ekor ayam kampung"}},
+ "tambah_key_meta": {"catatan_v171": {
+   "bentuk": {"pangan.sumber.telur": "string", "pangan.tugas.telur": "{nama: string, log: array 2-4 ({nama}, {jumlah})}",
+              "pangan.kandang.siap / ayam": "string; ayam wajib {jumlah}", "hari_jadi_ringkasan.log": "array variasi; tanpa awalan Hari {hari}: (log() menambahkannya); {hari} boleh tidak dipakai",
+              "hari_jadi_ringkasan.<label>": "string"},
+   "catatan_koding": "bangunan_lokal.orang_orangan_sawah.nama ('Orang-orangan sawah') & kandang_ayam.nama ('Kandang ayam') sudah ada sejak v1.3 dan tidak diubah (aturan aditif). Tema sedang kini punya bangunan_lokal di overlay -> __localNames aktif. {bangunan}/{tahap} di hari_jadi_ringkasan.log berisi ANGKA (extra menimpa arti bawaan)."}},
+ "tambah_entri_meta": {"placeholder": {
+   "{lahir}": "Jumlah bayi lahir setahun (hari_jadi_ringkasan.log)",
+   "{pendatang}": "Jumlah pendatang setahun (hari_jadi_ringkasan.log)",
+   "{hari2}": "Hari akhir rentang (hari_jadi_ringkasan.rentang)"}},
+ "set_meta": {"versi": "1.7.1"},
+}
+PATCH_V171 = copy.deepcopy(PATCH_V171)
+data = copy.deepcopy(data)  # lepas dari objek PATCH_V170
+terapkan_patch_v151(data, PATCH_V171)
+with open("/workspace/village-game/tools/patch-v1.7.1.json","w",encoding="utf-8") as f:
+    json.dump(PATCH_V171,f,ensure_ascii=False,indent=2); f.write("\n")
 with open("/workspace/village-game/tools/patch-v1.5.1.json","w",encoding="utf-8") as f:
     json.dump(PATCH_V151,f,ensure_ascii=False,indent=2); f.write("\n")
 with open("/workspace/village-game/tools/patch-v1.5.0.json","w",encoding="utf-8") as f:

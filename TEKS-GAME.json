@@ -1,7 +1,7 @@
 {
   "meta": {
     "judul_game": "Desa Mandiri",
-    "versi": "1.7.0",
+    "versi": "1.7.1",
     "bahasa": "id-ID",
     "encoding": "UTF-8",
     "nuansa": "Hangat, santai, dan menggemaskan. Pemain menjaga penduduk kecil yang hidup mandiri. Ancaman nyata tapi ringan (badai, babi hutan, wabah, kekurangan makanan), dengan kehangatan kebersamaan sebagai penyeimbang.",
@@ -42,7 +42,10 @@
       "{lomba}": "Nama lomba 17-an (agustusan.lomba.<id>.nama)",
       "{keinginan}": "Judul keinginan penduduk (keinginan.<id>.judul)",
       "{pasaran}": "Nama hari pasaran Jawa (Legi, Pahing, Pon, Wage, Kliwon)",
-      "{buah}": "Nama buah/sumber pangan (pangan.sumber.<id>, mis. mangga); isi lewat extra fill(). pangan.pohon_buah: label apa adanya; pangan.tugas.buah.log: huruf kecil"
+      "{buah}": "Nama buah/sumber pangan (pangan.sumber.<id>, mis. mangga); isi lewat extra fill(). pangan.pohon_buah: label apa adanya; pangan.tugas.buah.log: huruf kecil",
+      "{lahir}": "Jumlah bayi lahir setahun (hari_jadi_ringkasan.log)",
+      "{pendatang}": "Jumlah pendatang setahun (hari_jadi_ringkasan.log)",
+      "{hari2}": "Hari akhir rentang (hari_jadi_ringkasan.rentang)"
     },
     "sumber_daya": {
       "kayu": "Kayu",
@@ -852,6 +855,16 @@
         "log_ancaman.diusir_orang_orangan": "array variasi; {hewan} = TERMS.hewan (babi hutan / serigala), selalu didahului 'Seekor' atau di tengah kalimat"
       },
       "catatan_koding": "TT('diusir_orang_orangan') di game.js belum punya entri C.TXT di tema.js, jadi teks ini belum terbaca. Usul: diusir_orang_orangan: ['log_ancaman.diusir_orang_orangan', '<fallback>'] di TXT kedua tema. Tema sedang: TEKS-TEMA-sedang.json kini punya keinginan, monumen, cerita, teladan, rencana_tahun -> semua id TUJUAN_DISABLE bisa dicabut. Nama bangunan dari kode (tujuan.js MONUMENTS.*.nama & stages[].nama, BUILDINGS.orang_orangan.nama) masih Nusantara di tema sedang bila kode tidak membaca monumen.<id>.nama dari TEKS."
+    },
+    "catatan_v171": {
+      "bentuk": {
+        "pangan.sumber.telur": "string",
+        "pangan.tugas.telur": "{nama: string, log: array 2-4 ({nama}, {jumlah})}",
+        "pangan.kandang.siap / ayam": "string; ayam wajib {jumlah}",
+        "hari_jadi_ringkasan.log": "array variasi; tanpa awalan Hari {hari}: (log() menambahkannya); {hari} boleh tidak dipakai",
+        "hari_jadi_ringkasan.<label>": "string"
+      },
+      "catatan_koding": "bangunan_lokal.orang_orangan_sawah.nama ('Orang-orangan sawah') & kandang_ayam.nama ('Kandang ayam') sudah ada sejak v1.3 dan tidak diubah (aturan aditif). Tema sedang kini punya bangunan_lokal di overlay -> __localNames aktif. {bangunan}/{tahap} di hari_jadi_ringkasan.log berisi ANGKA (extra menimpa arti bawaan)."
     }
   },
   "penduduk": [
@@ -10279,7 +10292,8 @@
       "pasar": "Pasar",
       "cerita": "Kejadian",
       "kerja_bakti": "Kerja bakti",
-      "pesta_17an": "Pesta 17-an"
+      "pesta_17an": "Pesta 17-an",
+      "telur": "Telur"
     },
     "tooltip": {
       "judul": "Pangan = semua yang bisa dimakan warga",
@@ -10397,7 +10411,20 @@
           "{nama} memungut {jumlah} keong sawah di sela padi yang berair.",
           "Sawah sedang berair, keong bermunculan. {nama} mengumpulkan {jumlah} keong ke dalam bakul."
         ]
+      },
+      "telur": {
+        "nama": "Mengambil telur",
+        "log": [
+          "{nama} mengambil {jumlah} butir telur dari kandang ayam. Induknya berkotek protes.",
+          "{nama} merogoh sarang jerami dan menemukan {jumlah} telur yang masih hangat.",
+          "Ayam-ayam berkotek riang. {nama} pulang membawa {jumlah} butir telur untuk lumbung."
+        ]
       }
+    },
+    "kandang": {
+      "_catatan": "Panel info Kandang Ayam (coopInfo). siap = label stok telur; ayam: {jumlah} = jumlah induk (BUILDINGS.kandang_ayam.hens).",
+      "siap": "siap diambil",
+      "ayam": "{jumlah} ekor ayam kampung"
     }
   },
   "otomatis": {
@@ -10428,5 +10455,32 @@
   "cerita_ui": {
     "_catatan": "Label kartu cerita berantai (cerita.<id>).",
     "label": "Cerita Warga"
+  },
+  "hari_jadi_ringkasan": {
+    "_catatan": "Modal ringkasan Hari Jadi (game.js hariJadiHTML/hariJadiDaily). Placeholder persis seperti kode: log {hari} {tahun} {lahir} {pendatang} {bangunan} {tahap} (semua angka); judul {tahun}; rentang {hari} {hari2}; target {jumlah} {jumlah2}; tanpa_piagam {jumlah}. Label lain tanpa placeholder. Dipakai di innerHTML: tanpa '<'.",
+    "log": [
+      "Hari Jadi Desa ke-{tahun}! Setahun ini {lahir} bayi lahir, {pendatang} pendatang tiba, {bangunan} bangunan berdiri, dan {tahap} tahap monumen rampung.",
+      "Selamat Hari Jadi Desa ke-{tahun}! Setahun penuh cerita: {lahir} bayi lahir, {pendatang} pendatang, {bangunan} bangunan baru, {tahap} tahap monumen."
+    ],
+    "judul": "Hari Jadi Desa ke-{tahun}",
+    "rentang": "Hari ke-{hari}–{hari2}",
+    "statistik": "Setahun ini",
+    "penduduk": "Penduduk",
+    "lahir": "Lahir",
+    "pendatang": "Pendatang",
+    "wafat": "Berpulang",
+    "pergi": "Pergi",
+    "bangunan": "Bangunan selesai",
+    "pangan_masuk": "Pangan masuk",
+    "pangan_keluar": "Pangan keluar",
+    "keinginan": "Keinginan terwujud",
+    "kejadian": "Kejadian",
+    "target": "Rencana Desa: {jumlah}/{jumlah2} tercapai",
+    "piagam": "Piagam Tahunan diraih!",
+    "tanpa_piagam": "Piagam butuh {jumlah} target. Tahun depan kita coba lagi bersama.",
+    "gelar": "Gelar desa",
+    "monumen": "Monumen",
+    "tahap_tahun_ini": "Selesai tahun ini",
+    "tutup": "Lanjutkan"
   }
 }

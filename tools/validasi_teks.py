@@ -1,4 +1,4 @@
-"""Validasi TEKS-GAME.json v1.7.0 terhadap backup v1.0.0 (+allowlist tuning), v1.1.0, v1.2.0, v1.3.0, v1.4.0, v1.5.0, v1.5.1, v1.6.0, v1.6.1.
+"""Validasi TEKS-GAME.json v1.7.1 terhadap backup v1.0.0 (+allowlist tuning), v1.1.0, v1.2.0, v1.3.0, v1.4.0, v1.5.0, v1.5.1, v1.6.0, v1.6.1, v1.7.0.
 Sejak v1.4.0 (lokalisasi Indonesia) teks tampilan boleh berubah, tetapi semua key/struktur, semua angka/boolean, dan semua
 string berjenis id (id, tipe, target, era, musim, prasyarat, event_terkait, ...) harus tetap sama; placeholder teks yang berubah
 tidak boleh bertambah. Ditambah: cek kata terlarang (salju, serigala, harimau, ...) di semua teks tampilan, dan bagian baru v1.4/v1.5.
@@ -9,6 +9,7 @@ tidak muncul di teks cerita yang aktif di tema sedang).
 v1.6.0 hanya menambah key top-level pangan (pangan v9 game.js) + placeholder {buah}: semua key wajib ada di kedua tema (TEKS dan hasil
 gabungan sedang), placeholder sesuai yang diisi kode, tanpa kata khas Indonesia di pangan tema sedang (kecuali yang tidak dipakai tema itu).
 v1.6.1 (v9c) hanya menambah: otomatis.api_unggun/gubuk (array 2-4, {nama}/{nama2}), 10 pangan.keluar baru, daya_tarik.bahagia_syarat/murung.
+v1.7.1 (P1b) hanya menambah pangan.sumber/tugas.telur, pangan.kandang, hari_jadi_ringkasan (+{lahir} {pendatang} {hari2}); sedang menulis bangunan_lokal.
 v1.7.0 (P1) hanya menambah key UI (event_ui, cerita_ui, banner/tooltip masa awal, pentas_reog, orang_orangan_berdiri, diusir_orang_orangan,
 keinginan._ui.otomatis) di kedua tema; overlay sedang mendapat keinginan/monumen/cerita/teladan/rencana_tahun (placeholder <= teks Nusantara path
 yang sama, tanpa kata khas Indonesia; cerita.<id>.langkah[i].hasil boleh ditimpa karena berisi teks). Path lain bisa diberikan lewat env TEKS_FILE / TEKS_SEDANG (untuk uji negatif)."""
@@ -48,7 +49,7 @@ def sub(a, b, p, idk=False):
             teks_diubah.append(p)
     elif type(a) != type(b) or a != b: err.append(f"nilai/id berubah: {p} ({a!r} -> {b!r})")
 sub(old, new, "")
-if new["meta"]["versi"] != "1.7.0": err.append("meta.versi bukan 1.7.0")
+if new["meta"]["versi"] != "1.7.1": err.append("meta.versi bukan 1.7.1")
 for k in old:
     if list(new).index(k) != list(old).index(k): err.append(f"urutan key top-level berubah: {k}")
 m = new["meta"]
@@ -506,7 +507,7 @@ def cek_ov(b, o, p):  # overlay hanya boleh menimpa teks yang sudah ada di TEKS-
         if not isinstance(b, dict): sed_err.append(f"objek menimpa non-objek @ {p}"); return
         for k, v in o.items():
             if k.startswith("_"): continue
-            if k in BUKAN_TEKS and not (k == "hasil" and re.fullmatch(r"/cerita/\w+/langkah\[\d+\]", p)): sed_err.append(f"overlay menimpa data non-teks '{k}' @ {p}"); continue
+            if k in BUKAN_TEKS and not (k == "hasil" and re.fullmatch(r"/cerita/\w+/langkah\[\d+\]", p)) and not (k == "target" and p == "/hari_jadi_ringkasan" and isinstance(v, str)): sed_err.append(f"overlay menimpa data non-teks '{k}' @ {p}"); continue
             if k not in b: sed_err.append(f"path tidak ada di TEKS-GAME.json: {p}/{k}"); continue
             cek_ov(b[k], v, f"{p}/{k}")
     elif isinstance(o, list):
@@ -606,10 +607,10 @@ if "catatan_v160" not in m: err.append("meta.catatan_v160 hilang")
 if "{buah}" not in m["placeholder"]: err.append("placeholder {buah} (v1.6.0) tidak terdaftar")
 # id dari kode (game.js PANGAN_FB, FOOD_OUT_FB, penyerap takeFood/surplusSink) + C.FOOD_SOURCES (balance.js); cadangan bila tidak terbaca
 SUMBER = ["meramu", "memancing", "ikan", "jamur", "buah", "mangga", "rambutan", "pisang", "kelapa", "umbi", "keong", "padi", "jagung", "ubi", "singkong",
-          "gandum", "wortel", "makanan", "pasar", "cerita", "kerja_bakti", "pesta_17an"]
+          "gandum", "wortel", "makanan", "pasar", "cerita", "kerja_bakti", "pesta_17an", "telur"]  # telur: v1.7.1 (e64bda9)
 KELUAR = ["dimakan", "busuk", "kenduri", "tikus", "monyet", "syukuran_lahir", "syukuran_panen", "pesta", "dijual", "lainnya",
           "event", "cerita", "hadiah", "rusak", "pasar", "lomba", "pesta_17an", "kerja_bakti", "monumen", "keinginan"]  # baris 2: v1.6.1 (51b6d4d)
-TUGAS = ["meramu", "memancing", "jamur", "buah", "umbi", "keong"]  # = C.FOOD_SOURCES (dikonfirmasi Asisten Koding 21-10)
+TUGAS = ["meramu", "memancing", "jamur", "buah", "umbi", "keong", "telur"]  # = C.FOOD_SOURCES (dikonfirmasi Asisten Koding 21-10; telur v1.7.1 e64bda9)
 try:
     _g = open(ROOT + "game.js", encoding="utf-8").read(); _b = open(ROOT + "balance.js", encoding="utf-8").read()
     _fb = re.search(r"const PANGAN_FB = \{(.*?)\};", _g, re.S).group(1); _ob = re.search(r"const FOOD_OUT_FB = \{(.*?)\};", _g).group(1)
@@ -784,6 +785,83 @@ def _bersih(x):
     return any(x in ov.get(s, {}) for s in ("keinginan", "monumen", "cerita")) and not any(k == x for _, k in kena_t)
 tujuan_cabut = [x for x in TUJUAN_OFF if _bersih(x)]
 tujuan_tetap = [x for x in TUJUAN_OFF if x not in tujuan_cabut]
+# ---------- v1.7.1: P1b (e64bda9) — Kandang Ayam (telur, pangan.kandang), nama bangunan lokal P1, ringkasan Hari Jadi; kedua tema ----------
+old170 = json.load(open(ROOT + "tools/TEKS-GAME.v1.7.0.json", encoding="utf-8"))
+teks_diubah.clear(); _n = len(err); sub(old170, new, "")
+if len(err) > _n: err.insert(_n, "^ perbedaan struktur/angka terhadap v1.7.0:")
+if teks_diubah: err.append(f"v1.7.1 hanya penambahan, tetapi {len(teks_diubah)} teks v1.7.0 berubah, mis. {teks_diubah[:3]}")
+for k in old170:
+    if list(new).index(k) != list(old170).index(k): err.append(f"urutan key top-level v1.7.0 berubah: {k}")
+if "catatan_v171" not in m: err.append("meta.catatan_v171 hilang")
+for k in ("{lahir}", "{pendatang}", "{hari2}"):
+    if k not in m["placeholder"]: err.append(f"placeholder v1.7.1 tidak terdaftar: {k}")
+# ringkasan Hari Jadi: key & placeholder persis seperti HJ(k, extra) di game.js (cadangan bila tidak terbaca)
+HJ_PH = {"log": ("hari", "tahun", "lahir", "pendatang", "bangunan", "tahap"), "judul": ("tahun",), "rentang": ("hari", "hari2"), "statistik": (),
+         "penduduk": (), "lahir": (), "pendatang": (), "wafat": (), "pergi": (), "bangunan": (), "pangan_masuk": (), "pangan_keluar": (), "keinginan": (),
+         "kejadian": (), "target": ("jumlah", "jumlah2"), "piagam": (), "tanpa_piagam": ("jumlah",), "gelar": (), "monumen": (), "tahap_tahun_ini": (), "tutup": ()}
+# bangunan lokal yang namanya dibaca game.js tujuanNames(): BUILDINGS id -> bangunan_lokal.<key>.nama
+BANGUNAN_LOKAL_KODE = {"orang_orangan": "orang_orangan_sawah", "kandang_ayam": "kandang_ayam"}
+try:
+    _g = open(ROOT + "game.js", encoding="utf-8").read(); _b = open(ROOT + "balance.js", encoding="utf-8").read()
+    _f = re.search(r"function hariJadiHTML\(R\)(.*?)\n(?:function|//)", _g, re.S).group(1) + re.search(r"function hariJadiDaily\(\)(.*?)\n(?:function|//)", _g, re.S).group(1) + re.search(r"function showHariJadi\(\)(.*?)\n(?:function|//)", _g, re.S).group(1)
+    HJ_K = set(re.findall(r"HJ\('(\w+)'", _f)) | set(re.findall(r"row\('[^']*', '(\w+)'", _f))
+    if HJ_K != set(HJ_PH): err.append(f"hari_jadi_ringkasan: key di game.js berubah: baru {sorted(HJ_K - set(HJ_PH))}, hilang {sorted(set(HJ_PH) - HJ_K)}")
+    for k, ex in re.findall(r"HJ\('(\w+)', \{([^}]*)\}", _f):
+        ph = set(re.findall(r"(\w+):", ex))
+        if k in HJ_PH and ph != set(HJ_PH[k]): err.append(f"hari_jadi_ringkasan.{k}: extra di game.js {sorted(ph)} != daftar validator {sorted(HJ_PH[k])}")
+    _ln = re.search(r"for \(const \[b, k\] of \[(.*?)\]\) \{ const n = \(\(t\.bangunan_lokal", _g)
+    _lk = dict(re.findall(r"\['(\w+)', '(\w+)'\]", _ln.group(1))) if _ln else {}
+    if _lk != BANGUNAN_LOKAL_KODE: err.append(f"bangunan lokal yang dibaca tujuanNames() berubah: {_lk}")
+    _bd = re.search(r"BUILDINGS: \{(.*?)\n  \},", _b, re.S)
+    _bid = set(re.findall(r"^\s{4}(\w+):\s*\{", _bd.group(1), re.M)) if _bd else set()
+    _bid |= set(re.findall(r"CONFIG\.BUILDINGS\.(\w+)\s*=", open(ROOT + "tujuan.js", encoding="utf-8").read()))  # bangunan P1 ditambah di tujuan.js
+    if _bid and set(BANGUNAN_LOKAL_KODE) - _bid: err.append(f"id bangunan tidak ada di C.BUILDINGS: {sorted(set(BANGUNAN_LOKAL_KODE) - _bid)}")
+    for k in ("pangan.kandang.siap", "pangan.kandang.ayam"):
+        if f"TX('{k}'" not in _g: sed_warn.append(f"v1.7.1: {k} tidak lagi ditemukan di game.js")
+except Exception as e: sed_warn.append(f"game.js/balance.js tidak terbaca untuk cek v1.7.1 ({e}); memakai daftar bawaan")
+def cek_v171(T, sumber):
+    hj = T.get("hari_jadi_ringkasan")
+    if not isinstance(hj, dict): err.append(f"{sumber}hari_jadi_ringkasan hilang"); hj = {}
+    for k, ph in HJ_PH.items():
+        v = hj.get(k)
+        if k == "log":
+            if not (isinstance(v, list) and 1 <= len(v) <= 4): err.append(f"{sumber}hari_jadi_ringkasan.log harus array 1-4 variasi"); continue
+        elif not isinstance(v, str): err.append(f"{sumber}hari_jadi_ringkasan.{k} harus string"); continue
+        for x in (v if isinstance(v, list) else [v]):
+            cek_teks(x, "hari_jadi_ringkasan." + k, sumber, ph, False)
+            if "<" in x: err.append(f"{sumber}hari_jadi_ringkasan.{k}: tanpa '<' (innerHTML)")
+            for w in ph:
+                if w != "hari" or k == "rentang":
+                    if "{" + w + "}" not in x: err.append(f"{sumber}hari_jadi_ringkasan.{k} harus memakai {{{w}}}")
+    for path, bt, ph, wajib in (("pangan.sumber.telur", "str", (), ()), ("pangan.tugas.telur.nama", "str", (), ()),
+                                ("pangan.tugas.telur.log", "list", ("nama", "jumlah"), ("jumlah",)),
+                                ("pangan.kandang.siap", "str", (), ()), ("pangan.kandang.ayam", "str", ("jumlah",), ("jumlah",))) + tuple(
+                               (f"bangunan_lokal.{b}.nama", "str", (), ()) for b in BANGUNAN_LOKAL_KODE.values()):
+        v = ambil(T, path)
+        if bt == "str" and not (isinstance(v, str) and v.strip()): err.append(f"{sumber}{path} harus string"); continue
+        if bt == "list" and not (isinstance(v, list) and 2 <= len(v) <= 4): err.append(f"{sumber}{path} harus array 2-4 variasi"); continue
+        for x in (v if isinstance(v, list) else [v]):
+            cek_teks(x, path, sumber, ph, False)
+            for w in wajib:
+                if "{" + w + "}" not in x: err.append(f"{sumber}{path} harus memakai {{{w}}}")
+cek_v171(new, "")
+cek_v171(sd, "sedang:")
+# tema sedang: overlay WAJIB menulis bangunan_lokal kedua nama (game.js: ov.bangunan_lokal ada -> __localNames, nama Nusantara tak boleh bocor)
+for b in BANGUNAN_LOKAL_KODE.values():
+    if not isinstance(ambil(ov, f"bangunan_lokal.{b}.nama"), str): sed_err.append(f"overlay sedang tanpa bangunan_lokal.{b}.nama (nama Nusantara akan dipakai)")
+for path in ("pangan.kandang.ayam", "pangan.tugas.telur"):
+    if ambil(ov, path) is None: sed_err.append(f"overlay sedang tanpa {path} (teks Nusantara akan dipakai)")
+KHAS_V171 = KHAS_TUJUAN + ["ayam kampung", "caping", "pipit"]
+RX171 = re.compile(r"(?<![\w-])(" + "|".join(re.escape(w) for w in sorted(set(KHAS_V171), key=len, reverse=True)) + r")(?![\w-])", re.I)
+for path in ["pangan.sumber.telur", "pangan.tugas.telur", "pangan.kandang", "hari_jadi_ringkasan"] + [f"bangunan_lokal.{b}" for b in BANGUNAN_LOKAL_KODE.values()]:
+    o = []
+    def _s(x, p):
+        if isinstance(x, str): o.extend((p, h.group(1)) for h in RX171.finditer(x))
+        elif isinstance(x, dict): [_s(v, f"{p}/{k}") for k, v in x.items() if not k.startswith("_") and k not in SKIP_T]
+        elif isinstance(x, list): [_s(v, f"{p}[{i}]") for i, v in enumerate(x)]
+    _s(ambil(sd, path), path)
+    if o: sed_err.append(f"kata khas Indonesia di tema sedang: {path}: " + ", ".join(f"'{w}' @ {p}" for p, w in o[:3]))
+    cek_ph(ambil(sd, path), ambil(new, path), path); walk_s(ambil(sd, path), path)
 err += sed_err
 # kata terlarang di SEMUA teks tampilan (bukan key, bukan string id, bukan meta teknis)
 META_TAMPIL = ("sumber_daya", "bangunan", "musim", "era", "hewan", "penyebab_kondisi", "bangunan_pertahanan", "tahap_usia", "status_hubungan",
@@ -839,9 +917,10 @@ print(f"v1.6.0: pangan {len(V160)} key teks + daya_tarik.pendatang {len(new['pan
 print(f"v1.6.1: otomatis {len(OTOMATIS)} ({', '.join(f'{k} {len(new['otomatis'][k])} variasi' for k in OTOMATIS)}) | pangan.keluar +10 | daya_tarik.bahagia_syarat, murung")
 print(f"v1.7.0: key UI {len(V170)} | sedang tujuan: keinginan {len([k for k in ov.get('keinginan', {}) if not k.startswith('_')])}, monumen {len([k for k in ov.get('monumen', {}) if k != 'ui'])}, cerita {len(ov.get('cerita', {}))}, teladan/rencana_tahun {'ada' if 'teladan' in ov and 'rencana_tahun' in ov else 'BELUM'}")
 print(f"tema sedang: TUJUAN_DISABLE bisa dicabut: {tujuan_cabut or '-'}" + (f" | masih perlu disable: {tujuan_tetap}" if tujuan_tetap else ""))
+print(f"v1.7.1: pangan telur (sumber, tugas {len(new['pangan']['tugas']['telur']['log'])} log), kandang siap/ayam | hari_jadi_ringkasan {len(HJ_PH)} key | bangunan_lokal sedang: {', '.join(ambil(ov, f'bangunan_lokal.{b}.nama') or '-' for b in BANGUNAN_LOKAL_KODE.values())}")
 print(f"tema sedang: overlay {len([k for k in ov if not k.startswith('_')])} bagian | cerita: dilema {len(ov.get('dilema', {}).get('__byId', []))}, momen {len([k for k in ov.get('momen_kecil', {}) if not k.startswith('_')])}, "
       f"lomba {len(ov.get('agustusan', {}).get('lomba', {}))} | kata khas Indonesia di cerita aktif: {sum(len(v) for k, v in kena.items() if k in aktif)}")
 print(f"tema sedang: STORY_DISABLE bisa dicabut: {bisa_cabut or '-'}" + (f" | masih perlu disable: {tetap}" if tetap else "") + f" | STORY_PATCH enabled:false bisa dicabut: {patch_cabut or '-'}")
 for w in sed_warn: print(" peringatan:", w)
 if err: print("GAGAL:"); [print(" -", e) for e in err]; sys.exit(1)
-print("OK: JSON valid, struktur/id/angka lama utuh (TUNING_V10 + 14 retuning, v1.0-v1.6.1), overlay sedang bersih, kata terlarang bersih, semua efek/tipe/target/placeholder terdaftar.")
+print("OK: JSON valid, struktur/id/angka lama utuh (TUNING_V10 + 14 retuning, v1.0-v1.7.0), overlay sedang bersih, kata terlarang bersih, semua efek/tipe/target/placeholder terdaftar.")

@@ -1848,7 +1848,8 @@
    "pasar": "Pasar",
    "cerita": "Kejadian",
    "kerja_bakti": "Kerja bersama",
-   "pesta_17an": "Festival Panen"
+   "pesta_17an": "Festival Panen",
+   "telur": "Telur"
   },
   "keluar": {
    "dimakan": "dimakan",
@@ -1918,7 +1919,19 @@
      "{nama} menggali kentang liar di tepi hutan dan mendapat {jumlah} butir.",
      "Tanah gembur di bawah semak menyimpan kentang liar. {nama} pulang membawa {jumlah}."
     ]
+   },
+   "telur": {
+    "nama": "Mengambil telur",
+    "log": [
+     "{nama} mengambil {jumlah} butir telur dari sarang jerami. Induknya berkotek protes.",
+     "{nama} merogoh sarang jerami di kandang dan menemukan {jumlah} telur yang masih hangat.",
+     "Ayam-ayam berkotek riang. {nama} pulang membawa {jumlah} butir telur untuk gudang desa."
+    ]
    }
+  },
+  "kandang": {
+   "siap": "siap diambil",
+   "ayam": "{jumlah} ekor ayam"
   }
  },
  "otomatis": {
@@ -2921,8 +2934,44 @@
  "cerita_ui": {
   "label": "Cerita Warga"
  },
+ "bangunan_lokal": {
+  "orang_orangan_sawah": {
+   "nama": "Orang-orangan",
+   "tooltip": "Bertopi jerami dan bermantel lusuh. Mengusir burung dan membuat serigala ragu."
+  },
+  "kandang_ayam": {
+   "nama": "Kandang ayam",
+   "tooltip": "Kandang kayu kecil beratap jerami. Telurnya menambah makanan."
+  }
+ },
+ "hari_jadi_ringkasan": {
+  "log": [
+   "Hari Jadi Desa ke-{tahun}! Setahun ini {lahir} bayi lahir, {pendatang} pendatang tiba, {bangunan} bangunan berdiri, dan {tahap} tahap monumen rampung.",
+   "Selamat Hari Jadi Desa ke-{tahun}! Setahun penuh cerita: {lahir} bayi lahir, {pendatang} pendatang, {bangunan} bangunan baru, {tahap} tahap monumen."
+  ],
+  "judul": "Hari Jadi Desa ke-{tahun}",
+  "rentang": "Hari ke-{hari}–{hari2}",
+  "statistik": "Setahun ini",
+  "penduduk": "Penduduk",
+  "lahir": "Lahir",
+  "pendatang": "Pendatang",
+  "wafat": "Berpulang",
+  "pergi": "Pergi",
+  "bangunan": "Bangunan selesai",
+  "pangan_masuk": "Pangan masuk",
+  "pangan_keluar": "Pangan keluar",
+  "keinginan": "Keinginan terwujud",
+  "kejadian": "Kejadian",
+  "target": "Rencana Desa: {jumlah}/{jumlah2} tercapai",
+  "piagam": "Piagam Tahunan diraih!",
+  "tanpa_piagam": "Piagam butuh {jumlah} target. Tahun depan kita coba lagi bersama.",
+  "gelar": "Gelar desa",
+  "monumen": "Monumen",
+  "tahap_tahun_ini": "Selesai tahun ini",
+  "tutup": "Lanjutkan"
+ },
  "_cerita_sedang": {
-  "versi": "1.7.0-sedang.1",
+  "versi": "1.7.1-sedang.1",
   "alat": "tools/buat_tema_sedang_cerita.py",
   "bagian": [
    "dilema",
@@ -2943,7 +2992,12 @@
    "cerita_ui",
    "agustusan.pentas_reog",
    "dilema_ui.orang_orangan_berdiri",
-   "log_ancaman.diusir_orang_orangan"
+   "log_ancaman.diusir_orang_orangan",
+   "pangan.sumber.telur",
+   "pangan.tugas.telur",
+   "pangan.kandang",
+   "bangunan_lokal (orang_orangan_sawah, kandang_ayam)",
+   "hari_jadi_ringkasan"
   ],
   "catatan": "Jalankan SETELAH node tools/buat_overlay_sedang.js (alat itu menulis ulang file ini dan menghapus bagian cerita)."
  },
