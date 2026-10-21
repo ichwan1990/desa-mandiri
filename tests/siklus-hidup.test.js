@@ -36,7 +36,7 @@ const path = require('path'); const SHOT = n => path.join(__dirname, '..', 'docs
     out.partnerFloor = (() => { R.relSet(sa, bu, 0); return R.relGet(sa, bu); })(); Math.random = rnd;
     out.pairLevel = R.relLevel(sa, bu);
     // jadwal: 22:00 penduduk masuk rumah, lampu mati, Zzz
-    S.villagers.forEach(v => { v.task = null; v.energy = 80; v.hunger = 95; }); setDay(6, 0.86); run(40, () => S.villagers.every(v => v.inside != null));
+    S.villagers.forEach(v => { v.task = null; v.energy = 80; v.hunger = 95; }); setDay(6, 0.86); run(40, () => S.villagers.every(v => v.inside != null && v.task && v.task.asleep)); // tunggu semua benar-benar tidur (dulu kadang 1 baru masuk -> lampu masih menyala, flaky ~1/8)
     out.asleep = S.villagers.map(v => [v.task && v.task.kind, v.inside != null]);
     const h = S.buildings.find(x => x.id === sa.homeId); out.lightOff = h && !DESA.houseLit(h);
     out.doorHidden = !ASSETS.gubuk_pintu; // sprite pintu kayu tidak cocok dengan gubuk bambu
