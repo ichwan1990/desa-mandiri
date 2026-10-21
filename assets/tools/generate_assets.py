@@ -3356,6 +3356,37 @@ def pangan():
 def stage9():
     fishing(); ponds(); jamur_bakul(); pangan()
 
+# ================= TAHAP 9b: ikon jagung & rambutan =================
+def I_jagung(im,d):
+    # daun kelobot kiri/kanan
+    d.polygon([(16,30),(5,12),(3,4),(11,14),(15,24)],fill=P('corn_husk')); d.line([(15,28),(6,12)],fill=P('leaf_d'))
+    d.polygon([(16,30),(27,12),(29,4),(21,14),(17,24)],fill=P('corn_husk')); d.line([(17,28),(26,12)],fill=P('leaf_d'))
+    # tongkol
+    ell(im,(10,3,22,27),'corn'); ell(im,(11,4,16,14),'straw_l')
+    for y in range(6,26,3):
+        for x in range(12,21,3):
+            if (x-16)**2/36+(y-15)**2/144<0.85: px(im,x,y,'pisang_d')
+    # rambut jagung + daun bawah
+    for x,c in((14,'coco_l'),(16,'wood_d'),(18,'coco_l')): d.line([(16,4),(x,0)],fill=P(c))
+    d.polygon([(16,31),(9,20),(12,19),(16,26),(20,19),(23,20)],fill=P('leaf')); px(im,11,21,'leaf_l'); px(im,21,21,'leaf_l')
+def I_rambutan(im,d):
+    import math
+    d.line([(17,1),(16,6)],fill=P('wood_d'),width=2); d.line([(16,6),(9,10)],fill=P('wood_d')); d.line([(16,6),(23,10)],fill=P('wood_d'))
+    ell(im,(18,0,28,5),'leaf'); px(im,21,2,'leaf_l')
+    def ball(cx,cy,r,peeled=False):
+        L=new(); dl=ImageDraw.Draw(L)
+        for k in range(12):
+            t=k*math.pi/6+0.2; x=round(cx+math.cos(t)*(r+1)); y=round(cy+math.sin(t)*(r+1)); px(L,x,y,'leaf_l' if k%2 else 'rambutan')
+        ell(L,(cx-r,cy-r,cx+r,cy+r),'rambutan'); ell(L,(cx-r+1,cy-r+1,cx,cy),'rambutan_l')
+        for k in range(6):
+            t=k*math.pi/3; px(L,round(cx+math.cos(t)*(r-2)),round(cy+math.sin(t)*(r-2)),'leaf_l')
+        if peeled: ell(L,(cx-r+2,cy-r+1,cx+r-2,cy+r-3),'white'); ell(L,(cx-r+3,cy-r+2,cx-1,cy-1),'frangi'); px(L,cx-1,cy-2,'water_l')
+        im.alpha_composite(outline(L))
+    ball(9,15,6); ball(23,15,6); ball(16,23,7,True)
+def stage9b():
+    save(icon_draw(I_jagung),'icons/resources/icon_jagung.png',note='ikon sumber daya jagung (tongkol + kelobot) 32x32; format sama dengan icons/resources (tanpa _16); padanan hasil nature/crops/crop_jagung.png')
+    save(icon_draw(I_rambutan),'icons/resources/icon_rambutan.png',note='ikon sumber daya rambutan (3 buah, satu dikupas) 32x32; tanpa _16; padanan nature/tropis/tree_rambutan.png')
+
 if __name__=='__main__':
     tiles(); tree(); rock(); bush(True); bush(False); fields(); villagers(); campfire(); hut(); warehouse(); well(); mine(); wooden_house(); effects(); icons()
     for o in OUT: o['stage']=1
@@ -3379,5 +3410,7 @@ if __name__=='__main__':
     for o in OUT[n8:]: o['stage']=8; o['sub']='8c'
     stage9()
     for o in OUT: o.setdefault('stage',9)
+    n9=len(OUT); stage9b()
+    for o in OUT[n9:]: o['stage']=9; o['sub']='9b'
     json.dump(dict(palette=PALETTE,files=OUT),open(os.path.join(ROOT,'manifest.json'),'w'),indent=1)
     print(len(OUT),'files')

@@ -1368,3 +1368,17 @@ Palet bertambah: keong, jamur, tiram, kuping, umbi, tambak, nila, ikan_or, pisan
 - Belum ada varian musim untuk kolam dan tambak (mis. kering di kemarau), belum ada versi malam, dan belum ada animasi memberi pakan.
 - Jamur tidak punya varian beracun. Bila nanti diperlukan mekanik "salah petik", perlu aset tambahan.
 - Ikon pisang 32px berbentuk sesisir sederhana.
+
+## Tahap 9b: ikon jagung & rambutan (manifest `stage: 9`, `sub: "9b"`)
+
+Ada 2 file baru. Semua file lama tidak berubah (md5 dicek pada 776 PNG). Generator: `stage9b()`. Preview: `preview_9b.png` (`tools/make_preview_9b.py`). Palet tidak berubah.
+
+| File | Ukuran | Catatan |
+|---|---|---|
+| `icons/resources/icon_jagung.png` | 32x32 | Tongkol + kelobot. Hasil panen `nature/crops/crop_jagung.png`. Tanpa `_16`, seperti ikon resource lain. |
+| `icons/resources/icon_rambutan.png` | 32x32 | 3 buah berambut, satu dikupas (daging putih). Tanpa `_16`. |
+
+**Pohon rambutan sudah ada sejak tahap 7 dan terdaftar di manifest.** Formatnya identik dengan `tree_pisang`, `tree_kelapa`, dan `tree_mangga`: 32x64 RGBA, 1 frame, anchor bawah (2 tile tinggi, batang di tile bawah).
+- `nature/tropis/tree_rambutan.png` (berbuah) dan `nature/tropis/tree_rambutan_empty.png` (setelah dipetik).
+- Varian musim: `seasons/tropis/{hujan,mareng,kemarau,labuh}/tree_rambutan_<musim>.png`, sama seperti pisang dan mangga.
+- Catatan: `tree_kelapa` memang tidak punya varian musim (sejak tahap 7). Karena itu tidak ada perbaikan atau file baru untuk rambutan.

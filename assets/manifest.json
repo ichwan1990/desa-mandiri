@@ -12221,6 +12221,36 @@
    "frames": 1,
    "note": "32x32 telur keong (merah muda) di batang padi, opsional penanda hama keong",
    "stage": 9
+  },
+  {
+   "file": "icons/resources/icon_jagung.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "ikon sumber daya jagung (tongkol + kelobot) 32x32; format sama dengan icons/resources (tanpa _16); padanan hasil nature/crops/crop_jagung.png",
+   "stage": 9,
+   "sub": "9b"
+  },
+  {
+   "file": "icons/resources/icon_rambutan.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "ikon sumber daya rambutan (3 buah, satu dikupas) 32x32; tanpa _16; padanan nature/tropis/tree_rambutan.png",
+   "stage": 9,
+   "sub": "9b"
   }
  ]
 }
