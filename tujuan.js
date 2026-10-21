@@ -21,7 +21,7 @@ Object.assign(CONFIG, {
       nonton_reog:     { cara: 'otomatis', cek: 'pentasReog', hari: 14, mood: 12, buff: 2, gagal: -5, minDay: 30, bobotSifat: { seniman: 3 } },
       tabungan_haji:   { cara: 'cicil', biaya: { kopi: 20, alat: 6 }, hari: 56, mood: 25, moodDesa: 5, gagal: -4, pergiHari: 7, gelar: true, butuhSifat: 'religius', minAge: 30, butuh: 'hajiTerbuka' },
       mancing_sore:    { cara: 'otomatis', cek: 'memancing', hari: 5, mood: 6, hasil: { makanan: 1 }, gagal: -2, bukanMusim: ['kemarau'] },
-      punya_ayam:      { cara: 'otomatis', cek: 'bangunan:kandang_ayam', hari: 10, mood: 8, buff: 1, gagal: -3, butuh: 'bangunanAda:kandang_ayam' }, // kandang ayam belum ada di BUILDINGS -> tidak muncul
+      punya_ayam:      { cara: 'otomatis', cek: 'bangunanBaru:kandang_ayam', hari: 10, mood: 8, buff: 1, gagal: -3, butuh: 'bisaBangunLagi:kandang_ayam' }, // muncul bila kandang masih bisa ditambah (1 + pop/8), terwujud saat Kandang Ayam baru selesai
       baju_baru:       { cara: 'tombol', biaya: { kulit: 2 }, biayaAlt: { kopi: 2 }, hari: 7, mood: 8, buff: 1, gagal: -4, butuh: 'pedagangAtauPasar' },
       ziarah_makam:    { cara: 'otomatis', cek: 'kebiasaan', hari: 7, mood: 6, dukaKurangHari: 2, gagal: -3, butuh: 'makamKerabat' },
       wayang_semalam:  { cara: 'tombol', biaya: { kulit: 3, minyak: 2 }, hari: 10, mood: 10, moodDesa: 4, gagal: -4, minEra: 'desa_pertanian' },

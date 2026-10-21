@@ -258,6 +258,9 @@ window.ASSETS = {
     A[id + '_tahap' + i] = { color: '#b08a5a', img: `assets/buildings/monuments/${id}_tahap${i}.png`, fw, fh };
     A[id + '_tahap' + i + '_stages'] = { color: '#b08a5a', img: `assets/buildings/monuments/${id}_tahap${i}_stages.png`, fw, fh, frames: 4 }; }
   A.orang_orangan = { color: '#c9a24a', img: 'assets/structures/tropis/orang_orangan_sawah.png', fw: 32, fh: 64, frames: 2, ms: 500 };
+  // Kandang Ayam (P1): sprite kandang ternak berpagar bambu (tahap 7) dipakai sementara di kedua tema; ayam kampung = fauna tahap 7 (32x32, baris 0-3 diam, 4-7 jalan)
+  A.kandang_ayam = { color: '#a07a3a', img: 'assets/buildings/tropis/kandang.png', fw: 96, fh: 64 };
+  A.ayam = { img: 'assets/characters/fauna/ayam.png', fw: 32, fh: 32 };
 })();
 // Muat gambar dengan batas paralel (agar server sederhana tidak menolak koneksi) + coba ulang.
 window.loadAssets = function (done, opts = {}) {

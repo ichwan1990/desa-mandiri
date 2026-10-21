@@ -38,7 +38,7 @@ const { chromium } = require('playwright');
     ok(T + " penuhi bayar", w.paid === 2 && w.done && w.mood >= 50 + 8 * (w.mm || 0.4) - 0.01, w);
     ok(T + ' gagal sifat', w.failBiasa === 4 && Math.abs(w.failSabar - 2.4) < 0.01 && w.failMalas === 2, w);
     ok(T + ' gagal saat lapar tanpa penalti', w.failLapar === 0, w);
-    ok(T + ' otomatis reog', w.autoReog, w); ok(T + ' butuhSifat', w.malasOnly, w); ok(T + ' punya_ayam tidak muncul', w.ayamNever, w);
+    ok(T + ' otomatis reog', w.autoReog, w); ok(T + ' butuhSifat', w.malasOnly, w);
     ok(T + ' wishRateMult', w.rate[0] === 1.3 && w.rate[1] === 0.8, w);
     // spawn harian: dalam 120 hari simulasi kasar, keinginan muncul & selesai/gagal tanpa error
     const sp = await p.evaluate(() => { const S = DESA.state, P = DESA.p1; S.era = 1; let n = 0; for (let d = 40; d < 160; d++) { S.day = d; S.res.makanan = 100; P.wishDaily(); n += S.villagers.filter(v => v.wish).length; } return { n, st: S.wishStats }; });
@@ -93,8 +93,10 @@ const { chromium } = require('playwright');
       S.day = CONFIG.YEAR_SCALE ? 0 : 0; const yd = DESA.state.day; S.day = 28 + 21; P.teladanDaily(); r.tier = S.teladan.tier;
       S.day = 29; P.goalsDaily(); r.year2 = S.goals && S.goals.year; r.hist = S.goalHist;
       P.openTujuan(); r.panel = document.querySelectorAll('#tujuanpanel .mcard').length; r.kbBtn = !!document.getElementById('kbBtn'); return r; });
-    if (!tema) { ok(T + ' rencana tahun 1', tl.goals === 5, tl); ok(T + ' teladan swadaya', tl.tier === 1, tl); ok(T + ' rencana tahun 2', tl.year2 === 2 && tl.hist.length === 1, tl); ok(T + ' panel tujuan', tl.panel === 3 && tl.kbBtn, tl); }
-    else ok(T + ' panel tujuan sedang (bendungan saja, tanpa teladan/rencana)', tl.panel === 1 && !tl.goals && tl.tier === 0, tl);
+    ok(T + ' rencana tahun 1', tl.goals === 5, tl); ok(T + ' teladan swadaya', tl.tier === 1, tl); ok(T + ' rencana tahun 2', tl.year2 === 2 && tl.hist.length === 1, tl); ok(T + ' panel tujuan', tl.panel === 3 && tl.kbBtn, tl); // v1.7.0: sedang juga penuh
+    const nm = await p.evaluate(async () => ({ masjid: CONFIG.BUILDINGS.masjid.nama, tx: ((CONFIG.TEXT_OVERLAY ? (await (await fetch(CONFIG.TEXT_OVERLAY)).json()).monumen : null) || (await (await fetch('TEKS-GAME.json')).json()).monumen).masjid.nama, oo: CONFIG.BUILDINGS.orang_orangan.nama, dis: CONFIG.TUJUAN_DISABLE.length,
+      panel: [...document.querySelectorAll('#tujuanpanel .mcard b')].map(e => e.textContent) }));
+    ok(T + ' nama monumen dari TEKS', nm.masjid === nm.tx && nm.panel.includes(nm.tx) && nm.dis === 0 && (tema ? !/sawah/i.test(nm.oo) : /sawah/i.test(nm.oo)), nm);
     // ---- 3) cerita berantai ----
     const ch = await p.evaluate(() => { const S = DESA.state, C = CONFIG, P = DESA.p1, r = {}; S.event = null; S.story = null; S.chains = { active: [], done: {}, last: -99 };
       const dis = C.TUJUAN_DISABLE; C.TUJUAN_DISABLE = []; r.sedangOff = (dis || []).includes('resep_nenek'); S.day = 60; S.era = 2; S.merchantSeen = true; S.lastAttackDay = 50; DESA.addBuilding('gudang', 30, 30, true);

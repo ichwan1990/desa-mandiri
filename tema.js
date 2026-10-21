@@ -22,7 +22,7 @@ window.THEMES = {
     YEAR_SCALE: { daysPerYear: 28, threatChanceMult: 1.25, hardBufferDays: 10, extremeChanceAdd: 0.04 },
     FIELD_CROPS: { gandum: { res: 'gandum' }, wortel: { res: 'makanan' } }, FIELD_ROTATION: ['gandum', 'wortel'],
     NIGHT_THREAT: 'wolf', ART_SUFFIX: { semi: '_semi', panas: '_panas', gugur: '_gugur', dingin: '_dingin' }, WINTER_ART: 'dingin',
-    WEATHER: { panas: 'panas', gugur: 'daun', dingin: 'salju' }, ASSET_SWAP: {}, BUILDING_NAMES: {},
+    WEATHER: { panas: 'panas', gugur: 'daun', dingin: 'salju' }, ASSET_SWAP: {}, BUILDING_NAMES: { orang_orangan: 'Orang-orangan Ladang' },
     RES_LABEL: {}, EVENT_DISABLE: [], EVENT_SEASON_ALIAS: {}, EVENT_RULES: {},
     MARKET_MUSIM: { dingin: { jual: { makanan: 1.25, gandum: 1.25 }, beli: { makanan: 1.4, gandum: 1.4 } }, semi: { jual: { kayu: 0.9 } }, panas: { jual: { makanan: 0.85 } } },
     // teks empat musim: path TEKS lama ([path, cadangan]); isi path-nya ditimpa TEKS-TEMA-sedang.json (lihat TEXT_OVERLAY)
@@ -45,6 +45,7 @@ window.THEMES = {
       usai: ['log_ancaman.serigala_usai', 'Fajar menyingsing. Serigala sudah kembali ke hutan.'],
       serang: ['log_ancaman.serangan_serigala', 'Seekor serigala menerkam {nama}! Kesehatannya turun {jumlah}.'],
       diusir: ['log_ancaman.diusir', 'Cahaya obor membuat serigala ragu. Mereka berbalik ke hutan.'],
+      diusir_orang_orangan: ['log_ancaman.diusir_orang_orangan', 'Orang-orangan di ladang bergoyang ditiup angin. Seekor {hewan} ragu dan mundur ke hutan.'], // v1.7.0, {hewan}
       menara: ['bangunan_ancaman.bangunan_menara_jaga.usir', 'Dari Menara jaga, {nama} meniup terompet. Serigala lari ke hutan.'],
       warn_jejak: [null, 'Jejak serigala'], warn_mendekat: [null, 'Auman mendekat!'], warn_serang: [null, 'Serigala menyerang!'],
       warn_ekstrem: [null, 'Dingin ekstrem hari ini'], warn_ekstrem_besok: [null, 'Angin membeku malam ini…'], ikon_ekstrem: [null, '🥶'],
@@ -58,15 +59,13 @@ window.THEMES = {
     AGUS_HIDE: ['agus_bendera', 'agus_bunting'],
     STORY_SEASON_ALIAS: { semi: 'hujan', panas: 'labuh', gugur: 'mareng', dingin: 'kemarau' },
     // P1 tujuan: konten khas Nusantara dimatikan di tema sedang (TEKS-TEMA-sedang.json belum punya keinginan/monumen/cerita/teladan/rencana_tahun)
-    TUJUAN_DISABLE: ['makan_rendang', 'nasi_pecel', 'rumah_panggung', 'nonton_reog', 'tabungan_haji', 'wayang_semalam', 'belajar_gamelan', 'rujak_bareng', 'bancakan_weton', 'tumpeng_syukuran',
-      'sawah_menguning', 'main_layangan', 'jajan_pasar', 'ronda_malam',   // teksnya menyebut sawah/padi/layangan bambu/kelapa/ronda-kentongan
-      'masjid', 'pendopo_reog', 'warok_muda', 'penakut_babi', 'resep_nenek', 'teladan', 'rencana'],
+    TUJUAN_DISABLE: [],   // v1.7.0: overlay sedang (keinginan/monumen/cerita/teladan/rencana_tahun) menutup semua teks P1 -> semua konten P1 aktif
     STORY_PATCH: { MONKEY: { icon: '🦊', fallback: 'Seekor rubah menyelinap ke ladang dan membawa lari makanan!' } },
     TRAITS_PATCH: { founderNeedOneOf: null }, // aturan pengaman RISET-CERITA-TUJUAN §5.1: median d24 > 48 setelah efek sifat (55) -> hapus syarat sifat kerja pendiri
     MOOD_COMFORT_PATCH: { base: 64 }, // v9b: musim dingin menekan mood -> batas nyaman sedikit lebih tinggi supaya desa bahagia aktif ~25-45% hari seperti Nusantara
     SCHEDULE_PATCH: { dayWorkMult: 1.12, daySpeedMult: 1.2 }, // kompensasi jam tidur per tema (sim d24: 1.35 -> ~56; 1.2 + efek sifat -> 51-55; 1.12 -> lihat README)
     // pangan v9: musim empat-musim untuk memancing & jamur; pohon buah tropis, umbi hutan & keong sawah tidak ada (null = mati). Kolam Ikan membeku sebagian di musim dingin.
-    FOOD_SOURCES_PATCH: { meramu: { label: 'Buah beri', time: 20 }, memancing: { season: { semi: 1.1, panas: 0.85, gugur: 0.9, dingin: 0.4 }, pondSeasonMin: 0.6 }, jamur: { season: { semi: 1.0, panas: 0.2, gugur: 1.0, dingin: 0 } }, buah: null, keong: null,
+    FOOD_SOURCES_PATCH: { meramu: { label: 'Buah beri', time: 20 }, telur: { season: { semi: 1.1, panas: 1.0, gugur: 0.9, dingin: 0.5 } }, memancing: { season: { semi: 1.1, panas: 0.85, gugur: 0.9, dingin: 0.4 }, pondSeasonMin: 0.6 }, jamur: { season: { semi: 1.0, panas: 0.2, gugur: 1.0, dingin: 0 } }, buah: null, keong: null,
       // padanan iklim sedang: umbi liar (kentang/lobak liar) tetap ada, tanpa pohon buah tropis & keong sawah
       umbi: { label: 'Kentang liar', count: 7, season: { semi: 1.0, panas: 0.4, gugur: 0.7, dingin: 0.3 } } },
     // TEKS-GAME.json (v1.5) dipakai semua tema. Teks lama yang di v1.4+ ditulis ulang bernuansa Nusantara ditimpa dengan teks empat musim
@@ -135,6 +134,7 @@ window.THEMES = {
       serang: ['log_ancaman.babi_hutan_serang', 'Babi hutan menyeruduk {nama}! Kesehatannya turun {jumlah}.'],
       rusak_ladang: ['log_ancaman.babi_hutan_rusak_ladang', 'Babi hutan mengobrak-abrik ladang {tanaman}. Tanamannya rusak.'],
       diusir: ['log_ancaman.babi_hutan_diusir', 'Cahaya obor membuat babi hutan ragu. Ia berbalik ke hutan.'],
+      diusir_orang_orangan: ['log_ancaman.diusir_orang_orangan', 'Orang-orangan sawah bergoyang ditiup angin. Seekor {hewan} ragu dan mundur ke hutan.'], // v1.7.0, {hewan}
       menara: ['log_ancaman.pos_ronda_usir', 'Dari menara, {nama} memukul kentongan. Babi hutan lari ke hutan.'],
       warn_jejak: [null, 'Jejak babi hutan'], warn_mendekat: [null, 'Dengusan mendekat!'], warn_serang: [null, 'Babi hutan masuk desa!'],
       warn_ekstrem: [null, 'Malam bediding: udara sangat dingin'], warn_ekstrem_besok: [null, 'Bediding malam ini…'], ikon_ekstrem: [null, '🌬️'],

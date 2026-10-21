@@ -39,6 +39,7 @@ window.CONFIG = {
     rumah:     { nama: 'Rumah Kayu', w: 3, h: 3, cost: { kayu: 40, batu: 15, papan: 8 }, work: 60, kapasitas: 4, era: 'dusun', light: 'kecil' },
     // v9 pangan: kolam ikan & tambak dekat desa = tempat memancing sendiri dengan stok ikan harian (fishStock) terpisah dari sungai (aset tahap 9)
     kolam:     { nama: 'Kolam Ikan', w: 2, h: 2, cost: { kayu: 20, batu: 15 }, work: 45, era: 'dusun', fishStock: 10 },
+    kandang_ayam: { nama: 'Kandang Ayam', w: 3, h: 2, cost: { kayu: 20, batu: 10 }, work: 45, era: 'dusun', hens: 4 }, // P1: telur (FOOD_SOURCES.telur) + ayam kampung berkeliaran di sekitar kandang; keinginan punya_ayam
     tambak:    { nama: 'Tambak', w: 3, h: 2, cost: { kayu: 40, batu: 25, papan: 6 }, work: 80, era: 'desa_pertanian', fishStock: 18 },
   },
   // Era: syarat naik (semua harus terpenuhi). foodDays = stok (makanan+gandum) / konsumsi harian.
@@ -234,6 +235,7 @@ window.CONFIG = {
                  season: { kemarau: 1.0, mareng: 0.9, labuh: 0.8, hujan: 0.6 } },                                           // uwi/gembili di tepi hutan: cadangan klasik kemarau, digali lalu tumbuh lagi
     keong:     { label: 'Keong sawah', icon: 'keong', at: 'sawah', time: 12, yield: [1, 3], minMult: 0.3, crops: ['padi'],
                  season: { hujan: 1.0, labuh: 0.8 }, perFieldPerDay: 3 },                                                // keong di sawah berair (padi tumbuh) saat musim basah
+    telur:     { label: 'Telur', icon: 'telur', at: 'kandang', time: 8, yield: [2, 3], minMult: 0.3, perHenPerDay: 0.4, stockMax: 6 },          // P1: Kandang Ayam, tiap induk ±1 telur / 2.5 hari (4 induk = 1.6 pangan/hari/kandang), stok kandang maks 6, diambil di prioritas Makanan
   },
   SKILL_GAIN: 0.02, // skill naik per angkutan; efek: waktu kerja / (1+skill*0.5)
   NAMES: ['Sari','Budi','Dewi','Agus','Rina','Joko','Wati','Eko','Lina','Hadi','Tari','Yudi','Ayu','Bayu'],
