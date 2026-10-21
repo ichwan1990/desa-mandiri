@@ -90,7 +90,7 @@ window.THEMES = {
                  wellYieldAdd: -1, riverYieldMult: 0.6, fishMult: 0.5, droughtChance: 0.12, droughtDays: 3, droughtGrowDelay: 1, droughtWaterSafeDays: 3,
                  fireNightChance: 0.06, fireDayChance: 0.04, exposureMood: { tanpa: -4, dengan: -1 }, exposureDayOnly: true,
                  failHarvestChance: 0.20, failHarvestMult: 0.5 },
-      labuh:   { rainChance: 0.30, rainBushRegrowMult: 1, chopTimeMultRain: 1.05, wellRecover: 1, // tanpa 2 kunci ini semak & tebang kayu NaN saat hujan labuh (semak mati permanen) firstRainMood: 5, plantTimeMult: 0.9, windChance: 0.08, windHp: 20,
+      labuh:   { rainChance: 0.30, rainBushRegrowMult: 1, chopTimeMultRain: 1.05, wellRecover: 1, firstRainMood: 5, plantTimeMult: 0.9, windChance: 0.08, windHp: 20, // rainBushRegrowMult & chopTimeMultRain wajib: tanpa keduanya semak & tebang kayu NaN saat hujan labuh (semak mati permanen)
                  pestChance: 0.10, pestYieldMult: 0.5, chillSickChance: 0.02, chillMoodBelow: 50 },
     },
     YEAR_SCALE: { daysPerYear: 28, threatChanceMult: 1.25, hardBufferDays: 10, longDryChance: 0.10, longDryExtraDays: 3 },

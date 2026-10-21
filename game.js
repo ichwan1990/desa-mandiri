@@ -2249,7 +2249,7 @@ function chainDaily() { const H = CHC(); if (!H || !H.enabled) return; tujuanIni
 const scarecrowNear = b => S.buildings.some(s => s.type === 'orang_orangan' && s.done && dist(center(s), center(b)) <= C.SCARECROW.radius);
 function scarecrowScare(hewan) { const sc = S.buildings.filter(b => b.type === 'orang_orangan' && b.done), b = sc.length ? pick(sc) : null; S.scarecrowScares = (S.scarecrowScares || 0) + 1;
   log('🌾 ' + TT('diusir_orang_orangan', { hewan }, 'Orang-orangan sawah bergoyang ditiup angin. Seekor {hewan} ragu dan mundur ke hutan.'));
-  if (b) floatText(TX('dilema_ui.orang_orangan_teks_melayang', { hewan: cap1(hewan) }, `${cap1(hewan)} kabur!`), b.x, b.y - 1); }
+  if (b) floatText(cap1(TX('dilema_ui.orang_orangan_teks_melayang', { hewan: cap1(hewan) }, `${cap1(hewan)} kabur!`)), b.x, b.y - 1); }
 function scarecrowMonkeyMult() { const fl = S.buildings.filter(b => b.type === 'ladang' && b.done); if (!fl.length || !C.SCARECROW) return 1; return 1 - (1 - C.SCARECROW.monkeyMult) * fl.filter(scarecrowNear).length / fl.length; }
 function placeScarecrow() { const fl = S.buildings.filter(b => b.type === 'ladang'), base = fl.length ? fl : [{ x: C.CAMP.x, y: C.CAMP.y }], cands = [];
   for (const f of base) for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [-1, -1], [1, -1], [-1, 1], [2, 0], [0, 2], [-2, 0], [0, -2]]) { const x = f.x + dx, y = f.y + dy;
