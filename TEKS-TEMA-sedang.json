@@ -1846,7 +1846,16 @@
    "syukuran_panen": "pesta panen",
    "pesta": "pesta",
    "dijual": "dijual",
-   "lainnya": "lain-lain"
+   "lainnya": "lain-lain",
+   "event": "kejadian",
+   "cerita": "cerita",
+   "rusak": "rusak",
+   "pasar": "pasar",
+   "lomba": "lomba",
+   "pesta_17an": "Festival Panen",
+   "kerja_bakti": "kerja bersama",
+   "monumen": "monumen",
+   "keinginan": "keinginan warga"
   },
   "ladang": {
    "banjir": "Tergenang banjir, tanaman menunggu air surut",
@@ -1855,6 +1864,8 @@
   },
   "sudah_digali": "Sudah digali, tumbuh lagi beberapa hari",
   "daya_tarik": {
+   "bahagia_syarat": "(rata-rata mood ≥ {jumlah}, tak ada warga < {jumlah2})",
+   "murung": "ada warga yang murung: {jumlah}",
    "tooltip": "Daya tarik desa menentukan seberapa sering pengembara datang. Faktornya: suasana hati warga, desa bahagia beberapa hari berturut-turut, stok pangan yang cukup, dan tempat tidur kosong. Desa yang bahagia lebih sering didatangi pengembara.",
    "bonus": "→ pengembara lebih sering datang",
    "pendatang": [
@@ -1896,8 +1907,21 @@
    }
   }
  },
+ "otomatis": {
+  "api_unggun": [
+   "Warga menyusun batu dan kayu: api unggun pertama akan dinyalakan di perkemahan.",
+   "Tanpa menunggu aba-aba, {nama} dan {nama2} menata batu melingkar. Sebentar lagi api unggun pertama menyala.",
+   "Angin malam bertiup dingin. Warga sepakat menyalakan api unggun di tengah perkemahan.",
+   "{nama} mengumpulkan ranting kering dan batu sungai. Api unggun pertama siap dinyalakan!"
+  ],
+  "gubuk": [
+   "Warga tak tahan tidur di bawah langit: mereka mulai mendirikan gubuk sendiri.",
+   "{nama} dan {nama2} memasang tiang kayu dan atap jerami. Gubuk pertama sedang didirikan.",
+   "Embun dan angin malam membuat warga menggigil. Mereka bekerja bersama mendirikan gubuk pertama."
+  ]
+ },
  "_cerita_sedang": {
-  "versi": "1.6.0-sedang.1",
+  "versi": "1.6.1-sedang.1",
   "alat": "tools/buat_tema_sedang_cerita.py",
   "bagian": [
    "dilema",
@@ -1906,9 +1930,10 @@
    "agustusan",
    "kerja_bakti",
    "peringatan_dini.ancaman_monyet",
-   "pangan"
+   "pangan",
+   "otomatis"
   ],
   "catatan": "Jalankan SETELAH node tools/buat_overlay_sedang.js (alat itu menulis ulang file ini dan menghapus bagian cerita)."
  },
- "_catatan": "Dibuat otomatis oleh tools/buat_overlay_sedang.js dari TEKS v1.3.0 (empat musim) terhadap TEKS-GAME.json v1.5.0. Jangan edit manual; jalankan ulang bila TEKS berubah. Bagian cerita (dilema, momen_kecil, agustusan, kerja_bakti, dilema_ui, ancaman_monyet) dan pangan dari tools/buat_tema_sedang_cerita.py: jalankan sesudahnya."
+ "_catatan": "Dibuat otomatis oleh tools/buat_overlay_sedang.js dari TEKS v1.3.0 (empat musim) terhadap TEKS-GAME.json v1.5.0. Jangan edit manual; jalankan ulang bila TEKS berubah. Bagian cerita (dilema, momen_kecil, agustusan, kerja_bakti, dilema_ui, ancaman_monyet) serta pangan dan otomatis dari tools/buat_tema_sedang_cerita.py: jalankan sesudahnya."
 }

@@ -3388,6 +3388,45 @@ data = copy.deepcopy(data)  # lepas dari objek PATCH_V151
 terapkan_patch(data, PATCH_V160)
 with open("/workspace/village-game/tools/patch-v1.6.0.json","w",encoding="utf-8") as f:
     json.dump(PATCH_V160,f,ensure_ascii=False,indent=2); f.write("\n")
+# ===================== v1.6.1 (aditif): v9c (game.js 51b6d4d) — bangun otomatis, label pangan keluar baru, syarat desa bahagia =====================
+# otomatis.*: TX() memilih acak dari array; {nama}/{nama2} diisi fill() (warga yang ada). Tanpa awalan "Hari {hari}:".
+# pangan.keluar.<k>: FOOD_OUT_FB baru (dipakai '<label> <angka>'). daya_tarik.bahagia_syarat: {jumlah} = SPAWN.happy.mood (80), {jumlah2} = happy.minMood (50);
+# kode menambahkan sendiri <small>; tanda kurung ada di teks (seperti fallback). daya_tarik.murung: {jumlah} = mood warga terendah; kode menambahkan kurung.
+PATCH_V161 = {
+ "_patch": {"versi_dari": "1.6.0", "versi_ke": "1.6.1", "sifat": "hanya penambahan (tambah_key otomatis + tambah_path pangan.*; menolak menimpa)",
+            "sumber": "Asisten Koding 21-10 13:11: key v9c (51b6d4d) yang masih memakai fallback"},
+ "tambah_path": {
+  "pangan.keluar.event": "kejadian", "pangan.keluar.cerita": "cerita", "pangan.keluar.hadiah": "hadiah", "pangan.keluar.rusak": "rusak",
+  "pangan.keluar.pasar": "pasar", "pangan.keluar.lomba": "lomba", "pangan.keluar.pesta_17an": "pesta 17-an", "pangan.keluar.kerja_bakti": "kerja bakti",
+  "pangan.keluar.monumen": "monumen", "pangan.keluar.keinginan": "keinginan warga",
+  "pangan.daya_tarik.bahagia_syarat": "(rata-rata mood ≥ {jumlah}, tak ada warga < {jumlah2})",
+  "pangan.daya_tarik.murung": "ada warga yang murung: {jumlah}"},
+ "tambah_key": {"otomatis": {
+  "_catatan": "v9c AUTO_BUILD: warga menaruh api unggun (hari 2) & gubuk pertama (hari 4) sendiri bila kepala desa belum menaruhnya. Array = variasi acak.",
+  "api_unggun": [
+   "Warga menyusun batu dan kayu: api unggun pertama akan dinyalakan di perkemahan.",
+   "Tanpa menunggu aba-aba, {nama} dan {nama2} menata batu melingkar. Sebentar lagi api unggun pertama menyala.",
+   "Malam terasa lembap dan gelap. Warga sepakat membuat api unggun di tengah perkemahan.",
+   "{nama} mengumpulkan ranting kering dan batu kali. Api unggun pertama siap dinyalakan!"],
+  "gubuk": [
+   "Warga tak tahan tidur di bawah langit: mereka mulai mendirikan gubuk sendiri.",
+   "{nama} dan {nama2} mulai memasang tiang bambu dan atap ilalang. Gubuk pertama sedang didirikan.",
+   "Embun malam membuat warga menggigil. Mereka bergotong royong mendirikan gubuk pertama."]}},
+ "tambah_key_meta": {"catatan_v161": {
+   "bentuk": {
+    "otomatis.api_unggun / otomatis.gubuk": "array 2-4 variasi (TX memilih acak); boleh {nama}/{nama2}; tanpa awalan Hari {hari}:",
+    "pangan.keluar.<k> baru": "event, cerita, hadiah, rusak, pasar, lomba, pesta_17an, kerja_bakti, monumen, keinginan (FOOD_OUT_FB 51b6d4d)",
+    "pangan.daya_tarik.bahagia_syarat": "{jumlah} = rata-rata mood minimal (80), {jumlah2} = mood warga terendah yang diizinkan (50); termasuk tanda kurung",
+    "pangan.daya_tarik.murung": "{jumlah} = mood warga terendah; tanpa tanda kurung (kode menambahkannya)"},
+   "catatan_koding": "pangan.daya_tarik.bahagia kini diberi {jumlah3}/{jumlah4} oleh kode, tetapi belum terdaftar di meta.placeholder dan tidak dipakai teks. pangan.sumber.kerja_bakti/pesta_17an (v1.6.0) tidak terbaca lagi karena keduanya kini ada di FOOD_OUT_FB; dibiarkan (aditif)."}},
+ "tambah_entri_meta": {},
+ "set_meta": {"versi": "1.6.1"},
+}
+PATCH_V161 = copy.deepcopy(PATCH_V161)
+data = copy.deepcopy(data)  # lepas dari objek PATCH_V160
+terapkan_patch_v151(data, PATCH_V161)  # penerap tambah_path generik (menolak menimpa) + terapkan_patch
+with open("/workspace/village-game/tools/patch-v1.6.1.json","w",encoding="utf-8") as f:
+    json.dump(PATCH_V161,f,ensure_ascii=False,indent=2); f.write("\n")
 with open("/workspace/village-game/tools/patch-v1.5.1.json","w",encoding="utf-8") as f:
     json.dump(PATCH_V151,f,ensure_ascii=False,indent=2); f.write("\n")
 with open("/workspace/village-game/tools/patch-v1.5.0.json","w",encoding="utf-8") as f:

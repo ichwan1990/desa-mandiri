@@ -13,7 +13,7 @@ ronda -> jaga malam, padi/singkong -> gandum/kentang, kerbau -> sapi, reog -> ro
 import json, sys
 ROOT = "/workspace/village-game/"
 FILE = ROOT + "TEKS-TEMA-sedang.json"
-VERSI = "1.6.0-sedang.1"
+VERSI = "1.6.1-sedang.1"
 
 def O(teks, hasil, *tunda):
     o = {"teks": teks, "teks_hasil": hasil}
@@ -287,12 +287,18 @@ PANGAN = {
             "gandum": "Gandum", "wortel": "Wortel", "makanan": "Makanan", "pasar": "Pasar", "cerita": "Kejadian",
             "kerja_bakti": "Kerja bersama", "pesta_17an": "Festival Panen"},
  "keluar": {"dimakan": "dimakan", "busuk": "busuk", "kenduri": "makan bersama", "tikus": "dimakan tikus", "monyet": "dicuri rubah",
-            "syukuran_lahir": "pesta kelahiran", "syukuran_panen": "pesta panen", "pesta": "pesta", "dijual": "dijual", "lainnya": "lain-lain"},
+            "syukuran_lahir": "pesta kelahiran", "syukuran_panen": "pesta panen", "pesta": "pesta", "dijual": "dijual", "lainnya": "lain-lain",
+            # v1.6.1 (FOOD_OUT_FB 51b6d4d). "hadiah" sengaja tidak ditulis: teks TEKS-GAME.json sudah netral, dan validator
+            # menolak key bernama hadiah di overlay (nama yang sama dipakai untuk data angka hadiah di bagian lain)
+            "event": "kejadian", "cerita": "cerita", "rusak": "rusak", "pasar": "pasar", "lomba": "lomba",
+            "pesta_17an": "Festival Panen", "kerja_bakti": "kerja bersama", "monumen": "monumen", "keinginan": "keinginan warga"},
  "ladang": {"banjir": "Tergenang banjir, tanaman menunggu air surut",
             "berhenti_dingin": "Berhenti tumbuh: tanah membeku (musim {musim})",
             "berhenti_kemarau": "Berhenti tumbuh: musim kering tanpa irigasi (riset Irigasi Sederhana, T04)"},
  "sudah_digali": "Sudah digali, tumbuh lagi beberapa hari",
  "daya_tarik": {
+  "bahagia_syarat": "(rata-rata mood ≥ {jumlah}, tak ada warga < {jumlah2})",
+  "murung": "ada warga yang murung: {jumlah}",
   "tooltip": "Daya tarik desa menentukan seberapa sering pengembara datang. Faktornya: suasana hati warga, desa bahagia beberapa hari berturut-turut, stok pangan yang cukup, dan tempat tidur kosong. Desa yang bahagia lebih sering didatangi pengembara.",
   "bonus": "→ pengembara lebih sering datang",
   "pendatang": [
@@ -316,6 +322,19 @@ PANGAN = {
    "Tanah gembur di bawah semak menyimpan kentang liar. {nama} pulang membawa {jumlah}."]}},
 }
 
+# ---------------- bangun otomatis v9c (v1.6.1): otomatis.api_unggun / otomatis.gubuk ----------------
+OTOMATIS = {
+ "api_unggun": [
+  "Warga menyusun batu dan kayu: api unggun pertama akan dinyalakan di perkemahan.",
+  "Tanpa menunggu aba-aba, {nama} dan {nama2} menata batu melingkar. Sebentar lagi api unggun pertama menyala.",
+  "Angin malam bertiup dingin. Warga sepakat menyalakan api unggun di tengah perkemahan.",
+  "{nama} mengumpulkan ranting kering dan batu sungai. Api unggun pertama siap dinyalakan!"],
+ "gubuk": [
+  "Warga tak tahan tidur di bawah langit: mereka mulai mendirikan gubuk sendiri.",
+  "{nama} dan {nama2} memasang tiang kayu dan atap jerami. Gubuk pertama sedang didirikan.",
+  "Embun dan angin malam membuat warga menggigil. Mereka bekerja bersama mendirikan gubuk pertama."],
+}
+
 def main():
     ov = json.load(open(FILE, encoding="utf-8"))
     ov["dilema"] = {"__byId": DILEMA}
@@ -325,16 +344,18 @@ def main():
     ov["kerja_bakti"] = KERJA
     ov.setdefault("peringatan_dini", {})["ancaman_monyet"] = RUBAH
     ov["pangan"] = PANGAN
+    ov["otomatis"] = OTOMATIS
     ov["_cerita_sedang"] = {"versi": VERSI, "alat": "tools/buat_tema_sedang_cerita.py",
-        "bagian": ["dilema", "dilema_ui", "momen_kecil", "agustusan", "kerja_bakti", "peringatan_dini.ancaman_monyet", "pangan"],
+        "bagian": ["dilema", "dilema_ui", "momen_kecil", "agustusan", "kerja_bakti", "peringatan_dini.ancaman_monyet", "pangan", "otomatis"],
         "catatan": "Jalankan SETELAH node tools/buat_overlay_sedang.js (alat itu menulis ulang file ini dan menghapus bagian cerita)."}
     c = ov.get("_catatan", "")
-    tambah = " Bagian cerita (dilema, momen_kecil, agustusan, kerja_bakti, dilema_ui, ancaman_monyet) dan pangan dari tools/buat_tema_sedang_cerita.py: jalankan sesudahnya."
-    c = c.replace(" Bagian cerita (dilema, momen_kecil, agustusan, kerja_bakti, dilema_ui, ancaman_monyet) dari tools/buat_tema_sedang_cerita.py: jalankan sesudahnya.", "")  # catatan versi lama
+    tambah = " Bagian cerita (dilema, momen_kecil, agustusan, kerja_bakti, dilema_ui, ancaman_monyet) serta pangan dan otomatis dari tools/buat_tema_sedang_cerita.py: jalankan sesudahnya."
+    for lama in ("dari", "dan pangan dari", "pangan, otomatis dari"):  # catatan versi lama
+        c = c.replace(f" Bagian cerita (dilema, momen_kecil, agustusan, kerja_bakti, dilema_ui, ancaman_monyet) {lama} tools/buat_tema_sedang_cerita.py: jalankan sesudahnya.", "")
     if tambah.strip() not in c: c = c + tambah
     ov["_catatan"] = c.strip()
     # _catatan & _cerita_sedang tetap di akhir
     for k in ("_cerita_sedang", "_catatan"): ov[k] = ov.pop(k)
     with open(FILE, "w", encoding="utf-8") as f: json.dump(ov, f, ensure_ascii=False, indent=1); f.write("\n")  # sama dengan buat_overlay_sedang.js (JSON.stringify(o, null, 1) + newline)
-    print(f"TEKS-TEMA-sedang.json: dilema {len(DILEMA)}, momen_kecil {len(MOMEN)}, lomba {len(LOMBA)}, + agustusan/kerja_bakti/dilema_ui/ancaman_monyet/pangan ({VERSI})")
+    print(f"TEKS-TEMA-sedang.json: dilema {len(DILEMA)}, momen_kecil {len(MOMEN)}, lomba {len(LOMBA)}, + agustusan/kerja_bakti/dilema_ui/ancaman_monyet/pangan/otomatis ({VERSI})")
 if __name__ == "__main__": main()
