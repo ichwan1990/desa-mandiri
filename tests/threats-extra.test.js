@@ -7,7 +7,7 @@ const URL = process.env.GAME_URL || 'http://localhost:8095/';
   const b = await chromium.launch(); const errs = []; const watch = p => { p.on('console', m => m.type() === 'error' && errs.push(m.text())); p.on('pageerror', e => errs.push(String(e))); };
   const p = await b.newPage({ viewport: { width: 1600, height: 900 } }); watch(p);
   await p.goto(URL); await p.evaluate(() => localStorage.clear()); await p.reload();
-  await p.waitForFunction(() => window.DESA && DESA.state && DESA.allEvents().length, null, { timeout: 15000 });
+  await p.waitForFunction(() => window.DESA_READY && window.DESA && DESA.state && DESA.allEvents().length, null, { timeout: 15000 });
   await p.click('#btnNew'); await p.click('#tutSkip');
   const r = await p.evaluate(() => { const S = DESA.state, C = CONFIG, A = DESA.addBuilding, out = {}, R = Math.random;
     const setDay = (d, f = 0.3) => { S.t = (d - 1) * C.DAY_LENGTH_SEC + f * C.DAY_LENGTH_SEC; S.day = d; };
@@ -90,7 +90,7 @@ const URL = process.env.GAME_URL || 'http://localhost:8095/';
   await p.close();
   // 7) #warnbar di ponsel 390x844: semua banner terlihat, di dalam kanvas & viewport, tanpa gulir horizontal
   const c = await b.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true }); const m = await c.newPage(); watch(m);
-  await m.goto(URL); await m.waitForFunction(() => window.DESA && DESA.state, null, { timeout: 15000 }); await m.tap('#btnNew'); await m.waitForTimeout(300); await m.tap('#tutSkip').catch(() => {});
+  await m.goto(URL); await m.waitForFunction(() => window.DESA_READY && window.DESA && DESA.state, null, { timeout: 15000 }); await m.tap('#btnNew'); await m.waitForTimeout(300); await m.tap('#tutSkip').catch(() => {});
   const mob = await m.evaluate(async () => { const S = DESA.state, C = CONFIG; S.t = 15 * C.DAY_LENGTH_SEC + 0.8 * C.DAY_LENGTH_SEC; S.day = 16; S.res.makanan = 0; S.res.gandum = 0; S.era = 1;
     S.drought = { until: S.day + 2 }; DESA.addBuilding('gubuk', 18, 21, true); DESA.ignite(S.buildings[S.buildings.length - 1]); S.wolf = { day: S.day, phase: 'mendekat', scared: {} };
     await new Promise(r => setTimeout(r, 400)); const bar = document.getElementById('warnbar'), items = [...bar.querySelectorAll('.warn')], cv = document.getElementById('c').getBoundingClientRect();

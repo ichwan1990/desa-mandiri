@@ -10,7 +10,7 @@ const { chromium } = require('playwright');
     p.on('console', m => m.type() === 'error' && errs.push(m.text())); p.on('pageerror', e => errs.push(String(e)));
     const U = new URL(process.env.GAME_URL || 'http://localhost:8095/'); if (tema) U.searchParams.set('tema', tema);
     await p.goto(U.href); await p.evaluate(() => localStorage.clear()); await p.reload();
-    await p.waitForFunction(() => window.DESA && DESA.state && DESA.pangan, null, { timeout: 15000 });
+    await p.waitForFunction(() => window.DESA_READY && window.DESA && DESA.state && DESA.pangan, null, { timeout: 15000 });
     await p.click('#btnNew'); await p.click('#tutSkip'); await p.click('[data-s="0"]').catch(() => {}); return p; };
   const p = await open();
   // 1) top bar: total pangan + hari stok + tooltip rincian Makanan + Padi

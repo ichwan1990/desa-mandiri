@@ -2,7 +2,7 @@ const { chromium } = require('playwright');
 (async () => {
   const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1560, height: 860 } });
   const errs = [], warns = []; p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); if (m.type()==='warning') warns.push(m.text()); }); p.on('pageerror', e => errs.push(String(e)));
-  await p.goto(process.env.GAME_URL || 'http://localhost:8095/'); await p.waitForTimeout(1200);
+  await p.goto(process.env.GAME_URL || 'http://localhost:8095/'); await p.waitForFunction(() => window.DESA_READY && window.DESA && DESA.state, null, { timeout: 20000 });
   const sprites = await p.evaluate(() => Object.entries(ASSETS).filter(([k,a])=>a.img).map(([k,a]) => k + ':' + (a.images||[]).filter(Boolean).length));
   // path test across river
   const pt = await p.evaluate(() => { const S = DESA.state; const path = DESA.findPath(22, 10, 50, 10);

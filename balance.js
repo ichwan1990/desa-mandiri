@@ -12,11 +12,11 @@ window.CONFIG = {
   NODE_AMOUNT: { kayu: 25, batu: 40, makanan: 6 },
   BUSH_REGROW_SEC: 360,
   HUNGER_PER_DAY: 25, ENERGY_PER_DAY: 20,
-  HUNGER_CRIT: 25, MEAL_AT: 50, ENERGY_CRIT: 20, // MEAL_AT (v9b): makan biasa saat lapar <= 50 (porsi ~4-5, tiap ~2 hari) bila stok >= 1 hari; di bawah HUNGER_CRIT tetap makan apa pun stoknya SLEEP_AT_NIGHT_BELOW: 70,
+  HUNGER_CRIT: 25, MEAL_AT: 60, ENERGY_CRIT: 20, // MEAL_AT (v9b 50 -> v9c 60): makan biasa saat lapar <= 60 (porsi ~3-4, tiap ~1.6 hari) bila stok >= 1 hari; di bawah HUNGER_CRIT tetap makan apa pun stoknya SLEEP_AT_NIGHT_BELOW: 70,
   EAT_RESTORE_PER_FOOD: 12, // ~2 makanan = 1 porsi (+25)
   SLEEP_REGEN_PER_SEC: 2.5,
   // v9b batas nyaman: api/rumah menaikkan mood hanya sampai base + rumah + pangan>=foodDays hari + dapur + sumur (+ monumen); di atasnya turun aboveDecay/detik
-  MOOD_COMFORT: { base: 62, home: 6, partner: 2, food: 4, foodDays: 12, kitchen: 2, well: 2, max: 92, aboveDecay: 0.07 },
+  MOOD_COMFORT: { base: 63, home: 6, partner: 2, food: 4, foodDays: 12, kitchen: 2, well: 2, max: 92, aboveDecay: 0.07 },
   MOOD_CAMPFIRE_BONUS: 0.15, MOOD_DECAY: 0.05, MOOD_HOME_BONUS: 0.08, MOOD_HUNGRY_PENALTY: 0.2, // MOOD_HOME_BONUS: tidur di gubuk -> mood naik pelan
   // era: id era minimum untuk membuka bangunan (lihat ERAS). storage: bisa jadi tempat setor.
   BUILDINGS: {
@@ -73,7 +73,11 @@ window.CONFIG = {
   SPOILAGE: { foodFreeDays: 16, foodPerDay: 0.02, summerMult: 1.5, granaryMult: 0.5, waterFreeDays: 12, waterEvapPerDay: 0.10, waterCapDays: 30 },
   YEAR_SCALE: { daysPerYear: 28, threatChanceMult: 1.25, winterBufferDays: 10, extremeChanceAdd: 0.04 }, // berlaku mulai tahun ke-2 (hari 29+)
   // jenjang peringatan kelaparan (hari stok pangan): aman >= 8, waspada 5-8, bahaya 3-5, kritis < 3, kolaps < 1 & stok 0
-  FAMINE: { waspada: 8, bahaya: 5, kritis: 3, kolaps: 1, bahayaMoodPerDay: -5, graceDays: 7 }, // graceDays: awal game stok memang kecil -> jenjang maks 'waspada', tanpa penalti mood
+  FAMINE: { waspada: 8, bahaya: 5, kritis: 3, kolaps: 1, bahayaMoodPerDay: -5, graceDays: 7, graceBahaya: 1 }, // graceBahaya (v9c): masa awal tetap tampil 'bahaya' bila < 1 hari (tanpa penalti mood)
+  // v9c (uji perangkat Ichwan 21-10: tanpa input mood 70 -> 0 di hari 7): tanpa api/rumah mood turun ke floor, hujan tanpa atap tidak menekan di bawah rainFloor; api unggun menyala = penalti hujan x rainFireMult
+  MOOD_BARE: { floor: 40, rainFloor: 36, rainFireMult: 0.5 },
+  AUTO_BUILD: { fireDay: 2, hutDay: 4, hutTaskDay: 4 },     // warga menaruh api unggun / gubuk pertama sendiri bila belum ada sama sekali
+  FOOD_PRIORITY_DAYS: 4, FOOD_TILT_DAYS: 5, FOOD_DAYS_SMOOTH: 0.35,              // utamakan pangan bila stok < 4 hari; angka hari di lencana dihaluskan ~0.35 hari
   THREAT: {
     wolf: {
       minEra: 'dusun',            // perkemahan: hanya jejak, belum melukai

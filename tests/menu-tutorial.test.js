@@ -5,7 +5,7 @@ const path = require('path');
   const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1560, height: 860 } });
   const errs = []; p.on('console', m => m.type() === 'error' && errs.push(m.text())); p.on('pageerror', e => errs.push(String(e)));
   const url = process.env.GAME_URL || 'http://localhost:8095/';
-  await p.goto(url); await p.evaluate(() => localStorage.clear()); await p.reload(); await p.waitForTimeout(1000);
+  await p.goto(url); await p.evaluate(() => localStorage.clear()); await p.reload(); await p.waitForFunction(() => window.DESA_READY && window.DESA && DESA.state, null, { timeout: 20000 });
   const r = {};
   r.menuVisible = await p.isVisible('#menu'); r.continueHiddenNoSave = !(await p.isVisible('#btnContinue'));
   const t0 = await p.evaluate(() => DESA.state.t); await p.waitForTimeout(600); r.pausedInMenu = (await p.evaluate(() => DESA.state.t)) === t0;

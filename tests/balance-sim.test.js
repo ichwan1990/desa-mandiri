@@ -2,18 +2,19 @@
 // Mencatat stok makanan+gandum per hari. Jalankan: node balance-sim.test.js [jumlahRun] [hari]
 // Mode panjang: node balance-sim.test.js 12 120  -> seed tetap per run, bot terus membangun & meneliti, laporan kematian/pergi/stok hari 60/120/softlock.
 const { chromium } = require('playwright');
-const RUNS = +process.argv[2] || 3, DAYS = +process.argv[3] || 28, LONG = DAYS > 28;
+const RUNS = +process.argv[2] || 3, DAYS = +process.argv[3] || 28, LONG = DAYS > 28; const NOINPUT_ENV = !!process.env.SIM_NOINPUT;
 (async () => {
   const b = await chromium.launch(); const results = []; const errs = [];
   for (let run = 0; run < RUNS; run++) {
     const p = await b.newPage(); p.on('pageerror', e => errs.push(String(e))); p.on('console', m => m.type() === 'error' && errs.push(m.text()));
-    await p.goto(process.env.GAME_URL || 'http://localhost:8095/'); await p.evaluate(() => localStorage.clear()); await p.reload(); await p.waitForFunction(() => window.DESA && DESA.state, null, { timeout: 15000 });
+    await p.goto(process.env.GAME_URL || 'http://localhost:8095/'); await p.evaluate(() => localStorage.clear()); await p.reload(); await p.waitForFunction(() => window.DESA_READY && window.DESA && DESA.state, null, { timeout: 15000 });
     const nonFood = run === 1 || run === 3, foodFocus = LONG && run % 3 === 2;
-    results.push(await p.evaluate(([nonFood, DAYS, LONG, seed, foodFocus, TLon]) => {
+    results.push(await p.evaluate(([nonFood, DAYS, LONG, seed, foodFocus, TLon, NOINPUT]) => {
       if (LONG) { let a = seed >>> 0; Math.random = () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ t >>> 15, t | 1); t ^= t + Math.imul(t ^ t >>> 7, t | 61); return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
       const S = DESA.state, C = CONFIG, D = DESA;
       const plan = ['apiunggun', 'gudang', 'gubuk', 'ladang', 'ladang', 'sumur', 'gubuk', 'ladang', 'ladang'];
-      if (LONG) plan.push('obor', 'gubuk', 'dapur', 'kolam', 'gubuk', 'ladang', 'obor', 'bengkel', 'gubuk', 'lumbung', 'ladang', 'pasar', 'gubuk', 'menara_jaga', 'gubuk', 'ladang', 'balai', 'gubuk', 'gubuk', 'rumah', 'ladang', 'rumah', 'ladang', 'rumah', 'rumah', 'ladang', 'rumah');
+      if (NOINPUT) plan.length = 0; // SIM_NOINPUT=1: pemain diam (seperti uji perangkat 21-10) -> hanya inisiatif warga (AUTO_BUILD)
+      if (LONG && !NOINPUT) plan.push('obor', 'gubuk', 'dapur', 'kolam', 'gubuk', 'ladang', 'obor', 'bengkel', 'gubuk', 'lumbung', 'ladang', 'pasar', 'gubuk', 'menara_jaga', 'gubuk', 'ladang', 'balai', 'gubuk', 'gubuk', 'rumah', 'ladang', 'rumah', 'ladang', 'rumah', 'rumah', 'ladang', 'rumah');
       if (foodFocus) Object.assign(S.prio, { makanan: 3, bertani: 3, kayu: 1, batu: 1 });
       const unl = t => { const e = C.ERAS.findIndex(x => x.id === (C.BUILDINGS[t].era || 'perkemahan')); return e <= (S.era | 0); };
       const tryBuild = () => { if (LONG && S.day > 20 && D.foodDays() < 8 && plan[0] !== 'ladang' && S.buildings.filter(b => b.type === 'ladang').length < 4 + S.villagers.length && S.day - (S._simLad || 0) >= 6) { plan.unshift('ladang'); S._simLad = S.day; } // pemain wajar: tambah ladang saat pangan menipis
@@ -32,7 +33,7 @@ const RUNS = +process.argv[2] || 3, DAYS = +process.argv[3] || 28, LONG = DAYS >
         if (S.births && !firstBirth) firstBirth = S.day;
         if (S.day !== last && TLon && !firstBirth && S.day % 3 === 0) { const P = C.PREGNANCY, m = S.villagers.find(v => v.sex === 'P' && v.partnerId != null), f = m && D.life.partnerOf(m);
           (snap.why = snap.why || []).push(`d${S.day} era${S.era | 0} pairs${S.villagers.filter(v => v.partnerId != null).length / 2} singles${S.villagers.filter(v => v.partnerId == null && !D.life.isKid(v)).map(v => v.sex + v.age + '@' + v.homeId).join(',')} cap${D.life.capacity()} ` + (m ? `m.mood${Math.round(m.mood)} f.mood${Math.round(f.mood)} fd${D.foodDays().toFixed(1)} fam${D.famineLevel()} age${m.age}` : '')); }
-        if (S.day !== last && LONG && !S.research) { const n = D.techNodes().find(n => D.startResearch(n.id)); }
+        if (S.day !== last && LONG && !NOINPUT && !S.research) { const n = D.techNodes().find(n => D.startResearch(n.id)); }
         if (S.day !== last && S.day > 1) { const ms = S.villagers.map(v => v.mood); (snap.moods = snap.moods || []).push([Math.round(ms.reduce((a, b) => a + b, 0) / ms.length), Math.round(Math.min(...ms))]); }
         if (S.day !== last && S.day % 10 === 0) (snap.tl = snap.tl || []).push(`d${S.day} pop${S.villagers.length} m${Math.floor(S.res.makanan + S.res.gandum)} k${Math.floor(S.res.kayu)} a${Math.floor(S.res.air)} b${Math.floor(S.res.batu)} ${S.season || ''} lad${S.buildings.filter(b => b.type === 'ladang' && b.done).length} sick${S.villagers.filter(v => v.sick).length} kid${S.villagers.filter(v => D.life.isKid(v)).length} mood${Math.round(S.villagers.reduce((a, v) => a + v.mood, 0) / Math.max(1, S.villagers.length))} F[${['kosong', 'tumbuh', 'siap'].map(st => S.buildings.filter(b => b.type === 'ladang' && b.done && b.stage === st).length).join('/')}] T[${Object.entries(S.villagers.reduce((a, v) => (a[v.task ? v.task.kind + (v.task.res ? ':' + v.task.res : '') : '-'] = (a[v.task ? v.task.kind + (v.task.res ? ':' + v.task.res : '') : '-'] || 0) + 1, a), {})).map(e => e.join('')).join(' ')}] st${D.life ? S.villagers.map(v => D.life.stageOf(v)[0]).join('') : ''} ${D.seasonInfo ? D.seasonInfo(S.day).id : ''}`);
         if (S.day !== last) { last = S.day; tryBuild(); curve[S.day] = { food: Math.floor(S.res.makanan + S.res.gandum), pop: S.villagers.length, air: Math.floor(S.res.air) }; } }
@@ -41,9 +42,11 @@ const RUNS = +process.argv[2] || 3, DAYS = +process.argv[3] || 28, LONG = DAYS >
         harvests: S.log.filter(l => l.includes('memanen')).length, deathsN: S.deaths || 0, leavers: S.leavers || 0, snap, firstHut, endDay: S.day, foodFocus,
         dlog: S.log.filter(l => /💀|pergi|meninggalkan/.test(l)).slice(0, 14), softlock: !firstHut || firstHut > 30 || !S.villagers.length, bites: S.wolfBites || 0, births: S.births || 0, deathsOld: S.deathsOld || 0, babyLost: S.babyLost || 0, firstBirth, spoiled: Math.floor(S.spoiled || 0), newcomers: S.newcomerSpawns || 0, happyNew: S.happySpawns || 0, happyPct: Math.round(100 * (S.happyActiveDays || 0) / Math.max(1, S.day - 1)), minFood: Math.floor(minFood), minDay: S._minDay, minFd: +minFd.toFixed(1), src,
         story: (() => { const R = S.director || { days: '' }, d = R.days.slice(14), runs = d.split('1').map(x => x.length); return { cov: d.length ? d.split('').filter(c => c === '1').length / d.length : null, maxEmpty: Math.max(0, ...runs), counts: R.counts || {}, landed: (R.landed || []).length, food: S.storyFood || {}, lomba: (S.lomba && S.lomba.history || []).length + (S.lomba && S.lomba.stage >= 7 ? 1 : 0) }; })() };
-    }, [nonFood, DAYS, LONG, 1000 + run * 7919, foodFocus, !!process.env.TL]));
+    }, [nonFood, DAYS, LONG, 1000 + run * 7919, foodFocus, !!process.env.TL, NOINPUT_ENV]));
     await p.close();
   }
+  { const mc = []; for (let i = 0; i < 14; i++) { const a = results.map(r => (r.snap.moods || [])[i]).filter(Boolean).map(m => m[0]).sort((x, y) => x - y); if (a.length) mc.push(`d${i + 2}:${a[Math.floor(a.length / 2)]}`); }
+    console.log(`KURVA MOOD hari 2-15 (median rata-rata${process.env.SIM_NOINPUT ? ', TANPA INPUT' : ''}): ${mc.join(' ')} | terendah ${Math.min(...results.flatMap(r => (r.snap.moods || []).slice(0, 14).map(m => m[0])))}`); }
   if (LONG) { results.forEach((r, i) => console.log(`run ${i + 1}${r.foodFocus ? ' (fokus makanan)' : ''}: mati=${r.deathsN} pergi=${r.leavers} gigitan=${r.bites} gubuk1=hari ${r.firstHut ?? '-'} | d60 ${JSON.stringify(r.snap[60] || '-')} | d${DAYS} ${JSON.stringify(r.snap[DAYS] || r.snap[120] || ('punah hari ' + r.endDay))} | busuk=${r.spoiled}`));
     const med = a => { const s = a.filter(x => x != null).sort((p, q) => p - q); return s.length ? s[Math.floor(s.length / 2)] : '-'; };
     const dead = results.reduce((a, r) => a + r.deathsN, 0), left = results.reduce((a, r) => a + r.leavers, 0), withDeath = results.filter(r => r.deathsN > 0).length, collapsed = results.filter(r => !r.snap[DAYS] || r.snap[DAYS].pop <= 1).length;

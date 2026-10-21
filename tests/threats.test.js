@@ -6,7 +6,7 @@ const SHOT = n => path.join(__dirname, '..', 'docs', 'screenshots', n);
   const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1600, height: 900 } });
   const errs = []; p.on('console', m => m.type() === 'error' && errs.push(m.text())); p.on('pageerror', e => errs.push(String(e)));
   const U = new URL(process.env.GAME_URL || 'http://localhost:8095/'); U.searchParams.set('tema', 'sedang'); await p.goto(U.href); await p.evaluate(() => localStorage.clear()); await p.reload();
-  await p.waitForFunction(() => window.DESA && DESA.state, null, { timeout: 15000 });
+  await p.waitForFunction(() => window.DESA_READY && window.DESA && DESA.state, null, { timeout: 15000 });
   await p.click('#btnNew'); await p.click('#tutSkip');
   const base = () => p.evaluate(() => { const S = DESA.state, A = DESA.addBuilding;
     window.setDay = (d, f = 0.3) => { S.t = (d - 1) * CONFIG.DAY_LENGTH_SEC + f * CONFIG.DAY_LENGTH_SEC; S.day = d; };

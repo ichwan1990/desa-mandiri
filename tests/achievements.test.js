@@ -3,7 +3,7 @@ const { chromium } = require('playwright');
 (async () => {
   const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1280, height: 900 } });
   const errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); });
-  await p.goto((process.env.GAME_URL || 'http://localhost:8095/')); await p.evaluate(() => localStorage.removeItem('desaMandiriPencapaian')); await p.reload(); await p.waitForTimeout(1200);
+  await p.goto((process.env.GAME_URL || 'http://localhost:8095/')); await p.evaluate(() => localStorage.removeItem('desaMandiriPencapaian')); await p.reload(); await p.waitForFunction(() => window.DESA_READY && window.DESA && DESA.state, null, { timeout: 20000 });
   await p.click('#btnNew'); await p.click('#tutSkip').catch(() => {}); await p.click('[data-s="0"]');
   const r = {};
   r.a = await p.evaluate(() => { const S = DESA.state; const ids = () => Object.keys(DESA.ach.unlocked).sort();
@@ -24,7 +24,7 @@ const { chromium } = require('playwright');
   r.panel = await p.evaluate(() => ({ items: document.querySelectorAll('#achpanel .ach').length, open: document.querySelectorAll('#achpanel .ach.open').length, secret: [...document.querySelectorAll('#achpanel .ach.locked b')].filter(x => x.textContent === '???').length, head: document.querySelector('#achpanel h3').textContent }));
   await p.evaluate(() => DESA.toast('assets/icons/achievements/ach_first_fire.png', '🏅 Pencapaian terbuka: Api Pertama!', 'Percikan pertama menyala.'));
   await p.waitForTimeout(350); await p.screenshot({ path: '../docs/screenshots/v4-achievements.png' });
-  await p.evaluate(() => localStorage.removeItem('desaMandiriSave')); await p.reload(); await p.waitForTimeout(1200);
+  await p.evaluate(() => localStorage.removeItem('desaMandiriSave')); await p.reload(); await p.waitForFunction(() => window.DESA_READY && window.DESA && DESA.state, null, { timeout: 20000 });
   r.persist = await p.evaluate(() => [Object.keys(DESA.ach.unlocked).length, !!localStorage.getItem('desaMandiriPencapaian'), !localStorage.getItem('desaMandiriSave')]);
   const ok = ['A01', 'A02', 'A03', 'A07'].every(x => r.a.after.includes(x)) && r.a.kayuGain >= 10 && r.toasts.length > 0
     && ['A22', 'A12', 'A04'].every(x => r.b.includes(x)) && !r.b.includes('A24') && r.sum[0] === 4 && /dikumpulkan kayu 12/.test(r.sum[1]) && /Badai/.test(r.sum[1])

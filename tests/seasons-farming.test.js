@@ -3,7 +3,7 @@ const { chromium } = require('playwright');
   const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1560, height: 860 } });
   const errs = [], warns = []; p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); if (m.type() === 'warning') warns.push(m.text()); });
   p.on('pageerror', e => errs.push(String(e)));
-  await p.goto(process.env.GAME_URL || 'http://localhost:8095/'); await p.evaluate(() => localStorage.clear()); await p.reload(); await p.waitForTimeout(1200);
+  await p.goto(process.env.GAME_URL || 'http://localhost:8095/'); await p.evaluate(() => localStorage.clear()); await p.reload(); await p.waitForFunction(() => window.DESA_READY && window.DESA && DESA.state, null, { timeout: 20000 });
   await p.click('#btnNew'); await p.click('#tutSkip');
   const sprites = await p.evaluate(() => Object.entries(ASSETS).filter(([k, a]) => a.img).filter(([k, a]) => !(a.images || []).filter(Boolean).length).map(([k]) => k));
   // UI-placed field through camera at 2x
