@@ -230,11 +230,11 @@ window.ASSETS = {
   memancing: { img: [1, 2, 3, 4].map(i => `assets/characters/villager_${i}_memancing.png`), fw: 64, fh: 64, frames: 8 }, // kolom 0-1 lempar, 2-3 tunggu, 4-5 strike, 6-7 tarik; baris = arah menghadap air
   ikan_lompat: { img: 'assets/characters/fauna/ambient/ikan_lompat.png', frames: 6, ms: 90 },
   keong_sawah: { img: 'assets/characters/fauna/ambient/keong_sawah.png', frames: 2, ms: 700 },
-  // ikon pangan per sumber (teks melayang '+4 Ikan', ringkasan harian, tooltip Pangan)
+  // ikon pangan per sumber (teks melayang '+4 Ikan', ringkasan harian, tooltip Pangan). tahap 9b: icon_jagung & icon_rambutan
   pangan_ikon: { keys: ['ikan', 'jamur', 'buah', 'mangga', 'pisang', 'kelapa', 'rambutan', 'umbi', 'keong', 'makanan', 'padi', 'jagung', 'ubi', 'singkong', 'gandum', 'wortel'],
     img: ['assets/icons/resources/icon_fish.png', 'assets/icons/resources/icon_jamur.png', 'assets/icons/resources/icon_fruit.png', 'assets/icons/resources/icon_mangga.png', 'assets/icons/resources/icon_pisang.png',
-          'assets/icons/resources/icon_kelapa.png', 'assets/icons/resources/icon_fruit.png', 'assets/icons/resources/icon_umbi.png', 'assets/icons/resources/icon_keong.png', 'assets/icons/icon_food.png',
-          'assets/icons/resources/icon_padi_ikat.png', 'assets/icons/icon_food.png', 'assets/icons/resources/icon_umbi.png', 'assets/icons/resources/icon_umbi.png', 'assets/icons/resources/icon_wheat.png', 'assets/icons/icon_food.png'] },
+          'assets/icons/resources/icon_kelapa.png', 'assets/icons/resources/icon_rambutan.png', 'assets/icons/resources/icon_umbi.png', 'assets/icons/resources/icon_keong.png', 'assets/icons/icon_food.png',
+          'assets/icons/resources/icon_padi_ikat.png', 'assets/icons/resources/icon_jagung.png', 'assets/icons/resources/icon_umbi.png', 'assets/icons/resources/icon_umbi.png', 'assets/icons/resources/icon_wheat.png', 'assets/icons/icon_food.png'] },
   ikon_daya_tarik: { ui: 'assets/icons/status/icon_daya_tarik_16.png', img: 'assets/icons/status/icon_daya_tarik_16.png' }, ikon_pendatang: { ui: 'assets/icons/status/icon_pendatang_16.png', img: 'assets/icons/status/icon_pendatang_16.png' },
   bakul: { ui: 'assets/decor/pangan/bakul_kosong.png' },
   // UI peringatan & status

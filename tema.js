@@ -52,16 +52,19 @@ window.THEMES = {
       ekstrem_reda: ['peringatan_dini.ancaman_dingin_ekstrem.tingkat.reda.teks', 'Angin beku sudah reda.'],
     },
     TEXT_PATCH: {},
-    // cerita P0 (cerita.js): TEKS-TEMA-sedang.json belum punya dilema/momen_kecil/agustusan -> hanya yang netral-budaya dipakai; Agustusan & monyet mati
-    STORY_DISABLE: ['pencuri_singkong', 'tengkulak_padi', 'kerbau_tetangga', 'monyet_kebun', 'tanggap_reog', 'minta_hujan', 'jenang_suro', 'burung_perkutut', 'teh_tubruk', 'kentongan_iseng'],
+    // cerita P0: TEKS-TEMA-sedang.json v1.5.1+ punya padanan empat musim untuk 12 dilema, momen kecil, Festival Panen (pengganti Agustusan) & rubah (pengganti monyet)
+    // -> semua cerita aktif di tema ini. Bendera & bunting merah-putih tidak dipasang saat Festival Panen.
+    STORY_DISABLE: [],
+    AGUS_HIDE: ['agus_bendera', 'agus_bunting'],
     STORY_SEASON_ALIAS: { semi: 'hujan', panas: 'labuh', gugur: 'mareng', dingin: 'kemarau' },
-    STORY_PATCH: { AGUSTUSAN: { enabled: false }, MONKEY: { enabled: false } },
+    STORY_PATCH: { MONKEY: { icon: '🦊', fallback: 'Seekor rubah menyelinap ke ladang dan membawa lari makanan!' } },
     TRAITS_PATCH: { founderNeedOneOf: null }, // aturan pengaman RISET-CERITA-TUJUAN §5.1: median d24 > 48 setelah efek sifat (55) -> hapus syarat sifat kerja pendiri
+    MOOD_COMFORT_PATCH: { base: 64 }, // v9b: musim dingin menekan mood -> batas nyaman sedikit lebih tinggi supaya desa bahagia aktif ~25-45% hari seperti Nusantara
     SCHEDULE_PATCH: { dayWorkMult: 1.12, daySpeedMult: 1.2 }, // kompensasi jam tidur per tema (sim d24: 1.35 -> ~56; 1.2 + efek sifat -> 51-55; 1.12 -> lihat README)
     // pangan v9: musim empat-musim untuk memancing & jamur; pohon buah tropis, umbi hutan & keong sawah tidak ada (null = mati). Kolam Ikan membeku sebagian di musim dingin.
-    FOOD_SOURCES_PATCH: { memancing: { season: { semi: 1.1, panas: 0.85, gugur: 0.9, dingin: 0.4 }, pondSeasonMin: 0.6 }, jamur: { season: { semi: 1.0, panas: 0.2, gugur: 1.0, dingin: 0 } }, buah: null, keong: null,
+    FOOD_SOURCES_PATCH: { meramu: { label: 'Buah beri' }, memancing: { season: { semi: 1.1, panas: 0.85, gugur: 0.9, dingin: 0.4 }, pondSeasonMin: 0.6 }, jamur: { season: { semi: 1.0, panas: 0.2, gugur: 1.0, dingin: 0 } }, buah: null, keong: null,
       // padanan iklim sedang: umbi liar (kentang/lobak liar) tetap ada, tanpa pohon buah tropis & keong sawah
-      umbi: { label: 'Umbi liar', count: 7, season: { semi: 1.0, panas: 0.4, gugur: 0.7, dingin: 0.3 } } },
+      umbi: { label: 'Kentang liar', count: 7, season: { semi: 1.0, panas: 0.4, gugur: 0.7, dingin: 0.3 } } },
     // TEKS-GAME.json (v1.5) dipakai semua tema. Teks lama yang di v1.4+ ditulis ulang bernuansa Nusantara ditimpa dengan teks empat musim
     // dari TEKS-TEMA-sedang.json (selisih v1.3.0 vs v1.5.0, dibuat tools/buat_overlay_sedang.js; larik ber-id digabung per id)
     TEXT_OVERLAY: 'TEKS-TEMA-sedang.json',
@@ -151,7 +154,7 @@ CONFIG.THREAT.wolf.hardMult = CONFIG.THREAT.wolf.winterMult;
   try { const q = new URLSearchParams(location.search).get('tema'); if (q && THEMES[q]) id = q; } catch (e) { /* tanpa location */ }
   const T = THEMES[id]; CONFIG.THEME = id;
   for (const k of ['SEASONS', 'SEASON_LEN', 'SEASON_NAMES', 'SEASON_ICONS', 'HARD_SEASON', 'HARD_COLD', 'HARD_HUNGER_MULT', 'GRANARY_HARD_HUNGER_MULT', 'HARD_BUFFER_DAYS',
-    'SEASON_FX', 'NIGHT_THREAT', 'ART_SUFFIX', 'WINTER_ART', 'WEATHER', 'EVENT_DISABLE', 'EVENT_SEASON_ALIAS', 'TXT', 'TEXT_PATCH', 'TERMS', 'FIELD_ROTATION', 'ASSET_SWAP', 'RES_ICON', 'TEXT_FILE', 'TEXT_OVERLAY']) CONFIG[k] = T[k];
+    'SEASON_FX', 'NIGHT_THREAT', 'ART_SUFFIX', 'WINTER_ART', 'WEATHER', 'EVENT_DISABLE', 'EVENT_SEASON_ALIAS', 'TXT', 'TEXT_PATCH', 'TERMS', 'FIELD_ROTATION', 'ASSET_SWAP', 'RES_ICON', 'TEXT_FILE', 'TEXT_OVERLAY', 'AGUS_HIDE']) CONFIG[k] = T[k];
   for (const [b, n] of Object.entries(T.BUILDING_NAMES || {})) if (CONFIG.BUILDINGS[b]) CONFIG.BUILDINGS[b] = Object.assign({}, CONFIG.BUILDINGS[b], { nama: n });
   CONFIG.YEAR_SCALE = Object.assign({}, CONFIG.YEAR_SCALE, T.YEAR_SCALE);
   CONFIG.STORY_DISABLE = T.STORY_DISABLE || []; CONFIG.STORY_SEASON_ALIAS = T.STORY_SEASON_ALIAS || null;
@@ -159,6 +162,7 @@ CONFIG.THREAT.wolf.hardMult = CONFIG.THREAT.wolf.winterMult;
   if (T.TRAITS_PATCH && CONFIG.TRAITS) CONFIG.TRAITS = Object.assign({}, CONFIG.TRAITS, T.TRAITS_PATCH);
   if (T.FOOD_SOURCES_PATCH && CONFIG.FOOD_SOURCES) { CONFIG.FOOD_SOURCES = Object.assign({}, CONFIG.FOOD_SOURCES);
     for (const [k, v] of Object.entries(T.FOOD_SOURCES_PATCH)) { if (v === null) delete CONFIG.FOOD_SOURCES[k]; else CONFIG.FOOD_SOURCES[k] = Object.assign({}, CONFIG.FOOD_SOURCES[k], v); } }
+  if (T.MOOD_COMFORT_PATCH && CONFIG.MOOD_COMFORT) CONFIG.MOOD_COMFORT = Object.assign({}, CONFIG.MOOD_COMFORT, T.MOOD_COMFORT_PATCH);
   if (T.SCHEDULE_PATCH && CONFIG.SCHEDULE) CONFIG.SCHEDULE = Object.assign({}, CONFIG.SCHEDULE, T.SCHEDULE_PATCH);
   CONFIG.FIELD = Object.assign({}, CONFIG.FIELD, { crops: T.FIELD_CROPS });
   CONFIG.MARKET.musim = T.MARKET_MUSIM;

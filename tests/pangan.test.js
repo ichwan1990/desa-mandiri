@@ -52,18 +52,23 @@ const { chromium } = require('playwright');
     setDay(16); P.foodSourcesDaily(); const kemarau = count(); setDay(3); P.foodSourcesDaily(); v.task = null; v.carry = null;
     return { hujan, kemarau, forest, ys: [Math.min(...ys), Math.max(...ys)], mHujan: P.srcMult('jamur'), on: P.srcOn('jamur') }; });
   ok('jamur hujan', jam.forest > 0 && jam.hujan >= 10 && jam.kemarau === 0 && jam.ys[0] >= 2 && jam.ys[1] <= 4, jam);
-  // 6) pendatang desa bahagia: mood >= 70 selama 4 hari -> peluang SPAWN.happy.chancePerDay (biasa SPAWN.chancePerDay) + log "Kabar desa yang bahagia..."; tetap butuh 12 hari stok & rumah
+  // 6) pendatang desa bahagia (v9b): rata-rata mood >= 80 selama 5 hari & tak ada warga < 50 -> peluang SPAWN.happy.chancePerDay (biasa SPAWN.chancePerDay) + log "Kabar desa yang bahagia..."; tetap butuh 12 hari stok & rumah
   const happy = await p.evaluate(() => { const S = DESA.state, C = CONFIG, P = DESA.pangan;
     DESA.addBuilding('gubuk', 26, 23, true); DESA.addBuilding('gubuk', 18, 25, true); DESA.life.assignHomes();
     const prep = (mood, hd) => { S.villagers.forEach(v => { v.mood = mood; v.hunger = 100; }); S.moodGoodDays = 10; S.happyDays = hd; S.lastSpawnDay = -99; S.res.makanan = DESA.foodPerDay() * 20; S.res.gandum = 0; S.event = null; };
     const R = Math.random, tryDay = () => { const n0 = S.villagers.length, l0 = S.log.length; Math.random = () => 0.7; try { DESA.newDay(); } finally { Math.random = R; } S.event = null; return { spawned: S.villagers.length - n0, log: S.log.slice(0, Math.max(1, S.log.length - l0)).join(' | ') }; };
     prep(66, 0); const A0 = P.attraction(); const normal = tryDay();
-    prep(90, 4); const A1 = P.attraction(); const bahagia = tryDay();
-    prep(90, 4); S.res.makanan = DESA.foodPerDay() * 8; const A2 = P.attraction();
+    const H = C.SPAWN.happy; prep(90, H.days); const A1 = P.attraction(); const bahagia = tryDay();
+    prep(90, H.days - 1); S.villagers[0].mood = H.minMood - 10; const Am = P.attraction(), murung = tryDay(), murungDays = S.happyDays, htmlMurung = P.attractionHTML();
+    prep(H.mood + 5, 3); const prog = P.attractionHTML();
+    prep(90, H.days); S.res.makanan = DESA.foodPerDay() * 8; const A2 = P.attraction();
     S.res.makanan = DESA.foodPerDay() * 20; DESA.pangan.ui(); const html = P.attractionHTML(), el = document.getElementById('dayaTarik');
-    return { A0: { ok: A0.ok, chance: A0.chance, happy: A0.happy }, normal: normal.spawned, A1: { ok: A1.ok, chance: A1.chance, happy: A1.happy, needFd: A1.needFd }, bahagia, A2: { ok: A2.ok, foodOk: A2.foodOk }, panel: !!el && /Daya tarik desa/.test(el.innerHTML), html: html.replace(/^.*?<b>/, '<b>').slice(0, 160), happySpawns: S.happySpawns || 0, cfg: C.SPAWN }; });
+    return { A0: { ok: A0.ok, chance: A0.chance, happy: A0.happy }, normal: normal.spawned, A1: { ok: A1.ok, chance: A1.chance, happy: A1.happy, needFd: A1.needFd }, bahagia, murung: murung.spawned, murungDays, Am: { happy: Am.happy, minMood: Am.minMood }, htmlMurung: /murung/.test(htmlMurung), prog: (prog.replace(/<[^>]+>/g, '').match(/\d+\/\d+ hari/) || [''])[0], A2: { ok: A2.ok, foodOk: A2.foodOk }, panel: !!el && /Daya tarik desa/.test(el.innerHTML), html: html.replace(/^.*?<b>/, '<b>').slice(0, 160), happySpawns: S.happySpawns || 0, cfg: C.SPAWN }; });
   ok('pendatang biasa 0.5', happy.A0.ok && !happy.A0.happy && happy.A0.chance === happy.cfg.chancePerDay && happy.normal === 0, happy);
-  ok('pendatang bahagia', happy.A1.ok && happy.A1.happy && happy.A1.chance === happy.cfg.happy.chancePerDay && happy.A1.chance > happy.A0.chance && happy.bahagia.spawned === 1 && /Kabar desa yang bahagia sampai ke kampung sebelah/.test(happy.bahagia.log) && happy.happySpawns === 1, happy);
+  ok('pendatang bahagia', happy.A1.ok && happy.A1.happy && happy.A1.chance === happy.cfg.happy.chancePerDay && happy.A1.chance > happy.A0.chance && happy.bahagia.spawned === 1 && /💌/.test(happy.bahagia.log) /* teks fallback 'Kabar desa yang bahagia...' atau variasi TEKS pangan.daya_tarik.pendatang */ && happy.happySpawns === 1, happy);
+  ok('desa bahagia: syarat ketat', happy.cfg.happy.mood === 80 && happy.cfg.happy.days === 5 && happy.cfg.happy.minMood === 50, happy.cfg);
+  ok('warga murung membatalkan', happy.murung === 0 && happy.murungDays === 0 && !happy.Am.happy && happy.htmlMurung, happy);
+  ok('progres 3/5 hari', happy.prog === '3/5 hari', happy.prog);
   ok('pendatang butuh 12 hari stok', happy.A1.needFd === 12 && !happy.A2.ok && !happy.A2.foodOk, happy);
   ok('panel daya tarik', happy.panel && /Daya tarik desa: Tinggi/.test(happy.html), happy.html);
   // 7) kenduri: hanya menyerap stok di atas 15 hari; bentuk bergantian kenduri/syukuran/sedekah
@@ -103,7 +108,7 @@ const { chromium } = require('playwright');
     return { ids: Object.keys(F), buahNodes: S.nodes.filter(n => n.type === 'buah').length, umbiNodes: S.nodes.filter(n => n.type === 'umbi').length, note: DESA.notes.map(n => `+${n.n} ${n.label}`), umbiLbl: DESA.pangan.panganLabel('umbi'),
       badge: document.getElementById('panganBadge') && document.getElementById('panganBadge').textContent }; });
   ok('sedang sumber', sd.ids.includes('memancing') && sd.ids.includes('jamur') && sd.ids.includes('umbi') && !sd.ids.includes('buah') && !sd.ids.includes('keong') && sd.buahNodes === 0 && sd.umbiNodes > 0, sd);
-  ok('sedang note', sd.note.includes('+5 Ikan') && sd.umbiLbl === 'Umbi liar', sd);
+  ok('sedang note', sd.note.includes('+5 Ikan') && sd.umbiLbl !== 'Umbi hutan' /* fallback 'Umbi liar', TEKS sedang bisa 'Kentang liar' */, sd);
   const res = { top: top.txt, notes: notes.ns, field: fld.dry.why, fish: { hujan: fish.hujan.avg.toFixed(2), deras: fish.deras.avg.toFixed(2), kemarau: fish.kemarau.avg.toFixed(2) }, jamur: { hujan: jam.hujan, kemarau: jam.kemarau }, kenduri: ken.over, happy: happy.bahagia.spawned, fails, errs };
   console.log(JSON.stringify(res, null, 1));
   if (fails.length || errs.length) process.exitCode = 1; await b.close();

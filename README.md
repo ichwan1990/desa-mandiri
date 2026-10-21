@@ -111,6 +111,11 @@ Tema bawaan sekarang **Nusantara**; tema empat musim lama tetap ada (buka `index
 - Start makanan 14 → 20 (tanpa ini pangan habis di hari ke-3 sebelum hasil liar pertama), `FOOD_SURPLUS_FACTOR` 1,0 → 0,8.
 - Sim (`balance-sim`), sebelum → sesudah: min pangan hari 2–24 median 0 → 15–17 (Nusantara) / 0 → 8–13 (empat musim); d24 median Nusantara 31 (15 run), empat musim 47 (20 run).
   140 hari × 10: Nusantara pangan d120 486, pop d40/80/140 = 5/8/13 (maks 16); empat musim d120 437, pop 4/8/13 (maks 16). Sebelumnya pop d140 median 20.
+- **v9b (Ketua 21-10)** — desa bahagia harus diperjuangkan: rata-rata mood ≥ 80 selama 5 hari berturut-turut **dan** tidak ada warga < 50 (panel Daya tarik: “Desa bahagia 3/5 hari”, warga murung ditandai).
+  Batas nyaman mood (`MOOD_COMFORT`): api unggun & rumah hanya menaikkan mood sampai 62 + rumah 6 + pasangan 2 + pangan ≥ 12 hari 4 + dapur 2 + sumur 2 (+ monumen); di atasnya (kenduri, festival, sahabat, sifat) turun 0,07/detik. Tema sedang base 64.
+  Makan porsi kecil lebih sering (`MEAL_AT` 50: makan saat lapar ≤ 50 bila stok ≥ 1 hari) → stok tidak turun berundak 7/orang tiap 3 hari.
+  Tema sedang: semua dilema/momen P0, Festival Panen (tanpa bendera merah-putih) dan rubah pencuri aktif (TEKS v1.5.1/v1.6.0); ikon jagung & rambutan (aset 9b); nama/log tugas pangan dari `pangan.tugas.<id>`.
+  Sim 140 hari × 10: desa bahagia aktif median 36% hari (Nusantara) / 39% (sedang); pendatang median 6/run (min 5); d24 33 / 38; d120 489 / 449; pop d40/80/140 5/8/13 / 5/8/12.
 - Tes: `tests/pangan.test.js` (screenshot `v9-pangan.png`, `v9-memancing.png`).
 
 ## Struktur file

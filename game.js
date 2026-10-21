@@ -225,6 +225,14 @@ function assignHomes() { const hs = houses().sort((a, b) => a.id - b.id), free =
   for (const v of vs) { const n = at.get(v.id) ?? null; if (n !== v.homeId && v.inside != null && v.inside !== n) exitHouse(v); v.homeId = n; } }
 // ---- bayi: tidak berjalan; digendong ibu/ayah saat santai, di buaian depan rumah saat orang tua bekerja, di dalam rumah saat malam ----
 const cookBonus = () => { const P = TRT().list.pandai_masak; return Math.min(P.kitchenBonusCap, S.villagers.filter(o => hasTrait(o, 'pandai_masak')).length * P.kitchenBonusAdd); }; // pandai_masak: dapur +0.05 (maks +0.10 desa)
+// v9b: porsi lebih kecil & lebih sering (makan saat lapar <= MEAL_AT bila stok >= 1 hari), supaya stok pangan tidak turun berundak 7 per orang tiap 3 hari
+const wantMeal = v => foodTotal() > 0 && (v.hunger <= C.HUNGER_CRIT || (v.hunger <= (C.MEAL_AT ?? C.HUNGER_CRIT) && foodTotal() >= foodPerDay()));
+// v9b: batas nyaman mood (desa bahagia harus diperjuangkan): api unggun & rumah hanya menaikkan mood sampai batas ini;
+// di atasnya hanya dari hal baik (kenduri, keinginan terpenuhi, festival, sahabat, sifat) dan pelan-pelan turun lagi.
+function comfortVillage() { const M = C.MOOD_COMFORT; if (!M) return 100; if (S._cvDay === S.t >> 3) return S._cv;
+  S._cvDay = S.t >> 3; return S._cv = M.base + (foodDays() >= M.foodDays ? M.food : 0) + (done('dapur').length ? M.kitchen : 0) + (done('sumur').length ? M.well || 0 : 0) + monumentComfort(); }
+function monumentComfort() { return 0; } // diisi monumen P1
+function comfortCap(v) { const M = C.MOOD_COMFORT; if (!M) return 100; return Math.min(M.max, comfortVillage() + (v.homeId != null ? M.home : 0) + (v.partnerId != null ? M.partner || 0 : 0)); }
 function eatNow(v) { const per = C.EAT_RESTORE_PER_FOOD * (done('dapur').length ? 1 + techVal('dapur_bonus', C.KITCHEN_EAT_BONUS) + cookBonus() : 1);
   let need = Math.ceil((100 - v.hunger) / per); const a = Math.min(need, S.res.makanan); S.res.makanan -= a; need -= a;
   const g = Math.min(need, S.res.gandum || 0); S.res.gandum -= g;
@@ -233,7 +241,7 @@ const cradlePos = h => { const p = doorPos(h); return { x: p.x + (C.BUILDINGS[h.
 function updateBaby(v, dt) { const perSec = 1 / C.DAY_LENGTH_SEC;
   growUp(v, dt);
   v.hunger = Math.max(0, v.hunger - C.HUNGER_PER_DAY * foodMultOf(v) * (isWinter() ? hungerMultNow() : 1) * perSec * dt);
-  if (v.hunger <= C.HUNGER_CRIT && foodTotal() > 0) eatNow(v);
+  if (wantMeal(v)) eatNow(v);
   if (v.hunger <= 0) v.health -= C.HEALTH.starvePerDay * perSec * dt; else if (v.hunger > 50) v.health = Math.min(100, v.health + C.HEALTH.regenPerDay * perSec * dt);
   v.energy = 100; const m = S.villagers.find(o => o.id === v.motherId) || S.villagers.find(o => o.id === v.fatherId);
   if (m) v.mood = Math.max(40, Math.min(100, m.mood + 10));
@@ -474,7 +482,7 @@ function lifeDaily() { if (S.syukuran && S.syukuran.day === S.day) { log('🎊 '
 function chooseTask(v) {
   const st = storage(v);
   // 1. Lapar kritis
-  if (v.hunger <= C.HUNGER_CRIT && foodTotal() > 0 && st) return { kind: 'makan', target: stPos(st) };
+  if (wantMeal(v) && st) return { kind: 'makan', target: stPos(st) };
   // 2. Tidur kritis, sakit parah (istirahat), lalu tugas darurat (padam/rawat/jaga/makam), baru tidur malam biasa
   if (v.energy <= C.ENERGY_CRIT || v.sick && v.sick.lvl === 'parah') return bedTask(v);
   // darurat: anak tidak ikut; ibu hamil tidak jaga; setelah 21:00 hanya darurat jadwal, setelah 22:30 hanya padam/jaga
@@ -575,7 +583,9 @@ function updateVillager(v, dt) {
   if (v.hunger <= 0) v.health -= C.HEALTH.starvePerDay * perSec * dt; else if (v.hunger > 50) v.health = Math.min(100, v.health + C.HEALTH.regenPerDay * perSec * dt);
   if (!(v.task && v.task.kind === 'tidur' && v.task.asleep)) v.energy = Math.max(0, v.energy - C.ENERGY_PER_DAY * (stageOf(v) === 'lansia' ? C.AGE.elderEnergyDecayMult : 1) / traitMult(v, 'energyMult') * perSec * dt); // energyMult: rajin lebih awet, malas cepat lelah
   const fire = nearest(done('apiunggun'), v, center);
-  if (fire && campfireLit() && dist(center(fire), v) < 4 * techVal('api_radius', 1)) v.mood = Math.min(100, v.mood + C.MOOD_CAMPFIRE_BONUS * traitMult(v, 'fireMoodMult') * dt); else if (inHut(v)) v.mood = Math.min(100, v.mood + C.MOOD_HOME_BONUS * dt); else v.mood -= C.MOOD_DECAY * dt * (isWinter() && S.res.kulit < S.villagers.length ? C.WINTER_MOOD_DECAY_MULT_NO_HIDE : 1);
+  const cap = comfortCap(v), gain = g => { if (v.mood < cap) v.mood = Math.min(cap, v.mood + g); }; // v9b: api/rumah hanya menaikkan mood sampai batas nyaman
+  if (v.mood > cap) v.mood = Math.max(cap, v.mood - ((C.MOOD_COMFORT || {}).aboveDecay || 0) * dt); // di atas batas nyaman (dari kenduri, keinginan, festival) turun pelan
+  if (fire && campfireLit() && dist(center(fire), v) < 4 * techVal('api_radius', 1)) gain(C.MOOD_CAMPFIRE_BONUS * traitMult(v, 'fireMoodMult') * dt); else if (inHut(v)) gain(C.MOOD_HOME_BONUS * dt); else v.mood -= C.MOOD_DECAY * dt * (isWinter() && S.res.kulit < S.villagers.length ? C.WINTER_MOOD_DECAY_MULT_NO_HIDE : 1);
   if (v.hunger < C.HUNGER_CRIT || v.energy < C.ENERGY_CRIT) v.mood -= C.MOOD_HUNGRY_PENALTY * dt;
   v.mood = Math.max(0, Math.min(v.traumaUntil >= S.day ? TH().traumaMoodCap : 100, v.mood));
   // interupsi kebutuhan kritis
@@ -693,6 +703,9 @@ function foodTask(v) { const F = FS(), others = S.villagers.filter(o => o !== v 
       add('memancing', Math.min(avgYield(M) * Math.max(M.pondSeasonMin || 0, Math.min(1, srcMult('memancing'))) + (M.pondYieldAdd || 0), S.fish.ponds[pb.id]), M.time, p, { pond: pb.id, fb: pb, face: p.face }); } }
   if (F.keong) { const f = nearest(S.buildings.filter(b => b.type === 'ladang' && b.keong > 0 && !takenB.has(b)), v, center); if (f) add('keong', Math.min(avgYield(F.keong) * srcMult('keong'), f.keong), F.keong.time, center(f), { fb: f }); }
   if (!cand.length) return null; cand.sort((a, b) => b.sc - a.sc); return cand[0].t; }
+// nama tugas sumber pangan: TEKS pangan.tugas.<id>.nama (Asisten Dokumen v1.6.0), cadangan di sini
+const TASK_FB = { meramu: 'Meramu', memancing: 'Memancing', jamur: 'Mencari jamur', buah: 'Memetik buah', umbi: 'Menggali umbi hutan', keong: 'Memungut keong sawah' };
+const taskName = id => TX('pangan.tugas.' + id + '.nama', {}, TASK_FB[id] || 'Meramu');
 // sisa pangan yang masih bisa diambil di sumber tugas t
 function foodAvail(t) { if (t.src === 'memancing') return t.pond != null ? (S.fish && S.fish.ponds[t.pond]) || 0 : (S.fish && S.fish.river) || 0;
   if (t.src === 'keong') return S.buildings.includes(t.fb) ? t.fb.keong || 0 : 0; if (t.jamurT) return t.node && t.node.amount > 0 ? t.node.jamur || 0 : 0; return t.node ? t.node.amount : 0; }
@@ -707,7 +720,7 @@ function foodWork(v, t, dt) { const c = FS()[t.src]; if (!c || foodAvail(t) <= 0
   else if (t.src === 'keong') t.fb.keong = Math.max(0, t.fb.keong - n); else if (t.jamurT) t.node.jamur = Math.max(0, t.node.jamur - n);
   else { t.node.amount -= n; if (t.node.amount <= 0) { t.node.amount = 0; t.node.regrow = (c.regrowDays || 3) * C.DAY_LENGTH_SEC; } }
   v.skills.meramu += C.SKILL_GAIN * traitMult(v, 'skillGainMult'); const src = t.src === 'memancing' ? 'ikan' : t.src === 'buah' ? t.kindF || 'buah' : t.src;
-  v.carry = { res: 'makanan', n, src }; sfx('klik'); vhist(v, `${{ memancing: 'Memancing', jamur: 'Mencari jamur', buah: 'Memetik buah', umbi: 'Menggali umbi', keong: 'Memungut keong' }[t.src] || 'Meramu'}: ${n} ${panganLabel(src).toLowerCase()}`);
+  v.carry = { res: 'makanan', n, src }; sfx('klik'); vhist(v, TX('pangan.tugas.' + t.src + '.log', { nama: v.name, jumlah: n, sumber: panganLabel(src).toLowerCase(), ...(t.src === 'buah' ? { buah: panganLabel(src).toLowerCase() } : {}) }, `${taskName(t.src)}: ${n} ${panganLabel(src).toLowerCase()}`));
   const st = storage(v); v.task = st ? { kind: 'setor', target: stPos(st) } : null; }
 // pohon buah & umbi tumbuh lagi (hari game), pohon buah hanya berbuah di musimnya
 function foodNodesStep(dt) { for (const n of S.nodes) if ((n.type === 'buah' || n.type === 'umbi') && n.amount <= 0 && (n.regrow -= dt) <= 0) {
@@ -1389,7 +1402,7 @@ function vhist(v, msg) { const f = dayFrac(), hh = String(Math.floor(f * 24)).pa
 function TASK_TEXT(t) { if (!t) return 'Menunggu';
   switch (t.kind) {
     case 'makan': return 'Makan'; case 'tidur': return t.asleep ? (t.where === 'bed' ? 'Tidur di rumah' : 'Tidur di luar') : 'Pulang untuk tidur'; case 'main': return 'Bermain'; case 'diam': return 'Santai'; case 'setor': return 'Menyetor ke gudang';
-    case 'kumpul': return t.src && t.src !== 'meramu' ? ({ memancing: 'Memancing', jamur: 'Mencari jamur', buah: 'Memetik buah', umbi: 'Menggali umbi hutan', keong: 'Memungut keong sawah' }[t.src] || 'Meramu') : 'Mengumpulkan ' + String(RES_LABEL[t.res] || t.res).toLowerCase();
+    case 'kumpul': return t.src && t.src !== 'meramu' ? taskName(t.src) : 'Mengumpulkan ' + String(RES_LABEL[t.res] || t.res).toLowerCase();
     case 'bangun': return (t.b && t.b.done ? 'Memperbaiki ' : 'Membangun ') + (t.b ? C.BUILDINGS[t.b.type].nama : '');
     case 'tani': return t.harvest ? 'Memanen ladang' : 'Menanam ladang';
     case 'air': return 'Mengambil air dari ' + (t.src === 'sumur' ? 'sumur' : 'sungai');
@@ -1471,7 +1484,9 @@ function newDay() {
   checkEra();
   const mood = S.villagers.reduce((a, v) => a + v.mood, 0) / pop;
   S.moodGoodDays = mood >= C.SPAWN.minMood ? S.moodGoodDays + 1 : 0;
-  S.happyDays = mood >= ((C.SPAWN.happy || {}).mood ?? 101) ? (S.happyDays || 0) + 1 : 0;
+  { const H = C.SPAWN.happy || {}, minV = Math.min(...S.villagers.map(v => v.mood)); // v9b: rata-rata >= H.mood DAN tidak ada warga < H.minMood, berturut-turut
+    S.happyDays = mood >= (H.mood ?? 101) && minV >= (H.minMood ?? 0) ? (S.happyDays || 0) + 1 : 0; S.happyMinMood = minV;
+    if ((S.happyDays || 0) >= (H.days || 1e9)) S.happyActiveDays = (S.happyActiveDays || 0) + 1; }
   const A = attraction(), sp = C.SPAWN;
   if (A.ok && Math.random() < A.chance) {
     if (A.happy) { log('💌 ' + TX('pangan.daya_tarik.pendatang', {}, 'Kabar desa yang bahagia sampai ke kampung sebelah… Seorang perantau ingin tinggal.')); S.happySpawns = (S.happySpawns || 0) + 1; }
@@ -1491,19 +1506,21 @@ function newDay() {
 }
 // daya tarik desa (v9): syarat pendatang + bonus desa bahagia (rata-rata mood >= SPAWN.happy.mood selama happy.days hari -> peluang & jeda lebih baik)
 function attraction() { const sp = C.SPAWN, H = sp.happy || {}, pop = S.villagers.length, mood = pop ? S.villagers.reduce((a, v) => a + v.mood, 0) / pop : 0;
-  const happy = (S.happyDays || 0) >= (H.days || 1e9), fd = foodDays(), needFd = sp.foodDays ?? sp.foodDaysPerPop, free = capacity() - pop - S.villagers.filter(v => v.pregnantUntil).length;
+  const lowMood = pop ? Math.min(...S.villagers.map(v => v.mood)) : 0, happy = (S.happyDays || 0) >= (H.days || 1e9), fd = foodDays(), needFd = sp.foodDays ?? sp.foodDaysPerPop, free = capacity() - pop - S.villagers.filter(v => v.pregnantUntil).length;
   const cd = (sp.cooldownDays + (sp.cooldownPerPop || 0) * pop) * ((S.era | 0) >= eraIndex(C.PREGNANCY.minEra) ? C.PREGNANCY.newcomerCooldownMult : 1) * (happy ? H.cooldownMult || 1 : 1) - (done('balai').length ? C.TOWN_HALL_SPAWN_COOLDOWN_CUT : 0);
   const cdLeft = Math.max(0, Math.ceil(cd - (S.day - S.lastSpawnDay))), moodOk = S.moodGoodDays >= sp.moodDays, foodOk = fd >= needFd, houseOk = free > 0;
   const ok = foodOk && houseOk && moodOk && cdLeft <= 0, chance = happy ? H.chancePerDay ?? 1 : sp.chancePerDay ?? 1;
   const score = (moodOk ? 1 : 0) + (happy ? 1 : 0) + (foodOk ? 1 : 0) + (houseOk ? 1 : 0);
-  return { mood, happy, happyDays: S.happyDays || 0, needHappy: H.days, happyMood: H.mood, moodOk, minMood: sp.minMood, fd, needFd, foodOk, free, houseOk, cdLeft, ok, chance, score }; }
+  return { mood, lowMood, happyMinMood: H.minMood, happy, happyDays: S.happyDays || 0, needHappy: H.days, happyMood: H.mood, moodOk, minMood: sp.minMood, fd, needFd, foodOk, free, houseOk, cdLeft, ok, chance, score }; }
 function attractionHTML() { const A = attraction(), K = (k, ex, fb) => TX('pangan.daya_tarik.' + k, ex || {}, fb), ic = ASSETS.ikon_daya_tarik && ASSETS.ikon_daya_tarik.ui;
   const lvl = A.score >= 4 ? K('tinggi', null, 'Tinggi') : A.score >= 3 ? K('sedang', null, 'Sedang') : K('rendah', null, 'Rendah');
   const tip = K('tooltip', null, 'Pendatang datang bila suasana hati baik, stok pangan cukup, dan ada tempat tidur kosong. Desa yang bahagia lebih sering didatangi perantau.');
   const row = (ok, t) => `${ok ? '✅' : '▫️'} ${t}`;
   return `<div id="dayaTarik" title="${tip}" data-score="${A.score}" data-happy="${A.happy ? 1 : 0}" style="margin-top:6px">${ic ? `<img class="ico" src="${ic}" alt=""> ` : '💗 '}<b>${K('judul', null, 'Daya tarik desa')}: ${lvl}</b>${'★'.repeat(A.score)}${'☆'.repeat(4 - A.score)}<br>`
     + [row(A.moodOk, K('mood', { jumlah: Math.round(A.mood), jumlah2: A.minMood }, `Suasana hati ${Math.round(A.mood)} (≥ ${A.minMood})`)),
-       row(A.happy, K('bahagia', { jumlah: Math.min(A.happyDays, A.needHappy), jumlah2: A.needHappy }, `Desa bahagia (mood ≥ ${A.happyMood}) ${Math.min(A.happyDays, A.needHappy)}/${A.needHappy} hari`) + (A.happy ? ' ' + K('bonus', null, '→ perantau lebih sering datang') : '')),
+       row(A.happy, K('bahagia', { jumlah: Math.min(A.happyDays, A.needHappy), jumlah2: A.needHappy, jumlah3: A.happyMood, jumlah4: A.happyMinMood }, `Desa bahagia ${Math.min(A.happyDays, A.needHappy)}/${A.needHappy} hari`)
+         + ` <small>${K('bahagia_syarat', { jumlah: A.happyMood, jumlah2: A.happyMinMood }, `(rata-rata mood ≥ ${A.happyMood}, tak ada warga < ${A.happyMinMood})`)}</small>`
+         + (!A.happy && A.lowMood < (A.happyMinMood || 0) ? ` <small class="murung">(${K('murung', { jumlah: Math.round(A.lowMood) }, `ada warga murung: ${Math.round(A.lowMood)}`)})</small>` : '') + (A.happy ? ' ' + K('bonus', null, '→ perantau lebih sering datang') : '')),
        row(A.foodOk, K('pangan', { jumlah: A.fd.toFixed(1), jumlah2: A.needFd }, `Stok pangan ${A.fd.toFixed(1)}/${A.needFd} hari`)),
        row(A.houseOk, K('rumah', { jumlah: Math.max(0, A.free) }, `Tempat tidur kosong: ${Math.max(0, A.free)}`)),
        A.cdLeft > 0 ? `⏳ ${K('jeda', { jumlah: A.cdLeft }, `Pendatang berikutnya paling cepat ${A.cdLeft} hari lagi`)}` : ''].filter(Boolean).join('<br>') + '</div>'; }
@@ -1722,7 +1739,7 @@ function storyNewDay() { storyInit(); const R = S.director, prev = S.day - 1;
 // monyet pencuri siang (D15) & tikus lumbung (D21): penyerap kecil
 function monkeyDaily() { const M = C.MONKEY; if (!M || !M.enabled || S.day < M.fromDay || (S.era | 0) < eraIndex(M.era) || !M.musim.includes(storySeason()) || foodTotal() < M.minFood) return;
   if (Math.random() >= M.chancePerDay * threatBuff('monyet')) return; const n = rndInt(M.steal[0], M.steal[1]); takeFood(n, 'monyet'); S.monkeyDays.push(S.day); if (S.monkeyDays.length > 12) S.monkeyDays.shift();
-  log('🐒 ' + TX('peringatan_dini.ancaman_monyet.tingkat.bahaya.teks', {}, 'Monyet-monyet melompat ke tegalan dan menyambar jagung!')); }
+  log((M.icon || '🐒') + ' ' + TX('peringatan_dini.ancaman_monyet.tingkat.bahaya.teks', {}, M.fallback || 'Monyet-monyet melompat ke tegalan dan menyambar jagung!')); }
 function ratDaily() { const T = SKC().tikus; if (!T || S.day < T.fromDay || (S.res.gandum || 0) < T.gandumMin) return; const n = S.res.gandum * T.fracPerDay * buffMult('tikus'); S.res.gandum -= n; foodLedger(-n, true); dstat('sink', 'tikus', n); }
 // ---- Agustusan (§2.3) ----
 const agustusYear = () => yearIdx();
@@ -1800,11 +1817,12 @@ function panggung() { const A = AGC(), AT = (TEXT && TEXT.agustusan) || {}, R = 
 // tugas saat lomba: semua penduduk dewasa berkumpul di lapangan (kebutuhan kritis tetap didahulukan di chooseTask)
 function lombaTask(v) { const L = S.lomba, p = L && L.lap; if (!p) return null; const i = S.villagers.indexOf(v); return { kind: 'diam', target: { x: p.x + (i % 7), y: p.y + 3 + Math.floor(i / 7) % 2 }, timer: 6 }; }
 // dekorasi Agustusan di peta (aset tahap 8b): umbul-umbul, bendera, pinang, kerupuk, karung, peserta balap karung
-function storyDecor() { const A = AGC(), L = S.lomba, out = []; if (!A || !A.enabled || !L || L.year !== agustusYear() || !L.lap) return out; const d = dayOfYear(), p = L.lap;
+function storyDecor() { const out = storyDecorAll(), hide = C.AGUS_HIDE || []; return hide.length ? out.filter(o => !hide.includes(o.key)) : out; }
+function storyDecorAll() { const A = AGC(), L = S.lomba, out = []; if (!A || !A.enabled || !L || L.year !== agustusYear() || !L.lap) return out; const d = dayOfYear(), p = L.lap;
   const show = d >= A.prepDayOfYear && d <= A.umbul.days[1] && L.stage >= 2; if (!show) return out;
   for (let i = 0; i < (L.umbul || 0); i++) { const x = p.x - 1 + (i % 2) * 8, y = p.y - 1 + Math.floor(i / 2) * 2; out.push({ y: y + 1, draw: () => sprite('agus_umbul', x, y, 1, 1, frameAt(ASSETS.agus_umbul, 4)) }); }
-  out.push({ y: p.y + 1, draw: () => sprite('agus_bendera', p.x + 3, p.y, 1, 1, frameAt(ASSETS.agus_bendera, 4)) });
-  if (L.umbul > 0) for (let i = 0; i < 7; i++) out.push({ y: p.y - 0.5, draw: () => sprite('agus_bunting', p.x + i, p.y - 1, 1, 1, frameAt(ASSETS.agus_bunting, 2)) });
+  out.push({ key: 'agus_bendera', y: p.y + 1, draw: () => sprite('agus_bendera', p.x + 3, p.y, 1, 1, frameAt(ASSETS.agus_bendera, 4)) });
+  if (L.umbul > 0) for (let i = 0; i < 7; i++) out.push({ key: 'agus_bunting', y: p.y - 0.5, draw: () => sprite('agus_bunting', p.x + i, p.y - 1, 1, 1, frameAt(ASSETS.agus_bunting, 2)) });
   if (d === A.dayOfYear && L.stage >= 4 && L.stage < 7) { const picked = L.picked || [];
     if (picked.includes('panjat_pinang')) out.push({ y: p.y + 2, draw: () => sprite('agus_pinang', p.x + 5, p.y + 1, 2, 1) });
     if (picked.includes('makan_kerupuk')) out.push({ y: p.y + 2, draw: () => sprite('agus_kerupuk', p.x + 1, p.y + 1, 1, 1, frameAt(ASSETS.agus_kerupuk, 2)) });

@@ -80,7 +80,7 @@ const { chromium } = require('playwright');
   // tema sedang: Agustusan & dilema khas Nusantara mati, Juru Cerita tetap jalan
   const q = await open(null, 'sedang');
   const r7 = await q.evaluate(`(${setup})(); (() => { const S = DESA.state, C = CONFIG, seen = {}; for (let i = 0; i < 40 * 1200; i++) { DESA.step(0.1); if (S.event) { if (S.event === '@story') seen[S.story.type + ':' + (S.story.id || '')] = 1; const b = document.querySelector('#modal [data-ev]:not([disabled])'); b ? b.click() : (S.event = null); } }
-    return { agus: C.AGUSTUSAN.enabled, monyet: C.MONKEY.enabled, seen: Object.keys(seen), banned: Object.keys(seen).filter(k => C.STORY_DISABLE.includes(k.split(':')[1])), lomba: S.lomba.stage || 0 }; })()`);
+    return { agus: C.AGUSTUSAN.enabled, monyet: C.MONKEY.enabled, seen: Object.keys(seen), banned: Object.keys(seen).filter(k => C.STORY_DISABLE.includes(k.split(':')[1])), lomba: S.lomba.stage || 0, disable: C.STORY_DISABLE.length, hide: (C.AGUS_HIDE || []).join(), fox: C.MONKEY.icon }; })()`);
   console.log(JSON.stringify({ r: { ...r, perDay: undefined }, r2, r3, r4, r4b, r5, r6, r7 }));
   const ok = r.clash.length === 0 && r.bad.length === 0 && r.maxDil <= 1 && r.maxModal <= 2 && r.cov >= 0.8 && r.maxEmpty < 3 && (r.counts.dilema || 0) >= 3 && (r.counts.momen || 0) >= 3
     && r2.opened && r2.landed.length === 1 && r2.landed[0][1] - r2.landed[0][0] === 3 && r2.logHasHari && !r2.badRange && r2.firstOpt.every(x => x[4]) && r2.noKritis
@@ -88,6 +88,6 @@ const { chromium } = require('playwright');
     && r4b.atField >= 3 && r4.panel && r4.panel.length === 4 && r4.picked.length >= 2 && r4.umbul === 3 && r4.dayOfYear === 21
     && r5.results.length === 4 && new Set(r5.results).size === 4 && r5.juara && r5.piala && r5.stage === 7
     && r6.card && r6.opts === 3 && r6.tunda
-    && !r7.agus && !r7.monyet && r7.banned.length === 0 && r7.seen.length >= 2 && r7.lomba === 0 && !errs.length;
+    && r7.agus && r7.monyet && r7.disable === 0 && r7.fox === '🦊' && /agus_bendera/.test(r7.hide) && r7.banned.length === 0 && r7.seen.length >= 2 && !errs.length; // v9b: tema sedang memakai semua cerita (Festival Panen, rubah) tanpa bendera merah-putih
   console.log(errs.length ? errs.slice(0, 5) : 'no errors', ok ? 'LULUS' : 'GAGAL'); await b.close(); process.exit(ok ? 0 : 1);
 })();

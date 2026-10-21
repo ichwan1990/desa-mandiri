@@ -12,9 +12,11 @@ window.CONFIG = {
   NODE_AMOUNT: { kayu: 25, batu: 40, makanan: 6 },
   BUSH_REGROW_SEC: 360,
   HUNGER_PER_DAY: 25, ENERGY_PER_DAY: 20,
-  HUNGER_CRIT: 25, ENERGY_CRIT: 20, SLEEP_AT_NIGHT_BELOW: 70,
+  HUNGER_CRIT: 25, MEAL_AT: 50, ENERGY_CRIT: 20, // MEAL_AT (v9b): makan biasa saat lapar <= 50 (porsi ~4-5, tiap ~2 hari) bila stok >= 1 hari; di bawah HUNGER_CRIT tetap makan apa pun stoknya SLEEP_AT_NIGHT_BELOW: 70,
   EAT_RESTORE_PER_FOOD: 12, // ~2 makanan = 1 porsi (+25)
   SLEEP_REGEN_PER_SEC: 2.5,
+  // v9b batas nyaman: api/rumah menaikkan mood hanya sampai base + rumah + pangan>=foodDays hari + dapur + sumur (+ monumen); di atasnya turun aboveDecay/detik
+  MOOD_COMFORT: { base: 62, home: 6, partner: 2, food: 4, foodDays: 12, kitchen: 2, well: 2, max: 92, aboveDecay: 0.07 },
   MOOD_CAMPFIRE_BONUS: 0.15, MOOD_DECAY: 0.05, MOOD_HOME_BONUS: 0.08, MOOD_HUNGRY_PENALTY: 0.2, // MOOD_HOME_BONUS: tidur di gubuk -> mood naik pelan
   // era: id era minimum untuk membuka bangunan (lihat ERAS). storage: bisa jadi tempat setor.
   BUILDINGS: {
@@ -208,7 +210,7 @@ window.CONFIG = {
   // chancePerDay: peluang datang per hari bila semua syarat & jeda terpenuhi. happy: desa bahagia (rata-rata mood >= mood selama days hari) -> peluang & jeda membaik + log kabar.
   // cooldownPerPop: jeda bertambah per penduduk (desa besar tidak lagi 'kosong' bagi perantau) -> pop hari 140 tetap <= ~18 walau mood tinggi.
   SPAWN: { foodDaysPerPop: 10, foodPerDayPerPop: 2, foodDays: 12, minMood: 65, moodDays: 3, cooldownDays: 8, cooldownPerPop: 0.6, chancePerDay: 0.4,
-           happy: { mood: 70, days: 4, chancePerDay: 0.75, cooldownMult: 0.85 } },
+           happy: { mood: 80, days: 5, minMood: 50, chancePerDay: 0.75, cooldownMult: 0.85 } }, // v9b: desa bahagia harus diperjuangkan (target aktif ~25-45% hari)
   // ---------- pangan v9 (permintaan Ichwan 21-10): sumber pangan liar, dikerjakan otomatis di prioritas Makanan ----------
   // Semua hasil masuk 'makanan' (panen padi tetap 'gandum'). at: semak | tepi_air (tepi sungai + Kolam Ikan) | pohon (jamur di bawah pohon) | pohon_buah | sawah (keong).
   // time = detik kerja di tempat, yield = [min, maks] per angkutan, season = pengali hasil per musim (id musim tema; < minMult -> tidak dicari),
