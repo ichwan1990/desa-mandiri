@@ -77,6 +77,14 @@ window.CONFIG = {
   FAMINE: { waspada: 8, bahaya: 5, kritis: 3, kolaps: 1, bahayaMoodPerDay: -5, graceDays: 7, graceBahaya: 1 }, // graceBahaya (v9c): masa awal tetap tampil 'bahaya' bila < 1 hari (tanpa penalti mood)
   // v9c (uji perangkat Ichwan 21-10: tanpa input mood 70 -> 0 di hari 7): tanpa api/rumah mood turun ke floor, hujan tanpa atap tidak menekan di bawah rainFloor; api unggun menyala = penalti hujan x rainFireMult
   MOOD_BARE: { floor: 40, rainFloor: 40, rainFireMult: 0.5 },   // v9d: rainFloor 36 -> 40 (uji perangkat @51b6d4d)
+  // v11: kategori bilah bangun (label: TEKS bangun_kategori.<id>, cadangan 'nama'). Bangunan yang tak terdaftar masuk kategori terakhir.
+  BUILD_CATS: [
+    { id: 'tempat_tinggal', nama: 'Tempat Tinggal', items: ['gubuk', 'rumah', 'apiunggun', 'sumur'] },
+    { id: 'pangan', nama: 'Pangan', items: ['ladang', 'kolam', 'tambak', 'kandang_ayam', 'dapur', 'lumbung'] },
+    { id: 'bahan_produksi', nama: 'Bahan & Produksi', items: ['gudang', 'bengkel', 'pasar'] },
+    { id: 'keamanan', nama: 'Keamanan', items: ['obor', 'pagar', 'orang_orangan', 'menara_jaga'] },
+    { id: 'lainnya', nama: 'Lainnya', items: ['balai', 'makam', 'masjid', 'bendungan', 'pendopo_reog'] },
+  ],
   AUTO_BUILD: { fireDay: 2, hutDay: 4, hutTaskDay: 4, hutMoreDay: 8, hutMax: 2, bedHintDay: 6 }, // v10: gubuk ke-2 hari 8 bila penuh; petunjuk tempat tidur hari 6     // warga menaruh api unggun / gubuk pertama sendiri bila belum ada sama sekali
   FOOD_PRIORITY_DAYS: 4, FOOD_TILT_DAYS: 5, FOOD_DAYS_SMOOTH: 0.35,              // utamakan pangan bila stok < 4 hari; angka hari di lencana dihaluskan ~0.35 hari
   THREAT: {

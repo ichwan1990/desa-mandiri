@@ -664,9 +664,54 @@ function notify(res, n, v, src) { const near = notes.find(o => o.res === res && 
   const off = lows.length ? Math.max(-NOTE_GAP * 3, Math.min(0, Math.min(...lows) - NOTE_GAP)) : 0;
   notes.push({ res, n, x: v.x, y: v.y, life: 2, src, off, label: src ? panganLabel(src) : RES_LABEL[res] || res }); }
 // teks melayang tanpa angka (mis. 'Monyet kabur!'), ditumpuk seperti notify
-function floatText(label, x, y) { if (notes.length >= (C.MAX_NOTES || 6)) notes.shift(); const lows = notes.filter(o => o.life > 0 && Math.abs(o.x - x) < 2.5 && Math.abs(o.y - y) < 2).map(o => noteRise(o) + (y - o.y) * T);
-  notes.push({ res: '_teks', n: 0, x, y, life: 2.5, txt: true, label, off: lows.length ? Math.max(-NOTE_GAP * 3, Math.min(0, Math.min(...lows) - NOTE_GAP)) : 0 }); }
+function floatText(label, x, y, col) { if (notes.length >= (C.MAX_NOTES || 6)) notes.shift(); const lows = notes.filter(o => o.life > 0 && Math.abs(o.x - x) < 2.5 && Math.abs(o.y - y) < 2).map(o => noteRise(o) + (y - o.y) * T);
+  notes.push({ res: '_teks', n: 0, x, y, life: 2.5, txt: true, label, col, off: lows.length ? Math.max(-NOTE_GAP * 3, Math.min(0, Math.min(...lows) - NOTE_GAP)) : 0 }); }
 const NOTE_GAP = 13; // px antar baris teks melayang
+// ================= v11: kejadian di peta — penanda '!' berdenyut, efek di lokasi, klik spanduk/log -> kamera ke sana =================
+const EV_COL = { serang: '#ff3b30', ladang: '#ff3b30', curi: '#ff8a00', api: '#ff6a00', banjir: '#3aa0ff', rusak: '#ff8a00', pendatang: '#5ad05a' };
+const EV_SEC = () => 0.25 * C.DAY_LENGTH_SEC;
+let fx = []; // efek sesaat (debu), tidak disimpan
+function mapEvent(k, x, y, sec, ref) { S.mapEvents = (S.mapEvents || []).filter(e => S.t < e.until && !(ref != null && e.ref === ref && e.k === k));
+  const e = { k, x, y, t0: S.t, until: S.t + (sec ?? EV_SEC()), ref }; S.mapEvents.push(e); if (S.mapEvents.length > 12) S.mapEvents.shift(); S.lastEventAt = { k, x, y }; return e; }
+function logAt(msg, x, y) { log(msg); const P = S.logPos = S.logPos || {}; P[S.log[0]] = [Math.round(x * 10) / 10, Math.round(y * 10) / 10]; for (const k of Object.keys(P)) if (!S.log.includes(k)) delete P[k]; }
+function dustAt(x, y) { fx.push({ k: 'debu', x, y, t0: performance.now() }); if (fx.length > 20) fx.shift(); }
+// penanda aktif: kejadian tercatat + yang dinamis (hewan menyerang, bangunan terbakar, banjir)
+function activeMarkers() { const out = (S.mapEvents || []).filter(e => S.t < e.until).map(e => ({ k: e.k, x: e.x, y: e.y }));
+  if (S.wolf && S.wolf.phase === 'serang') for (const o of S.wolves || []) if (o.mode !== 'pergi') out.push({ k: 'serang', x: o.x, y: o.y });
+  for (const r of S.raiders || []) if (r.mode !== 'pergi') out.push({ k: 'curi', x: r.x, y: r.y });
+  for (const b of S.buildings) if (b.burning) { const c = center(b); out.push({ k: 'api', x: c.x, y: c.y }); }
+  if (S.flood && S.flood.pos && S.t < S.flood.end) out.push({ k: 'banjir', x: S.flood.pos.x, y: S.flood.pos.y });
+  return out; }
+function drawMarkers() { const t = performance.now() / 1000;
+  for (const m of activeMarkers()) { const cx = m.x * T + 16, cy = m.y * T + 16, p = (Math.sin(t * 6) + 1) / 2, col = EV_COL[m.k] || '#ff3b30';
+    ctx.globalAlpha = 0.35 + 0.4 * (1 - p); ctx.strokeStyle = col; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(cx, cy, 12 + p * 10, 0, 7); ctx.stroke(); ctx.globalAlpha = 1;
+    ctx.fillStyle = col; ctx.beginPath(); ctx.arc(cx, cy - 26, 8, 0, 7); ctx.fill(); ctx.fillStyle = '#fff'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('!', cx, cy - 22); ctx.textAlign = 'left'; }
+  const now = performance.now(); fx = fx.filter(f => now - f.t0 < 1200);
+  for (const f of fx) { const a = (now - f.t0) / 1200; ctx.globalAlpha = 0.6 * (1 - a); ctx.fillStyle = '#a07a50';
+    for (let i = 0; i < 5; i++) { const ang = i * 1.26, r = 4 + a * 14; ctx.beginPath(); ctx.arc(f.x * T + 16 + Math.cos(ang) * r, f.y * T + 22 + Math.sin(ang) * r * 0.5 - a * 6, 4 + a * 4, 0, 7); ctx.fill(); } }
+  ctx.globalAlpha = 1; }
+// posisi untuk spanduk peringatan (klik -> kamera ke sana)
+function warnPos(k) { const M = activeMarkers(), f = m => m && { x: m.x, y: m.y };
+  if (k === 'howl') return f(M.find(m => m.k === 'serang')) || f((S.wolves || [])[0]) || f((S.tracks || [])[0]) || f(S.lastEventAt && S.lastEventAt.k === 'serang' ? S.lastEventAt : null);
+  if (k === 'fire') { const b = S.buildings.find(b => b.burning) || (S.fireRisk && S.buildings.find(b => b.id === S.fireRisk.b)); return b ? center(b) : null; }
+  if (k === 'flood') return S.flood && S.flood.pos ? { ...S.flood.pos } : null;
+  if (k === 'hunger') { const g = storeBuilding(); return g ? center(g) : { x: CAMP.x, y: CAMP.y }; }
+  return null; }
+function panTo(x, y) { centerCam(+x, +y); S.panFlash = { x: +x, y: +y, t: S.t }; }
+// pencuri pangan (monyet/rubah) berjalan dari tepi peta ke ladang/gudang, menyambar, lalu pergi (visual; jumlah dicuri sudah diambil di monkeyDaily)
+function spawnRaider(n, kind) { const tg = pick(S.buildings.filter(b => b.type === 'ladang' && b.done)) || storeBuilding() || { x: CAMP.x, y: CAMP.y }; const c = center(tg);
+  const e = [{ x: c.x, y: 1 }, { x: C.MAP_W - 2, y: c.y }, { x: c.x, y: C.MAP_H - 2 }, { x: 1, y: c.y }].reduce((a, b) => dist(a, c) < dist(b, c) ? a : b), s = nearestWalkable(Math.round(e.x), Math.round(e.y)) || { x: 1, y: 1 };
+  (S.raiders = S.raiders || []).push({ x: s.x, y: s.y, home: { ...s }, goal: { x: c.x, y: c.y }, n, kind, mode: 'jalan', dir: 0 }); mapEvent('curi', c.x, c.y); }
+function updateRaiders(dt) { for (const r of S.raiders || []) { const g = r.mode === 'pergi' ? r.home : r.goal, d = dist(r, g), st = 3.2 * dt; r.moving = d > 0.05;
+    if (d > 0.001) { const dx = g.x - r.x, dy = g.y - r.y; r.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 1 : 2) : (dy < 0 ? 3 : 0); }
+    if (d <= st) { r.x = g.x; r.y = g.y; if (r.mode === 'jalan') { r.mode = 'pergi'; dustAt(r.x, r.y); floatText(`-${r.n} ${TX('peta_kejadian.pangan', {}, 'Pangan')}`, r.x, r.y - 0.5, '#ff9a8a'); } else r.gone = true; }
+    else { r.x += (g.x - r.x) / d * st; r.y += (g.y - r.y) / d * st; } }
+  if (S.raiders) S.raiders = S.raiders.filter(r => !r.gone); }
+// sprite monyet/rubah belum ada (aset hilang): siluet sementara
+function drawRaider(r) { const x = r.x * T, y = r.y * T, l = r.dir === 1, bob = r.moving ? Math.sin(performance.now() / 60) * 1.5 : 0, fox = r.kind === 'rubah';
+  ctx.fillStyle = 'rgba(0,0,0,0.25)'; ctx.fillRect(x + 9, y + 25, 14, 3); ctx.fillStyle = fox ? '#c8642a' : '#7a5a3a'; ctx.fillRect(x + 10, y + 14 + bob, 12, 9);
+  ctx.fillRect(l ? x + 5 : x + 20, y + 10 + bob, 8, 8); ctx.fillStyle = fox ? '#f2e6d0' : '#d8b890'; ctx.fillRect(l ? x + 5 : x + 24, y + 13 + bob, 3, 3);
+  ctx.fillStyle = fox ? '#c8642a' : '#5a4028'; ctx.fillRect(l ? x + 22 : x + 4, y + 12 + bob, 6, 3); ctx.fillStyle = '#111'; ctx.fillRect(l ? x + 7 : x + 24, y + 12 + bob, 1, 1); }
 const noteRise = n => (2 - n.life) * 14 + (n.off || 0);
 // ================= PANGAN v9 (permintaan Ichwan 21-10): sumber pangan liar data-driven (C.FOOD_SOURCES), teks melayang per sumber, ringkasan masuk/keluar =================
 const FS = () => C.FOOD_SOURCES || {};
@@ -860,16 +905,18 @@ function applyEffects(ef, src) {
     const resKey = resKeyOf(k);
     if (resKey in S.res) { const b0 = S.res[resKey]; S.res[resKey] = Math.max(0, S.res[resKey] + n); const dd = S.res[resKey] - b0; if (isFoodRes(resKey) && dd) dd > 0 ? dstat('panganMasuk', src === 'cerita' ? 'cerita' : 'event', dd) : dstat('sink', src === 'cerita' ? 'cerita' : 'event', -dd); }
     else if (k === 'suasana_hati' || k === 'energi') S.villagers.forEach(v => v[k === 'energi' ? 'energy' : 'mood'] = Math.max(0, Math.min(100, v[k === 'energi' ? 'energy' : 'mood'] + n)));
-    else if (k === 'penduduk') { if (n > 0) for (let i = 0; i < n; i++) spawnVillager(CAMP.x, CAMP.y + 1, false, i === 0 ? S.eventName : null);
+    else if (k === 'penduduk') { if (n > 0) for (let i = 0; i < n; i++) { spawnVillager(CAMP.x, CAMP.y + 1, false, i === 0 ? S.eventName : null); const nv = S.villagers[S.villagers.length - 1]; if (nv) mapEvent('pendatang', nv.x, nv.y, EV_SEC(), 'v' + nv.id); }
       else for (let i = 0; i < -n && S.villagers.length > 1; i++) log(`${S.villagers.pop().name} meninggalkan desa.`); }
     else if (k === 'hari_kerja_hilang') S.restUntil = S.t + n * C.DAY_LENGTH_SEC;
     else if (k === 'progres_riset') { if (S.research) { const nd = techNodes().find(x => x.id === S.research.id); if (nd) S.research.progress = Math.min(nd.work - 0.01, S.research.progress + nd.work * n / 100); } }
     else if (k === 'harga_jual_pangan' || k === 'harga_beli_pangan') addPriceEvent(k === 'harga_jual_pangan' ? 'jual' : 'beli', ['makanan', 'gandum'], n / 100, C.MARKET.eventDays);
     else if (k === 'kesehatan') S.villagers.forEach(v => v.health = Math.max(1, Math.min(100, (v.health ?? 100) + n)));
-    else if (k === 'kesehatan_satu') { const v = S.eventVictim && vById(S.eventVictim) || pick(S.villagers); if (v) { v.health = Math.max(1, Math.min(100, (v.health ?? 100) + n)); if (n < 0) v.injured = S.day; } }
+    else if (k === 'kesehatan_satu') { const v = S.eventVictim && vById(S.eventVictim) || pick(S.villagers); if (v) { v.health = Math.max(1, Math.min(100, (v.health ?? 100) + n)); if (n < 0) { v.injured = S.day; floatText(`${n} ${TX('peta_kejadian.kesehatan', {}, 'Kesehatan')}`, v.x, v.y - 0.5, '#ff9a8a'); mapEvent('serang', v.x, v.y, EV_SEC(), 'v' + v.id); } } }
     else if (k === 'pertumbuhan_ladang') S.buildings.filter(b => b.type === 'ladang' && b.stage === 'tumbuh').forEach(b => b.grow = Math.max(0, b.grow + n));
-    else if (k === 'kesehatan_bangunan') { S.buildings.filter(b => b.done).forEach(b => b.hp = Math.max(0, Math.min(100, (b.hp ?? 100) + n)));
-      if (n < 0) log(`Bangunan rusak ${-n}%. Tukang akan memperbaikinya.`); }
+    else if (k === 'kesehatan_bangunan') { const hit = S.buildings.filter(b => b.done); hit.forEach(b => b.hp = Math.max(0, Math.min(100, (b.hp ?? 100) + n)));
+      if (n < 0) { const big = hit.filter(b => b.type !== 'ladang' && b.type !== 'pagar').sort((a, b) => dist(center(a), CAMP) - dist(center(b), CAMP)).slice(0, 4); // v11: kerusakan (angin/badai) terlihat di peta
+        big.forEach((b, i) => { const c = center(b); dustAt(c.x, c.y); if (i < 3) floatText(`${n} ${TX('peta_kejadian.kondisi', {}, 'Kondisi')}`, c.x, c.y - 0.5, '#ff9a8a'); mapEvent('rusak', c.x, c.y, EV_SEC(), b.id); });
+        const c0 = big[0] && center(big[0]), msg = `Bangunan rusak ${-n}%. Tukang akan memperbaikinya.`; if (c0) logAt(msg, c0.x, c0.y); else log(msg); } }
     else console.info(`[efek] kunci "${k}" belum didukung (${src}), diabaikan.`);
   }
 }
@@ -1025,7 +1072,8 @@ function warnings() { const W = [], J = (TEXT && TEXT.jenjang_kelaparan && TEXT.
 const fillSafe = (s, x) => S.villagers.length ? fill(s, x) : s.replace(/\{(\w+)\}/g, (_, k) => x[k] ?? k);
 function warnUI() { const W = warnings();
   setHTML('warnbar', W.map(w => { const ic = w.k === 'cold' ? `${ASSETS.STATUS_DIR}status_thermometer_cold_16.png` : w.ic ? `${ASSETS.STATUS_DIR}status_${w.ic}_16.png` : `${ASSETS.WARN_DIR}warn_${w.k}_${w.c}.png`;
-    return `<div class="warn w-${w.c}" title="${w.tip || ''}" data-warn="${w.k}"><img src="${ic}" alt="">${w.t}${w.lv === 'kritis' ? ' <small>(jeda & atur prioritas)</small>' : ''}</div>`; }).join('')); }
+    const wp = warnPos(w.k), at = wp ? ` data-wx="${Math.round(wp.x * 10) / 10}" data-wy="${Math.round(wp.y * 10) / 10}" style="cursor:pointer"` : '';
+    return `<div class="warn w-${w.c}" title="${w.tip || ''}" data-warn="${w.k}"${at}><img src="${ic}" alt="">${w.t}${w.lv === 'kritis' ? ' <small>(jeda & atur prioritas)</small>' : ''}</div>`; }).join('')); }
 // ---- cuaca harian & musim ----
 // teks musim: tema empat musim memakai kunci TEKS lama; tema lain memakai C.TXT (tema.js)
 const STX = (kOld, kTheme, ex, fb) => TT(kTheme, ex, fb); // kunci & cadangan per tema ada di tema.js TXT (kOld hanya catatan)
@@ -1088,8 +1136,9 @@ function floodTiles() { if (S._floodSet) return S._floodSet; const set = new Set
   return S._floodSet = set; }
 const isFlooded = (x, y) => S.flood && S.t >= S.flood.start && floodTiles().has(Math.round(y) * C.MAP_W + Math.round(x));
 function startFlood() { S.floodDone = true; const dur = C.FLOOD.durationDays * techVal('banjir_durasi', 1) * C.DAY_LENGTH_SEC;
-  S.flood = { start: S.t + 0.1 * C.DAY_LENGTH_SEC, end: S.t + 0.1 * C.DAY_LENGTH_SEC + dur };
-  log('🌊 ' + TX('peringatan_dini.ancaman_banjir.tingkat.waspada.teks', {}, 'Sungai naik. Air mungkin meluap ke tepian.')); sfx('event'); }
+  let pos = null, bd = 1e9; for (const i of floodTiles()) { const p = { x: i % C.MAP_W, y: Math.floor(i / C.MAP_W) }, d = dist(p, CAMP); if (d < bd) { bd = d; pos = p; } }
+  S.flood = { start: S.t + 0.1 * C.DAY_LENGTH_SEC, end: S.t + 0.1 * C.DAY_LENGTH_SEC + dur, pos };
+  const fl = '🌊 ' + TX('peringatan_dini.ancaman_banjir.tingkat.waspada.teks', {}, 'Sungai naik. Air mungkin meluap ke tepian.'); if (pos) logAt(fl, pos.x, pos.y); else log(fl); sfx('event'); }
 function applyFlood() { S.flood.applied = true; const fs = S.buildings.filter(b => b.type === 'ladang' && floodTiles().has(b.y * C.MAP_W + b.x));
   if (techVal('banjir_ladang', 1) > 0) fs.forEach(b => { if (b.stage === 'tumbuh') b.grow = Math.max(0, b.grow - C.FLOOD.growDelayDays); });
   log('🌊 ' + TX('peringatan_dini.ancaman_banjir.tingkat.bahaya.teks', {}, 'Sungai meluap ke tepian. Jalan di dekat air jadi becek.'));
@@ -1097,7 +1146,7 @@ function applyFlood() { S.flood.applied = true; const fs = S.buildings.filter(b 
 function endFlood() { S.flood = null; log('🌤️ ' + TX('peringatan_dini.ancaman_banjir.tingkat.reda.teks', {}, 'Air sungai kembali tenang.')); }
 // ---- kebakaran (panas) ----
 const bname = b => C.BUILDINGS[b.type].nama;
-function ignite(b) { const F = C.FIRE; b.burning = { target: rnd(F.hpLoss[0], F.hpLoss[1]), lost: 0, actions: 0, need: rndInt(F.actionsToPut[0], F.actionsToPut[1]), nextSpread: S.t + F.spreadSec };
+function ignite(b) { const F = C.FIRE; { const c = center(b); mapEvent('api', c.x, c.y, EV_SEC(), b.id); } b.burning = { target: rnd(F.hpLoss[0], F.hpLoss[1]), lost: 0, actions: 0, need: rndInt(F.actionsToPut[0], F.actionsToPut[1]), nextSpread: S.t + F.spreadSec };
   log('🔥 ' + TX('log_ancaman.kebakaran_menyala', { bangunan: bname(b) }, `Api menyala di ${bname(b)}!`)); sfx('event');
   if (C.BUILDINGS[b.type].storage && Math.random() < F.stockLossChance) { const n = Math.floor(S.res.makanan * F.stockLossFrac); S.res.makanan -= n; dstat('sink', 'rusak', n);
     if (n) log(TX('log_ancaman.kebakaran_rugi', { bangunan: bname(b), jumlah: n, sumber_daya: 'makanan' }, `Sebagian isi ${bname(b)} terbakar: ${n} makanan hilang.`)); }
@@ -1148,7 +1197,7 @@ function wolfStep(dt) { const W = TH(), w = S.wolf; S.wolves = S.wolves || [];
     if (morn && f >= C.NIGHT_END && w.phase !== 'usai') { w.phase = 'usai'; S.wolves.forEach(o => o.mode = 'pergi'); S.villagers.forEach(v => v.goHome = false);
       log('🌅 ' + TLX('log_ancaman.serigala_usai', 'usai', {}, 'Fajar menyingsing. Hewan liar sudah kembali ke hutan.')); }
     if (S.day > w.day + 1) S.wolf = null; }
-  for (const o of S.wolves) updateWolf(o, dt);
+  for (const o of S.wolves) updateWolf(o, dt); updateRaiders(dt);
   S.wolves = S.wolves.filter(o => !o.gone);
   if (S.tracks) S.tracks = S.tracks.filter(t => S.t - t.t < C.DAY_LENGTH_SEC); }
 function placeTracks() { S.tracks = S.tracks || []; const side = rndInt(0, 3), n = 4 + rndInt(0, 3);
@@ -1170,8 +1219,9 @@ function wreckField(o, b) { const W = TH(); o.field = null;
   // obor menyala di dekat petak membuat babi ragu (sama seperti melindungi penduduk)
   if (S.buildings.some(t => torchLit(t) && dist(center(t), b) <= W.torchSafeRadius) && Math.random() >= W.torchHitMult) { o.plots = (o.plots || 0) + 1; log('🔥 ' + TT('diusir', {}, 'Cahaya obor membuat babi hutan ragu.')); return; }
   if (C.SCARECROW && scarecrowNear(b) && Math.random() >= C.SCARECROW.boarFieldMult) { o.plots = (o.plots || 0) + 1; log('🌾 ' + TT('diusir_orang_orangan', { hewan: C.NIGHT_THREAT === 'wolf' ? 'serigala' : 'babi hutan' }, 'Orang-orangan sawah bergoyang ditiup angin. Seekor {hewan} ragu dan mundur ke hutan.')); return; }
-  o.plots = (o.plots || 0) + 1; b.stage = 'kosong'; b.grow = 0; b.wrecked = S.day; S.fieldsWrecked = (S.fieldsWrecked || 0) + 1; sfx('event');
-  log('🐗 ' + TT('rusak_ladang', { tanaman: cropName(b) }, `Babi hutan merusak ladang ${cropName(b)}.`)); }
+  const cn = cropName(b); o.plots = (o.plots || 0) + 1; b.stage = 'kosong'; b.grow = 0; b.wrecked = S.day; b.wreckedT = S.t; S.fieldsWrecked = (S.fieldsWrecked || 0) + 1; sfx('event');
+  dustAt(b.x, b.y); floatText(`-1 ${cn}`, b.x, b.y - 0.5, '#ff9a8a'); mapEvent('ladang', b.x, b.y, EV_SEC(), b.id);
+  logAt('🐗 ' + TT('rusak_ladang', { tanaman: cn }, `Babi hutan merusak ladang ${cn}.`), b.x, b.y); }
 function updateWolf(o, dt) { const W = TH();
   if (o.mode === 'serang') { o.t += dt; if (o.t >= 0.5 && !o.bit) { o.bit = true; biteVillager(o, vById(o.target)); } if (o.t >= 0.9) o.mode = 'pergi'; return; }
   let goal;
@@ -1207,7 +1257,8 @@ function biteVillager(o, v) { const W = TH(); if (!v || !S.villagers.includes(v)
   if (Math.random() >= hit) { log('🔥 ' + TLX('log_ancaman.diusir', 'diusir', { nama: v.name }, 'Cahaya obor membuat hewan liar ragu dan berbalik ke hutan.')); return; }
   const dmg = Math.round(rnd(W.damage[0], W.damage[1]) * traitMult(v, 'threatDmgMult')); v.health = Math.max(isY2() ? 0.5 : 1, (v.health ?? 100) - dmg); v.mood = Math.max(0, v.mood - W.moodHit); v.lastHurt = 'serangan'; v.injured = S.day;
   S.wolfBites = (S.wolfBites || 0) + 1; sfx('event');
-  log(threatIcon() + TLX('log_ancaman.serangan_serigala', 'serang', { nama: v.name, jumlah: dmg }, `Hewan liar menyerang ${v.name}! Kesehatannya turun ${dmg}.`));
+  dustAt(v.x, v.y); floatText(`-${dmg} ${TX('peta_kejadian.kesehatan', {}, 'Kesehatan')}`, v.x, v.y - 0.5, '#ff9a8a'); mapEvent('serang', v.x, v.y, EV_SEC(), 'v' + v.id);
+  logAt(threatIcon() + TLX('log_ancaman.serangan_serigala', 'serang', { nama: v.name, jumlah: dmg }, `Hewan liar menyerang ${v.name}! Kesehatannya turun ${dmg}.`), v.x, v.y);
   if (Math.random() < W.traumaChance * traitMult(v, 'traumaMult')) { v.traumaUntil = S.day + W.traumaDays; log(TX('log_ancaman.trauma', { nama: v.name }, `${v.name} masih teringat malam serangan itu.`)); }
   const guarded = near('menara_jaga', v, W.killSafeRadius) || near('pagar', v, W.killSafeRadius);
   if (isY2() && v.health < W.killHpBelow && !guarded && Math.random() < W.killChanceIfLowHp) { killVillager(v, 'serangan'); return; }
@@ -1580,7 +1631,7 @@ function newDay() {
   if (A.ok && Math.random() < A.chance * monFxLast('newcomerMult', 1) * (teladanBonus('newcomerMult') || 1)) {
     if (A.happy) { log('💌 ' + TX('pangan.daya_tarik.pendatang', {}, 'Kabar desa yang bahagia sampai ke kampung sebelah… Seorang perantau ingin tinggal.')); S.happySpawns = (S.happySpawns || 0) + 1; }
     const h = houses()[0], c = h ? doorPos(h) : CAMP; spawnVillager(c.x, c.y + 0.5); S.lastSpawnDay = S.day; S.newcomerSpawns = (S.newcomerSpawns || 0) + 1;
-    const nv = S.villagers[S.villagers.length - 1]; if (nv) nv.newcomerUntil = S.day + 3; // ikon pendatang di atas kepala 3 hari
+    const nv = S.villagers[S.villagers.length - 1]; if (nv) { nv.newcomerUntil = S.day + 3; mapEvent('pendatang', nv.x, nv.y, EV_SEC(), 'v' + nv.id); } // ikon pendatang di atas kepala 3 hari
   }
   const need = pop * C.SPAWN.foodPerDayPerPop;
   if (S.villagers.some(v => v.hunger <= 5)) log('⚠️ Ada penduduk kelaparan parah!');
@@ -1705,7 +1756,7 @@ function applyStoryEffects(ef, ctx = {}) { const A = ctx.aktor || [], va = vById
       case 'kekeringan_selesai': if (S.drought) { S.drought.until = S.day - 1; } break;
       case 'sumur_kemarau_add': S.wellHardAdd = (S.wellHardAdd || 0) + n; break;
       case 'banjir': startFlood(); break;
-      case 'longsor': case 'kesehatan_bangunan_dekat': if (k === 'kesehatan_bangunan_dekat') { const bs = S.buildings.filter(b => b.done && b.type !== 'ladang'); for (let i = 0; i < Math.min(2, bs.length); i++) { const b = pick(bs); b.hp = Math.max(0, (b.hp ?? 100) + n); } } break;
+      case 'longsor': case 'kesehatan_bangunan_dekat': if (k === 'kesehatan_bangunan_dekat') { const bs = S.buildings.filter(b => b.done && b.type !== 'ladang'); for (let i = 0; i < Math.min(2, bs.length); i++) { const b = pick(bs); b.hp = Math.max(0, (b.hp ?? 100) + n); const c = center(b); dustAt(c.x, c.y); floatText(`${n} ${TX('peta_kejadian.kondisi', {}, 'Kondisi')}`, c.x, c.y - 0.5, '#ff9a8a'); mapEvent('rusak', c.x, c.y, EV_SEC(), b.id); } } break;
       case 'ladang_gratis': S.freeFields = (S.freeFields || 0) + n; break;
       case 'tebang_pohon': { const tr = S.nodes.filter(o => o.type === 'pohon').sort((a, b) => dist(b, CAMP) - dist(a, CAMP)); for (let i = 0; i < n && tr.length; i++) S.nodes.splice(S.nodes.indexOf(tr.shift()), 1); break; }
       case 'kerja_bakti_gratis': startKerjaBakti(false, true); break; // P1: kerja bakti sungguhan (tanpa jeda tunggu)
@@ -1846,8 +1897,8 @@ function storyNewDay() { storyInit(); const R = S.director, prev = S.day - 1;
 function monkeyDaily() { const M = C.MONKEY; if (!M || !M.enabled || S.day < M.fromDay || (S.era | 0) < eraIndex(M.era) || !M.musim.includes(storySeason()) || foodTotal() < M.minFood) return;
   if (Math.random() >= M.chancePerDay * threatBuff('monyet')) return;
   if (Math.random() >= scarecrowMonkeyMult()) return scarecrowScare(M.hewan || 'monyet'); // orang-orangan sawah menjaga ladang dalam radius: kawanan urung mencuri
-  const n = rndInt(M.steal[0], M.steal[1]); takeFood(n, 'monyet'); S.monkeyDays.push(S.day); if (S.monkeyDays.length > 12) S.monkeyDays.shift(); // dulu baris ini tertelan komentar -> monyet tak pernah mengambil makanan
-  log((M.icon || '🐒') + ' ' + TX('peringatan_dini.ancaman_monyet.tingkat.bahaya.teks', {}, M.fallback || 'Monyet-monyet melompat ke tegalan dan menyambar jagung!')); }
+  const n = rndInt(M.steal[0], M.steal[1]); const got = takeFood(n, 'monyet'); spawnRaider(Math.round(got || n), M.hewan || 'monyet'); S.monkeyDays.push(S.day); if (S.monkeyDays.length > 12) S.monkeyDays.shift(); // dulu baris ini tertelan komentar -> monyet tak pernah mengambil makanan
+  { const r = S.raiders[S.raiders.length - 1]; logAt((M.icon || '🐒') + ' ' + TX('peringatan_dini.ancaman_monyet.tingkat.bahaya.teks', {}, M.fallback || 'Monyet-monyet melompat ke tegalan dan menyambar jagung!'), r.goal.x, r.goal.y); } }
 function ratDaily() { const T = SKC().tikus; if (!T || S.day < T.fromDay || (S.res.gandum || 0) < T.gandumMin) return; const n = S.res.gandum * T.fracPerDay * buffMult('tikus'); S.res.gandum -= n; foodLedger(-n, true); dstat('sink', 'tikus', n); }
 // ================= P1 Cerita & Tujuan (docs/RISET-CERITA-TUJUAN.md): keinginan warga (§1.3) =================
 const WSC = () => C.WISHES, MNC = () => C.MONUMENTS;
@@ -2428,6 +2479,7 @@ function render() {
   if (!storeBuilding()) for (const p of stockpiles()) list.push({ y: p.y + 0.9, draw: () => drawStockpile(p) }); // ada gudang utuh -> tumpukan tanah disembunyikan
   if (S.merchant) list.push({ y: S.merchant.y + 1, draw: () => drawMerchant(S.merchant) });
   for (const o of S.wolves || []) list.push({ y: o.y + 1, draw: () => drawWolf(o) });
+  for (const r of S.raiders || []) list.push({ y: r.y + 1, draw: () => drawRaider(r) });
   if (!inSleepWindow()) for (const b of S.buildings) if (b.type === 'kandang_ayam' && b.done) for (const e of hensOf(b)) list.push({ y: e.y + 0.6, draw: () => drawHen(e) });
   for (const bd of S.bodies || []) list.push({ y: bd.y + 0.5, draw: () => { ctx.fillStyle = '#e8dcc0'; ctx.fillRect(bd.x * T + 8, bd.y * T + 20, 18, 7); ctx.fillStyle = '#7a6a50'; ctx.fillRect(bd.x * T + 8, bd.y * T + 26, 18, 2); } });
   for (const v of S.villagers) { if (v.inside != null) continue;
@@ -2456,11 +2508,13 @@ function render() {
     ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
     for (const b of done('apiunggun')) drawBuilding(b, C.BUILDINGS.apiunggun); // api tetap terang di atas overlay
   }
+  if (darkness > 0.3) { ctx.globalAlpha = Math.min(0.85, darkness); for (const o of S.wolves || []) drawWolf(o); for (const r of S.raiders || []) drawRaider(r); ctx.globalAlpha = 1; } // v11: penyerang tetap terlihat di malam gelap
+  drawMarkers();
   const ik = ASSETS.res_ikon;
   for (const n of notes) { const al = Math.max(0, Math.min(1, n.life)), rise = noteRise(n), x = n.x * T + 4, y = n.y * T - 4 - rise, pi = n.src && panganIcon(n.src), im = (pi && pi.im) || ik.images && ik.images[ik.keys.indexOf(n.res)];
     ctx.globalAlpha = al; const txt = `+${Math.round(n.n)}`, s = n.txt ? n.label : `${txt} ${n.label || RES_LABEL[n.res] || n.res}`; ctx.font = 'bold 12px sans-serif'; ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(30,20,10,0.85)'; // v9c: kayu/batu/air sama dengan pangan: ikon + '+4 Kayu' (gaya huruf dulu ikut tertelan komentar)
     if (im) ctx.drawImage(im, x, y - 11, 14, 14); const tx = x + (im ? 16 : 0);
-    ctx.strokeText(s, tx, y); ctx.fillStyle = n.txt ? '#ffe0a0' : n.res === 'air' ? '#bfe8ff' : n.src ? '#c8ffa0' : '#fff6a0'; ctx.fillText(s, tx, y); ctx.globalAlpha = 1; }
+    ctx.strokeText(s, tx, y); ctx.fillStyle = n.txt ? n.col || '#ffe0a0' : n.res === 'air' ? '#bfe8ff' : n.src ? '#c8ffa0' : '#fff6a0'; ctx.fillText(s, tx, y); ctx.globalAlpha = 1; }
   drawLifeIcons();
   for (const b of S.buildings) if (b.burning && darkness > 0) drawHazardOnBuilding(b);
   if (placing) { const d = C.BUILDINGS[placing], ok = validSpot(placing, mouse.x, mouse.y) && canAfford(d.cost);
@@ -2514,6 +2568,7 @@ function drawBuilding(b, d) {
     else hasImg = sprite(key, b.x, b.y, 1, 1, fr);
     if (!hasImg) { ctx.fillStyle = ['#8a5a32', '#8a7a32', '#7a9a3a', '#5aa03a', '#e0c040'][fr] || '#8a5a32'; ctx.fillRect(b.x * T + 2, b.y * T + 2, T - 4, T - 4); }
     if (b.done && (fr === 2 || fr === 3) && canGrow(b)) sprite('kilau', b.x, b.y, 1, 1, animFrame(ASSETS.kilau, ASSETS.kilau.fps));
+    if (b.wreckedT != null && S.t - b.wreckedT < C.DAY_LENGTH_SEC) { const a = 1 - (S.t - b.wreckedT) / C.DAY_LENGTH_SEC; ctx.globalAlpha = 0.6 * a; ctx.fillStyle = '#6b4a24'; ctx.fillRect(b.x * T + 1, b.y * T + 1, T - 2, T - 2); ctx.fillStyle = '#3e2a14'; for (let i = 0; i < 4; i++) ctx.fillRect(b.x * T + 4 + i * 7, b.y * T + 8 + (i % 2) * 9, 5, 2); ctx.globalAlpha = b.done ? 1 : 0.45; } // v11: ladang dirusak hewan -> tanah teraduk cokelat, memudar dalam sehari
     if (b.keong > 0 && ASSETS.keong_sawah) sprite('keong_sawah', b.x, b.y, 1, 1, frameAt(ASSETS.keong_sawah, 2)); // v9: keong di sawah berair
   } else if (b.done && (b.hp ?? 100) <= 0 && b.type !== 'makam') { // hangus -> puing
     hasImg = (ASSETS[b.type + '_hangus'] && ASSETS[b.type + '_hangus'].image) ? sprite(b.type + '_hangus', b.x, b.y, d.w, d.h) : sprite(d.w >= 2 ? 'puing_besar' : 'puing_kecil', b.x, b.y, d.w, d.h);
@@ -2522,7 +2577,7 @@ function drawBuilding(b, d) {
   } else if (b.mon) { hasImg = drawMonument(b, d);
   } else if (b.type === 'orang_orangan' && ASSETS.orang_orangan && ASSETS.orang_orangan.image) { hasImg = sprite('orang_orangan', b.x, b.y, 1, 1, b.done ? Math.floor(performance.now() / 500) % 2 : 0);
   } else if (b.type === 'pagar') { const a = ASSETS.pagar, nb = (x, y) => S.buildings.some(o => o.type === 'pagar' && o.x === x && o.y === y);
-    const i = (nb(b.x, b.y - 1) ? 1 : 0) + (nb(b.x + 1, b.y) ? 2 : 0) + (nb(b.x, b.y + 1) ? 4 : 0) + (nb(b.x - 1, b.y) ? 8 : 0);
+    let i = (nb(b.x, b.y - 1) ? 1 : 0) + (nb(b.x + 1, b.y) ? 2 : 0) + (nb(b.x, b.y + 1) ? 4 : 0) + (nb(b.x - 1, b.y) ? 8 : 0); if (i === 0) i = 10; // v11: pagar tunggal dulu memakai petak 0 = satu tiang bambu 9px -> nyaris tak terlihat; kini ruas mendatar
     if (a.image) ctx.drawImage(a.image, (i % 4) * T, Math.floor(i / 4) * T, T, T, b.x * T, b.y * T, T, T); else { ctx.fillStyle = a.color; ctx.fillRect(b.x * T + 2, b.y * T + 12, 28, 6); ctx.fillRect(b.x * T + 13, b.y * T + 4, 6, 24); }
   } else if (b.type === 'obor') { const a = ASSETS.obor, fr = b.done && !b.unlit ? frameAt(a, 4) : a.frameMati;
     if (!sprite('obor', b.x, b.y, 1, 1, b.done ? fr : a.frameMati)) { ctx.fillStyle = '#5a3a1a'; ctx.fillRect(b.x * T + 14, b.y * T + 6, 4, 24); if (!b.unlit) { ctx.fillStyle = '#ffb040'; ctx.fillRect(b.x * T + 12, b.y * T + 2, 8, 6); } }
@@ -2660,9 +2715,10 @@ function ui() {
   setHTML('res', resH); // v9c: hanya ditulis ulang bila isinya berubah (dulu innerHTML ~60x/dtk -> tooltip berkedip)
   const era = C.ERAS[S.era | 0], next = C.ERAS[(S.era | 0) + 1];
   setHTML('era', `<b>${era.nama}</b>` + (next ? `<br>Menuju <b>${next.nama}</b>:<br>` + eraReqStatus(next).map(([t, ok]) => `${ok ? '✅' : '▫️'} ${t}`).join('<br>') : '<br>Era tertinggi tercapai!') + attractionHTML());
+  if (buildLockSig() !== _buildSig) buildBuildBar();
   document.querySelectorAll('[data-b]').forEach(bt => { const k = bt.dataset.b; if (k) bt.disabled = !unlocked(k) || !canAfford(C.BUILDINGS[k].cost); });
   warnUI(); setHTML('quest', questUI()); wishUI(); tujuanPanelUI(); setHTML('summary', summaryUI()); villagerPanelUI(); techPanelUI(); marketUI(); $('marketbtn').classList.toggle('on', marketOpen());
-  setHTML('log', S.log.slice(0, 15).map(l => `<div>${withIcons(l)}</div>`).join(''));
+  setHTML('log', S.log.slice(0, 15).map(l => { const p = S.logPos && S.logPos[l]; return p ? `<div class="loglok" data-wx="${p[0]}" data-wy="${p[1]}" title="${TX('peta_kejadian.lihat_lokasi', {}, 'Klik untuk melihat lokasinya')}">📍 ${withIcons(l)}</div>` : `<div>${withIcons(l)}</div>`; }).join(''));
   // bilah atas bisa memanjang tanpa resize (sumber daya/tombol baru di tengah permainan; uji perangkat 1500x768 -> 89px): ringkas lagi bila > TOPBAR_MAX_H
   if (!document.body.classList.contains('compact2') && !document.body.classList.contains('mobile') && $('top').offsetHeight > (C.TOPBAR_MAX_H || 80)) fitCanvas();
 }
@@ -2699,15 +2755,37 @@ function marketUI() { const el = $('market'); if (!el || el.style.display !== 'b
   setHTML('mkPreview', r.n != null && r.n >= 0 ? `${L.total || 'Total'}: ${r.qty} ${resIcon(g.value)} ${RES_LABEL[g.value]} (nilai ${r.value.toFixed(1)}) → <b>${r.n} ${resIcon(t.value)} ${RES_LABEL[t.value]}</b>${r.ok ? '' : ` — <span style="color:#a63e34">${r.why}</span>`}` : r.why || '');
   $('mkDo').disabled = !open || !r.ok; }
 function openTech() { $('techpanel').style.display = 'block'; delete _html.techpanel; techPanelUI(); tutAction('buka_riset'); }
-function buildBuildBar() {
-  $('buildbar').innerHTML = '<span class="lbl">Bangun: </span>' + Object.entries(C.BUILDINGS).filter(([k, d]) => unlocked(k) && !d.monumen).map(([k, d]) =>
-    `<button data-b="${k}" title="${buildTip(k, d).replace(/"/g, '&quot;')}">${d.nama}</button>`).join('') + '<button data-b="">Batal</button>'; }
+// v11: bilah bangun berkategori (C.BUILD_CATS di balance.js). Tombol kategori membuka menu tarik-turun (#buildmenu, position:fixed -> tinggi #top tetap);
+// bangunan era/riset berikutnya tampil abu-abu + gembok, tanpa data-b (klik tidak memulai penempatan). Monumen (tujuan.js) membuka panel Tujuan.
+let buildCat = null;
+const costText = cost => Object.entries(cost || {}).map(([r, n]) => n + ' ' + (RES_LABEL[r] || r)).join(', ');
+const LOCK_SVG = '<svg class="lock" viewBox="0 0 10 12" width="9" height="11" aria-hidden="true"><rect x="1" y="5" width="8" height="7" rx="1" fill="currentColor"/><path d="M3 5V3.5a2 2 0 0 1 4 0V5" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>';
+function buildCatOf(k) { const cats = C.BUILD_CATS || []; const c = cats.find(c => (c.items || []).includes(k)); return c ? c.id : (cats.length ? cats[cats.length - 1].id : 'lainnya'); }
+const buildCatLabel = c => TX('bangun_kategori.' + c.id, {}, c.nama || c.id);
+function buildLockWhy(k) { const d = C.BUILDINGS[k], e = C.ERAS.find(x => x.id === (d.era || 'perkemahan'));
+  if (eraIndex(d.era || 'perkemahan') > (S.era | 0)) return TX('bangun_kategori.terkunci_era', { era: e ? e.nama : d.era }, `Terbuka di era ${e ? e.nama : d.era}`);
+  const n = techNodes().find(n => n.efek.some(f => f.kunci === 'buka_bangunan' && f.nilai === k) && !(S.techDone || []).includes(n.id));
+  return n ? TX('bangun_kategori.terkunci_riset', { riset: n.nama || n.id }, `Butuh riset ${n.nama || n.id}`) : ''; }
+const buildLockSig = () => Object.keys(C.BUILDINGS).map(k => C.BUILDINGS[k].monumen ? (eraIndex(C.BUILDINGS[k].era || 'perkemahan') <= (S.era | 0) ? 1 : 0) : unlocked(k) ? 1 : 0).join('');
+let _buildSig = '';
+function buildMenuHTML(cat) { const q = t => String(t).replace(/"/g, '&quot;');
+  return Object.entries(C.BUILDINGS).filter(([k]) => buildCatOf(k) === cat).map(([k, d]) => {
+    if (d.monumen) { const lock = eraIndex(d.era || 'perkemahan') > (S.era | 0), why = lock ? buildLockWhy(k) : TX('bangun_kategori.monumen_tujuan', {}, 'Monumen dibangun lewat panel Tujuan');
+      return `<button ${lock ? 'class="locked" data-lock' : 'data-tujopen'}="${k}" title="${q(why)}">${lock ? LOCK_SVG + ' ' : ''}${d.nama}</button>`; }
+    if (unlocked(k)) return `<button data-b="${k}" title="${q(buildTip(k, d))}">${d.nama}</button>`;
+    return `<button class="locked" data-lock="${k}" aria-disabled="true" title="${q(buildLockWhy(k) + '\n' + costText(d.cost))}">${LOCK_SVG} ${d.nama}</button>`; }).join(''); }
+function buildBuildBar() { _buildSig = buildLockSig(); const cats = C.BUILD_CATS || [];
+  $('buildbar').innerHTML = '<span class="lbl">Bangun: </span>' + cats.map(c => `<button data-cat="${c.id}" class="bcat${buildCat === c.id ? ' on' : ''}" title="${buildCatLabel(c)}">${buildCatLabel(c)} ▾</button>`).join('') + '<button data-b="">Batal</button>'
+    + `<div id="buildmenu" class="panel" style="display:${buildCat ? 'flex' : 'none'}">${buildCat ? buildMenuHTML(buildCat) : ''}</div>`; placeBuildMenu(); }
+function placeBuildMenu() { const m = $('buildmenu'), b = buildCat && document.querySelector(`#buildbar [data-cat="${buildCat}"]`); if (!m || !b) return;
+  const r = b.getBoundingClientRect(), top = $('top').getBoundingClientRect(); m.style.top = Math.round(top.bottom + 2) + 'px'; m.style.left = Math.round(Math.max(4, Math.min(r.left, innerWidth - m.offsetWidth - 4))) + 'px'; }
+function openBuildCat(id) { buildCat = buildCat === id ? null : id; buildBuildBar(); }
 function buildPrioUI() {
   const PD = (TEXT && TEXT.prioritas_darurat) || {};
   $('prio').innerHTML = Object.keys(S.prio).map(k => `<div class="row" title="${(PD[k] && PD[k].tooltip) || ''}">${PD[k] ? '🚨 ' + PD[k].label : JOB_LABEL[k]} <span>${[0, 1, 2, 3].map(n =>
     `<button data-p="${k}" data-n="${n}" class="${S.prio[k] === n ? 'on' : ''}">${n ? n : 'Off'}</button>`).join('')}</span></div>`).join('');
 }
-document.addEventListener('click', e => { if (e.target.tagName === 'BUTTON') sfx('klik'); const d = e.target.dataset; if (!d) return;
+document.addEventListener('click', e => { if (e.target.tagName === 'BUTTON') sfx('klik'); const d = e.target.dataset; if (!d) return; const inBar = !!(e.target.closest && e.target.closest('#buildbar'));
   if (e.target.id === 'vpClose') closeVillager();
   if (e.target.id === 'techbtn') openTech();
   if (e.target.id === 'marketbtn') openMarket();
@@ -2729,7 +2807,11 @@ document.addEventListener('click', e => { if (e.target.tagName === 'BUTTON') sfx
   if (e.target.id === 'tutSkip') { S.tutorialStep = 999; tutorialUI(); }
   if (d.p) { S.prio[d.p] = +d.n; buildPrioUI(); tutAction('ubah_prioritas'); }
   if (d.s !== undefined) { setSpeed(+d.s); tutAction('ubah_kecepatan'); }
-  if (d.b !== undefined) placing = d.b || null; });
+  { const el = e.target.closest && e.target.closest('[data-wx]'); if (el) panTo(el.dataset.wx, el.dataset.wy); }
+  if (d.cat) openBuildCat(d.cat);
+  if (d.tujopen !== undefined) { buildCat = null; buildBuildBar(); openTujuan(); }
+  if (d.b !== undefined) { placing = d.b || null; if (buildCat) { buildCat = null; buildBuildBar(); } }
+  else if (buildCat && !inBar) { buildCat = null; buildBuildBar(); } });
 // kamera: seret (klik kiri/tengah) untuk geser, roda mouse / tombol untuk zoom, WASD/panah untuk geser
 let drag = null;
 const scr = e => { const r = cv.getBoundingClientRect(); return { x: (e.clientX - r.left) * cv.width / r.width, y: (e.clientY - r.top) * cv.height / r.height }; };
@@ -2745,7 +2827,7 @@ cv.addEventListener('mousemove', e => { const p = scr(e); const t = screenToTile
     if (drag.moved) { cam.x = drag.cx - dx / cam.zoom; cam.y = drag.cy - dy / cam.zoom; clampCam(); } } });
 cv.addEventListener('wheel', e => { e.preventDefault(); const p = scr(e), Z = C.ZOOM_LEVELS, i = Z.indexOf(cam.zoom);
   const ni = Math.max(0, Math.min(Z.length - 1, i + (e.deltaY < 0 ? 1 : -1))); if (ni !== i) setZoom(Z[ni], p.x, p.y); }, { passive: false });
-window.addEventListener('keydown', e => { const k = { ArrowLeft: [-1, 0], a: [-1, 0], ArrowRight: [1, 0], d: [1, 0], ArrowUp: [0, -1], w: [0, -1], ArrowDown: [0, 1], s: [0, 1] }[e.key];
+window.addEventListener('keydown', e => { if (e.key === 'Escape' && buildCat) { buildCat = null; buildBuildBar(); } const k = { ArrowLeft: [-1, 0], a: [-1, 0], ArrowRight: [1, 0], d: [1, 0], ArrowUp: [0, -1], w: [0, -1], ArrowDown: [0, 1], s: [0, 1] }[e.key];
   if (k) { cam.x += k[0] * 64 / cam.zoom; cam.y += k[1] * 64 / cam.zoom; clampCam(); } });
 $('zin').onclick = () => { const Z = C.ZOOM_LEVELS, i = Z.indexOf(cam.zoom); setZoom(Z[Math.min(Z.length - 1, i + 1)]); };
 $('zout').onclick = () => { const Z = C.ZOOM_LEVELS, i = Z.indexOf(cam.zoom); setZoom(Z[Math.max(0, i - 1)]); };
@@ -2812,7 +2894,7 @@ function frame(now) { const real = Math.min(0.25, (now - prev) / 1000); prev = n
   for (const n of notes) n.life -= real; while (notes.length && notes[0].life <= 0) notes.shift();
   let sim = menuOpen ? 0 : real * speed; while (sim > 0) { const d = Math.min(0.1, sim); step(d); sim -= d; }
   render(); ui(); requestAnimationFrame(frame); }
-window.DESA = { get state() { return S; }, p1: { monkeyDaily, buildTip, textNotes: () => notes.filter(n => n.txt).map(n => n.label), hensOf, hensStep, coopSpot, coopInfo, foodTask, hariJadiSummary, hariJadiDaily, hariJadiHTML, showHariJadi, placeScarecrow, scarecrowMonkeyMult, chainStart, chainDaily, chainEligible, chainDueCard, chooseChain, monStart, monNext, monStageDone, bWork, kbStatus, startKerjaBakti, kbOn, kbTask, pentasReog, monDaily, tujuanDaily, teladanDaily, teladanReq, goalsDaily, goalProg, tujuanPanelUI, openTujuan, validSpot, nearRiver, irrigated, FX, griefM, view: (tx, ty, z) => { if (z) setZoom(z); centerCam(tx, ty); }, wishDaily, wishStart, wishPay, wishFulfil, wishFail, wishEligible, wishAuto, wishNeed, sendAway, awayDaily, canGoAway, wishUI, drawWishBubble, monFxSum, monFxLast, monStage }, v9c: { autoBuildDaily, bedHintOn, bedHintText, bareFloor, famineLevel, famineDaily, popEventOk, sniffGoal, notify, noteRise, get notes() { return notes; }, spawnWolf, updateWolf, endOfDaySummary, foodDayIO, ioText, applyEffects, chooseTask }, pangan: { foodTask, foodWork, foodAvail, foodSourcesDaily, srcMult, srcOn, panganLabel, panganBadge, fieldInfo, hoverInfo, attraction, attractionHTML, foodDayIO, forestTrees, deposit, render: () => render(), ui: () => ui() }, storeBuilding, storeFillLevel, pilesVisible: () => !storeBuilding(), story: { directorTick, firePending, runLomba, openDilemma, openMomen, pickDilemma, pickMomen, dilemmaAllowed, applyStoryEffects, storyNewDay, agustusStep, buffMult, surplusSink, takeFood, monkeyDaily, ratDaily, syaratOk, optEffects, chooseStory, dayOfYear, defaultLomba, lombaCost, storyInit, payDebts, relGrief }, get text() { return TEXT; }, exitHouse, TT, TX, mergeTextOverlay, openVillager, houseLit, rel: { traitMult, traitAdd, traitWorkMult, traitDaily, traitTick, traitOnArrive, nearInfo, cookBonus, relGet, relAdd, relSet, relLevel, relKey, relInitFor, relTick, relDaily, relGrief, isFamily, pickTraits, founderTraits, newcomerTraits, babyTraits, revealTraits, traitsVisible, pairingDaily }, life: { stageOf, ageOf, isKid, isBaby, canWork, childHelper, partnerOf, childrenOf, houses, capacity, chooseTask, inSleepWindow, pastLate, lateAllowed, pregnancyOk, giveBirth, pairUp, assignHomes, lifeDaily, oldAgeDaily, foodPerDay, updateVillager, spawnVillager }, bindThemeText, hutEmergencyTask, buildTask, sicknessDaily, sawahDry, drySawahImg, popBadge, maybeEvent, waterNeed, wellYieldNow, riverYieldNow, canGrow, growDaysOf, cropId, seasonInfo, isHardSeason, yearDays, eventAllowed, chooseTask, wreckField, fieldTarget, foodPerDay, hungerMultNow, RES_LABEL, isY2, updateVillager, loadGame, biteVillager, updateWolf, wolfCost, seasonDaily, stockpiles, pileTier, pileSpots, notify, get notes() { return notes; }, killVillager, makeSick, ignite, spawnWolf, startFlood, famineLevel, warnings, threatDaily, seasonStep, wolfDaily, leaveDaily, sicknessDaily, spoilDaily, year, foodDays, floodTiles, isFlooded, fitCanvas, get placing() { return placing; }, setPlacing(b) { placing = b; }, get ach() { return ACH; }, checkAch, achProgress, unlockAch, endOfDaySummary, newDay, toast, applyEffects, allEvents, eventEraOk, fill, marketNewDay, priceOf, tradeQuote, doTrade, spawnMerchant, marketOpen, quota, foodSellMult, openMarket, startResearch, techVal, techNodes, openTech, showEvent, validSpot, canAfford, addBuilding, season, isRaining,  step, cam, findPath, setZoom, centerCam };
+window.DESA = { get state() { return S; }, p1: { monkeyDaily, buildTip, textNotes: () => notes.filter(n => n.txt).map(n => n.label), hensOf, hensStep, coopSpot, coopInfo, foodTask, hariJadiSummary, hariJadiDaily, hariJadiHTML, showHariJadi, placeScarecrow, scarecrowMonkeyMult, chainStart, chainDaily, chainEligible, chainDueCard, chooseChain, monStart, monNext, monStageDone, bWork, kbStatus, startKerjaBakti, kbOn, kbTask, pentasReog, monDaily, tujuanDaily, teladanDaily, teladanReq, goalsDaily, goalProg, tujuanPanelUI, openTujuan, validSpot, nearRiver, irrigated, FX, griefM, view: (tx, ty, z) => { if (z) setZoom(z); centerCam(tx, ty); }, wishDaily, wishStart, wishPay, wishFulfil, wishFail, wishEligible, wishAuto, wishNeed, sendAway, awayDaily, canGoAway, wishUI, drawWishBubble, monFxSum, monFxLast, monStage }, v11: { get placing() { return placing; }, mapEvent, activeMarkers, warnPos, panTo, logAt, spawnRaider, updateRaiders, wreckField, cam: () => ({ x: cam.x, y: cam.y, zoom: cam.zoom, w: cv.width, h: cv.height }), buildCatOf, buildLockWhy, openBuildCat, buildMenuHTML }, v9c: { autoBuildDaily, bedHintOn, bedHintText, bareFloor, famineLevel, famineDaily, popEventOk, sniffGoal, notify, noteRise, get notes() { return notes; }, spawnWolf, updateWolf, endOfDaySummary, foodDayIO, ioText, applyEffects, chooseTask }, pangan: { foodTask, foodWork, foodAvail, foodSourcesDaily, srcMult, srcOn, panganLabel, panganBadge, fieldInfo, hoverInfo, attraction, attractionHTML, foodDayIO, forestTrees, deposit, render: () => render(), ui: () => ui() }, storeBuilding, storeFillLevel, pilesVisible: () => !storeBuilding(), story: { directorTick, firePending, runLomba, openDilemma, openMomen, pickDilemma, pickMomen, dilemmaAllowed, applyStoryEffects, storyNewDay, agustusStep, buffMult, surplusSink, takeFood, monkeyDaily, ratDaily, syaratOk, optEffects, chooseStory, dayOfYear, defaultLomba, lombaCost, storyInit, payDebts, relGrief }, get text() { return TEXT; }, exitHouse, TT, TX, mergeTextOverlay, openVillager, houseLit, rel: { traitMult, traitAdd, traitWorkMult, traitDaily, traitTick, traitOnArrive, nearInfo, cookBonus, relGet, relAdd, relSet, relLevel, relKey, relInitFor, relTick, relDaily, relGrief, isFamily, pickTraits, founderTraits, newcomerTraits, babyTraits, revealTraits, traitsVisible, pairingDaily }, life: { stageOf, ageOf, isKid, isBaby, canWork, childHelper, partnerOf, childrenOf, houses, capacity, chooseTask, inSleepWindow, pastLate, lateAllowed, pregnancyOk, giveBirth, pairUp, assignHomes, lifeDaily, oldAgeDaily, foodPerDay, updateVillager, spawnVillager }, bindThemeText, hutEmergencyTask, buildTask, sicknessDaily, sawahDry, drySawahImg, popBadge, maybeEvent, waterNeed, wellYieldNow, riverYieldNow, canGrow, growDaysOf, cropId, seasonInfo, isHardSeason, yearDays, eventAllowed, chooseTask, wreckField, fieldTarget, foodPerDay, hungerMultNow, RES_LABEL, isY2, updateVillager, loadGame, biteVillager, updateWolf, wolfCost, seasonDaily, stockpiles, pileTier, pileSpots, notify, get notes() { return notes; }, killVillager, makeSick, ignite, spawnWolf, startFlood, famineLevel, warnings, threatDaily, seasonStep, wolfDaily, leaveDaily, sicknessDaily, spoilDaily, year, foodDays, floodTiles, isFlooded, fitCanvas, get placing() { return placing; }, setPlacing(b) { placing = b; }, get ach() { return ACH; }, checkAch, achProgress, unlockAch, endOfDaySummary, newDay, toast, applyEffects, allEvents, eventEraOk, fill, marketNewDay, priceOf, tradeQuote, doTrade, spawnMerchant, marketOpen, quota, foodSellMult, openMarket, startResearch, techVal, techNodes, openTech, showEvent, validSpot, canAfford, addBuilding, season, isRaining,  step, cam, findPath, setZoom, centerCam };
 // tambalan teks tema di memori (TEKS-GAME.json tidak diubah): 'event:<id>.<path>' atau '<path>'
 // TEKS meta.txt_tema_nusantara: isi path TEKS untuk THEMES.indonesia.TXT (cadangan di tema.js tetap dipakai bila path tidak ada)
 function bindThemeText(t) { const M = t && t.meta && t.meta.txt_tema_nusantara; if (!M || C.THEME === 'sedang') return;

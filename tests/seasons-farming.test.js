@@ -10,7 +10,7 @@ const { chromium } = require('playwright');
   await p.click('#zin'); await p.evaluate(() => { DESA.state.res.kayu += 300; DESA.state.res.batu += 200; });
   const box = await p.locator('#c').boundingBox();
   const tgt = await p.evaluate(() => { const c = DESA.cam; return { sx: (20 * 32 + 16 - c.x) * c.zoom, sy: (17 * 32 + 16 - c.y) * c.zoom }; });
-  await p.click('[data-b="ladang"]'); await p.mouse.move(box.x + tgt.sx, box.y + tgt.sy); await p.mouse.click(box.x + tgt.sx, box.y + tgt.sy);
+  await p.click('[data-cat="pangan"]'); await p.click('[data-b="ladang"]'); await p.mouse.move(box.x + tgt.sx, box.y + tgt.sy); await p.mouse.click(box.x + tgt.sx, box.y + tgt.sy);
   const r = await p.evaluate(() => { const S = DESA.state, A = DESA.addBuilding;
     A('apiunggun', 22, 20, true); A('gudang', 25, 17, true); A('gubuk', 18, 21, true); A('gubuk', 26, 22, true); A('sumur', 24, 23, true);
     for (const [x, y] of [[19, 17], [21, 17], [19, 18], [20, 18], [21, 18]]) A('ladang', x, y, true);

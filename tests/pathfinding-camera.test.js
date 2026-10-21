@@ -11,7 +11,7 @@ const { chromium } = require('playwright');
   await p.click('#btnNew'); await p.click('#tutSkip'); await p.click('#zin');
   const target = await p.evaluate(() => { const c = DESA.cam; const tx = 24, ty = 18; return { sx: (tx * 32 + 16 - c.x) * c.zoom, sy: (ty * 32 + 16 - c.y) * c.zoom, zoom: c.zoom }; });
   const box = await p.locator('#c').boundingBox();
-  await p.click('[data-b="apiunggun"]'); await p.mouse.move(box.x + target.sx, box.y + target.sy); await p.mouse.click(box.x + target.sx, box.y + target.sy);
+  await p.click('[data-cat="tempat_tinggal"]'); await p.click('[data-b="apiunggun"]'); await p.mouse.move(box.x + target.sx, box.y + target.sy); await p.mouse.click(box.x + target.sx, box.y + target.sy);
   const placed = await p.evaluate(() => DESA.state.buildings.map(b => [b.type, b.x, b.y]));
   // drag pan
   const before = await p.evaluate(() => ({ ...DESA.cam }));

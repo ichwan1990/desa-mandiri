@@ -180,3 +180,10 @@ body.mobile #modal.story{width:auto}
 #modal .hj + h3{margin-top:12px;padding-top:8px;border-top:2px solid rgba(120,90,50,.45)}
 body.mobile #modal.hjm{width:auto;max-height:80vh}
 #quest .bedhint{background:#5a3a12;border:1px solid #c98a3a;border-radius:4px;padding:3px 6px;margin-bottom:4px;color:#ffe0a0}
+/* v11: bilah bangun berkategori + menu tarik-turun (fixed: tidak menambah tinggi #top) */
+#buildbar .bcat.on{outline:2px solid var(--accent)}
+#buildmenu{position:fixed;z-index:60;flex-wrap:wrap;gap:4px;max-width:min(560px,calc(100vw - 8px));max-height:60vh;overflow:auto;padding:6px;white-space:normal}
+#buildmenu button{flex:none}
+#buildmenu button.locked{opacity:.5;filter:grayscale(1);cursor:not-allowed}
+#buildmenu .lock{vertical-align:-1px;pointer-events:none}
+body.mobile #buildmenu{left:4px!important;right:4px;max-width:none}

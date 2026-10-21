@@ -126,7 +126,7 @@ const { chromium } = require('playwright');
     // ---- 4) orang-orangan sawah ----
     const sc = await p.evaluate(() => { const S = DESA.state, C = CONFIG, P = DESA.p1, r = {}; S.buildings = S.buildings.filter(b => b.type !== 'ladang' && b.type !== 'orang_orangan');
       for (let i = 0; i < 4; i++) DESA.addBuilding('ladang', 12 + i, 20, true); r.before = P.scarecrowMonkeyMult();
-      const b = P.placeScarecrow(); r.placed = !!b && b.type === 'orang_orangan' && b.done; r.after = P.scarecrowMonkeyMult(); r.bar = !!document.querySelector('#buildbar [data-b="orang_orangan"]') || !C.BUILDINGS.orang_orangan;
+      const b = P.placeScarecrow(); r.placed = !!b && b.type === 'orang_orangan' && b.done; r.after = P.scarecrowMonkeyMult(); r.bar = (DESA.v11.openBuildCat('keamanan'), !!document.querySelector('#buildmenu [data-b="orang_orangan"]')) && (DESA.v11.openBuildCat('keamanan'), true) || !C.BUILDINGS.orang_orangan;
       // monyet/rubah datang ke ladang yang dijaga -> sebagian kabur: log diusir_orang_orangan + teks melayang; babi hutan/serigala tidak terpengaruh; tooltip bangun
       const M = C.MONKEY; if (M) { const sv = { ...M }, rnd = Math.random; Object.assign(M, { enabled: true, fromDay: 0, era: 'perkemahan', musim: { includes: () => true }, minFood: 0, chancePerDay: 1 });
         S.res.makanan = 200; S.scarecrowScares = 0; let q = 0; Math.random = () => (q++ % 2 ? 0.9 : 0.0); const f0 = S.res.makanan; P.monkeyDaily(); Math.random = rnd; Object.assign(M, sv);
