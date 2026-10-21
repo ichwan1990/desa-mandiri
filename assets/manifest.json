@@ -1340,6 +1340,26 @@
    196,
    160,
    40
+  ],
+  "fox_d": [
+   184,
+   84,
+   40
+  ],
+  "fox": [
+   236,
+   128,
+   56
+  ],
+  "fox_l": [
+   252,
+   236,
+   214
+  ],
+  "fox_sock": [
+   92,
+   58,
+   46
   ]
  },
  "files": [
@@ -12251,6 +12271,20 @@
    "note": "ikon sumber daya rambutan (3 buah, satu dikupas) 32x32; tanpa _16; padanan nature/tropis/tree_rambutan.png",
    "stage": 9,
    "sub": "9b"
+  },
+  {
+   "file": "characters/animals/fox.png",
+   "size": [
+    128,
+    384
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 48,
+   "note": "rubah oranye (tema sedang) 12 baris x 4 kolom, format identik wolf_grey/babi_hutan: 0-3 diam, 4-7 jalan, 8-11 menyerang/menerkam (frame 2 = gigitan); arah bawah,kiri,kanan,atas; anchor tengah-bawah",
+   "stage": 10
   }
  ]
 }

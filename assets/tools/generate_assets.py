@@ -3387,6 +3387,66 @@ def stage9b():
     save(icon_draw(I_jagung),'icons/resources/icon_jagung.png',note='ikon sumber daya jagung (tongkol + kelobot) 32x32; format sama dengan icons/resources (tanpa _16); padanan hasil nature/crops/crop_jagung.png')
     save(icon_draw(I_rambutan),'icons/resources/icon_rambutan.png',note='ikon sumber daya rambutan (3 buah, satu dikupas) 32x32; tanpa _16; padanan nature/tropis/tree_rambutan.png')
 
+# ================= TAHAP 10: rubah (tema sedang) =================
+_PAL16D=[v for v in PALETTE.values() if len(v)==3]  # snapshot palet tahap 9 agar ikon _16 lama stabil
+def to16d(im32): return _q16(im32,_PAL16D)
+PALETTE.update({'fox_d':(184,84,40),'fox':(236,128,56),'fox_l':(252,236,214),'fox_sock':(92,58,46)})
+def fox_frame(dirn,f,mode):
+    """Rubah 32x32, format/gerak sama dengan wolf_frame (diam/jalan/serang, frame 2 = terkam)."""
+    D,M,Lc,S='fox_d','fox','fox_l','fox_sock'; im=new(); d=ImageDraw.Draw(im)
+    step=[0,1,0,-1][f] if mode=='walk' else 0; lunge=[0,-1,3,1][f] if mode=='attack' else 0; bob=1 if (mode=='idle' and f in(1,2)) else 0
+    if dirn in('left','right'):
+        s=1 if dirn=='right' else -1; X=lambda x:16+s*(x-16); lx=lunge
+        def E(x0,y0,x1,y1,c): ell(im,(min(X(x0),X(x1)),y0,max(X(x0),X(x1)),y1),c)
+        def R(x0,y0,x1,y1,c): rect(im,min(X(x0),X(x1)),y0,max(X(x0),X(x1)),y1,c)
+        for i,x0 in enumerate((10,13,18,21)):
+            o=step*(1 if i%2 else -1); R(x0+o+lx,23,x0+o+lx+1,28,D if i in(0,2) else M); R(x0+o+lx,27,x0+o+lx+1,28,S)
+        # ekor tebal ujung putih (di belakang badan)
+        tu=[0,1,0,1][f] if mode!='attack' else 2
+        E(max(1,1+lx),13-tu,12+lx,22,M); E(max(1,1+lx),12-tu,6+lx,18-tu,Lc); px(im,X(4+lx),15-tu,'white')
+        E(8+lx,16+bob,23+lx,26,M); E(12+lx,21,22+lx,26,Lc)
+        # kepala bulat + moncong runcing
+        E(17+lx,9+bob,27+lx,19+bob,M); E(20+lx,14+bob,26+lx,19+bob,Lc)
+        d.polygon([(X(25+lx),13+bob),(X(31+lx),16+bob),(X(25+lx),18+bob)],fill=P(Lc)); px(im,X(31+lx),16+bob,'black')
+        d.polygon([(X(18+lx),11+bob),(X(19+lx),2+bob),(X(23+lx),9+bob)],fill=P(M)); px(im,X(19+lx),3+bob,S); px(im,X(19+lx),4+bob,S)
+        d.polygon([(X(22+lx),10+bob),(X(24+lx),3+bob),(X(26+lx),11+bob)],fill=P(D))
+        R(23+lx,12+bob,24+lx,13+bob,'black'); px(im,X(23+lx),12+bob,'white')
+        if mode=='attack' and f==2: R(26+lx,18+bob,29+lx,18+bob,'berry_l')
+    else:
+        ly=lunge if dirn=='down' else -lunge
+        for x0 in(10,19):
+            o=step if x0==10 else -step; rect(im,x0,25+(o if o>0 else 0),x0+2,28,D); rect(im,x0,27,x0+2,28,S)
+        if dirn=='down':
+            t=[0,1,0,-1][f]; ell(im,(20+t,16,30+t,26),M); ell(im,(25+t,15,30+t,20),Lc)  # ekor menyembul di samping
+        ell(im,(9,15,22,27),M)
+        if dirn=='down':
+            ell(im,(12,18,19,27),Lc); hy=6+bob+ly
+            d.polygon([(8,hy+6),(8,hy-3),(14,hy+3)],fill=P(M)); d.polygon([(23,hy+6),(23,hy-3),(17,hy+3)],fill=P(M))
+            d.polygon([(9,hy+3),(9,hy-1),(12,hy+2)],fill=P(S)); d.polygon([(22,hy+3),(22,hy-1),(19,hy+2)],fill=P(S))
+            ell(im,(8,hy+2,23,hy+14),M); ell(im,(8,hy+8,14,hy+14),Lc); ell(im,(17,hy+8,23,hy+14),Lc)
+            d.polygon([(12,hy+9),(19,hy+9),(15.5,hy+15)],fill=P(Lc)); rect(im,15,hy+14,16,hy+15,'black')
+            rect(im,11,hy+6,12,hy+8,'black'); rect(im,19,hy+6,20,hy+8,'black'); px(im,11,hy+6,'white'); px(im,19,hy+6,'white')
+            px(im,10,hy+10,'berry_l'); px(im,21,hy+10,'berry_l')
+            if mode=='attack' and f==2: rect(im,14,hy+12,17,hy+13,'berry')
+        else:
+            t=[0,1,0,-1][f]
+            ell(im,(16+t,17,28+t,29),M); ell(im,(22+t,23,28+t,29),Lc); px(im,25+t,26,'white'); d.arc((16+t,17,28+t,29),110,250,fill=P(D))  # ekor tebal ke samping
+            hy=5+bob+ly
+            d.polygon([(8,hy+6),(8,hy-3),(14,hy+3)],fill=P(M)); d.polygon([(23,hy+6),(23,hy-3),(17,hy+3)],fill=P(M))
+            px(im,8,hy-2,S); px(im,23,hy-2,S)
+            ell(im,(8,hy+2,23,hy+14),M); ell(im,(11,hy+4,20,hy+9),D)
+    im=outline(im); im=shadow(im,16,28,9,2)
+    if mode=='attack' and f==2:
+        pos={'right':(29,6),'left':(2,6),'down':(4,4),'up':(26,4)}[dirn]
+        for a,b in((0,0),(1,1),(2,2),(0,2),(2,0)): px(im,pos[0]+a,pos[1]+b,'white')
+    return im
+def stage10():
+    sh=new(128,384)
+    for k,mode in enumerate(('idle','walk','attack')):
+        for r_,dn in enumerate(('down','left','right','up')):
+            for f in range(4): sh.paste(fox_frame(dn,f,mode),(f*32,(k*4+r_)*32))
+    save(sh,'characters/animals/fox.png',(32,32),48,'rubah oranye (tema sedang) 12 baris x 4 kolom, format identik wolf_grey/babi_hutan: 0-3 diam, 4-7 jalan, 8-11 menyerang/menerkam (frame 2 = gigitan); arah bawah,kiri,kanan,atas; anchor tengah-bawah')
+
 if __name__=='__main__':
     tiles(); tree(); rock(); bush(True); bush(False); fields(); villagers(); campfire(); hut(); warehouse(); well(); mine(); wooden_house(); effects(); icons()
     for o in OUT: o['stage']=1
@@ -3412,5 +3472,7 @@ if __name__=='__main__':
     for o in OUT: o.setdefault('stage',9)
     n9=len(OUT); stage9b()
     for o in OUT[n9:]: o['stage']=9; o['sub']='9b'
+    stage10()
+    for o in OUT: o.setdefault('stage',10)
     json.dump(dict(palette=PALETTE,files=OUT),open(os.path.join(ROOT,'manifest.json'),'w'),indent=1)
     print(len(OUT),'files')

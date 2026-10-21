@@ -1382,3 +1382,20 @@ Ada 2 file baru. Semua file lama tidak berubah (md5 dicek pada 776 PNG). Generat
 - `nature/tropis/tree_rambutan.png` (berbuah) dan `nature/tropis/tree_rambutan_empty.png` (setelah dipetik).
 - Varian musim: `seasons/tropis/{hujan,mareng,kemarau,labuh}/tree_rambutan_<musim>.png`, sama seperti pisang dan mangga.
 - Catatan: `tree_kelapa` memang tidak punya varian musim (sejak tahap 7). Karena itu tidak ada perbaikan atau file baru untuk rambutan.
+
+## Tahap 10: rubah (fox) + cek monyet (manifest `stage: 10`)
+
+Ada 1 sprite baru. Semua file lama tidak berubah (md5 dicek pada 779 PNG). Generator: `stage10()`, dengan fungsi `fox_frame` yang memakai rig dan gerak yang sama dengan `wolf_frame`. Preview: `preview_10.png` (`tools/make_preview_10.py`): kolom babi_hutan, monyet, wolf_grey, fox, semua 12 baris, ditambah tampilan skala 1x. Palet bertambah `fox`, `fox_d`, `fox_l`, `fox_sock`. Ikon `_16` tahap 9 dikunci ke snapshot `_PAL16D` agar tetap sama.
+
+| File | Ukuran | Frame | Catatan |
+|---|---|---|---|
+| `characters/animals/fox.png` | 128x384 | 32x32 x 48 | Rubah oranye untuk tema sedang: moncong runcing, telinga segitiga berujung gelap, ekor tebal berujung putih, kaki "kaus kaki" coklat, pipi merah muda. |
+
+**Format** (identik dengan `wolf_grey`, `wolf_brown`, `babi_hutan`, `monyet`):
+- 4 kolom (frame 0–3) x 12 baris.
+- Baris 0–3 diam, 4–7 jalan, 8–11 serang/terkam. Frame 2 pada baris serang = gigitan, dengan kilau putih.
+- Urutan arah tiap blok: bawah, kiri, kanan, atas.
+- Anchor tengah-bawah, bayangan di y≈28.
+- fps saran: diam ~4 fps, jalan ~8 fps, serang ~10 fps (sama dengan serigala).
+
+**Monyet ekor panjang sudah ada sejak tahap 7:** `characters/fauna/monyet.png` (128x384, 32x32, 48 frame, 12 baris diam/jalan/serang-mencuri, arah bawah, kiri, kanan, atas). Formatnya sudah sama dengan babi_hutan dan wolf, jadi **tidak diubah dan tidak dibuat ulang**. Bentuknya tegak dengan wajah krem dan ekor melengkung, tidak mirip anjing. Pada frame serang 2, monyet menyambar pisang. Versi ambient monyet tidak ada.
