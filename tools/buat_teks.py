@@ -3288,6 +3288,106 @@ def terapkan_patch_v151(data, patch):
     return terapkan_patch(data, patch)
 PATCH_V151 = copy.deepcopy(PATCH_V151)
 terapkan_patch_v151(data, PATCH_V151)
+# ===================== v1.6.0 (aditif): teks pangan v9 (game.js 98960a0 masih memakai fallback) =====================
+# Semua dibaca game.js lewat TX(path, extra, fallback); string tunggal kecuali daya_tarik.pendatang dan pangan.tugas.<id>.log (array -> dipilih acak).
+# Tanpa awalan "Hari {hari}:" (log() sudah menambahkannya). Teks tooltip dipakai di atribut title=: tanpa tanda kutip ganda dan tanpa '<'.
+PANGAN_V160 = {
+ "_catatan": "Pangan v9 (permintaan Ichwan 21-10). Path & bentuk sesuai TX() di game.js 98960a0; lihat meta.catatan_v160. Tema sedang menimpa lewat TEKS-TEMA-sedang.json (pangan).",
+ "label": "Pangan",
+ "hari": "hari",
+ "sumber": {
+  "meramu": "Buah semak", "memancing": "Ikan", "ikan": "Ikan", "jamur": "Jamur", "buah": "Buah",
+  "mangga": "Mangga", "rambutan": "Rambutan", "pisang": "Pisang", "kelapa": "Kelapa",
+  "umbi": "Umbi hutan", "keong": "Keong sawah",
+  "padi": "Padi", "jagung": "Jagung", "ubi": "Ubi", "singkong": "Singkong", "gandum": "Padi", "wortel": "Sayuran",
+  "makanan": "Makanan", "pasar": "Pasar", "cerita": "Kejadian", "kerja_bakti": "Kerja bakti", "pesta_17an": "Pesta 17-an"},
+ "tooltip": {
+  "judul": "Pangan = semua yang bisa dimakan warga",
+  "konsumsi": "Dimakan",
+  "hari_ini": "Masuk hari ini"},
+ "keluar": {
+  "dimakan": "dimakan", "busuk": "busuk", "kenduri": "kenduri", "tikus": "dimakan tikus", "monyet": "dicuri monyet",
+  "syukuran_lahir": "syukuran kelahiran", "syukuran_panen": "tasyakuran panen", "pesta": "pesta", "dijual": "dijual", "lainnya": "lain-lain"},
+ "ringkasan": {
+  "judul_masuk": "Pangan masuk", "judul_keluar": "Pangan keluar",
+  "masuk": "pangan masuk", "keluar": "keluar"},
+ "ladang": {
+  "belum_jadi": "Belum selesai dibangun",
+  "banjir": "Tergenang banjir, tanaman menunggu air surut",
+  "berhenti_dingin": "Berhenti tumbuh: {musim}",
+  "berhenti_kemarau": "Berhenti tumbuh: kemarau tanpa irigasi (riset Irigasi Sederhana, T04)",
+  "siap": "Siap panen",
+  "tumbuh": "Sedang tumbuh",
+  "kosong": "Menunggu ditanam",
+  "perkiraan": "Perkiraan panen",
+  "hasil": "Perkiraan hasil"},
+ "kolam": {"hari_ini": "tersedia hari ini"},
+ "pohon_buah": "Pohon {buah}",
+ "berbuah": "Buah siap dipetik",
+ "belum_berbuah": "Belum berbuah, tunggu musimnya",
+ "sudah_digali": "Sudah digali, tumbuh lagi beberapa hari",
+ "daya_tarik": {
+  "pendatang": [
+   "Kabar desa yang bahagia sampai ke kampung sebelah… Seorang perantau ingin tinggal.",
+   "Cerita tentang desa yang rukun dan riang terdengar sampai jauh. Seorang perantau datang membawa buntelan, ingin ikut menetap.",
+   "{nama} pernah bercerita tentang desa kita di pasar. Hari ini seorang perantau datang dan bertanya, bolehkah ikut tinggal?",
+   "Tawa warga terdengar sampai jalan besar. Seorang pengembara mampir minum teh, lalu memutuskan ingin tinggal di sini."],
+  "judul": "Daya tarik desa",
+  "tinggi": "Tinggi", "sedang": "Sedang", "rendah": "Rendah",
+  "tooltip": "Daya tarik desa menentukan seberapa sering perantau datang. Faktornya: suasana hati warga, desa bahagia beberapa hari berturut-turut, stok pangan yang cukup, dan tempat tidur kosong. Desa yang bahagia lebih sering didatangi perantau.",
+  "mood": "Suasana hati {jumlah} (perlu ≥ {jumlah2})",
+  "bahagia": "Desa bahagia {jumlah}/{jumlah2} hari",
+  "bonus": "→ perantau lebih sering datang",
+  "pangan": "Stok pangan {jumlah}/{jumlah2} hari",
+  "rumah": "Tempat tidur kosong: {jumlah}",
+  "jeda": "Pendatang berikutnya paling cepat {jumlah} hari lagi"},
+ "tugas": {
+  "_catatan": "Belum dibaca game.js (98960a0: nama tugas masih tertanam di vhist() foodWork). Id = C.FOOD_SOURCES (dikonfirmasi Asisten Koding). {jumlah} = hasil, {buah} = pangan.sumber.<jenis> huruf kecil (hanya tugas buah).",
+  "meramu": {"nama": "Meramu", "log": [
+   "{nama} memetik buah semak di tepi hutan dan pulang membawa {jumlah} genggam.",
+   "{nama} menyusuri semak sambil bersenandung. Bakulnya terisi {jumlah} buah kecil yang manis."]},
+  "memancing": {"nama": "Memancing", "log": [
+   "{nama} duduk sabar di tepi air. Pulangnya membawa {jumlah} ikan.",
+   "Kail {nama} bergetar! {jumlah} ikan masuk ke keranjang.",
+   "{nama} memancing sambil bersiul pelan. Hasilnya {jumlah} ikan untuk lumbung desa."]},
+  "jamur": {"nama": "Mencari jamur", "log": [
+   "{nama} menemukan jamur di bawah pohon rimbun dan memetik {jumlah}.",
+   "Habis hujan, {nama} masuk ke hutan dan pulang membawa {jumlah} jamur segar."]},
+  "buah": {"nama": "Memetik buah", "log": [
+   "{nama} memetik {jumlah} {buah} dari pohon. Wanginya harum sekali.",
+   "{nama} memanjat pelan-pelan dan menurunkan {jumlah} {buah} yang sudah matang."]},
+  "umbi": {"nama": "Menggali umbi", "log": [
+   "{nama} menggali umbi hutan dan mendapat {jumlah} umbi gemuk.",
+   "Tanah gembur di bawah semak menyimpan umbi. {nama} pulang membawa {jumlah}."]},
+  "keong": {"nama": "Memungut keong", "log": [
+   "{nama} memungut {jumlah} keong sawah di sela padi yang berair.",
+   "Sawah sedang berair, keong bermunculan. {nama} mengumpulkan {jumlah} keong ke dalam bakul."]}},
+}
+PATCH_V160 = {
+ "_patch": {"versi_dari": "1.5.1", "versi_ke": "1.6.0", "sifat": "hanya penambahan: key top-level baru pangan + placeholder {buah}",
+            "sumber": "Ichwan 21-10: Pangan v9 (98960a0) memakai fallback; tambahan log & nama tugas memancing/jamur/buah/umbi/keong"},
+ "tambah_key": {"pangan": PANGAN_V160},
+ "tambah_entri_meta": {"placeholder": {"{buah}": "Nama buah/sumber pangan (pangan.sumber.<id>, mis. mangga); isi lewat extra fill(). pangan.pohon_buah: label apa adanya; pangan.tugas.buah.log: huruf kecil"}},
+ "tambah_key_meta": {"catatan_v160": {
+   "bentuk": {
+    "pangan.sumber.<id>": "string; id = C.FOOD_SOURCES (meramu, memancing, jamur, buah, umbi, keong) + jenis buah (mangga, rambutan, pisang, kelapa) + tanaman ladang (padi, jagung, ubi, singkong, gandum, wortel; wortel = kata terlarang Nusantara -> \"Sayuran\", tema sedang \"Wortel\") + ikan/makanan/pasar/cerita (PANGAN_FB) + kerja_bakti/pesta_17an (penyerap pangan tanpa label pangan.keluar)",
+    "pangan.keluar.<k>": "string; k = FOOD_OUT_FB game.js (dimakan, busuk, kenduri, tikus, monyet, syukuran_lahir, syukuran_panen, pesta, dijual, lainnya); dipakai sebagai '<label> <angka>'",
+    "pangan.label / hari / tooltip.* / ringkasan.* / ladang.* / kolam.hari_ini / berbuah / belum_berbuah / sudah_digali": "string tanpa placeholder; ladang.berhenti_dingin memakai {musim} (C.SEASON_NAMES, huruf besar)",
+    "pangan.pohon_buah": "string; {buah} = panganLabel(jenis)",
+    "pangan.daya_tarik.pendatang": "array 3-5 variasi; boleh {nama} (warga yang sudah ada)",
+    "pangan.daya_tarik.mood / bahagia / pangan": "{jumlah} = nilai sekarang, {jumlah2} = syarat",
+    "pangan.daya_tarik.rumah / jeda": "{jumlah}",
+    "pangan.daya_tarik.tooltip, pangan.tooltip.*": "dipakai di atribut title=: tanpa tanda kutip ganda dan tanpa '<'",
+    "pangan.tugas.<id>": "{nama: string, log: array >= 2}; BELUM dibaca kode -> koordinasi Asisten Koding: nama menggantikan peta nama di vhist() foodWork, log opsional setelah hasil disetor ({nama}, {jumlah}, {buah})"},
+   "tema_sedang": "TEKS-TEMA-sedang.json menimpa pangan (tools/buat_tema_sedang_cerita.py). Tidak dipakai di tema sedang (FOOD_SOURCES_PATCH buah/keong = null, tanaman Nusantara): sumber buah/mangga/rambutan/pisang/kelapa/keong/padi/jagung/ubi/singkong, tugas.buah, tugas.keong, pohon_buah, berbuah, belum_berbuah. umbi -> Kentang liar.",
+   "awalan_hari": "Tanpa awalan \"Hari {hari}:\" (seperti v1.5.1)."}},
+ "set_meta": {"versi": "1.6.0"},
+}
+PATCH_V160 = copy.deepcopy(PATCH_V160)
+data = copy.deepcopy(data)  # lepas dari objek PATCH_V151
+terapkan_patch(data, PATCH_V160)
+with open("/workspace/village-game/tools/patch-v1.6.0.json","w",encoding="utf-8") as f:
+    json.dump(PATCH_V160,f,ensure_ascii=False,indent=2); f.write("\n")
 with open("/workspace/village-game/tools/patch-v1.5.1.json","w",encoding="utf-8") as f:
     json.dump(PATCH_V151,f,ensure_ascii=False,indent=2); f.write("\n")
 with open("/workspace/village-game/tools/patch-v1.5.0.json","w",encoding="utf-8") as f:

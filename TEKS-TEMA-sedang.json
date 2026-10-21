@@ -1821,8 +1821,83 @@
    "{nama} dan {nama2} memimpin kerja bersama. Pekerjaan berat terasa ringan bila dikerjakan bersama."
   ]
  },
+ "pangan": {
+  "sumber": {
+   "meramu": "Buah beri",
+   "memancing": "Ikan",
+   "ikan": "Ikan",
+   "jamur": "Jamur",
+   "umbi": "Kentang liar",
+   "gandum": "Gandum",
+   "wortel": "Wortel",
+   "makanan": "Makanan",
+   "pasar": "Pasar",
+   "cerita": "Kejadian",
+   "kerja_bakti": "Kerja bersama",
+   "pesta_17an": "Festival Panen"
+  },
+  "keluar": {
+   "dimakan": "dimakan",
+   "busuk": "busuk",
+   "kenduri": "makan bersama",
+   "tikus": "dimakan tikus",
+   "monyet": "dicuri rubah",
+   "syukuran_lahir": "pesta kelahiran",
+   "syukuran_panen": "pesta panen",
+   "pesta": "pesta",
+   "dijual": "dijual",
+   "lainnya": "lain-lain"
+  },
+  "ladang": {
+   "banjir": "Tergenang banjir, tanaman menunggu air surut",
+   "berhenti_dingin": "Berhenti tumbuh: tanah membeku (musim {musim})",
+   "berhenti_kemarau": "Berhenti tumbuh: musim kering tanpa irigasi (riset Irigasi Sederhana, T04)"
+  },
+  "sudah_digali": "Sudah digali, tumbuh lagi beberapa hari",
+  "daya_tarik": {
+   "tooltip": "Daya tarik desa menentukan seberapa sering pengembara datang. Faktornya: suasana hati warga, desa bahagia beberapa hari berturut-turut, stok pangan yang cukup, dan tempat tidur kosong. Desa yang bahagia lebih sering didatangi pengembara.",
+   "bonus": "→ pengembara lebih sering datang",
+   "pendatang": [
+    "Kabar desa yang bahagia sampai ke desa sebelah… Seorang pengembara ingin tinggal.",
+    "Cerita tentang desa yang rukun dan riang terdengar sampai ke kota. Seorang pengembara datang membawa ransel, ingin ikut menetap.",
+    "{nama} pernah bercerita tentang desa kita di pasar kota. Hari ini seorang pengembara datang dan bertanya, bolehkah ikut tinggal?",
+    "Tawa warga terdengar sampai jalan besar. Seorang pengelana mampir minum teh madu, lalu memutuskan ingin tinggal di sini."
+   ]
+  },
+  "tugas": {
+   "meramu": {
+    "nama": "Memetik beri",
+    "log": [
+     "{nama} memetik buah beri di tepi hutan dan pulang membawa {jumlah} genggam.",
+     "{nama} menyusuri semak beri sambil bersenandung. Keranjangnya terisi {jumlah} beri yang manis."
+    ]
+   },
+   "memancing": {
+    "nama": "Memancing",
+    "log": [
+     "{nama} duduk sabar di tepi sungai berbatu. Pulangnya membawa {jumlah} ikan trout.",
+     "Kail {nama} bergetar! {jumlah} ikan masuk ke keranjang anyaman.",
+     "{nama} memancing di kolam sambil bersiul pelan. Hasilnya {jumlah} ikan untuk gudang desa."
+    ]
+   },
+   "jamur": {
+    "nama": "Mencari jamur",
+    "log": [
+     "{nama} menemukan jamur di bawah pohon ek dan memetik {jumlah}.",
+     "Habis hujan, {nama} masuk ke hutan berlumut dan pulang membawa {jumlah} jamur segar."
+    ]
+   },
+   "umbi": {
+    "nama": "Menggali kentang liar",
+    "log": [
+     "{nama} menggali kentang liar di tepi hutan dan mendapat {jumlah} butir.",
+     "Tanah gembur di bawah semak menyimpan kentang liar. {nama} pulang membawa {jumlah}."
+    ]
+   }
+  }
+ },
  "_cerita_sedang": {
-  "versi": "1.5.1-sedang.2",
+  "versi": "1.6.0-sedang.1",
   "alat": "tools/buat_tema_sedang_cerita.py",
   "bagian": [
    "dilema",
@@ -1830,9 +1905,10 @@
    "momen_kecil",
    "agustusan",
    "kerja_bakti",
-   "peringatan_dini.ancaman_monyet"
+   "peringatan_dini.ancaman_monyet",
+   "pangan"
   ],
   "catatan": "Jalankan SETELAH node tools/buat_overlay_sedang.js (alat itu menulis ulang file ini dan menghapus bagian cerita)."
  },
- "_catatan": "Dibuat otomatis oleh tools/buat_overlay_sedang.js dari TEKS v1.3.0 (empat musim) terhadap TEKS-GAME.json v1.5.0. Jangan edit manual; jalankan ulang bila TEKS berubah. Bagian cerita (dilema, momen_kecil, agustusan, kerja_bakti, dilema_ui, ancaman_monyet) dari tools/buat_tema_sedang_cerita.py: jalankan sesudahnya."
+ "_catatan": "Dibuat otomatis oleh tools/buat_overlay_sedang.js dari TEKS v1.3.0 (empat musim) terhadap TEKS-GAME.json v1.5.0. Jangan edit manual; jalankan ulang bila TEKS berubah. Bagian cerita (dilema, momen_kecil, agustusan, kerja_bakti, dilema_ui, ancaman_monyet) dan pangan dari tools/buat_tema_sedang_cerita.py: jalankan sesudahnya."
 }

@@ -1,4 +1,4 @@
-"""Tambahkan teks CERITA tema sedang (beriklim sedang) ke TEKS-TEMA-sedang.json — idempoten.
+"""Tambahkan teks CERITA (dan pangan v1.6.0) tema sedang (beriklim sedang) ke TEKS-TEMA-sedang.json — idempoten.
 
 TEKS-TEMA-sedang.json dibuat oleh tools/buat_overlay_sedang.js (agen lain; jangan diedit dari sini). Alat itu menulis ulang
 seluruh file, jadi urutan menjalankan:  node tools/buat_overlay_sedang.js  ->  python3 tools/buat_tema_sedang_cerita.py
@@ -13,7 +13,7 @@ ronda -> jaga malam, padi/singkong -> gandum/kentang, kerbau -> sapi, reog -> ro
 import json, sys
 ROOT = "/workspace/village-game/"
 FILE = ROOT + "TEKS-TEMA-sedang.json"
-VERSI = "1.5.1-sedang.2"
+VERSI = "1.6.0-sedang.1"
 
 def O(teks, hasil, *tunda):
     o = {"teks": teks, "teks_hasil": hasil}
@@ -279,6 +279,43 @@ DILEMA_UI = {
                 "Pemberi pinjaman menyita separuh kayu, batu, dan papan desa. \"Lain kali kita bekerja bersama saja,\" bisik para tetua."],
 }
 
+# ---------------- pangan v9 (v1.6.0): padanan iklim sedang ----------------
+# Hanya yang dipakai tema sedang. Tidak ditulis (Nusantara saja, FOOD_SOURCES_PATCH buah/keong = null, tanaman tropis):
+# sumber buah/mangga/rambutan/pisang/kelapa/keong/padi/jagung/ubi/singkong, tugas.buah, tugas.keong, pohon_buah, berbuah, belum_berbuah.
+PANGAN = {
+ "sumber": {"meramu": "Buah beri", "memancing": "Ikan", "ikan": "Ikan", "jamur": "Jamur", "umbi": "Kentang liar",
+            "gandum": "Gandum", "wortel": "Wortel", "makanan": "Makanan", "pasar": "Pasar", "cerita": "Kejadian",
+            "kerja_bakti": "Kerja bersama", "pesta_17an": "Festival Panen"},
+ "keluar": {"dimakan": "dimakan", "busuk": "busuk", "kenduri": "makan bersama", "tikus": "dimakan tikus", "monyet": "dicuri rubah",
+            "syukuran_lahir": "pesta kelahiran", "syukuran_panen": "pesta panen", "pesta": "pesta", "dijual": "dijual", "lainnya": "lain-lain"},
+ "ladang": {"banjir": "Tergenang banjir, tanaman menunggu air surut",
+            "berhenti_dingin": "Berhenti tumbuh: tanah membeku (musim {musim})",
+            "berhenti_kemarau": "Berhenti tumbuh: musim kering tanpa irigasi (riset Irigasi Sederhana, T04)"},
+ "sudah_digali": "Sudah digali, tumbuh lagi beberapa hari",
+ "daya_tarik": {
+  "tooltip": "Daya tarik desa menentukan seberapa sering pengembara datang. Faktornya: suasana hati warga, desa bahagia beberapa hari berturut-turut, stok pangan yang cukup, dan tempat tidur kosong. Desa yang bahagia lebih sering didatangi pengembara.",
+  "bonus": "→ pengembara lebih sering datang",
+  "pendatang": [
+   "Kabar desa yang bahagia sampai ke desa sebelah… Seorang pengembara ingin tinggal.",
+   "Cerita tentang desa yang rukun dan riang terdengar sampai ke kota. Seorang pengembara datang membawa ransel, ingin ikut menetap.",
+   "{nama} pernah bercerita tentang desa kita di pasar kota. Hari ini seorang pengembara datang dan bertanya, bolehkah ikut tinggal?",
+   "Tawa warga terdengar sampai jalan besar. Seorang pengelana mampir minum teh madu, lalu memutuskan ingin tinggal di sini."]},
+ "tugas": {
+  "meramu": {"nama": "Memetik beri", "log": [
+   "{nama} memetik buah beri di tepi hutan dan pulang membawa {jumlah} genggam.",
+   "{nama} menyusuri semak beri sambil bersenandung. Keranjangnya terisi {jumlah} beri yang manis."]},
+  "memancing": {"nama": "Memancing", "log": [
+   "{nama} duduk sabar di tepi sungai berbatu. Pulangnya membawa {jumlah} ikan trout.",
+   "Kail {nama} bergetar! {jumlah} ikan masuk ke keranjang anyaman.",
+   "{nama} memancing di kolam sambil bersiul pelan. Hasilnya {jumlah} ikan untuk gudang desa."]},
+  "jamur": {"nama": "Mencari jamur", "log": [
+   "{nama} menemukan jamur di bawah pohon ek dan memetik {jumlah}.",
+   "Habis hujan, {nama} masuk ke hutan berlumut dan pulang membawa {jumlah} jamur segar."]},
+  "umbi": {"nama": "Menggali kentang liar", "log": [
+   "{nama} menggali kentang liar di tepi hutan dan mendapat {jumlah} butir.",
+   "Tanah gembur di bawah semak menyimpan kentang liar. {nama} pulang membawa {jumlah}."]}},
+}
+
 def main():
     ov = json.load(open(FILE, encoding="utf-8"))
     ov["dilema"] = {"__byId": DILEMA}
@@ -287,14 +324,17 @@ def main():
     ov["agustusan"] = FESTIVAL
     ov["kerja_bakti"] = KERJA
     ov.setdefault("peringatan_dini", {})["ancaman_monyet"] = RUBAH
+    ov["pangan"] = PANGAN
     ov["_cerita_sedang"] = {"versi": VERSI, "alat": "tools/buat_tema_sedang_cerita.py",
-        "bagian": ["dilema", "dilema_ui", "momen_kecil", "agustusan", "kerja_bakti", "peringatan_dini.ancaman_monyet"],
+        "bagian": ["dilema", "dilema_ui", "momen_kecil", "agustusan", "kerja_bakti", "peringatan_dini.ancaman_monyet", "pangan"],
         "catatan": "Jalankan SETELAH node tools/buat_overlay_sedang.js (alat itu menulis ulang file ini dan menghapus bagian cerita)."}
     c = ov.get("_catatan", "")
-    tambah = " Bagian cerita (dilema, momen_kecil, agustusan, kerja_bakti, dilema_ui, ancaman_monyet) dari tools/buat_tema_sedang_cerita.py: jalankan sesudahnya."
-    if tambah.strip() not in c: ov["_catatan"] = (c + tambah).strip()
+    tambah = " Bagian cerita (dilema, momen_kecil, agustusan, kerja_bakti, dilema_ui, ancaman_monyet) dan pangan dari tools/buat_tema_sedang_cerita.py: jalankan sesudahnya."
+    c = c.replace(" Bagian cerita (dilema, momen_kecil, agustusan, kerja_bakti, dilema_ui, ancaman_monyet) dari tools/buat_tema_sedang_cerita.py: jalankan sesudahnya.", "")  # catatan versi lama
+    if tambah.strip() not in c: c = c + tambah
+    ov["_catatan"] = c.strip()
     # _catatan & _cerita_sedang tetap di akhir
     for k in ("_cerita_sedang", "_catatan"): ov[k] = ov.pop(k)
     with open(FILE, "w", encoding="utf-8") as f: json.dump(ov, f, ensure_ascii=False, indent=1); f.write("\n")  # sama dengan buat_overlay_sedang.js (JSON.stringify(o, null, 1) + newline)
-    print(f"TEKS-TEMA-sedang.json: dilema {len(DILEMA)}, momen_kecil {len(MOMEN)}, lomba {len(LOMBA)}, + agustusan/kerja_bakti/dilema_ui/ancaman_monyet ({VERSI})")
+    print(f"TEKS-TEMA-sedang.json: dilema {len(DILEMA)}, momen_kecil {len(MOMEN)}, lomba {len(LOMBA)}, + agustusan/kerja_bakti/dilema_ui/ancaman_monyet/pangan ({VERSI})")
 if __name__ == "__main__": main()
