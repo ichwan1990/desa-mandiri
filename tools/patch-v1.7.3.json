@@ -1,0 +1,38 @@
+{
+  "_patch": {
+    "versi_dari": "1.7.2",
+    "versi_ke": "1.7.3",
+    "sifat": "hanya penambahan (tambah_key petunjuk + tambah_path otomatis.gubuk_tambahan; menolak menimpa)",
+    "sumber": "Asisten Koding 21-10 15:18: 42d19ac v10 (warga menambah gubuk ke-2, petunjuk butuh gubuk hari 6)"
+  },
+  "tambah_key": {
+    "petunjuk": {
+      "_catatan": "Petunjuk pemain (kotak misi questUI + log sekali). String tunggal; tanpa '<' dan tanpa awalan 'Hari '.",
+      "butuh_gubuk": "Pendatang dan anak-anak butuh tempat tidur. Bangun {gubuk} supaya desa bisa bertambah."
+    }
+  },
+  "tambah_path": {
+    "otomatis.gubuk_tambahan": [
+      "{nama} dan {nama2} mendirikan {gubuk} lagi supaya ada tempat untuk pendatang dan anak.",
+      "Tempat tidur mulai sesak. {nama} dan {nama2} memasang tiang bambu untuk {gubuk} baru.",
+      "{nama} mengukur tanah, {nama2} mengangkut bambu dan ilalang. {gubuk} baru mulai berdiri untuk keluarga yang bertambah."
+    ]
+  },
+  "tambah_key_meta": {
+    "catatan_v173": {
+      "bentuk": {
+        "petunjuk.butuh_gubuk": "STRING (dirender ulang tiap frame panel misi; array akan berganti-ganti); {gubuk}",
+        "otomatis.gubuk_tambahan": "array 2-4 variasi (log); {nama}, {nama2}, {gubuk}"
+      },
+      "catatan_koding": "{gubuk} = C.BUILDINGS.gubuk.nama, sudah berhuruf kapital (nama bangunan), dipakai apa adanya di tengah kalimat."
+    }
+  },
+  "tambah_entri_meta": {
+    "placeholder": {
+      "{gubuk}": "Nama bangunan gubuk (C.BUILDINGS.gubuk.nama: Nusantara 'Gubuk Bambu', sedang 'Gubuk'); petunjuk.butuh_gubuk, otomatis.gubuk_tambahan"
+    }
+  },
+  "set_meta": {
+    "versi": "1.7.3"
+  }
+}

@@ -1949,6 +1949,11 @@
    "Warga tak tahan tidur di bawah langit: mereka mulai mendirikan gubuk sendiri.",
    "{nama} dan {nama2} memasang tiang kayu dan atap jerami. Gubuk pertama sedang didirikan.",
    "Embun dan angin malam membuat warga menggigil. Mereka bekerja bersama mendirikan gubuk pertama."
+  ],
+  "gubuk_tambahan": [
+   "{nama} dan {nama2} mendirikan {gubuk} lagi supaya ada tempat untuk pendatang dan anak.",
+   "Tempat tidur mulai sesak. {nama} dan {nama2} memasang tiang kayu untuk {gubuk} baru.",
+   "{nama} mengukur tanah, {nama2} mengangkut kayu dan jerami. {gubuk} baru mulai berdiri untuk keluarga yang bertambah."
   ]
  },
  "keinginan": {
@@ -2975,8 +2980,11 @@
   "tahap_tahun_ini": "Selesai tahun ini",
   "tutup": "Lanjutkan"
  },
+ "petunjuk": {
+  "butuh_gubuk": "Pendatang dan anak-anak butuh tempat tidur. Bangun {gubuk} supaya desa bisa bertambah."
+ },
  "_cerita_sedang": {
-  "versi": "1.7.2-sedang.1",
+  "versi": "1.7.3-sedang.1",
   "alat": "tools/buat_tema_sedang_cerita.py",
   "bagian": [
    "dilema",
@@ -3003,7 +3011,9 @@
    "pangan.kandang",
    "bangunan_lokal (orang_orangan_sawah, kandang_ayam)",
    "hari_jadi_ringkasan",
-   "dilema_ui.orang_orangan_teks_melayang"
+   "dilema_ui.orang_orangan_teks_melayang",
+   "petunjuk",
+   "otomatis.gubuk_tambahan"
   ],
   "catatan": "Jalankan SETELAH node tools/buat_overlay_sedang.js (alat itu menulis ulang file ini dan menghapus bagian cerita)."
  },

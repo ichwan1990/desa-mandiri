@@ -3555,6 +3555,31 @@ PATCH_V172 = copy.deepcopy(PATCH_V172)
 terapkan_patch_v151(data, PATCH_V172)
 with open("/workspace/village-game/tools/patch-v1.7.2.json","w",encoding="utf-8") as f:
     json.dump(PATCH_V172,f,ensure_ascii=False,indent=2); f.write("\n")
+# ===================== v1.7.3 (aditif): v10 (42d19ac) — gubuk tambahan otomatis & petunjuk butuh gubuk =====================
+# otomatis.gubuk_tambahan: TX(..., { nama, nama2, gubuk }) -> array variasi (log). petunjuk.butuh_gubuk: TX(..., { gubuk }) dipanggil tiap render questUI()
+# (innerHTML) + sekali di log -> STRING (array akan berganti-ganti tiap render). {gubuk} = C.BUILDINGS.gubuk.nama (Nusantara 'Gubuk Bambu', sedang 'Gubuk'): nama bangunan, kapital.
+PATCH_V173 = {
+ "_patch": {"versi_dari": "1.7.2", "versi_ke": "1.7.3", "sifat": "hanya penambahan (tambah_key petunjuk + tambah_path otomatis.gubuk_tambahan; menolak menimpa)",
+            "sumber": "Asisten Koding 21-10 15:18: 42d19ac v10 (warga menambah gubuk ke-2, petunjuk butuh gubuk hari 6)"},
+ "tambah_key": {"petunjuk": {"_catatan": "Petunjuk pemain (kotak misi questUI + log sekali). String tunggal; tanpa '<' dan tanpa awalan 'Hari '.",
+   "butuh_gubuk": "Pendatang dan anak-anak butuh tempat tidur. Bangun {gubuk} supaya desa bisa bertambah."}},
+ "tambah_path": {
+  "otomatis.gubuk_tambahan": [
+   "{nama} dan {nama2} mendirikan {gubuk} lagi supaya ada tempat untuk pendatang dan anak.",
+   "Tempat tidur mulai sesak. {nama} dan {nama2} memasang tiang bambu untuk {gubuk} baru.",
+   "{nama} mengukur tanah, {nama2} mengangkut bambu dan ilalang. {gubuk} baru mulai berdiri untuk keluarga yang bertambah."]},
+ "tambah_key_meta": {"catatan_v173": {
+   "bentuk": {"petunjuk.butuh_gubuk": "STRING (dirender ulang tiap frame panel misi; array akan berganti-ganti); {gubuk}",
+              "otomatis.gubuk_tambahan": "array 2-4 variasi (log); {nama}, {nama2}, {gubuk}"},
+   "catatan_koding": "{gubuk} = C.BUILDINGS.gubuk.nama, sudah berhuruf kapital (nama bangunan), dipakai apa adanya di tengah kalimat."}},
+ "tambah_entri_meta": {"placeholder": {"{gubuk}": "Nama bangunan gubuk (C.BUILDINGS.gubuk.nama: Nusantara 'Gubuk Bambu', sedang 'Gubuk'); petunjuk.butuh_gubuk, otomatis.gubuk_tambahan"}},
+ "set_meta": {"versi": "1.7.3"},
+}
+PATCH_V173 = copy.deepcopy(PATCH_V173)
+data = copy.deepcopy(data)  # lepas dari objek PATCH_V172
+terapkan_patch_v151(data, PATCH_V173)
+with open("/workspace/village-game/tools/patch-v1.7.3.json","w",encoding="utf-8") as f:
+    json.dump(PATCH_V173,f,ensure_ascii=False,indent=2); f.write("\n")
 with open("/workspace/village-game/tools/patch-v1.5.1.json","w",encoding="utf-8") as f:
     json.dump(PATCH_V151,f,ensure_ascii=False,indent=2); f.write("\n")
 with open("/workspace/village-game/tools/patch-v1.5.0.json","w",encoding="utf-8") as f:

@@ -1,4 +1,4 @@
-"""Validasi TEKS-GAME.json v1.7.2 terhadap backup v1.0.0 (+allowlist tuning), v1.1.0, v1.2.0, v1.3.0, v1.4.0, v1.5.0, v1.5.1, v1.6.0, v1.6.1, v1.7.0, v1.7.1.
+"""Validasi TEKS-GAME.json v1.7.3 terhadap backup v1.0.0 (+allowlist tuning), v1.1.0, v1.2.0, v1.3.0, v1.4.0, v1.5.0, v1.5.1, v1.6.0, v1.6.1, v1.7.0, v1.7.1, v1.7.2.
 Sejak v1.4.0 (lokalisasi Indonesia) teks tampilan boleh berubah, tetapi semua key/struktur, semua angka/boolean, dan semua
 string berjenis id (id, tipe, target, era, musim, prasyarat, event_terkait, ...) harus tetap sama; placeholder teks yang berubah
 tidak boleh bertambah. Ditambah: cek kata terlarang (salju, serigala, harimau, ...) di semua teks tampilan, dan bagian baru v1.4/v1.5.
@@ -9,6 +9,7 @@ tidak muncul di teks cerita yang aktif di tema sedang).
 v1.6.0 hanya menambah key top-level pangan (pangan v9 game.js) + placeholder {buah}: semua key wajib ada di kedua tema (TEKS dan hasil
 gabungan sedang), placeholder sesuai yang diisi kode, tanpa kata khas Indonesia di pangan tema sedang (kecuali yang tidak dipakai tema itu).
 v1.6.1 (v9c) hanya menambah: otomatis.api_unggun/gubuk (array 2-4, {nama}/{nama2}), 10 pangan.keluar baru, daya_tarik.bahagia_syarat/murung.
+v1.7.3 hanya menambah petunjuk.butuh_gubuk (string) & otomatis.gubuk_tambahan (array) dengan {gubuk} (+ meta.placeholder).
 v1.7.2 menambah tooltip_ancaman & orang_orangan_teks_melayang, mengoreksi 4 path terdaftar (KOREKSI_V172), dan melarang awalan 'Hari ' di teks log baru.
 v1.7.1 (P1b) hanya menambah pangan.sumber/tugas.telur, pangan.kandang, hari_jadi_ringkasan (+{lahir} {pendatang} {hari2}); sedang menulis bangunan_lokal.
 v1.7.0 (P1) hanya menambah key UI (event_ui, cerita_ui, banner/tooltip masa awal, pentas_reog, orang_orangan_berdiri, diusir_orang_orangan,
@@ -50,7 +51,7 @@ def sub(a, b, p, idk=False):
             teks_diubah.append(p)
     elif type(a) != type(b) or a != b: err.append(f"nilai/id berubah: {p} ({a!r} -> {b!r})")
 sub(old, new, "")
-if new["meta"]["versi"] != "1.7.2": err.append("meta.versi bukan 1.7.2")
+if new["meta"]["versi"] != "1.7.3": err.append("meta.versi bukan 1.7.3")
 for k in old:
     if list(new).index(k) != list(old).index(k): err.append(f"urutan key top-level berubah: {k}")
 m = new["meta"]
@@ -680,7 +681,8 @@ if teks_diubah: err.append(f"v1.6.1 hanya penambahan, tetapi {len(teks_diubah)} 
 for k in old160:
     if list(new).index(k) != list(old160).index(k): err.append(f"urutan key top-level v1.6.0 berubah: {k}")
 if "catatan_v161" not in m: err.append("meta.catatan_v161 hilang")
-OTOMATIS = ["api_unggun", "gubuk"]
+OTOMATIS = ["api_unggun", "gubuk", "gubuk_tambahan"]  # gubuk_tambahan: v1.7.3 (42d19ac)
+OTOMATIS_PH = {"gubuk_tambahan": ("nama", "nama2", "gubuk")}  # lainnya: autoNames() = {nama}, {nama2}
 try:
     _ot = re.findall(r"TX\('otomatis\.(\w+)'", open(ROOT + "game.js", encoding="utf-8").read())
     if set(_ot) - set(OTOMATIS): err.append(f"otomatis: key baru di kode belum ada di daftar validator: {sorted(set(_ot) - set(OTOMATIS))}")
@@ -689,7 +691,7 @@ def cek_v161(T, sumber):
     for k in OTOMATIS:
         v = ambil(T, "otomatis." + k)
         if not (isinstance(v, list) and 2 <= len(v) <= 4): err.append(f"{sumber}otomatis.{k} harus array 2-4 variasi"); continue
-        for x in v: cek_teks(x, "otomatis." + k, sumber, ("nama", "nama2"), False)
+        for x in v: cek_teks(x, "otomatis." + k, sumber, OTOMATIS_PH.get(k, ("nama", "nama2")), False)
 cek_v161(new, "")
 cek_v161(sd, "sedang:")
 if "otomatis" not in ov: sed_err.append("TEKS-TEMA-sedang.json tanpa bagian otomatis: jalankan python3 tools/buat_tema_sedang_cerita.py")
@@ -950,6 +952,45 @@ for k, v in _ov_baru.items():  # overlay sedang: hanya teks di path yang baru di
         elif isinstance(x, list): [_sb(y, f"{p}[{i}]") for i, y in enumerate(x)]
     _sb(ambil(sd, k), "/" + k)
 for p in hari_baru: err.append(f"teks log baru/terkoreksi diawali 'Hari ' (log() sudah menambahkannya): {p}")
+# ---------- v1.7.3: v10 (42d19ac) — otomatis.gubuk_tambahan, petunjuk.butuh_gubuk ({gubuk} = C.BUILDINGS.gubuk.nama) ----------
+old172 = json.load(open(ROOT + "tools/TEKS-GAME.v1.7.2.json", encoding="utf-8"))
+teks_diubah.clear(); _n = len(err); sub(old172, new, "")
+if len(err) > _n: err.insert(_n, "^ perbedaan struktur/angka terhadap v1.7.2:")
+if teks_diubah: err.append(f"v1.7.3 hanya penambahan, tetapi {len(teks_diubah)} teks v1.7.2 berubah, mis. {teks_diubah[:3]}")
+for k in old172:
+    if list(new).index(k) != list(old172).index(k): err.append(f"urutan key top-level v1.7.2 berubah: {k}")
+if "catatan_v173" not in m: err.append("meta.catatan_v173 hilang")
+if "{gubuk}" not in m["placeholder"]: err.append("placeholder {gubuk} (v1.7.3) tidak terdaftar")
+# path -> (bentuk, placeholder yang diisi kode, wajib). petunjuk: STRING (questUI merender ulang; array akan berganti-ganti)
+V173 = {"petunjuk.butuh_gubuk": ("str", ("gubuk",), ("gubuk",)), "otomatis.gubuk_tambahan": ("list", ("nama", "nama2", "gubuk"), ("gubuk",))}
+try:
+    _g = open(ROOT + "game.js", encoding="utf-8").read()
+    for path, (_, ph, _w) in V173.items():
+        _x = re.search(r"TX\('" + re.escape(path) + r"', \{([^}]*)\}", _g)
+        if not _x: sed_warn.append(f"v1.7.3: {path} tidak lagi ditemukan di game.js"); continue
+        _k = set(re.findall(r"(\w+)\s*:", _x.group(1))) | ({"nama", "nama2"} if "...n" in _x.group(1) else set())
+        if _k != set(ph): err.append(f"{path}: extra di game.js {sorted(_k)} != daftar validator {sorted(ph)}")
+    if "gubuk: C.BUILDINGS.gubuk.nama" not in _g: sed_warn.append("{gubuk} tidak lagi C.BUILDINGS.gubuk.nama; periksa teks")
+except Exception as e: sed_warn.append(f"game.js tidak terbaca untuk cek v1.7.3 ({e})")
+def cek_v173(T, sumber):
+    for path, (bt, ph, wajib) in V173.items():
+        v = ambil(T, path)
+        if bt == "str" and not isinstance(v, str): err.append(f"{sumber}{path} harus string (dirender ulang tiap frame)"); continue
+        if bt == "list" and not (isinstance(v, list) and 2 <= len(v) <= 4): err.append(f"{sumber}{path} harus array 2-4 variasi"); continue
+        for x in (v if isinstance(v, list) else [v]):
+            cek_teks(x, path, sumber, ph, False)
+            if x.startswith("Hari "): err.append(f"{sumber}{path} jangan diawali 'Hari ' (log() menambahkannya)")
+            if "<" in x: err.append(f"{sumber}{path}: tanpa '<' (innerHTML)")
+            for w in wajib:
+                if "{" + w + "}" not in x: err.append(f"{sumber}{path} harus memakai {{{w}}}")
+cek_v173(new, "")
+cek_v173(sd, "sedang:")
+RX173 = re.compile(r"(?<![\w-])(" + "|".join(re.escape(w) for w in sorted(set(KHAS_TUJUAN + ["gotong royong", "gotong-royong", "bergotong", "ilalang"]), key=len, reverse=True)) + r")(?![\w-])", re.I)
+for path in V173:
+    if ambil(ov, path) is None: sed_err.append(f"overlay sedang tanpa {path} (teks Nusantara akan dipakai)")
+    for x in (lambda y: y if isinstance(y, list) else [y])(ambil(sd, path)):
+        for h in (RX173.finditer(x) if isinstance(x, str) else []): sed_err.append(f"kata khas Indonesia di tema sedang: {path}: '{h.group(1)}'")
+    cek_ph(ambil(sd, path), ambil(new, path), path); walk_s(ambil(sd, path), path)
 err += sed_err
 # kata terlarang di SEMUA teks tampilan (bukan key, bukan string id, bukan meta teknis)
 META_TAMPIL = ("sumber_daya", "bangunan", "musim", "era", "hewan", "penyebab_kondisi", "bangunan_pertahanan", "tahap_usia", "status_hubungan",
@@ -1007,9 +1048,10 @@ print(f"v1.7.0: key UI {len(V170)} | sedang tujuan: keinginan {len([k for k in o
 print(f"tema sedang: TUJUAN_DISABLE bisa dicabut: {tujuan_cabut or '-'}" + (f" | masih perlu disable: {tujuan_tetap}" if tujuan_tetap else ""))
 print(f"v1.7.1: pangan telur (sumber, tugas {len(new['pangan']['tugas']['telur']['log'])} log), kandang siap/ayam | hari_jadi_ringkasan {len(HJ_PH)} key | bangunan_lokal sedang: {', '.join(ambil(ov, f'bangunan_lokal.{b}.nama') or '-' for b in BANGUNAN_LOKAL_KODE.values())}")
 print(f"v1.7.2: tooltip_ancaman, orang_orangan_teks_melayang {len(ambil(new, 'dilema_ui.orang_orangan_teks_melayang'))} variasi | koreksi {len(KOREKSI_V172)} path | teks lama berawalan 'Hari {{hari}}:' (dibuang fill()): {len(hari_lama)}")
+print(f"v1.7.3: petunjuk.butuh_gubuk | otomatis.gubuk_tambahan {len(new['otomatis']['gubuk_tambahan'])} variasi (sedang {len(sd['otomatis']['gubuk_tambahan'])}) | placeholder {{gubuk}}")
 print(f"tema sedang: overlay {len([k for k in ov if not k.startswith('_')])} bagian | cerita: dilema {len(ov.get('dilema', {}).get('__byId', []))}, momen {len([k for k in ov.get('momen_kecil', {}) if not k.startswith('_')])}, "
       f"lomba {len(ov.get('agustusan', {}).get('lomba', {}))} | kata khas Indonesia di cerita aktif: {sum(len(v) for k, v in kena.items() if k in aktif)}")
 print(f"tema sedang: STORY_DISABLE bisa dicabut: {bisa_cabut or '-'}" + (f" | masih perlu disable: {tetap}" if tetap else "") + f" | STORY_PATCH enabled:false bisa dicabut: {patch_cabut or '-'}")
 for w in sed_warn: print(" peringatan:", w)
 if err: print("GAGAL:"); [print(" -", e) for e in err]; sys.exit(1)
-print("OK: JSON valid, struktur/id/angka lama utuh (TUNING_V10 + 14 retuning, v1.0-v1.7.1), overlay sedang bersih, kata terlarang bersih, semua efek/tipe/target/placeholder terdaftar.")
+print("OK: JSON valid, struktur/id/angka lama utuh (TUNING_V10 + 14 retuning, v1.0-v1.7.2), overlay sedang bersih, kata terlarang bersih, semua efek/tipe/target/placeholder terdaftar.")

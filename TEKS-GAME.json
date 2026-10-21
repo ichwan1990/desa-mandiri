@@ -1,7 +1,7 @@
 {
   "meta": {
     "judul_game": "Desa Mandiri",
-    "versi": "1.7.2",
+    "versi": "1.7.3",
     "bahasa": "id-ID",
     "encoding": "UTF-8",
     "nuansa": "Hangat, santai, dan menggemaskan. Pemain menjaga penduduk kecil yang hidup mandiri. Ancaman nyata tapi ringan (badai, babi hutan, wabah, kekurangan makanan), dengan kehangatan kebersamaan sebagai penyeimbang.",
@@ -47,7 +47,8 @@
       "{pendatang}": "Jumlah pendatang setahun (hari_jadi_ringkasan.log)",
       "{hari2}": "Hari akhir rentang (hari_jadi_ringkasan.rentang)",
       "{pencuri}": "Hewan pencuri ladang yang diusir orang-orangan (C.MONKEY.hewan: monyet / rubah); huruf kecil",
-      "{pagar}": "Nama bangunan pagar (C.BUILDINGS.pagar.nama) untuk tooltip orang-orangan"
+      "{pagar}": "Nama bangunan pagar (C.BUILDINGS.pagar.nama) untuk tooltip orang-orangan",
+      "{gubuk}": "Nama bangunan gubuk (C.BUILDINGS.gubuk.nama: Nusantara 'Gubuk Bambu', sedang 'Gubuk'); petunjuk.butuh_gubuk, otomatis.gubuk_tambahan"
     },
     "sumber_daya": {
       "kayu": "Kayu",
@@ -875,6 +876,13 @@
       },
       "koreksi": "log_ancaman.diusir_orang_orangan[1..2] & meta.catatan_v170: {hewan} di sana monyet/rubah (siang/kapan saja), bukan babi hutan/serigala malam. hari_jadi_ringkasan.log[0] tidak lagi diawali 'Hari ' (aturan log v1.7.2).",
       "aturan_log": "Teks log baru/terkoreksi sejak v1.7.0 tidak boleh diawali 'Hari ' (log() menambahkan 'Hari X:'). Teks lama berawalan 'Hari {hari}:' tetap aman karena fill() membuangnya."
+    },
+    "catatan_v173": {
+      "bentuk": {
+        "petunjuk.butuh_gubuk": "STRING (dirender ulang tiap frame panel misi; array akan berganti-ganti); {gubuk}",
+        "otomatis.gubuk_tambahan": "array 2-4 variasi (log); {nama}, {nama2}, {gubuk}"
+      },
+      "catatan_koding": "{gubuk} = C.BUILDINGS.gubuk.nama, sudah berhuruf kapital (nama bangunan), dipakai apa adanya di tengah kalimat."
     }
   },
   "penduduk": [
@@ -10454,6 +10462,11 @@
       "Warga tak tahan tidur di bawah langit: mereka mulai mendirikan gubuk sendiri.",
       "{nama} dan {nama2} mulai memasang tiang bambu dan atap ilalang. Gubuk pertama sedang didirikan.",
       "Embun malam membuat warga menggigil. Mereka bergotong royong mendirikan gubuk pertama."
+    ],
+    "gubuk_tambahan": [
+      "{nama} dan {nama2} mendirikan {gubuk} lagi supaya ada tempat untuk pendatang dan anak.",
+      "Tempat tidur mulai sesak. {nama} dan {nama2} memasang tiang bambu untuk {gubuk} baru.",
+      "{nama} mengukur tanah, {nama2} mengangkut bambu dan ilalang. {gubuk} baru mulai berdiri untuk keluarga yang bertambah."
     ]
   },
   "event_ui": {
@@ -10497,5 +10510,9 @@
     "monumen": "Monumen",
     "tahap_tahun_ini": "Selesai tahun ini",
     "tutup": "Lanjutkan"
+  },
+  "petunjuk": {
+    "_catatan": "Petunjuk pemain (kotak misi questUI + log sekali). String tunggal; tanpa '<' dan tanpa awalan 'Hari '.",
+    "butuh_gubuk": "Pendatang dan anak-anak butuh tempat tidur. Bangun {gubuk} supaya desa bisa bertambah."
   }
 }
