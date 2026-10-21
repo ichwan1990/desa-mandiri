@@ -60,7 +60,7 @@ window.THEMES = {
     STORY_SEASON_ALIAS: { semi: 'hujan', panas: 'labuh', gugur: 'mareng', dingin: 'kemarau' },
     // P1 tujuan: konten khas Nusantara dimatikan di tema sedang (TEKS-TEMA-sedang.json belum punya keinginan/monumen/cerita/teladan/rencana_tahun)
     TUJUAN_DISABLE: [],   // v1.7.0: overlay sedang (keinginan/monumen/cerita/teladan/rencana_tahun) menutup semua teks P1 -> semua konten P1 aktif
-    STORY_PATCH: { MONKEY: { icon: '🦊', fallback: 'Seekor rubah menyelinap ke ladang dan membawa lari makanan!' } },
+    STORY_PATCH: { MONKEY: { hewan: 'rubah', icon: '🦊', fallback: 'Seekor rubah menyelinap ke ladang dan membawa lari makanan!' } },
     TRAITS_PATCH: { founderNeedOneOf: null }, // aturan pengaman RISET-CERITA-TUJUAN §5.1: median d24 > 48 setelah efek sifat (55) -> hapus syarat sifat kerja pendiri
     MOOD_COMFORT_PATCH: { base: 64 }, // v9b: musim dingin menekan mood -> batas nyaman sedikit lebih tinggi supaya desa bahagia aktif ~25-45% hari seperti Nusantara
     SCHEDULE_PATCH: { dayWorkMult: 1.12, daySpeedMult: 1.2 }, // kompensasi jam tidur per tema (sim d24: 1.35 -> ~56; 1.2 + efek sifat -> 51-55; 1.12 -> lihat README)

@@ -127,8 +127,14 @@ const { chromium } = require('playwright');
     const sc = await p.evaluate(() => { const S = DESA.state, C = CONFIG, P = DESA.p1, r = {}; S.buildings = S.buildings.filter(b => b.type !== 'ladang' && b.type !== 'orang_orangan');
       for (let i = 0; i < 4; i++) DESA.addBuilding('ladang', 12 + i, 20, true); r.before = P.scarecrowMonkeyMult();
       const b = P.placeScarecrow(); r.placed = !!b && b.type === 'orang_orangan' && b.done; r.after = P.scarecrowMonkeyMult(); r.bar = !!document.querySelector('#buildbar [data-b="orang_orangan"]') || !C.BUILDINGS.orang_orangan;
+      // monyet/rubah datang ke ladang yang dijaga -> sebagian kabur: log diusir_orang_orangan + teks melayang; babi hutan/serigala tidak terpengaruh; tooltip bangun
+      const M = C.MONKEY; if (M) { const sv = { ...M }, rnd = Math.random; Object.assign(M, { enabled: true, fromDay: 0, era: 'perkemahan', musim: { includes: () => true }, minFood: 0, chancePerDay: 1 });
+        S.res.makanan = 200; S.scarecrowScares = 0; let q = 0; Math.random = () => (q++ % 2 ? 0.9 : 0.0); const f0 = S.res.makanan; P.monkeyDaily(); Math.random = rnd; Object.assign(M, sv);
+        r.scares = S.scarecrowScares; r.noSteal = S.res.makanan === f0; r.logScare = /orang-orangan/i.test(S.log[0]) && !/\{hewan\}/.test(S.log[0]) && !/Hari \d+: Hari \d+:/.test(S.log[0]); r.float = P.textNotes(); r.log0 = S.log[0]; }
+      r.boar = C.SCARECROW.boarFieldMult; r.tip = P.buildTip('orang_orangan', C.BUILDINGS.orang_orangan);
       return r; });
     ok(T + ' orang-orangan', sc.before === 1 && sc.placed && sc.after === 0.5, sc);
+    ok(T + ' orang-orangan usir monyet', (sc.scares === undefined || sc.scares === 1 && sc.noSteal && sc.logScare && sc.float.length >= 1) && sc.boar === 1 && /babi hutan|serigala/.test(sc.tip) && /Pagar/i.test(sc.tip), sc);
     if (!tema && !only) { const at = await p.evaluate(() => { const S = DESA.state, C = CONFIG, P = DESA.p1; S.event = null; S.story = null; document.getElementById('modal').style.display = 'none';
         S.buildings = S.buildings.filter(b => !b.mon); S.day = 120; S.era = 3; S.monumentDiscount = {}; Object.assign(S.res, { kayu: 999, batu: 999, papan: 999, batu_bata: 999, alat: 99, kulit: 99, makanan: 500 });
         const find = (id, cx, cy) => { for (let r = 0; r < 25; r++) for (let dy = -r; dy <= r; dy++) for (let dx = -r; dx <= r; dx++) { const x = cx + dx, y = cy + dy; if (P.validSpot(id, x, y)) return { x, y }; } };

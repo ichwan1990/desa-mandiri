@@ -115,6 +115,7 @@ body.compact #time{white-space:nowrap}
 body.compact #res .ico, body.compact #res img{width:14px;height:14px}
 body.compact #buildbar{order:10;flex:1 1 220px;min-width:220px;display:flex;flex-wrap:wrap;row-gap:2px;overflow:visible;white-space:nowrap} /* tombol bangun membungkus ke baris baru (dulu gulir mendatar -> Makam/Batal terpotong di 1100-1366) */
 body.compact #buildbar button{flex:none}
+body.compact2 #buildbar{flex:1 1 100%;min-width:0} /* bilah atas masih > 80px: tombol bangun satu baris penuh */
 body.compact #res small{display:none}
 body.compact #top{gap:5px}
 #top button .lbl{pointer-events:none} /* klik pada label tetap mengenai tombol (handler memakai e.target.id) */

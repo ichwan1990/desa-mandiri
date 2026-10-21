@@ -111,7 +111,7 @@ Object.assign(CONFIG, {
       { pilihan: [{ efek: { harga_jual_makanan_permanen: 0.10 } }, { efek: { suasana_hati: 6 } }], lanjut: null } ] },
     penakut_babi: { syarat: { sifat: 'penakut', setelah: 'serangan' }, langkah: [
       { pilihan: [{ efek: { ronda_aktor: 3 }, lanjut: 1, jeda: [3, 3] }, { efek: { mood_aktor: 4 }, lanjut: null }] },
-      { efek: { rel_rekan_ronda: 5 }, lanjut: 2, tunggu: 'ancamanMendekat', batasHari: 28 },
+      { efek: { rel_rekan_ronda: 5 }, lanjut: 2, tunggu: 'ancamanMendekat', batasHari: 10 }, // malam hewan liar mendekat (bukan hanya serangan); paling lambat 10 hari
       { acak: [{ peluang: 0.5, kunci: 'berani', efek: { sifat_ganti: ['penakut', 'pemberani'], suasana_hati: 5 } }, { peluang: 0.5, kunci: 'lari', efek: { mood_aktor: -8, rel_A_semua: 3 } }], lanjut: null } ] },
     kucing_belang: { syarat: { adaAnakAtauSifat: 'suka_menolong', bangunan: 'gudang' }, langkah: [
       { pilihan: [{ efek: { biaya_berkala: { makanan: 1, tiapHari: 3, kali: 10 } }, lanjut: 1, jeda: [7, 7] }, { efek: { rel_tetangga: 1 }, lanjut: null }] },
@@ -119,7 +119,7 @@ Object.assign(CONFIG, {
       { pilihan: [{ efek: { rel_tetangga: 2 } }, { efek: { mood_pemilik_harian: 2, biaya_berkala: { makanan: 1, tiapHari: 2, kali: 14 } } }], lanjut: null } ] },
   },
   // ---- orang-orangan sawah (RISET-INDONESIA; D15 monyet_kebun opsi 1 membangunnya gratis) ----
-  SCARECROW: { radius: 4, monkeyMult: 0.5, boarFieldMult: 0.7 },  // monyet/rubah tidak mencuri dari ladang dalam radius; babi hutan lebih jarang memilih ladang dekatnya
+  SCARECROW: { radius: 4, monkeyMult: 0.5, boarFieldMult: 1 },  // monyet/rubah urung mencuri dari ladang dalam radius (log + teks melayang); babi hutan/serigala TIDAK terpengaruh (1 = tanpa efek; pakai pagar)
 });
 CONFIG.BUILDINGS.orang_orangan = { nama: 'Orang-orangan Sawah', w: 1, h: 1, cost: { kayu: 5 }, work: 8, era: 'dusun' };
 // monumen = bangunan khusus (tidak di bilah bangun; ditaruh dari panel Tujuan Desa). work dihitung per tahap (stageWork).

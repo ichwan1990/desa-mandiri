@@ -79,6 +79,10 @@ const { chromium } = require('playwright');
   // (8) retest hardware @5abc262: lebar 1100/1280/1366/1500/1599 x tinggi 768/860 dengan panel penduduk terbuka -> bilah atas <= ~2 baris (<= 80px),
   //     panel penduduk tidak lewat bawah layar, baris tombol bangun tidak terpotong/tersembunyi (membungkus, tanpa gulir mendatar)
   const hw = [];
+  // (8b) uji perangkat @e64bda9: 1500x768/860 bilah atas 89px di tengah permainan (sumber daya & tombol bertambah TANPA resize) -> harus ringkas lagi <= 80px
+  const late = () => { const S = DESA.state; S.era = 3; S.day = 120; for (const k of Object.keys(S.res)) S.res[k] = 999; Object.assign(S.res, { papan: 99, batu_bata: 99, alat: 99, kulit: 99, gandum: 999 }); S.techDone = Object.keys(CONFIG.TECH || {}); };
+  for (const h of [768, 860]) { await p.setViewportSize({ width: 1500, height: h }); await p.waitForTimeout(350); await p.evaluate(late); await p.addStyleTag({ content: '#top{letter-spacing:.6px}' }); await p.waitForTimeout(600); // letter-spacing ~ font perangkat lebih lebar
+    hw.push(await p.evaluate(([w, h]) => ({ w, h, grow: true, compact: document.body.classList.contains('compact'), topH: Math.round(document.getElementById('top').getBoundingClientRect().height), vpBottom: 0, cut: [], noHScroll: true, nBtn: 99 }), [1500, h])); }
   for (const w of [1100, 1280, 1366, 1500, 1599]) for (const h of [768, 860]) { await p.setViewportSize({ width: w, height: h }); await p.waitForTimeout(350);
     await p.evaluate(() => DESA.openVillager(DESA.state.villagers[0].id)); await p.waitForTimeout(150);
     hw.push(await p.evaluate(([w, h]) => { const t = document.getElementById('top').getBoundingClientRect(), vpn = document.getElementById('vpanel').getBoundingClientRect(), bb = document.getElementById('buildbar'), br = bb.getBoundingClientRect();

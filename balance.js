@@ -1,6 +1,6 @@
 // Semua konstanta balancing (sesuai RISET-MEKANIK.md, V1). Satuan waktu: detik game pada 1x.
 window.CONFIG = {
-  TILE: 32, MAP_W: 60, MAP_H: 40, VIEW_W: 1280, VIEW_H: 800, VIEW_MIN_W: 560, VIEW_MIN_H: 360, TOPBAR_COMPACT_W: 1500, TOPBAR_MAX_H: 80, SIDE_MIN_W: 280, SIDE_MAX_W: 320, // kanvas menyusut di layar sedang agar panel samping >= SIDE_MIN_W
+  TILE: 32, MAP_W: 60, MAP_H: 40, VIEW_W: 1280, VIEW_H: 800, VIEW_MIN_W: 560, VIEW_MIN_H: 360, TOPBAR_COMPACT_W: 1600, TOPBAR_MAX_H: 80, SIDE_MIN_W: 280, SIDE_MAX_W: 320, // kanvas menyusut di layar sedang agar panel samping >= SIDE_MIN_W
   ZOOM_LEVELS: [1, 2, 3], START_ZOOM: 1, CAMP: { x: 22, y: 20 },
   RIVER_X: 34, BRIDGE_ROWS: [20, 33], // baris jembatan yang melintasi sungai
   DAY_LENGTH_SEC: 120, NIGHT_START: 0.75, NIGHT_END: 0.25,

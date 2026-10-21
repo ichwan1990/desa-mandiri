@@ -42,6 +42,18 @@ const { chromium } = require('playwright');
     ok(T + ' telur', e.stock >= 1 && e.perDay > 0 && e.perDay <= 2 && e.info, e); ok(T + ' tugas ambil telur', e.task === 'telur' && e.taken >= 1, e); ok(T + ' ayam berkeliaran', e.hens >= 3 && e.moved && e.near, e);
     if (!tema && !only) { await p.evaluate(({ x, y }) => { const S = DESA.state, C = CONFIG, fr = C.DAY_LENGTH_SEC; S.t = Math.floor(S.t / fr) * fr + 0.4 * fr; S.villagers.forEach(v => v.task = null); DESA.p1.view(x + 1.5, y + 1, 3); }, k);
       await p.waitForTimeout(1500); await p.screenshot({ path: '../docs/screenshots/v9-kandang.png' }); }
+    // ---- cerita penakut_babi: setelah pilihan pertama (ronda), langkah 1 menunggu malam hewan liar mendekat -> lanjut (dulu hanya serangan nyata: malam 'mengintai' = macet) ----
+    const pb = await p.evaluate(() => { const S = DESA.state, C = CONFIG, P = DESA.p1, r = {}; S.event = null; S.story = null; S.chains = { active: [], done: {}, last: -99 }; S.day = 60; S.t = 59.3 * C.DAY_LENGTH_SEC; S.era = 2; S.lastAttackDay = S.day - 3; S.lastThreatNearDay = null;
+      const v = S.villagers.find(o => o.age > 16) || S.villagers[0]; S.villagers.forEach(o => o.traits = (o.traits || []).filter(t => t !== 'penakut')); v.traits = ['penakut'];
+      const save = Object.keys(C.STORY_CHAINS).filter(k => k !== 'penakut_babi' && C.STORY_CHAINS[k] && C.STORY_CHAINS[k].langkah).map(k => [k, C.STORY_CHAINS[k]]); save.forEach(([k]) => delete C.STORY_CHAINS[k]);
+      r.start = !!P.chainStart(); save.forEach(([k, d]) => C.STORY_CHAINS[k] = d); const b0 = document.querySelector('#modal [data-ev="0"]'); r.card = !!b0; if (b0) b0.click();
+      const ch = S.chains.active[0]; r.step1 = ch && ch.step; if (!ch) return r;
+      // lompat ke hari jatuh tempo, malam itu hewan liar hanya mengintai (tracksOnly) -> pagi berikutnya langkah 1 jalan
+      const D = C.DAY_LENGTH_SEC; S.t = (ch.due - 1) * D + 0.5 * D; S.day = ch.due; DESA.step(0.1); if (S.event) { S.event = null; S.story = null; document.getElementById('modal').style.display = 'none'; } S.wolf = { day: S.day, phase: null, tracksOnly: true, spawned: false, scared: {} };
+      for (let i = 0; i < 2.2 * D * 10 && S.chains.active.includes(ch) && ch.step === 1; i++) { DESA.step(0.1); if (S.event) { const q = document.querySelector('#modal [data-ev]:not([disabled])'); q ? q.click() : (S.event = null); } }
+      r.nearDay = S.lastThreatNearDay; r.after = S.chains.active.includes(ch) ? ch.step : 'selesai'; r.days = S.day - (ch.due);
+      for (let i = 0; i < 3 && S.chains.active.includes(ch); i++) { S.day++; P.chainDaily(); } r.done = !!S.chains.done.penakut_babi; return r; });
+    ok(T + ' penakut_babi lanjut', pb.start && pb.card && pb.step1 === 1 && pb.nearDay != null && pb.after !== 1 && pb.done, pb);
     // ---- Hari Jadi ----
     const h = await p.evaluate(`(() => { const S = DESA.state, C = CONFIG, P = DESA.p1, r = {}, yd = C.YEAR_SCALE ? C.YEAR_SCALE.daysPerYear : 28;
       S.event = null; document.getElementById('modal').style.display = 'none'; S.hjDone = {}; S.hjPending = false;
@@ -49,7 +61,7 @@ const { chromium } = require('playwright');
       S.goals = null; S.day = 2; P.goalsDaily(); r.goals = !!S.goals;
       S.day = yd + 1; S.t = (S.day - 1) * C.DAY_LENGTH_SEC + 0.3 * C.DAY_LENGTH_SEC; P.tujuanDaily(); r.pending = S.hjPending; const R = S.hjSummary || {};
       r.R = { tahun: R.tahun, births: R.births, built: R.built, wishes: R.wishes, stages: (R.stages || []).length, goals: R.goals && R.goals.length, mons: (R.mons || []).length, gelar: R.gelar };
-      r.log = S.log.some(l => /Hari Jadi/.test(l)); r.newGoals = S.goals && S.goals.year === 2; r.acc = S.yearAcc.from === S.day && S.yearAcc.births === 0;
+      const hl = S.log.find(l => /Hari Jadi/.test(l)) || ''; r.logLine = hl; r.log = !!hl && hl.split('Hari ').filter(x => /^[0-9]+:/.test(x)).length === 1 && hl.includes(' 9 ') && hl.includes(' 2 ') && !hl.includes('{'); r.newGoals = S.goals && S.goals.year === 2; r.acc = S.yearAcc.from === S.day && S.yearAcc.births === 0;
       DESA.maybeEvent ? DESA.maybeEvent() : null; if (!S.event) { S.event = '@harijadi'; DESA.showEvent(); }
       const m = document.getElementById('modal'); r.open = m.style.display === 'block' && !!m.querySelector('.hj'); r.cls = m.className; r.ev = S.event;
       r.txt = m.textContent; r.btn = m.querySelectorAll('[data-ev]').length;
