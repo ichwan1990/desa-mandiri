@@ -3427,6 +3427,54 @@ data = copy.deepcopy(data)  # lepas dari objek PATCH_V160
 terapkan_patch_v151(data, PATCH_V161)  # penerap tambah_path generik (menolak menimpa) + terapkan_patch
 with open("/workspace/village-game/tools/patch-v1.6.1.json","w",encoding="utf-8") as f:
     json.dump(PATCH_V161,f,ensure_ascii=False,indent=2); f.write("\n")
+# ===================== v1.7.0 (aditif): P1 Tujuan & Cerita (3bbeca1) — key yang di game.js masih memakai fallback =====================
+# Path & bentuk sesuai kode: event_ui.pendatang.* lewat TX (string; tolak_halus_hasil boleh array), jenjang_kelaparan.tingkat.bahaya.banner_masa_awal
+# dibaca LANGSUNG (JB.banner_masa_awal -> fillSafe) = harus string dengan {jumlah}; tooltip_masa_awal lewat TX (atribut title=: tanpa kutip ganda);
+# cerita_ui.label & keinginan._ui.otomatis string; agustusan.pentas_reog, dilema_ui.orang_orangan_berdiri lewat TX (array = variasi acak);
+# log_ancaman.diusir_orang_orangan dibaca lewat TT('diusir_orang_orangan') -> perlu entri C.TXT di tema.js (belum ada; lihat meta.catatan_v170).
+PATCH_V170 = {
+ "_patch": {"versi_dari": "1.6.1", "versi_ke": "1.7.0", "sifat": "hanya penambahan (tambah_key event_ui/cerita_ui + tambah_path; menolak menimpa)",
+            "sumber": "Asisten Koding 21-10 14:11: P1 (3bbeca1) keinginan, monumen, cerita berantai, orang-orangan sawah, Pendatang Terima/Tolak halus"},
+ "tambah_key": {
+  "event_ui": {"_catatan": "Teks UI event (P1). pendatang = event Pendatang Mengetuk: 2 pilihan Terima / Tolak halus.",
+   "pendatang": {"terima": "Terima", "tolak_halus": "Tolak halus",
+    "tolak_halus_hasil": ["Pengembara mengangguk mengerti dan melanjutkan perjalanan. Beberapa warga melambai sedikit sedih.",
+                          "Pengembara tersenyum, membetulkan capingnya, dan berjalan ke desa berikutnya. \"Semoga desa ini selalu rukun.\""]}},
+  "cerita_ui": {"_catatan": "Label kartu cerita berantai (cerita.<id>).", "label": "Cerita Warga"}},
+ "tambah_path": {
+  "jenjang_kelaparan.tingkat.bahaya.banner_masa_awal": "Stok pangan hanya {jumlah} hari! Segera kumpulkan makanan.",
+  "jenjang_kelaparan.tingkat.bahaya.tooltip_masa_awal": "Masa awal: belum ada penalti suasana hati, tapi stok hampir habis. Utamakan makanan.",
+  "agustusan.pentas_reog": [
+   "Pentas reog di pendopo! Dadak merak menari, gamelan bertalu, anak-anak ikut berjoget.",
+   "Kendang bertalu dan dadak merak berputar gagah. Warga bersorak, anak-anak menirukan gerak jathil.",
+   "Malam ini reog pentas di pendopo. {nama} menonton paling depan dengan mata berbinar."],
+  "dilema_ui.orang_orangan_berdiri": [
+   "Orang-orangan sawah berdiri di tepi ladang, bajunya berkibar ditiup angin.",
+   "{nama} memasang orang-orangan sawah bercaping di tengah ladang. Burung pipit langsung menjaga jarak."],
+  "log_ancaman.diusir_orang_orangan": [
+   "Orang-orangan sawah bergoyang ditiup angin. Seekor {hewan} ragu dan mundur ke hutan.",
+   "Baju orang-orangan sawah berkibar di bawah cahaya bulan. Seekor {hewan} yang mengendap-endap berbalik pergi.",
+   "Bayangan orang-orangan sawah di tepi ladang membuat {hewan} ragu. Tanaman selamat malam ini."],
+  "keinginan._ui.otomatis": "menunggu kesempatan"},
+ "tambah_key_meta": {"catatan_v170": {
+   "bentuk": {
+    "event_ui.pendatang.terima / tolak_halus": "string (label tombol)",
+    "event_ui.pendatang.tolak_halus_hasil": "array variasi (TX memilih saat event dibuat)",
+    "jenjang_kelaparan.tingkat.bahaya.banner_masa_awal": "STRING wajib (dibaca langsung, bukan TX); {jumlah} = hari stok",
+    "jenjang_kelaparan.tingkat.bahaya.tooltip_masa_awal": "string tanpa placeholder; tanpa tanda kutip ganda",
+    "cerita_ui.label / keinginan._ui.otomatis": "string",
+    "agustusan.pentas_reog": "array variasi; boleh {nama}; tanpa awalan Hari {hari}:",
+    "dilema_ui.orang_orangan_berdiri": "array variasi; boleh {nama}",
+    "log_ancaman.diusir_orang_orangan": "array variasi; {hewan} = TERMS.hewan (babi hutan / serigala), selalu didahului 'Seekor' atau di tengah kalimat"},
+   "catatan_koding": "TT('diusir_orang_orangan') di game.js belum punya entri C.TXT di tema.js, jadi teks ini belum terbaca. Usul: diusir_orang_orangan: ['log_ancaman.diusir_orang_orangan', '<fallback>'] di TXT kedua tema. Tema sedang: TEKS-TEMA-sedang.json kini punya keinginan, monumen, cerita, teladan, rencana_tahun -> semua id TUJUAN_DISABLE bisa dicabut. Nama bangunan dari kode (tujuan.js MONUMENTS.*.nama & stages[].nama, BUILDINGS.orang_orangan.nama) masih Nusantara di tema sedang bila kode tidak membaca monumen.<id>.nama dari TEKS."}},
+ "tambah_entri_meta": {},
+ "set_meta": {"versi": "1.7.0"},
+}
+PATCH_V170 = copy.deepcopy(PATCH_V170)
+data = copy.deepcopy(data)  # lepas dari objek PATCH_V161
+terapkan_patch_v151(data, PATCH_V170)
+with open("/workspace/village-game/tools/patch-v1.7.0.json","w",encoding="utf-8") as f:
+    json.dump(PATCH_V170,f,ensure_ascii=False,indent=2); f.write("\n")
 with open("/workspace/village-game/tools/patch-v1.5.1.json","w",encoding="utf-8") as f:
     json.dump(PATCH_V151,f,ensure_ascii=False,indent=2); f.write("\n")
 with open("/workspace/village-game/tools/patch-v1.5.0.json","w",encoding="utf-8") as f:

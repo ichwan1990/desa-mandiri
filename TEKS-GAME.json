@@ -1,7 +1,7 @@
 {
   "meta": {
     "judul_game": "Desa Mandiri",
-    "versi": "1.6.1",
+    "versi": "1.7.0",
     "bahasa": "id-ID",
     "encoding": "UTF-8",
     "nuansa": "Hangat, santai, dan menggemaskan. Pemain menjaga penduduk kecil yang hidup mandiri. Ancaman nyata tapi ringan (badai, babi hutan, wabah, kekurangan makanan), dengan kehangatan kebersamaan sebagai penyeimbang.",
@@ -839,6 +839,19 @@
         "pangan.daya_tarik.murung": "{jumlah} = mood warga terendah; tanpa tanda kurung (kode menambahkannya)"
       },
       "catatan_koding": "pangan.daya_tarik.bahagia kini diberi {jumlah3}/{jumlah4} oleh kode, tetapi belum terdaftar di meta.placeholder dan tidak dipakai teks. pangan.sumber.kerja_bakti/pesta_17an (v1.6.0) tidak terbaca lagi karena keduanya kini ada di FOOD_OUT_FB; dibiarkan (aditif)."
+    },
+    "catatan_v170": {
+      "bentuk": {
+        "event_ui.pendatang.terima / tolak_halus": "string (label tombol)",
+        "event_ui.pendatang.tolak_halus_hasil": "array variasi (TX memilih saat event dibuat)",
+        "jenjang_kelaparan.tingkat.bahaya.banner_masa_awal": "STRING wajib (dibaca langsung, bukan TX); {jumlah} = hari stok",
+        "jenjang_kelaparan.tingkat.bahaya.tooltip_masa_awal": "string tanpa placeholder; tanpa tanda kutip ganda",
+        "cerita_ui.label / keinginan._ui.otomatis": "string",
+        "agustusan.pentas_reog": "array variasi; boleh {nama}; tanpa awalan Hari {hari}:",
+        "dilema_ui.orang_orangan_berdiri": "array variasi; boleh {nama}",
+        "log_ancaman.diusir_orang_orangan": "array variasi; {hewan} = TERMS.hewan (babi hutan / serigala), selalu didahului 'Seekor' atau di tengah kalimat"
+      },
+      "catatan_koding": "TT('diusir_orang_orangan') di game.js belum punya entri C.TXT di tema.js, jadi teks ini belum terbaca. Usul: diusir_orang_orangan: ['log_ancaman.diusir_orang_orangan', '<fallback>'] di TXT kedua tema. Tema sedang: TEKS-TEMA-sedang.json kini punya keinginan, monumen, cerita, teladan, rencana_tahun -> semua id TUJUAN_DISABLE bisa dicabut. Nama bangunan dari kode (tujuan.js MONUMENTS.*.nama & stages[].nama, BUILDINGS.orang_orangan.nama) masih Nusantara di tema sedang bila kode tidak membaca monumen.<id>.nama dari TEKS."
     }
   },
   "penduduk": [
@@ -4367,7 +4380,9 @@
         "label": "Bahaya",
         "warna": "oranye",
         "banner": "Stok pangan hanya {jumlah} hari! Penduduk mulai murung.",
-        "tooltip": "Suasana hati penduduk turun setiap hari sampai stok kembali cukup."
+        "tooltip": "Suasana hati penduduk turun setiap hari sampai stok kembali cukup.",
+        "banner_masa_awal": "Stok pangan hanya {jumlah} hari! Segera kumpulkan makanan.",
+        "tooltip_masa_awal": "Masa awal: belum ada penalti suasana hati, tapi stok hampir habis. Utamakan makanan."
       },
       "kritis": {
         "label": "Kritis",
@@ -4962,6 +4977,11 @@
     ],
     "kebakaran_ilalang": [
       "Hari {hari}: Ilalang kering di tepi desa terbakar! {nama} dan {nama2} memadamkannya dengan ranting basah dan ember."
+    ],
+    "diusir_orang_orangan": [
+      "Orang-orangan sawah bergoyang ditiup angin. Seekor {hewan} ragu dan mundur ke hutan.",
+      "Baju orang-orangan sawah berkibar di bawah cahaya bulan. Seekor {hewan} yang mengendap-endap berbalik pergi.",
+      "Bayangan orang-orangan sawah di tepi ladang membuat {hewan} ragu. Tanaman selamat malam ini."
     ]
   },
   "penduduk_sakit": {
@@ -7192,7 +7212,8 @@
       "judul_panel": "Keinginan Warga",
       "baris": "{nama}: {keinginan}",
       "terpenuhi": "Hari {hari}: Keinginan {nama} terwujud: {keinginan}!",
-      "kosong": "Belum ada warga yang punya keinginan."
+      "kosong": "Belum ada warga yang punya keinginan.",
+      "otomatis": "menunggu kesempatan"
     }
   },
   "cerita": {
@@ -8044,6 +8065,11 @@
     ],
     "pengumuman_lomba": [
       "Hari {hari}: Juara lomba {lomba} tahun ini: {nama}! Hadiahnya sabun, buku tulis, dan tepuk tangan meriah."
+    ],
+    "pentas_reog": [
+      "Pentas reog di pendopo! Dadak merak menari, gamelan bertalu, anak-anak ikut berjoget.",
+      "Kendang bertalu dan dadak merak berputar gagah. Warga bersorak, anak-anak menirukan gerak jathil.",
+      "Malam ini reog pentas di pendopo. {nama} menonton paling depan dengan mata berbinar."
     ]
   },
   "rencana_tahun": {
@@ -10009,6 +10035,10 @@
       "Utang belum terbayar. Rentenir menyita separuh kayu, batu, dan papan desa.",
       "Gudang belum cukup untuk membayar. Rentenir membawa pergi separuh kayu, batu, dan papan. Warga terdiam sedih.",
       "Rentenir menyita separuh kayu, batu, dan papan desa. \"Lain kali kita kerja bakti saja,\" bisik para tetua."
+    ],
+    "orang_orangan_berdiri": [
+      "Orang-orangan sawah berdiri di tepi ladang, bajunya berkibar ditiup angin.",
+      "{nama} memasang orang-orangan sawah bercaping di tengah ladang. Burung pipit langsung menjaga jarak."
     ]
   },
   "momen_kecil": {
@@ -10383,5 +10413,20 @@
       "{nama} dan {nama2} mulai memasang tiang bambu dan atap ilalang. Gubuk pertama sedang didirikan.",
       "Embun malam membuat warga menggigil. Mereka bergotong royong mendirikan gubuk pertama."
     ]
+  },
+  "event_ui": {
+    "_catatan": "Teks UI event (P1). pendatang = event Pendatang Mengetuk: 2 pilihan Terima / Tolak halus.",
+    "pendatang": {
+      "terima": "Terima",
+      "tolak_halus": "Tolak halus",
+      "tolak_halus_hasil": [
+        "Pengembara mengangguk mengerti dan melanjutkan perjalanan. Beberapa warga melambai sedikit sedih.",
+        "Pengembara tersenyum, membetulkan capingnya, dan berjalan ke desa berikutnya. \"Semoga desa ini selalu rukun.\""
+      ]
+    }
+  },
+  "cerita_ui": {
+    "_catatan": "Label kartu cerita berantai (cerita.<id>).",
+    "label": "Cerita Warga"
   }
 }

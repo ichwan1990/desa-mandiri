@@ -1,4 +1,4 @@
-"""Validasi TEKS-GAME.json v1.6.1 terhadap backup v1.0.0 (+allowlist tuning), v1.1.0, v1.2.0, v1.3.0, v1.4.0, v1.5.0, v1.5.1, v1.6.0.
+"""Validasi TEKS-GAME.json v1.7.0 terhadap backup v1.0.0 (+allowlist tuning), v1.1.0, v1.2.0, v1.3.0, v1.4.0, v1.5.0, v1.5.1, v1.6.0, v1.6.1.
 Sejak v1.4.0 (lokalisasi Indonesia) teks tampilan boleh berubah, tetapi semua key/struktur, semua angka/boolean, dan semua
 string berjenis id (id, tipe, target, era, musim, prasyarat, event_terkait, ...) harus tetap sama; placeholder teks yang berubah
 tidak boleh bertambah. Ditambah: cek kata terlarang (salju, serigala, harimau, ...) di semua teks tampilan, dan bagian baru v1.4/v1.5.
@@ -8,7 +8,10 @@ Ditambah cek overlay tema sedang TEKS-TEMA-sedang.json (path ada di TEKS, hanya 
 tidak muncul di teks cerita yang aktif di tema sedang).
 v1.6.0 hanya menambah key top-level pangan (pangan v9 game.js) + placeholder {buah}: semua key wajib ada di kedua tema (TEKS dan hasil
 gabungan sedang), placeholder sesuai yang diisi kode, tanpa kata khas Indonesia di pangan tema sedang (kecuali yang tidak dipakai tema itu).
-v1.6.1 (v9c) hanya menambah: otomatis.api_unggun/gubuk (array 2-4, {nama}/{nama2}), 10 pangan.keluar baru, daya_tarik.bahagia_syarat/murung. Path lain bisa diberikan lewat env TEKS_FILE / TEKS_SEDANG (untuk uji negatif)."""
+v1.6.1 (v9c) hanya menambah: otomatis.api_unggun/gubuk (array 2-4, {nama}/{nama2}), 10 pangan.keluar baru, daya_tarik.bahagia_syarat/murung.
+v1.7.0 (P1) hanya menambah key UI (event_ui, cerita_ui, banner/tooltip masa awal, pentas_reog, orang_orangan_berdiri, diusir_orang_orangan,
+keinginan._ui.otomatis) di kedua tema; overlay sedang mendapat keinginan/monumen/cerita/teladan/rencana_tahun (placeholder <= teks Nusantara path
+yang sama, tanpa kata khas Indonesia; cerita.<id>.langkah[i].hasil boleh ditimpa karena berisi teks). Path lain bisa diberikan lewat env TEKS_FILE / TEKS_SEDANG (untuk uji negatif)."""
 import json, re, sys, os, copy, subprocess
 ROOT = "/workspace/village-game/"
 new = json.load(open(os.environ.get("TEKS_FILE", ROOT + "TEKS-GAME.json"), encoding="utf-8"))
@@ -45,7 +48,7 @@ def sub(a, b, p, idk=False):
             teks_diubah.append(p)
     elif type(a) != type(b) or a != b: err.append(f"nilai/id berubah: {p} ({a!r} -> {b!r})")
 sub(old, new, "")
-if new["meta"]["versi"] != "1.6.1": err.append("meta.versi bukan 1.6.1")
+if new["meta"]["versi"] != "1.7.0": err.append("meta.versi bukan 1.7.0")
 for k in old:
     if list(new).index(k) != list(old).index(k): err.append(f"urutan key top-level berubah: {k}")
 m = new["meta"]
@@ -503,7 +506,7 @@ def cek_ov(b, o, p):  # overlay hanya boleh menimpa teks yang sudah ada di TEKS-
         if not isinstance(b, dict): sed_err.append(f"objek menimpa non-objek @ {p}"); return
         for k, v in o.items():
             if k.startswith("_"): continue
-            if k in BUKAN_TEKS: sed_err.append(f"overlay menimpa data non-teks '{k}' @ {p}"); continue
+            if k in BUKAN_TEKS and not (k == "hasil" and re.fullmatch(r"/cerita/\w+/langkah\[\d+\]", p)): sed_err.append(f"overlay menimpa data non-teks '{k}' @ {p}"); continue
             if k not in b: sed_err.append(f"path tidak ada di TEKS-GAME.json: {p}/{k}"); continue
             cek_ov(b[k], v, f"{p}/{k}")
     elif isinstance(o, list):
@@ -692,6 +695,95 @@ if "pangan" not in ov: sed_err.append("TEKS-TEMA-sedang.json tanpa bagian pangan
 _ovp = ov.get("pangan", {})
 for x in SEDANG_TAK_DIPAKAI:
     if ambil(_ovp, x.split(".", 1)[1]) is not None: sed_warn.append(f"overlay sedang menulis {x} padahal tidak dipakai tema sedang")
+# ---------- v1.7.0: P1 Tujuan & Cerita (3bbeca1) — key UI baru di kedua tema + bagian overlay sedang keinginan/monumen/cerita/teladan/rencana_tahun ----------
+old161 = json.load(open(ROOT + "tools/TEKS-GAME.v1.6.1.json", encoding="utf-8"))
+teks_diubah.clear(); _n = len(err); sub(old161, new, "")
+if len(err) > _n: err.insert(_n, "^ perbedaan struktur/angka terhadap v1.6.1:")
+if teks_diubah: err.append(f"v1.7.0 hanya penambahan, tetapi {len(teks_diubah)} teks v1.6.1 berubah, mis. {teks_diubah[:3]}")
+for k in old161:
+    if list(new).index(k) != list(old161).index(k): err.append(f"urutan key top-level v1.6.1 berubah: {k}")
+if "catatan_v170" not in m: err.append("meta.catatan_v170 hilang")
+# path -> (bentuk, placeholder yang diisi kode, placeholder wajib). bentuk: str | list (array 2-4) | strlist (string atau array)
+V170 = {"event_ui.pendatang.terima": ("str", (), ()), "event_ui.pendatang.tolak_halus": ("str", (), ()),
+        "event_ui.pendatang.tolak_halus_hasil": ("strlist", ("nama", "nama2"), ()),
+        "jenjang_kelaparan.tingkat.bahaya.banner_masa_awal": ("str", ("jumlah",), ("jumlah",)),   # dibaca langsung (fillSafe), bukan TX -> wajib string
+        "jenjang_kelaparan.tingkat.bahaya.tooltip_masa_awal": ("str", (), ()),
+        "cerita_ui.label": ("str", (), ()), "keinginan._ui.otomatis": ("str", (), ()),
+        "agustusan.pentas_reog": ("list", ("nama", "nama2", "hari"), ()),
+        "dilema_ui.orang_orangan_berdiri": ("list", ("nama", "nama2"), ()),
+        "log_ancaman.diusir_orang_orangan": ("list", ("nama", "nama2", "hewan", "hari"), ())}
+TITLE |= {"jenjang_kelaparan.tingkat.bahaya.tooltip_masa_awal"}
+try:
+    _g = open(ROOT + "game.js", encoding="utf-8").read()
+    for path in V170:
+        if path.startswith("log_ancaman."): ok = f"TT('{path.split('.')[-1]}'" in _g
+        elif path.endswith("banner_masa_awal"): ok = "JB.banner_masa_awal" in _g
+        else: ok = f"TX('{path}'" in _g
+        if not ok: sed_warn.append(f"v1.7.0: {path} tidak lagi ditemukan di game.js")
+    if "TT('diusir_orang_orangan'" in _g and "diusir_orang_orangan" not in open(ROOT + "tema.js", encoding="utf-8").read():
+        sed_warn.append("log_ancaman.diusir_orang_orangan belum dibaca kode: TT('diusir_orang_orangan') tanpa entri C.TXT di tema.js (catatan untuk Asisten Koding)")
+except Exception as e: sed_warn.append(f"game.js tidak terbaca untuk cek v1.7.0 ({e})")
+def cek_v170(T, sumber):
+    for path, (bt, ph, wajib) in V170.items():
+        v = ambil(T, path)
+        if bt == "str" and not isinstance(v, str): err.append(f"{sumber}{path} harus string"); continue
+        if bt == "list" and not (isinstance(v, list) and 2 <= len(v) <= 4): err.append(f"{sumber}{path} harus array 2-4 variasi"); continue
+        for x in (v if isinstance(v, list) else [v]):
+            cek_teks(x, path, sumber, ph, False)
+            for w in wajib:
+                if isinstance(x, str) and "{" + w + "}" not in x: err.append(f"{sumber}{path} harus memakai {{{w}}}")
+            if isinstance(x, str) and re.search(r"(^|[.!?]\s+)\{hewan\}", x): err.append(f"{sumber}{path}: {{hewan}} huruf kecil jangan di awal kalimat")
+cek_v170(new, "")
+cek_v170(sd, "sedang:")
+# bagian tujuan tema sedang: harus ada, placeholder hanya yang ada di teks Nusantara path yang sama, tanpa kata khas Indonesia
+TUJUAN_SEDANG = ["keinginan", "monumen", "cerita", "teladan", "rencana_tahun"]
+KHAS_TUJUAN = KHAS_PANGAN + ["di kali", "ke kali", "dari kali", "tepi kali", "batu kali", "layangan", "jajan", "klepon", "cenil", "bale-bale", "haji", "adzan", "azan",
+    "bedug", "joglo", "soko guru", "rumbia", "kebaya", "kamboja", "posyandu", "kencur", "cobek", "mengulek", "warung", "gong", "santan", "rempeyek", "bambu",
+    "dalang", "swadaya", "swakarya", "swasembada", "pak camat", "halal bihalal", "bujang ganong", "barongan", "guyub", "kerasan", "ijuk", "sabut", "nasi",
+    "momongan", "masjid", "langgar", "dadak merak", "tasyakuran", "legi", "kliwon", "embung", "bronjong"]
+RXT = re.compile(r"(?<![\w-])(" + "|".join(re.escape(w) for w in sorted(set(KHAS_TUJUAN), key=len, reverse=True)) + r")(?![\w-])", re.I)
+SKIP_T = {"id", "kunci", "_catatan"}
+def scan_t(x, p, out):
+    if isinstance(x, str): out.extend((p, h.group(1)) for h in RXT.finditer(x))
+    elif isinstance(x, dict): [scan_t(v, f"{p}/{k}", out) for k, v in x.items() if not k.startswith("_") and k not in SKIP_T]
+    elif isinstance(x, list): [scan_t(v, f"{p}[{i}]", out) for i, v in enumerate(x)]
+PH_RX = re.compile(r"\{(\w+)\}")
+def ph_semua(x):
+    if isinstance(x, str): return set(PH_RX.findall(x))
+    if isinstance(x, list): return set().union(*[ph_semua(v) for v in x]) if x else set()
+    if isinstance(x, dict): return set().union(*[ph_semua(v) for v in x.values()]) if x else set()
+    return set()
+def cek_ph(s, b, p):  # s = gabungan sedang, b = TEKS (Nusantara), struktur sama
+    if isinstance(s, str):
+        lebih = set(PH_RX.findall(s)) - ph_semua(b)
+        if lebih: sed_err.append(f"sedang:{p} memakai placeholder yang tidak ada di teks Nusantara path ini {sorted(lebih)}")
+    elif isinstance(s, dict) and isinstance(b, dict): [cek_ph(v, b.get(k), f"{p}/{k}") for k, v in s.items() if not k.startswith("_")]
+    elif isinstance(s, list):
+        for i, v in enumerate(s): cek_ph(v, b[i] if isinstance(b, list) and isinstance(v, dict) and i < len(b) else b, f"{p}[{i}]")
+kena_t = {}
+for sec in TUJUAN_SEDANG:
+    if sec not in ov: sed_err.append(f"TEKS-TEMA-sedang.json tanpa bagian {sec}: jalankan python3 tools/buat_tema_sedang_cerita.py")
+    cek_ph(sd[sec], new[sec], sec)
+    for k, v in sd[sec].items():
+        if k.startswith("_") and k != "_ui": continue
+        o = []; scan_t(v, f"{sec}/{k}", o)
+        if o: kena_t[(sec, k)] = o
+for path in V170:
+    o = []; scan_t(ambil(sd, path), path, o)
+    if o: kena_t[("ui", path)] = o
+for (sec, k), hits in kena_t.items():
+    sed_err.append(f"kata khas Indonesia di tema sedang: {sec}.{k}: " + ", ".join(f"'{w}' @ {p}" for p, w in hits[:3]) + (f" (+{len(hits) - 3})" if len(hits) > 3 else ""))
+for sec in TUJUAN_SEDANG: walk_s(sd[sec], sec)
+for path in V170: walk_s(ambil(sd, path), path)
+# id TUJUAN_DISABLE (tema.js) yang teks sedangnya kini bersih -> boleh dicabut
+_m = re.search(r"TUJUAN_DISABLE:\s*\[([^\]]*)\]", _tm)
+TUJUAN_OFF = re.findall(r"'([^']+)'", _m.group(1)) if _m else []
+_sek = {"teladan": "teladan", "rencana": "rencana_tahun"}
+def _bersih(x):
+    if x in _sek: return not any(s == _sek[x] for s, _ in kena_t) and _sek[x] in ov
+    return any(x in ov.get(s, {}) for s in ("keinginan", "monumen", "cerita")) and not any(k == x for _, k in kena_t)
+tujuan_cabut = [x for x in TUJUAN_OFF if _bersih(x)]
+tujuan_tetap = [x for x in TUJUAN_OFF if x not in tujuan_cabut]
 err += sed_err
 # kata terlarang di SEMUA teks tampilan (bukan key, bukan string id, bukan meta teknis)
 META_TAMPIL = ("sumber_daya", "bangunan", "musim", "era", "hewan", "penyebab_kondisi", "bangunan_pertahanan", "tahap_usia", "status_hubungan",
@@ -745,9 +837,11 @@ if all(k in new for k in V15):
 print(f"v1.5.1: key baru {len(V151)} ({', '.join(V151)})")
 print(f"v1.6.0: pangan {len(V160)} key teks + daya_tarik.pendatang {len(new['pangan']['daya_tarik']['pendatang'])} variasi + tugas {len(TUGAS)} ({', '.join(TUGAS)}) | sumber {len(SUMBER)}, keluar {len(KELUAR)} | sedang: pangan {sum(1 for _ in daftar(ov.get('pangan', {})))} teks, tidak dipakai {len(SEDANG_TAK_DIPAKAI)}")
 print(f"v1.6.1: otomatis {len(OTOMATIS)} ({', '.join(f'{k} {len(new['otomatis'][k])} variasi' for k in OTOMATIS)}) | pangan.keluar +10 | daya_tarik.bahagia_syarat, murung")
+print(f"v1.7.0: key UI {len(V170)} | sedang tujuan: keinginan {len([k for k in ov.get('keinginan', {}) if not k.startswith('_')])}, monumen {len([k for k in ov.get('monumen', {}) if k != 'ui'])}, cerita {len(ov.get('cerita', {}))}, teladan/rencana_tahun {'ada' if 'teladan' in ov and 'rencana_tahun' in ov else 'BELUM'}")
+print(f"tema sedang: TUJUAN_DISABLE bisa dicabut: {tujuan_cabut or '-'}" + (f" | masih perlu disable: {tujuan_tetap}" if tujuan_tetap else ""))
 print(f"tema sedang: overlay {len([k for k in ov if not k.startswith('_')])} bagian | cerita: dilema {len(ov.get('dilema', {}).get('__byId', []))}, momen {len([k for k in ov.get('momen_kecil', {}) if not k.startswith('_')])}, "
       f"lomba {len(ov.get('agustusan', {}).get('lomba', {}))} | kata khas Indonesia di cerita aktif: {sum(len(v) for k, v in kena.items() if k in aktif)}")
 print(f"tema sedang: STORY_DISABLE bisa dicabut: {bisa_cabut or '-'}" + (f" | masih perlu disable: {tetap}" if tetap else "") + f" | STORY_PATCH enabled:false bisa dicabut: {patch_cabut or '-'}")
 for w in sed_warn: print(" peringatan:", w)
 if err: print("GAGAL:"); [print(" -", e) for e in err]; sys.exit(1)
-print("OK: JSON valid, struktur/id/angka lama utuh (TUNING_V10 + 14 retuning, v1.0-v1.6.0), overlay sedang bersih, kata terlarang bersih, semua efek/tipe/target/placeholder terdaftar.")
+print("OK: JSON valid, struktur/id/angka lama utuh (TUNING_V10 + 14 retuning, v1.0-v1.6.1), overlay sedang bersih, kata terlarang bersih, semua efek/tipe/target/placeholder terdaftar.")
