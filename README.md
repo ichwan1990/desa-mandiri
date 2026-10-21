@@ -91,11 +91,27 @@ Tema bawaan sekarang **Nusantara**; tema empat musim lama tetap ada (buka `index
 - **Dilema**: kartu `ui/dilemma` (ringan/berat, potret ekspresi, chip reaksi sifat, ⏳ akibat tertunda). Opsi pertama selalu aman. Akibat tertunda di `S.pending` (diundi pagi saat jatuh tempo; bila syarat belum terpenuhi menunggu ≤ 28 hari). Utang rentenir: tagihan, bunga 20%/7 hari, sita setelah 2× telat.
 - **Momen kecil**: 12 momen tanpa biaya (mood/hubungan), ulang ≥ 21 hari (≥ 10 bila stok habis).
 - **Agustusan** (hari 18/20/21 tiap tahun): kartu panitia (pilih lomba, umbul-umbul ×3/×6), malam tirakatan (tumpeng tahun 2+), upacara, 4 lomba (balap karung, makan kerupuk, tarik tambang, panjat pinang) di lapangan dekat api unggun dengan dekorasi 8b, juara umum + ikon piala 14 hari. Tahun 1 gratis 2 lomba.
-- **Penyerap pangan** (arahan Ketua: cerita P0 tidak menambah pangan bersih): kenduri tiap 2 hari bila stok > 8 hari (35% kelebihan), tasyakuran panen akhir mareng, syukuran lahir, pesta 17-an tahun 2+, tikus lumbung (~1% gandum/hari), monyet pencuri (Nusantara), biaya dilema. Musim tanpa panen (empat musim: dingin) dicadangkan dulu. Kait `monumenFoodPerWorkerDay` untuk monumen P1.
+- **Penyerap pangan** (arahan Ketua: cerita P0 tidak menambah pangan bersih): kenduri tiap 2 hari bila stok > 15 hari (60% kelebihan; v9: bentuk bergantian kenduri / syukuran / sedekah ke desa tetangga), tasyakuran panen akhir mareng, syukuran lahir, pesta 17-an tahun 2+, tikus lumbung (~1% gandum/hari), monyet pencuri (Nusantara), biaya dilema. Musim tanpa panen (empat musim: dingin) dicadangkan dulu. Kait `monumenFoodPerWorkerDay` untuk monumen P1.
 - **Sifat & duka**: reaksi sifat atas keputusan, pelit −1 mood tiap pengeluaran ≥ 10, pandai_masak pesta ×0.9, seniman mood festival ×1.25, duka pribadi (keluarga +3 hari ×1.5, sahabat +2 hari, pasangan ×1.5), suka_menolong duka anak ×1.3.
 - **Tema empat musim**: Agustusan & monyet mati, dilema/momen khas Nusantara dimatikan (`STORY_DISABLE`), musim dipetakan (`STORY_SEASON_ALIAS`).
 - Sim (`balance-sim`): d24 median Nusantara 38, empat musim 42 (31 run). Hari 120 (10 run) Nusantara: pangan 875 → 472, pop 16, 0 mati selain tua; empat musim 381. Hari 140 (20 run): pop 17, lahir pertama 35. Cakupan hari bermakna sejak hari 15: median 93%, maks 2 hari kosong beruntun.
 - Tes: `tests/cerita.test.js` (screenshot `v8-dilema.png`, `v8-agustusan.png`).
+
+## Pangan v9 (permintaan Ichwan 21-10)
+- **Satu angka Pangan** di bar atas: `Pangan 75 · 18 hari` (Makanan + Padi/Gandum), warna mengikuti tingkat kelaparan; tooltip merinci Makanan + Padi, konsumsi/hari, dan pangan masuk hari ini.
+- **Teks melayang per sumber**: `+9 Padi`, `+7 Jagung`, `+4 Ikan`, `+3 Jamur` dengan ikon sumber (aset tahap 9 `pangan_ikon`).
+- **Tooltip ladang** (arahkan kursor / ketuk): tanaman, tahap, progres %, perkiraan hari panen, hasil, dan alasan berhenti tumbuh (kemarau tanpa irigasi, musim dingin, banjir, belum jadi). Juga Kolam Ikan/Tambak, pohon buah, umbi, jamur.
+- **Ringkasan harian**: pangan masuk per sumber dan keluar (dimakan, busuk, kenduri, tikus, ...), plus selisih bersih.
+- **Sumber pangan liar** (`CONFIG.FOOD_SOURCES` di `balance.js`, otomatis di prioritas Makanan; warga memilih sumber dengan hasil per detik terbaik):
+  memancing di tepi sungai (3–5 ikan × musim, ×1,3 saat hujan, stok sungai 10/hari, maks 2 pemancing), mencari jamur di bawah pohon rimbun (banyak di hujan/labuh, hampir nol di kemarau),
+  pohon buah (mangga, rambutan, pisang, kelapa; musim masing-masing), umbi hutan, keong sawah di padi yang berair, buah semak +2–3 (dulu +1).
+  **Kolam Ikan** (Dusun, kayu 20 batu 15, 10 ikan/hari) dan **Tambak** (Desa Pertanian, 18 ikan/hari) — sumber ikan yang tetap jalan di kemarau.
+  Tema empat musim (`FOOD_SOURCES_PATCH` di `tema.js`): memancing (dingin ×0,4) dan jamur (gugur) tetap ada, umbi liar menggantikan umbi hutan, tanpa pohon buah tropis & keong.
+- **Pendatang & daya tarik desa**: syarat 12 hari stok pangan + tempat tidur kosong + mood ≥ 65 tiga hari. Desa bahagia (rata-rata mood ≥ 70 selama 4 hari) menaikkan peluang (0,4 → 0,75/hari) dan memperpendek jeda (×0,85), dengan log “Kabar desa yang bahagia sampai ke kampung sebelah… Seorang perantau ingin tinggal.” Jeda bertambah 0,6 hari per penduduk. Panel Era menampilkan **Daya tarik desa** (mood, desa bahagia, stok pangan, tempat tidur, jeda).
+- Start makanan 14 → 20 (tanpa ini pangan habis di hari ke-3 sebelum hasil liar pertama), `FOOD_SURPLUS_FACTOR` 1,0 → 0,8.
+- Sim (`balance-sim`), sebelum → sesudah: min pangan hari 2–24 median 0 → 15–17 (Nusantara) / 0 → 8–13 (empat musim); d24 median Nusantara 31 (15 run), empat musim 47 (20 run).
+  140 hari × 10: Nusantara pangan d120 486, pop d40/80/140 = 5/8/13 (maks 16); empat musim d120 437, pop 4/8/13 (maks 16). Sebelumnya pop d140 median 20.
+- Tes: `tests/pangan.test.js` (screenshot `v9-pangan.png`, `v9-memancing.png`).
 
 ## Struktur file
 ```

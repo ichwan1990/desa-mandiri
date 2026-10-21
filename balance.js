@@ -5,7 +5,7 @@ window.CONFIG = {
   RIVER_X: 34, BRIDGE_ROWS: [20, 33], // baris jembatan yang melintasi sungai
   DAY_LENGTH_SEC: 120, NIGHT_START: 0.75, NIGHT_END: 0.25,
   START_VILLAGERS: 2,
-  START_RES: { kayu: 12, batu: 8, makanan: 10, gandum: 0, air: 8, alat: 0, kulit: 0, papan: 0, batu_bata: 0 },
+  START_RES: { kayu: 12, batu: 8, makanan: 20, gandum: 0, air: 8, alat: 0, kulit: 0, papan: 0, batu_bata: 0 },
   VILLAGER_SPEED: 2.5,
   CARRY: { kayu: 5, batu: 5, makanan: 1 },        // hasil per angkutan
   GATHER_TIME: { kayu: 25, batu: 16, makanan: 14 }, // tebang 20-30s, buah 8-12s
@@ -35,6 +35,9 @@ window.CONFIG = {
     makam:     { nama: 'Makam', w: 1, h: 1, cost: { kayu: 5 }, work: 15, era: 'perkemahan' },
     // rumah keluarga (docs/RISET-SIKLUS-HIDUP.md): kapasitas 4, untuk pasangan + anak
     rumah:     { nama: 'Rumah Kayu', w: 3, h: 3, cost: { kayu: 40, batu: 15, papan: 8 }, work: 60, kapasitas: 4, era: 'dusun', light: 'kecil' },
+    // v9 pangan: kolam ikan & tambak dekat desa = tempat memancing sendiri dengan stok ikan harian (fishStock) terpisah dari sungai (aset tahap 9)
+    kolam:     { nama: 'Kolam Ikan', w: 2, h: 2, cost: { kayu: 20, batu: 15 }, work: 45, era: 'dusun', fishStock: 10 },
+    tambak:    { nama: 'Tambak', w: 3, h: 2, cost: { kayu: 40, batu: 25, papan: 6 }, work: 80, era: 'desa_pertanian', fishStock: 18 },
   },
   // Era: syarat naik (semua harus terpenuhi). foodDays = stok (makanan+gandum) / konsumsi harian.
   ERAS: [
@@ -200,8 +203,32 @@ window.CONFIG = {
   MARKET_DAILY: { minKayu: 60, in: { kayu: 10 }, out: { makanan: 2 } },
   GRANARY_WINTER_HUNGER_MULT: 1.6, TOWN_HALL_SPAWN_COOLDOWN_CUT: 2,
   BUILDING_DAMAGE: { repairBelow: 80, noCapacityBelow: 40, repairPerSec: 2 },
-  // Penduduk baru: SEMUA syarat harus terpenuhi
-  SPAWN: { foodDaysPerPop: 10, foodPerDayPerPop: 2, minMood: 65, moodDays: 3, cooldownDays: 8 },
+  // Penduduk baru: SEMUA syarat harus terpenuhi. foodDays: stok pangan (hari, = foodDays()) minimal — keputusan Ketua 21-10: 12 hari (dulu pop x 10 x 2 pangan).
+  // foodDaysPerPop x foodPerDayPerPop tetap dipakai sebagai batas "pangan cukup" kerja Makanan (FOOD_SURPLUS_FACTOR).
+  // chancePerDay: peluang datang per hari bila semua syarat & jeda terpenuhi. happy: desa bahagia (rata-rata mood >= mood selama days hari) -> peluang & jeda membaik + log kabar.
+  // cooldownPerPop: jeda bertambah per penduduk (desa besar tidak lagi 'kosong' bagi perantau) -> pop hari 140 tetap <= ~18 walau mood tinggi.
+  SPAWN: { foodDaysPerPop: 10, foodPerDayPerPop: 2, foodDays: 12, minMood: 65, moodDays: 3, cooldownDays: 8, cooldownPerPop: 0.6, chancePerDay: 0.4,
+           happy: { mood: 70, days: 4, chancePerDay: 0.75, cooldownMult: 0.85 } },
+  // ---------- pangan v9 (permintaan Ichwan 21-10): sumber pangan liar, dikerjakan otomatis di prioritas Makanan ----------
+  // Semua hasil masuk 'makanan' (panen padi tetap 'gandum'). at: semak | tepi_air (tepi sungai + Kolam Ikan) | pohon (jamur di bawah pohon) | pohon_buah | sawah (keong).
+  // time = detik kerja di tempat, yield = [min, maks] per angkutan, season = pengali hasil per musim (id musim tema; < minMult -> tidak dicari),
+  // rainMult = pengali saat hari hujan. Penduduk memilih sumber dengan hasil/detik (termasuk jalan) terbaik. label/ikon: teks melayang '+4 Ikan'.
+  FOOD_SOURCES: {
+    meramu:    { label: 'Buah semak', icon: 'makanan', at: 'semak', time: 14, yield: [2, 3] },                     // dulu +1 per angkutan
+    memancing: { label: 'Ikan', icon: 'ikan', at: 'tepi_air', time: 30, yield: [3, 5], rainMult: 1.3, minMult: 0.3,
+                 season: { hujan: 1.2, mareng: 1.0, kemarau: 0.7, labuh: 1.1 },
+                 riverStockPerDay: 10, maxFishers: 2, pondSeasonMin: 0.9, pondYieldAdd: 1 }, // stok ikan sungai per hari (dibagi semua pemancing); Kolam/Tambak punya stok sendiri (BUILDINGS.*.fishStock) & tidak surut di kemarau
+    jamur:     { label: 'Jamur', icon: 'jamur', at: 'pohon', time: 12, yield: [2, 4], rainMult: 1.5, minMult: 0.2,
+                 season: { hujan: 1.0, labuh: 0.9, mareng: 0.35, kemarau: 0.05 },
+                 patchesPerDay: 6, patchAmount: [3, 5], forestNeighbors: 2 },                                          // rumpun jamur muncul pagi di bawah pohon yang rimbun (>= forestNeighbors pohon di dekatnya), layu malam
+    buah:      { label: 'Buah', icon: 'buah', at: 'pohon_buah', time: 16, yield: [3, 5], minMult: 0.3, trees: 9, regrowDays: 4,
+                 kinds: { mangga: { season: { labuh: 1.0, kemarau: 0.8, hujan: 0.2, mareng: 0.3 } }, rambutan: { season: { hujan: 1.0, labuh: 0.5, mareng: 0.2, kemarau: 0 } },
+                          pisang: { season: { hujan: 0.7, mareng: 0.7, kemarau: 0.6, labuh: 0.7 } }, kelapa: { season: { hujan: 0.6, mareng: 0.6, kemarau: 0.6, labuh: 0.6 } } }, amount: 6 },  // pohon buah di peta (sprite tahap 7), bukan untuk ditebang
+    umbi:      { label: 'Umbi hutan', icon: 'umbi', at: 'umbi', time: 20, yield: [3, 5], minMult: 0.3, count: 8, regrowDays: 6,
+                 season: { kemarau: 1.0, mareng: 0.9, labuh: 0.8, hujan: 0.6 } },                                           // uwi/gembili di tepi hutan: cadangan klasik kemarau, digali lalu tumbuh lagi
+    keong:     { label: 'Keong sawah', icon: 'keong', at: 'sawah', time: 12, yield: [1, 3], minMult: 0.3, crops: ['padi'],
+                 season: { hujan: 1.0, labuh: 0.8 }, perFieldPerDay: 3 },                                                // keong di sawah berair (padi tumbuh) saat musim basah
+  },
   SKILL_GAIN: 0.02, // skill naik per angkutan; efek: waktu kerja / (1+skill*0.5)
   NAMES: ['Sari','Budi','Dewi','Agus','Rina','Joko','Wati','Eko','Lina','Hadi','Tari','Yudi','Ayu','Bayu'],
   WATER_SURPLUS_DAYS: 8, // stok air >= ini (hari) -> kerja air turun prioritas
@@ -246,7 +273,7 @@ window.CONFIG = {
   },
   MERCHANT: { firstDay: 4, everyDays: [9, 12], stayFrac: 0.35, speed: 2.0, spawn: { x: 59, row: 0 } }, // row = indeks BRIDGE_ROWS
   MAX_LOG: 40, MAX_NOTES: 6,
-  FOOD_SURPLUS_FACTOR: 1.0, FOOD_SURPLUS_PENALTY: 40, // jika stok makanan melimpah, kerja makanan turun prioritas
+  FOOD_SURPLUS_FACTOR: 0.8, FOOD_SURPLUS_PENALTY: 40, // jika stok makanan melimpah (>= pop x 10 x 2 x faktor), kerja makanan turun prioritas. v9: 1.0 -> 0.8 karena sumber pangan liar jauh lebih produktif (d24 tetap 25-50)
   DEFAULT_PRIO: { bangun: 3, makanan: 2, bertani: 2, air: 2, kayu: 2, batu: 2, riset: 1, jaga: 3, padam: 3, rawat: 3, makam: 3 }, // jaga/padam/rawat/makam = darurat (di atas kerja biasa, di bawah makan/tidur kritis) // 0=mati .. 3=tinggi
   EVENT_MIN_DAY: 3, EVENT_CHANCE_PER_DAY: 0.18, EVENT_CHANCE_PER_DAY_DUSUN: 0.25, FLAVOR_LOG_PER_DAY: 1, // _DUSUN: peluang event mulai era Dusun (docs/ANALISA-PLAYTEST.md)
   START_BUILDINGS: [], // contoh: [['gudang', 16, 10]]  (quest awal meminta pemain membangun Api Unggun/Gudang sendiri)

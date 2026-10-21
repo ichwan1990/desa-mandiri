@@ -140,3 +140,9 @@ body.compact #top{gap:5px}
 #modal.story .hint img{width:16px;height:16px}
 #modal.story .lomba{display:block;margin:3px 0 3px -86px;font-size:12px}
 body.mobile #modal.story{width:auto}
+
+/* v9 pangan: angka Pangan di bilah atas, tooltip ladang/kolam, daya tarik desa */
+#panganBadge{cursor:help;white-space:nowrap}
+#fieldTip{position:fixed;display:none;pointer-events:none;z-index:30;padding:6px 9px;font-size:12px;line-height:1.35;max-width:260px}
+#fieldTip .why{color:#a63e34;font-weight:bold}
+#dayaTarik{font-size:12px;line-height:1.35;cursor:help}

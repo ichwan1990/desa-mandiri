@@ -138,7 +138,7 @@ Object.assign(CONFIG, {
     resAlias: { bambu: 'kayu', sabut: 'kulit', minyak: 'makanan', kelapa: 'makanan', kopi: 'makanan' }, // biaya dalam sumber daya yang belum ada di game -> pengganti
     // hadiah dalam sumber daya yang belum ada (kopi, bambu, ...) dibuang, bukan diganti pangan
     syukuranPanen: { foodDaysMin: 10, perPop: 1, surplusDays: 20, surplusFrac: 0.15 },   // awal mareng (tasyakuran panen), menggantikan "syukur" lama
-    kenduri: { fromDay: 29, everyDays: 2, surplusDays: 8, surplusFrac: 0.35, mood: 0.5, rel: 0.5 }, // kenduri/selamatan tiap 2 hari bila stok > 8 hari: 35% kelebihan dibagi ke warga & tetangga (skala stok)
+    kenduri: { fromDay: 29, everyDays: 2, surplusDays: 15, surplusFrac: 0.6, mood: 0.5, rel: 0.5, forms: ['kenduri', 'syukuran', 'sedekah'], logGapDays: 5 }, // keputusan Ketua: hanya stok > 15 hari (dulu 8; di atas syarat pendatang 12 hari), 60% kelebihan; bentuk bergantian kenduri/syukuran/sedekah ke desa tetangga
     syukuranLahir: { perPop: 0.5, surplusDays: 20, surplusFrac: 0.04 },
     monumenFoodPerWorkerDay: 0,                        // kait untuk MONUMENTS (P1): pangan pekerja monumen per hari
     tikus: { fromDay: 1, gandumMin: 20, fracPerDay: 0.01 },  // tikus lumbung: ~1%/hari dari gandum (D21 tikus_mult mengecilkan), penyerap baru, bukan pembusukan

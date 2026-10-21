@@ -58,6 +58,10 @@ window.THEMES = {
     STORY_PATCH: { AGUSTUSAN: { enabled: false }, MONKEY: { enabled: false } },
     TRAITS_PATCH: { founderNeedOneOf: null }, // aturan pengaman RISET-CERITA-TUJUAN §5.1: median d24 > 48 setelah efek sifat (55) -> hapus syarat sifat kerja pendiri
     SCHEDULE_PATCH: { dayWorkMult: 1.12, daySpeedMult: 1.2 }, // kompensasi jam tidur per tema (sim d24: 1.35 -> ~56; 1.2 + efek sifat -> 51-55; 1.12 -> lihat README)
+    // pangan v9: musim empat-musim untuk memancing & jamur; pohon buah tropis, umbi hutan & keong sawah tidak ada (null = mati). Kolam Ikan membeku sebagian di musim dingin.
+    FOOD_SOURCES_PATCH: { memancing: { season: { semi: 1.1, panas: 0.85, gugur: 0.9, dingin: 0.4 }, pondSeasonMin: 0.6 }, jamur: { season: { semi: 1.0, panas: 0.2, gugur: 1.0, dingin: 0 } }, buah: null, keong: null,
+      // padanan iklim sedang: umbi liar (kentang/lobak liar) tetap ada, tanpa pohon buah tropis & keong sawah
+      umbi: { label: 'Umbi liar', count: 7, season: { semi: 1.0, panas: 0.4, gugur: 0.7, dingin: 0.3 } } },
     // TEKS-GAME.json (v1.5) dipakai semua tema. Teks lama yang di v1.4+ ditulis ulang bernuansa Nusantara ditimpa dengan teks empat musim
     // dari TEKS-TEMA-sedang.json (selisih v1.3.0 vs v1.5.0, dibuat tools/buat_overlay_sedang.js; larik ber-id digabung per id)
     TEXT_OVERLAY: 'TEKS-TEMA-sedang.json',
@@ -96,7 +100,7 @@ window.THEMES = {
     WEATHER: { hujan: 'hujan_lebat', kemarau: 'debu', labuh: 'awan' }, // hujan lebat (+kilat) saat hari hujan; debu & tint kemarau; bayang awan pancaroba
     // sprite tropis (tahap 7) menggantikan sprite lama untuk id bangunan yang sama
     ASSET_SWAP: { gubuk: 'gubuk_bambu', rumah: 'rumah_panggung', lumbung: 'lumbung_padi', menara_jaga: 'pos_ronda', pagar: 'pagar_bambu', obor: 'obor_bambu' },
-    BUILDING_NAMES: { gubuk: 'Gubuk Bambu', rumah: 'Rumah Panggung', lumbung: 'Lumbung Padi', menara_jaga: 'Pos Ronda', pagar: 'Pagar Bambu', obor: 'Oncor', ladang: 'Ladang (Tegalan)' },
+    BUILDING_NAMES: { gubuk: 'Gubuk Bambu', rumah: 'Rumah Panggung', lumbung: 'Lumbung Padi', menara_jaga: 'Pos Ronda', pagar: 'Pagar Bambu', obor: 'Oncor', ladang: 'Ladang (Tegalan)', kolam: 'Kolam Ikan', tambak: 'Tambak' },
     RES_LABEL: { gandum: 'Padi' }, // id internal tetap 'gandum' (save & quest tetap cocok)
     RES_ICON: { gandum: 'assets/icons/resources/icon_padi_ikat.png' }, // ikon resmi tahap 8c (ikat padi); icon_padi.png lama = cadangan sementara
     // TEKS v1.4.0 sudah melokalkan semua event (id lama tetap, teks Nusantara) -> tidak ada yang dimatikan; musim event lama dipetakan ke musim tropis
@@ -153,6 +157,8 @@ CONFIG.THREAT.wolf.hardMult = CONFIG.THREAT.wolf.winterMult;
   CONFIG.STORY_DISABLE = T.STORY_DISABLE || []; CONFIG.STORY_SEASON_ALIAS = T.STORY_SEASON_ALIAS || null;
   for (const [k, v] of Object.entries(T.STORY_PATCH || {})) if (CONFIG[k]) CONFIG[k] = Object.assign({}, CONFIG[k], v); // cerita.js dimuat sebelum tema.js
   if (T.TRAITS_PATCH && CONFIG.TRAITS) CONFIG.TRAITS = Object.assign({}, CONFIG.TRAITS, T.TRAITS_PATCH);
+  if (T.FOOD_SOURCES_PATCH && CONFIG.FOOD_SOURCES) { CONFIG.FOOD_SOURCES = Object.assign({}, CONFIG.FOOD_SOURCES);
+    for (const [k, v] of Object.entries(T.FOOD_SOURCES_PATCH)) { if (v === null) delete CONFIG.FOOD_SOURCES[k]; else CONFIG.FOOD_SOURCES[k] = Object.assign({}, CONFIG.FOOD_SOURCES[k], v); } }
   if (T.SCHEDULE_PATCH && CONFIG.SCHEDULE) CONFIG.SCHEDULE = Object.assign({}, CONFIG.SCHEDULE, T.SCHEDULE_PATCH);
   CONFIG.FIELD = Object.assign({}, CONFIG.FIELD, { crops: T.FIELD_CROPS });
   CONFIG.MARKET.musim = T.MARKET_MUSIM;

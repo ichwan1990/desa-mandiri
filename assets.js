@@ -219,6 +219,24 @@ window.ASSETS = {
   pos_ronda_malam: { img: 'assets/buildings/tropis/night/pos_ronda_night.png', fw: 64, fh: 64, frames: 3, ms: 150 },
   pagar_bambu: { color: '#b0a050', img: 'assets/structures/tropis/pagar_bambu_autotile.png' },
   obor_bambu: { color: '#ffb040', img: 'assets/structures/tropis/obor_bambu.png', fw: 32, fh: 64, frames: 4, ms: 120, frameMati: 4 },
+  // ---------- tahap 9: pangan v9 (memancing, kolam/tambak, jamur, pohon buah, umbi, keong, daya tarik) ----------
+  ...Object.fromEntries(['mangga', 'pisang', 'kelapa', 'rambutan'].flatMap(k => [[`pohon_buah_${k}`, { img: `assets/nature/tropis/tree_${k}.png`, fw: 32, fh: 64, color: '#3f7a2e', shape: 'circle' }],
+    [`pohon_buah_${k}_kosong`, { img: `assets/nature/tropis/tree_${k}_empty.png`, fw: 32, fh: 64, color: '#3f7a2e', shape: 'circle' }],
+    ...(k === 'kelapa' ? [] : ['hujan', 'mareng', 'kemarau', 'labuh'].map(m => [`pohon_buah_${k}_${m}`, { img: `assets/seasons/tropis/${m}/tree_${k}_${m}.png`, fw: 32, fh: 64 }]))])),
+  umbi_hutan: { img: 'assets/nature/tropis/umbi_hutan.png', color: '#6a8a3a' }, umbi_hutan_digali: { img: 'assets/nature/tropis/umbi_hutan_digali.png', color: '#8a6a3a' },
+  ...Object.fromEntries(['kancing', 'payung', 'tiram', 'kuping'].flatMap(j => ['banyak', 'sedikit'].map(n => [`jamur_${j}_${n}`, { img: `assets/nature/tropis/jamur_${j}_${n}.png` }]))),
+  kolam: { img: 'assets/buildings/tropis/kolam_ikan.png', fw: 64, fh: 64, frames: 2, ms: 500, color: '#4a8ac0' }, kolam_kosong: { img: 'assets/buildings/tropis/kolam_ikan_kosong.png', fw: 64, fh: 64, frames: 2, ms: 500 },
+  tambak: { img: 'assets/buildings/tropis/tambak.png', fw: 96, fh: 64, frames: 2, ms: 500, color: '#5a9ab0' }, tambak_kosong: { img: 'assets/buildings/tropis/tambak_kosong.png', fw: 96, fh: 64, frames: 2, ms: 500 },
+  memancing: { img: [1, 2, 3, 4].map(i => `assets/characters/villager_${i}_memancing.png`), fw: 64, fh: 64, frames: 8 }, // kolom 0-1 lempar, 2-3 tunggu, 4-5 strike, 6-7 tarik; baris = arah menghadap air
+  ikan_lompat: { img: 'assets/characters/fauna/ambient/ikan_lompat.png', frames: 6, ms: 90 },
+  keong_sawah: { img: 'assets/characters/fauna/ambient/keong_sawah.png', frames: 2, ms: 700 },
+  // ikon pangan per sumber (teks melayang '+4 Ikan', ringkasan harian, tooltip Pangan)
+  pangan_ikon: { keys: ['ikan', 'jamur', 'buah', 'mangga', 'pisang', 'kelapa', 'rambutan', 'umbi', 'keong', 'makanan', 'padi', 'jagung', 'ubi', 'singkong', 'gandum', 'wortel'],
+    img: ['assets/icons/resources/icon_fish.png', 'assets/icons/resources/icon_jamur.png', 'assets/icons/resources/icon_fruit.png', 'assets/icons/resources/icon_mangga.png', 'assets/icons/resources/icon_pisang.png',
+          'assets/icons/resources/icon_kelapa.png', 'assets/icons/resources/icon_fruit.png', 'assets/icons/resources/icon_umbi.png', 'assets/icons/resources/icon_keong.png', 'assets/icons/icon_food.png',
+          'assets/icons/resources/icon_padi_ikat.png', 'assets/icons/icon_food.png', 'assets/icons/resources/icon_umbi.png', 'assets/icons/resources/icon_umbi.png', 'assets/icons/resources/icon_wheat.png', 'assets/icons/icon_food.png'] },
+  ikon_daya_tarik: { ui: 'assets/icons/status/icon_daya_tarik_16.png', img: 'assets/icons/status/icon_daya_tarik_16.png' }, ikon_pendatang: { ui: 'assets/icons/status/icon_pendatang_16.png', img: 'assets/icons/status/icon_pendatang_16.png' },
+  bakul: { ui: 'assets/decor/pangan/bakul_kosong.png' },
   // UI peringatan & status
   WARN_DIR: 'assets/ui/warning/', STATUS_DIR: 'assets/icons/status/',
   blob47:   { json: 'assets/tiles/autotile_blob47.json' },
