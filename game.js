@@ -685,7 +685,7 @@ let fx = []; // efek sesaat (debu), tidak disimpan
 function mapEvent(k, x, y, sec, ref) { S.mapEvents = (S.mapEvents || []).filter(e => S.t < e.until && !(ref != null && e.ref === ref && e.k === k));
   const e = { k, x, y, t0: S.t, until: S.t + (sec ?? EV_SEC()), ref }; S.mapEvents.push(e); if (S.mapEvents.length > 12) S.mapEvents.shift(); S.lastEventAt = { k, x, y }; return e; }
 function logAt(msg, x, y) { log(msg); const P = S.logPos = S.logPos || {}; P[S.log[0]] = [Math.round(x * 10) / 10, Math.round(y * 10) / 10]; for (const k of Object.keys(P)) if (!S.log.includes(k)) delete P[k]; }
-function dustAt(x, y) { fx.push({ k: 'debu', x, y, t0: performance.now() }); if (fx.length > 20) fx.shift(); }
+function dustAt(x, y, big) { fx.push({ k: 'debu', x, y, t0: performance.now(), life: big ? 2600 : 1600, big: !!big }); if (fx.length > 20) fx.shift(); } // v15: debu lebih besar & lama
 // penanda aktif: kejadian tercatat + yang dinamis (hewan menyerang, bangunan terbakar, banjir)
 function activeMarkers() { const out = (S.mapEvents || []).filter(e => S.t < e.until).map(e => ({ k: e.k, x: e.x, y: e.y }));
   if (S.wolf && S.wolf.phase === 'serang') for (const o of S.wolves || []) if (o.mode !== 'pergi') out.push({ k: 'serang', x: o.x, y: o.y });
@@ -697,9 +697,9 @@ function drawMarkers() { const t = performance.now() / 1000;
   for (const m of activeMarkers()) { const cx = m.x * T + 16, cy = m.y * T + 16, p = (Math.sin(t * 6) + 1) / 2, col = EV_COL[m.k] || '#ff3b30';
     ctx.globalAlpha = 0.35 + 0.4 * (1 - p); ctx.strokeStyle = col; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(cx, cy, 12 + p * 10, 0, 7); ctx.stroke(); ctx.globalAlpha = 1;
     ctx.fillStyle = col; ctx.beginPath(); ctx.arc(cx, cy - 26, 8, 0, 7); ctx.fill(); ctx.fillStyle = '#fff'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('!', cx, cy - 22); ctx.textAlign = 'left'; }
-  const now = performance.now(); fx = fx.filter(f => now - f.t0 < 1200);
-  for (const f of fx) { const a = (now - f.t0) / 1200; ctx.globalAlpha = 0.6 * (1 - a); ctx.fillStyle = '#a07a50';
-    for (let i = 0; i < 5; i++) { const ang = i * 1.26, r = 4 + a * 14; ctx.beginPath(); ctx.arc(f.x * T + 16 + Math.cos(ang) * r, f.y * T + 22 + Math.sin(ang) * r * 0.5 - a * 6, 4 + a * 4, 0, 7); ctx.fill(); } }
+  const now = performance.now(); fx = fx.filter(f => now - f.t0 < (f.life || 1600));
+  for (const f of fx) { const a = (now - f.t0) / (f.life || 1600), n = f.big ? 9 : 6, s = f.big ? 1.5 : 1; ctx.globalAlpha = 0.85 * (1 - a * a);
+    for (let i = 0; i < n; i++) { const ang = i * 6.283 / n + a, r = (5 + a * 20) * s; ctx.fillStyle = i % 2 ? '#8a6238' : '#b08a5a'; ctx.beginPath(); ctx.arc(f.x * T + 16 + Math.cos(ang) * r, f.y * T + 22 + Math.sin(ang) * r * 0.55 - a * 10, (5 + a * 7) * s, 0, 7); ctx.fill(); } }
   ctx.globalAlpha = 1; }
 // posisi untuk spanduk peringatan (klik -> kamera ke sana)
 function warnPos(k) { const M = activeMarkers(), f = m => m && { x: m.x, y: m.y };
@@ -944,9 +944,9 @@ function eventAllowed(e) { const r = (C.EVENT_RULES || {})[e.id] || {}, year = y
   if (r.cooldownHari && S.day - ((S.eventLastDay || {})[e.id] ?? -999) < r.cooldownHari) return false;
   if (r.grup) { const G = S.eventGroup || {}; if (r.grupMaksPerTahun && (G[r.grup + '@' + year] || 0) >= r.grupMaksPerTahun) return false; if (r.grupCooldown && S.day - (G[r.grup + '@last'] ?? -999) < r.grupCooldown) return false;
     if (r.grup === 'angin' && S.windDay != null && S.day - S.windDay < (r.grupCooldown || 3)) return false; } // v14: satu slot event angin (badai + angin_mareng), tidak menumpuk dengan angin harian
-  if (r.era && eraIndex(r.era) > (S.era | 0)) return false; if (r.butuh && !r.butuh.every(t => done(t).length)) return false; if (r.kecuali && S[r.kecuali]) return false; // v13: syarat dari teks event (bangunan/era/flag)
+  if (r.era && eraIndex(r.era) > (S.era | 0)) return false; if (r.minHari && S.day < r.minHari) return false; if (r.butuh && !r.butuh.every(t => done(t).length)) return false; if (r.kecuali && S[r.kecuali]) return false; // v13: syarat dari teks event (bangunan/era/flag)
   return true; }
-const eventWeight = e => { const r = (C.EVENT_RULES || {})[e.id]; return (r && r.bobot != null ? r.bobot : e.bobot ?? 1) * (e.id === 'panen_raya' ? FX().panenRayaWeightMult || 1 : 1); };
+const eventWeight = e => { const r = (C.EVENT_RULES || {})[e.id]; return (r && r.bobot != null ? r.bobot : e.bobot ?? 1) * (r && r.bobotAwal && S.day <= (C.EVENT_EARLY_DAYS || 30) ? r.bobotAwal : 1) /* v15: event lokal ramah masa awal lebih sering dipilih hari 1-30 (peluang harian tetap) */ * (e.id === 'panen_raya' ? FX().panenRayaWeightMult || 1 : 1); };
 const allEvents = () => !TEXT ? [] : [...(TEXT.event_acak || []), ...(TEXT.event_era_lanjut || []), ...(TEXT.event_musiman || []), ...(TEXT.__lokalEv ? TEXT.event_lokal || [] : [])].map(e => e.id === 'pendatang' ? pendatangEvent(e) : e); // v13: event_lokal (Nusantara; tema lain hanya bila overlay-nya punya event_lokal) masuk kolam undian yang sama
 // P1: Pendatang Mengetuk = 2 pilihan: Terima (pilihan sambut lama) / Tolak halus (mood kecil, tanpa biaya lain). Teks: event_ui.pendatang.* (fallback Indonesia)
 const pendatangEvent = e => { const s = e.pilihan.find(p => addsPop(p.efek)) || e.pilihan[0];
@@ -1242,7 +1242,7 @@ function wreckField(o, b) { const W = TH(); o.field = null;
   if (S.buildings.some(t => torchLit(t) && dist(center(t), b) <= W.torchSafeRadius) && Math.random() >= W.torchHitMult) { o.plots = (o.plots || 0) + 1; log('🔥 ' + TT('diusir', {}, 'Cahaya obor membuat babi hutan ragu.')); return; }
   if (C.SCARECROW && scarecrowNear(b) && Math.random() >= C.SCARECROW.boarFieldMult) { o.plots = (o.plots || 0) + 1; log('🌾 ' + TT('diusir_orang_orangan', { hewan: C.NIGHT_THREAT === 'wolf' ? 'serigala' : 'babi hutan' }, 'Orang-orangan sawah bergoyang ditiup angin. Seekor {hewan} ragu dan mundur ke hutan.')); return; }
   const cn = cropName(b); o.plots = (o.plots || 0) + 1; b.stage = 'kosong'; b.grow = 0; b.wrecked = S.day; b.wreckedT = S.t; S.fieldsWrecked = (S.fieldsWrecked || 0) + 1; sfx('event');
-  dustAt(b.x, b.y); floatText(`-1 ${cn}`, b.x, b.y - 0.5, '#ff9a8a'); mapEvent('ladang', b.x, b.y, EV_SEC(), b.id);
+  dustAt(b.x, b.y, true); if (o && o.x != null && dist(o, b) > 0.5) dustAt(o.x, o.y, true); floatText(`🐗 -1 ${cn}`, b.x, b.y - 0.8, '#ff9a8a'); mapEvent('ladang', b.x, b.y, EV_SEC(), b.id);
   logAt('🐗 ' + TT('rusak_ladang', { tanaman: cn }, `Babi hutan merusak ladang ${cn}.`), b.x, b.y); }
 function updateWolf(o, dt) { const W = TH();
   if (o.mode === 'serang') { o.t += dt; if (o.t >= 0.5 && !o.bit) { o.bit = true; biteVillager(o, vById(o.target)); } if (o.t >= 0.9) o.mode = 'pergi'; return; }
@@ -1279,7 +1279,7 @@ function biteVillager(o, v) { const W = TH(); if (!v || !S.villagers.includes(v)
   if (Math.random() >= hit) { log('🔥 ' + TLX('log_ancaman.diusir', 'diusir', { nama: v.name }, 'Cahaya obor membuat hewan liar ragu dan berbalik ke hutan.')); return; }
   const dmg = Math.round(rnd(W.damage[0], W.damage[1]) * traitMult(v, 'threatDmgMult')); v.health = Math.max(isY2() ? 0.5 : 1, (v.health ?? 100) - dmg); v.mood = Math.max(0, v.mood - W.moodHit); v.lastHurt = 'serangan'; v.injured = S.day;
   S.wolfBites = (S.wolfBites || 0) + 1; sfx('event');
-  dustAt(v.x, v.y); floatText(`-${dmg} ${TX('peta_kejadian.kesehatan', {}, 'Kesehatan')}`, v.x, v.y - 0.5, '#ff9a8a'); mapEvent('serang', v.x, v.y, EV_SEC(), 'v' + v.id);
+  dustAt(v.x, v.y, true); floatText(`-${dmg} ${TX('peta_kejadian.kesehatan', {}, 'Kesehatan')}`, v.x, v.y - 0.5, '#ff9a8a'); mapEvent('serang', v.x, v.y, EV_SEC(), 'v' + v.id);
   logAt(threatIcon() + TLX('log_ancaman.serangan_serigala', 'serang', { nama: v.name, jumlah: dmg }, `Hewan liar menyerang ${v.name}! Kesehatannya turun ${dmg}.`), v.x, v.y);
   if (Math.random() < W.traumaChance * traitMult(v, 'traumaMult')) { v.traumaUntil = S.day + W.traumaDays; log(TX('log_ancaman.trauma', { nama: v.name }, `${v.name} masih teringat malam serangan itu.`)); }
   const guarded = near('menara_jaga', v, W.killSafeRadius) || near('pagar', v, W.killSafeRadius);
@@ -2590,7 +2590,7 @@ function drawBuilding(b, d) {
     else hasImg = sprite(key, b.x, b.y, 1, 1, fr);
     if (!hasImg) { ctx.fillStyle = ['#8a5a32', '#8a7a32', '#7a9a3a', '#5aa03a', '#e0c040'][fr] || '#8a5a32'; ctx.fillRect(b.x * T + 2, b.y * T + 2, T - 4, T - 4); }
     if (b.done && (fr === 2 || fr === 3) && canGrow(b)) sprite('kilau', b.x, b.y, 1, 1, animFrame(ASSETS.kilau, ASSETS.kilau.fps));
-    if (b.wreckedT != null && S.t - b.wreckedT < C.DAY_LENGTH_SEC) { const a = 1 - (S.t - b.wreckedT) / C.DAY_LENGTH_SEC; ctx.globalAlpha = 0.6 * a; ctx.fillStyle = '#6b4a24'; ctx.fillRect(b.x * T + 1, b.y * T + 1, T - 2, T - 2); ctx.fillStyle = '#3e2a14'; for (let i = 0; i < 4; i++) ctx.fillRect(b.x * T + 4 + i * 7, b.y * T + 8 + (i % 2) * 9, 5, 2); ctx.globalAlpha = b.done ? 1 : 0.45; } // v11: ladang dirusak hewan -> tanah teraduk cokelat, memudar dalam sehari
+    if (b.wreckedT != null && S.t - b.wreckedT < 2 * C.DAY_LENGTH_SEC) { const a = 1 - (S.t - b.wreckedT) / (2 * C.DAY_LENGTH_SEC); ctx.globalAlpha = Math.min(1, 0.35 + 0.6 * a); ctx.fillStyle = '#5e3f1c'; ctx.fillRect(b.x * T + 1, b.y * T + 1, T - 2, T - 2); ctx.fillStyle = '#2e1e0c'; for (let i = 0; i < 9; i++) ctx.fillRect(b.x * T + 3 + (i % 3) * 10 + (i * 5) % 4, b.y * T + 4 + Math.floor(i / 3) * 9 + (i % 2) * 2, 6, 3); ctx.fillStyle = '#8a6238'; for (let i = 0; i < 5; i++) ctx.fillRect(b.x * T + 6 + i * 5, b.y * T + 7 + (i % 3) * 8, 3, 3); ctx.strokeStyle = '#2e1e0c'; ctx.lineWidth = 2; ctx.strokeRect(b.x * T + 2, b.y * T + 2, T - 4, T - 4); ctx.globalAlpha = b.done ? 1 : 0.45; } // v11: ladang dirusak hewan -> tanah teraduk cokelat, memudar dalam sehari
     if (b.keong > 0 && ASSETS.keong_sawah) sprite('keong_sawah', b.x, b.y, 1, 1, frameAt(ASSETS.keong_sawah, 2)); // v9: keong di sawah berair
   } else if (b.done && (b.hp ?? 100) <= 0 && b.type !== 'makam') { // hangus -> puing
     hasImg = (ASSETS[b.type + '_hangus'] && ASSETS[b.type + '_hangus'].image) ? sprite(b.type + '_hangus', b.x, b.y, d.w, d.h) : sprite(d.w >= 2 ? 'puing_besar' : 'puing_kecil', b.x, b.y, d.w, d.h);

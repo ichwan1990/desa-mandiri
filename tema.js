@@ -116,11 +116,11 @@ window.THEMES = {
     EVENT_SEASON_ALIAS: { semi: 'hujan', panas: 'kemarau', gugur: 'mareng', dingin: 'kemarau' }, // = TEKS meta.alias_id_v140.musim
     EVENT_RULES: { panen_raya: { musim: ['mareng'] }, kekeringan: { musim: ['kemarau'] }, badai: { musim: ['mareng', 'labuh'], bobot: 0.5, grup: 'angin', grupMaksPerTahun: 2, grupCooldown: 10 }, // v14: badai + angin_mareng = satu slot event angin (bobot total 1 = badai lama), kerusakan lewat windStrike
       // v13 event_lokal: bobot 0.5 (kolam undian sama, peluang harian tetap); syarat sesuai teks: butuh bangunan / era / flag
-      ular_di_sawah: { bobot: 0.5, butuh: ['ladang'] }, hujan_pertama: { bobot: 0.5, maksPerTahun: 1, kecuali: 'firstRainDone', setel: 'firstRainDone' },
-      monyet_pencuri: { bobot: 0.5, butuh: ['gudang'], cooldownHari: 14 }, dbd_pancaroba: { bobot: 0.5, maksPerTahun: 1 }, ispa_asap: { bobot: 0.5, maksPerTahun: 1 },
-      kebakaran_ilalang: { bobot: 0.5, butuh: ['gubuk'], maksPerTahun: 1 }, angin_mareng: { bobot: 0.5, grup: 'angin', grupMaksPerTahun: 2, grupCooldown: 10 }, tanam_serentak: { bobot: 0.5, butuh: ['ladang'], maksPerTahun: 1 },
-      gotong_royong: { bobot: 0.5, era: 'dusun', cooldownHari: 20 }, kenduri_panen: { bobot: 0.5, butuh: ['ladang'], maksPerTahun: 1 }, ronda_malam: { bobot: 0.5, butuh: ['menara_jaga'], cooldownHari: 20 },
-      hari_pasar: { bobot: 0.5, era: 'desa_pertanian', cooldownHari: 14 }, tamu_desa_sebelah: { bobot: 0.5, cooldownHari: 20 } },
+      ular_di_sawah: { bobot: 0.5, butuh: ['ladang'], bobotAwal: 4 }, hujan_pertama: { bobot: 0.5, maksPerTahun: 1, kecuali: 'firstRainDone', setel: 'firstRainDone' },
+      monyet_pencuri: { bobot: 0.5, butuh: ['gudang'], cooldownHari: 14 }, dbd_pancaroba: { bobot: 0.5, maksPerTahun: 1, bobotAwal: 2 }, ispa_asap: { bobot: 0.5, maksPerTahun: 1 },
+      kebakaran_ilalang: { bobot: 0.5, butuh: ['gubuk'], maksPerTahun: 1 }, angin_mareng: { bobot: 0.5, grup: 'angin', grupMaksPerTahun: 2, grupCooldown: 10 }, tanam_serentak: { bobot: 0.5, butuh: ['ladang'], maksPerTahun: 1, bobotAwal: 2 },
+      gotong_royong: { bobot: 0.5, minHari: 6, cooldownHari: 20, bobotAwal: 5 }, kenduri_panen: { bobot: 0.5, butuh: ['ladang'], maksPerTahun: 1, bobotAwal: 3 }, ronda_malam: { bobot: 0.5, butuh: ['menara_jaga'], cooldownHari: 20 }, // v15: gotong royong tak lagi menunggu era Dusun (hari 6+)
+      hari_pasar: { bobot: 0.5, era: 'dusun', cooldownHari: 14 }, tamu_desa_sebelah: { bobot: 0.5, minHari: 5, cooldownHari: 20, bobotAwal: 5 } }, // v15: pasaran mulai Dusun (dulu Desa Pertanian); ronda tetap butuh Pos Ronda (teks)
     MARKET_MUSIM: { kemarau: { jual: { makanan: 1.25, gandum: 1.25 }, beli: { makanan: 1.4, gandum: 1.4 } }, hujan: { jual: { kayu: 0.9 } }, mareng: { jual: { makanan: 0.85, gandum: 0.9 } } },
     // teks bawaan (bahasa Indonesia) per kait; [pathTEKS atau null, cadangan]. Asisten Dokumen mengisi path saat TEKS Nusantara siap.
     TXT: {

@@ -56,7 +56,7 @@ const SHOT = process.env.SHOTS !== '0';
       r.wolfMarker = V.activeMarkers().some(m => m.k === 'serang');
       // ladang dirusak: penanda + posisi log + teks melayang
       const rnd = Math.random; Math.random = () => 0.99; V.wreckField(o, f); Math.random = rnd;
-      r.fieldMarker = V.activeMarkers().some(m => m.k === 'ladang' && m.x === f.x && m.y === f.y); r.logPos = !!(S.logPos && S.logPos[S.log[0]]); r.float = DESA.p1.textNotes().some(t => t.startsWith('-1'));
+      r.fieldMarker = V.activeMarkers().some(m => m.k === 'ladang' && m.x === f.x && m.y === f.y); r.logPos = !!(S.logPos && S.logPos[S.log[0]]); r.float = DESA.p1.textNotes().some(t => t.includes('-1 '));
       // pencuri pangan berjalan ke sasaran
       V.spawnRaider(3, (CONFIG.MONKEY && CONFIG.MONKEY.hewan) || 'monyet'); const rd = S.raiders[S.raiders.length - 1], e0 = Math.hypot(rd.x - rd.goal.x, rd.y - rd.goal.y); V.updateRaiders(0.5); r.raidMove = Math.hypot(rd.x - rd.goal.x, rd.y - rd.goal.y) < e0;
       r.raidMarker = V.activeMarkers().some(m => m.k === 'curi'); r.raidKind = rd.kind; r.raidSprite = !!(ASSETS[rd.kind] && ASSETS[rd.kind].image);
@@ -81,7 +81,7 @@ const SHOT = process.env.SHOTS !== '0';
       const n0 = S.villagers.length; DESA.v9c.applyEffects({ penduduk: 1 }, 'tes'); r.pendatang = S.villagers.length > n0 && V.activeMarkers().some(m => m.k === 'pendatang');
       return r; });
     ok(T + ' banjir/api/rusak punya posisi & penanda', ot.flood && ot.floodMarker && ot.fire && ot.rusak && ot.rusak2 && ot.pendatang, ot);
-    if (!tema && SHOT) { await p.evaluate(() => { const S = DESA.state, o = S.wolves[0]; if (o) { o.mode = 'jalan'; DESA.p1.view(Math.round(o.x), Math.round(o.y), 2); } }); await p.waitForTimeout(300); await p.screenshot({ path: '../docs/screenshots/v11-babi.png' }); }
+    if (!tema && SHOT) { await p.evaluate(() => { const S = DESA.state, o = S.wolves[0], f = (DESA.addBuilding('ladang', 27, 32, true), S.buildings[S.buildings.length - 1]); if (o) { o.mode = 'jalan'; if (f) { o.x = f.x + 1.2; o.y = f.y + 0.2; S.buildings.forEach(b => { if (b.type === 'obor') b.fuel = 0; }); DESA.v11.wreckField(o, f); } DESA.p1.view(Math.round(o.x), Math.round(o.y), 2); } }); await p.waitForTimeout(1900); await p.screenshot({ path: '../docs/screenshots/v11-babi.png' }); } // v15: babi baru merusak ladang -> debu, tanah cokelat, teks melayang
     await p.close(); }
   await b.close();
   if (errs.length) fails.push('console: ' + errs.slice(0, 3).join(' | '));
