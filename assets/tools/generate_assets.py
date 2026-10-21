@@ -2169,8 +2169,9 @@ def local_buildings():
 # =====================================================================
 PALETTE.update({'merah':(214,40,48),'merah_d':(160,28,40),'putih':(248,246,240),'pos_c':(110,180,90),'neg_c':(150,120,150),'neu_c':(220,180,90),
  'sirap':(120,78,52),'sirap_l':(160,108,70),'wall_w':(240,232,214),'wall_d':(206,194,170),'mustaka':(232,190,70),'batik':(120,64,40),'batik_l':(200,150,90)})
+_PAL16B=[v for v in PALETTE.values() if len(v)==3]  # snapshot palet tahap 8 (ikon _16 tahap 8 stabil)
 def to16b(im32):
-    s=im32.resize((16,16),Image.BOX); p=s.load(); cols=[v for v in PALETTE.values() if len(v)==3]
+    s=im32.resize((16,16),Image.BOX); p=s.load(); cols=_PAL16B
     for y in range(16):
         for x in range(16):
             c=p[x,y]; p[x,y]=(0,0,0,0) if c[3]<110 else min(cols,key=lambda q:sum((a-b)**2 for a,b in zip(q,c[:3])))+(255,)
@@ -2458,6 +2459,903 @@ def dilemma_ui():
 def stage8():
     traits_rel(); emotes(); monuments(); agustus(); dilemma_ui()
 
+# =====================================================================
+# TAHAP 8b: lengkap sesuai docs/RISET-CERITA-TUJUAN.md (§1.1, §1.2, §1.3, §2.1, §2.3, §7)
+# =====================================================================
+PALETTE.update({'merak':(36,120,104),'merak_l':(96,184,140),'merak_eye':(44,72,170),'merak_g':(236,196,80),
+ 'khaki':(176,156,104),'khaki_d':(132,112,72),'khaki_l':(208,190,140),'coat':(236,240,240),'coat_d':(190,200,206),
+ 'kader':(232,130,164),'kader_d':(186,90,124),'kader_l':(248,190,210),'kerudung':(250,214,226),
+ 'ksatria':(150,40,40),'kayu_ukir':(170,100,50),'kerupuk':(244,226,170),'kerupuk_d':(214,186,120),'kabah':(40,36,44)})
+def to16c(im32):
+    s=im32.resize((16,16),Image.BOX); p=s.load(); cols=_PAL16C
+    for y in range(16):
+        for x in range(16):
+            c=p[x,y]; p[x,y]=(0,0,0,0) if c[3]<110 else min(cols,key=lambda q:sum((a-b)**2 for a,b in zip(q,c[:3])))+(255,)
+    return s
+def grid_icon(rows,cmap):
+    h=len(rows); w=len(rows[0]); im=new(w,h)
+    for y,r in enumerate(rows):
+        for x,ch in enumerate(r):
+            if ch!='.': px(im,x,y,cmap[ch])
+    return im
+def pop4(b,W,H,note=None):
+    """4 frame muncul: 0 kecil (0.5), 1 membesar (1.15), 2 normal, 3 bob -1px; anchor tengah-bawah"""
+    sh=new(W*4,H)
+    for f,sc in enumerate((0.5,1.15,1.0,1.0)):
+        if sc!=1.0:
+            w=max(2,int(W*sc)); h=max(2,int(H*sc)); bb=b.resize((w,h),Image.NEAREST); fr=new(W,H)
+            fr.alpha_composite(bb.crop((max(0,(w-W)//2),max(0,h-H),max(0,(w-W)//2)+min(W,w),max(0,h-H)+min(H,h))),(max(0,(W-w)//2),max(0,H-h)))
+        elif f==3: fr=new(W,H); fr.alpha_composite(b,(0,-1))
+        else: fr=b
+        sh.paste(fr,(f*W,0))
+    return sh
+# ---------- 1. sifat baru ----------
+def Y_perantau(im,d):
+    d.line([(4,30),(24,6)],fill=P('wood_d'),width=3); d.line([(5,29),(24,7)],fill=P('wood_l'),width=1)
+    ell(im,(11,7,31,27),'cloth2'); ell(im,(13,9,26,19),'water_l')
+    for x,y in((16,12),(22,10),(26,15),(19,18),(24,20),(15,16)): rect(im,x,y+2,x+1,y+3,'white')
+    d.polygon([(15,10),(17,1),(22,8)],fill=P('cloth2')); d.polygon([(22,8),(30,2),(28,11)],fill=P('cloth2')); ell(im,(18,6,24,11),'cloth_d')
+def Y_ahli_tani(im,d):
+    for x,lean in((8,-3),(14,-1),(20,2),(25,4)):
+        d.line([(x,30),(x+lean,15)],fill=P('rice_g'),width=2)
+        for k in range(4): ell(im,(x+lean+(k%2)*2-2,14+k*3-1,x+lean+(k%2)*2+1,14+k*3+2),'rice_y')
+    d.polygon([(1,14),(16,2),(31,14)],fill=P('straw')); d.polygon([(6,12),(16,4),(26,12)],fill=P('straw_l'))
+    for y in(7,10,13): d.line([(16-(y-2)*15/12,y),(16+(y-2)*15/12,y)],fill=P('straw_d'))
+    d.line([(1,14),(31,14)],fill=P('straw_d'),width=2); rect(im,15,1,17,3,'wood_d')
+def Y_pandai_masak(im,d):
+    for x in(10,16,22): d.arc((x-3,1,x+3,9),90,270,fill=P('smoke'),width=2)
+    d.line([(1,17),(6,17)],fill=P('wood_d'),width=3); d.line([(26,17),(31,17)],fill=P('wood_d'),width=3)
+    d.chord((4,8,28,30),0,180,fill=P('stone_d')); ell(im,(4,12,28,22),'stone'); ell(im,(6,13,26,21),'fire_d')
+    for x,y,c in((10,15,'carrot'),(15,17,'leaf_l'),(20,15,'fire_l'),(13,18,'wheat'),(22,18,'carrot')): ell(im,(x-2,y-1,x+2,y+2),c)
+    d.line([(22,4),(18,16)],fill=P('wood_l'),width=2); rect(im,16,14,20,17,'wood')
+def Y_seniman(im,d):
+    for a in range(-90,91,18):
+        r_=math.radians(a-90); x,y=16+14*math.cos(r_),18+14*math.sin(r_)
+        d.line([(16,20),(x,y)],fill=P('merak'),width=3); ell(im,(x-3,y-3,x+3,y+3),'merak_l'); ell(im,(x-2,y-2,x+1,y+1),'merak_eye'); px(im,int(x),int(y),'merak_g')
+    ell(im,(9,15,23,31),'leo'); ell(im,(11,23,21,31),'leo_l'); [px(im,x,y,'spot') for x,y in((11,19),(21,19),(16,17))]
+    rect(im,11,20,13,22,'black'); rect(im,19,20,21,22,'black'); px(im,11,20,'white'); px(im,19,20,'white')
+    rect(im,12,27,20,29,'merah'); [px(im,x,27,'white') for x in(13,15,17,19)]
+NEW_TRAITS=[('perantau',Y_perantau,'netral (bingkai hijau sesuai riset)'),('ahli_tani',Y_ahli_tani,'positif'),('pandai_masak',Y_pandai_masak,'positif'),('seniman',Y_seniman,'positif')]
+def rel12(kind):
+    O='outline'
+    m={'teman':(["...oooooo...","..oyyyyyyo..",".oyyyyyyyyo.","oyykyyyykyyo","oyykyyyykyyo","oyyyyyyyyyyo","oyrryyyyrryo","oyyykyykyyyo",".oyyykkkyyo.","..oyyyyyyo..","...oooooo...","............"],{'o':O,'y':'pos_c','k':'black','r':'berry_l'}),
+       'sahabat':(["..ooo..ooo..",".oggg oohhho".replace(' ','o'),".oggggohhhho",".oggggohhhho","..oggo.ohho.",".oooggoohhoo","oggggggghhho","ogggggghhhho","ogggooohhhho","oggo....ohho","ooo......ooo","............"],{'o':O,'g':'leaf_d','h':'pos_c'}),
+       'rival':(["......oooo..",".....offfo..","....offfo...","...offfo....","..offfffffo.","..ooooffffo.","....offfoo..","...offfo....","..offo......","..ofo.......","..oo........","............"],{'o':O,'f':'fire'}),
+       'pasangan':(["............",".ooo...ooo..","obbbo.obbbo.","obwbbobbbbbo","obbbbbbbbbbo","obbbbbbbbbbo",".obbbbbbbbo.","..obbbbbbo..","...obbbbo...","....obbo....",".....oo.....","............"],{'o':O,'b':'berry','w':'white'}),
+       'keluarga':([".....oo.....","....orro....","...orrrro...","..orrrrrro..",".orrrrrrrro.","oooooooooooo",".owwwwwwwwo.",".owbbwwddwo.",".owbbwwddwo.",".owwwwwddwo.",".oooooooooo.","............"],{'o':O,'r':'roof','w':'wall_w','b':'water_l','d':'wood'})}
+    if kind=='sahabat':
+        im=new(12,12); ell(im,(2,1,5,4),'leaf_d'); ell(im,(6,1,9,4),'pos_c'); rect(im,1,6,4,10,'leaf_d'); rect(im,7,6,10,10,'pos_c'); rect(im,4,7,7,8,'skin2'); return outline(im)
+    return grid_icon(*m[kind])
+def traits_rel_8b():
+    for n,fn,kind in NEW_TRAITS:
+        im=badge(fn,'pos_c'); save(im,f'icons/traits/trait_{n}.png',note=f'sifat {n} ({kind}), format sama dengan icons/traits')
+        save(to16c(im),f'icons/traits/trait_{n}_16.png',note='16x16')
+    def R_sahabat(im,d):
+        ell(im,(0,10,12,22),'skin1'); ell(im,(20,10,32,22),'skin3'); rect(im,0,13,4,21,'cloth1'); rect(im,28,13,31,21,'cloth2')
+        d.polygon([(8,12),(18,10),(24,14),(22,22),(12,22)],fill=P('skin2')); d.line([(12,14),(20,20)],fill=P('skin3'),width=2); d.line([(14,12),(22,17)],fill=P('skin1'),width=1)
+        for x,y in((6,4),(26,4),(16,2)): px(im,x,y,'gold'); [px(im,x+a,y+b,'fire_l') for a,b in((1,0),(-1,0),(0,1),(0,-1))]
+    def R_keluarga(im,d):
+        d.polygon([(2,14),(16,2),(30,14)],fill=P('roof')); d.line([(2,14),(16,2),(30,14)],fill=P('roof_l'),width=2)
+        rect(im,5,14,27,29,'wall_w'); rect(im,5,27,27,29,'wall_d'); rect(im,20,19,25,29,'wood'); rect(im,7,17,12,22,'water_l')
+        for ox,oy in((14,17),): ell(im,(ox-4,oy-2,ox,oy+2),'berry'); ell(im,(ox-1,oy-2,ox+3,oy+2),'berry'); ImageDraw.Draw(im).polygon([(ox-4,oy+1),(ox+3,oy+1),(ox-0.5,oy+5)],fill=P('berry'))
+    for n,fn,c in(('sahabat',R_sahabat,'leaf_d'),('keluarga',R_keluarga,'wood_l')):
+        im=badge(fn,c); save(im,f'icons/relations/rel_{n}.png',note='hubungan 32x32'); save(to16c(im),f'icons/relations/rel_{n}_16.png',note='16x16')
+    for n in('teman','sahabat','rival','pasangan','keluarga'):
+        save(rel12(n),f'icons/relations/rel_{n}_12.png',note='12x12 tanpa bingkai (riset §7: ikon hubungan 12x12 di panel/garis antar penduduk)')
+# ---------- 3. gelembung keinginan ----------
+def wish_bubble(col='white',edge=None):
+    b=new(24,24); d=ImageDraw.Draw(b)
+    for bb in((1,1,12,10),(10,0,22,10),(0,6,10,18),(13,6,23,18),(3,9,20,19)): ell(b,bb,col)
+    rect(b,3,3,20,17,col); ell(b,(5,18,10,22),col); ell(b,(2,21,4,23),col)
+    b=outline(b,edge or 'outline')
+    rect(b,4,2,19,17,'parch') if False else None
+    return b
+WISH_LIST=['makan_rendang','nasi_pecel','kopi_pagi','rumah_panggung','nonton_reog','tabungan_haji','mancing_sore','punya_ayam','baju_baru','ziarah_makam',
+ 'wayang_semalam','tidur_siang','kerja_bakti','ngobrol_sahabat','punya_anak','sawah_menguning','jajan_pasar','belajar_gamelan','rujak_bareng','bancakan_weton',
+ 'pulang_kampung','ronda_malam','main_layangan','menang_lomba','tumpeng_syukuran','mandi_kali']
+def W_plate(im,d,cy=20): ell(im,(2,cy-6,29,cy+9),'white'); ell(im,(5,cy-4,26,cy+6),'parch')
+def piala_draw(im,d):
+    d.chord((6,2,26,24),0,180,fill=P('gold')); rect(im,6,2,26,13,'gold'); rect(im,8,3,10,12,'fire_w'); d.arc((0,4,10,16),90,270,fill=P('gold_d'),width=2); d.arc((22,4,32,16),270,90,fill=P('gold_d'),width=2)
+    rect(im,14,22,18,25,'gold_d'); rect(im,9,25,23,28,'wood_d'); rect(im,8,28,24,30,'wood'); rect(im,13,26,19,27,'gold')
+def wish_draw(n,im,d):
+    if n=='makan_rendang':
+        W_plate(im,d)
+        for x,y in((10,18),(17,16),(21,20),(13,22)): ell(im,(x-4,y-3,x+4,y+3),'wood_d'); px(im,x-1,y-1,'dirt')
+        for x,y in((8,14),(24,16),(16,24)): rect(im,x,y,x+2,y+1,'merah')
+    elif n=='nasi_pecel':
+        W_plate(im,d); ell(im,(6,12,16,22),'white'); ell(im,(15,14,26,24),'leaf'); ell(im,(17,15,24,21),'leaf_l'); d.chord((9,16,24,27),180,360,fill=P('dirt')) ; rect(im,20,8,28,13,'kerupuk'); px(im,22,10,'kerupuk_d'); px(im,25,11,'kerupuk_d')
+    elif n=='kopi_pagi':
+        ell(im,(3,22,28,30),'white'); rect(im,8,13,23,25,'white'); ell(im,(8,10,23,16),'white'); ell(im,(9,11,22,15),'coffee'); d.arc((20,15,28,23),270,90,fill=P('white'),width=2)
+        for x in(12,18): d.arc((x-2,1,x+2,9),90,270,fill=P('smoke'),width=2)
+    elif n=='rumah_panggung':
+        d.polygon([(3,14),(16,3),(29,14)],fill=P('ijuk')); rect(im,6,14,26,22,'bamboo'); rect(im,13,16,18,22,'wood_d'); [rect(im,x,22,x+1,29,'wood_d') for x in(7,15,24)]; rect(im,5,22,27,23,'wood')
+    elif n=='nonton_reog': Y_seniman(im,d)
+    elif n=='tabungan_haji':
+        d.polygon([(4,12),(16,7),(28,12),(28,26),(16,31),(4,26)],fill=P('kabah')); d.polygon([(4,12),(16,17),(16,31),(4,26)],fill=P('outline'))
+        d.line([(4,15),(16,20),(28,15)],fill=P('gold'),width=2); d.polygon([(4,12),(16,7),(28,12),(16,17)],fill=P('stone_d'))
+        rect(im,20,21,22,26,'gold')
+    elif n=='mancing_sore':
+        d.line([(3,29),(22,3)],fill=P('bamboo_d'),width=2); d.line([(22,3),(27,16)],fill=P('white')); 
+        ell(im,(14,18,28,26),'water_l'); ell(im,(16,19,26,25),'stone_l'); d.polygon([(14,22),(10,18),(10,26)],fill=P('stone_l')); px(im,23,21,'black')
+    elif n=='punya_ayam':
+        ell(im,(5,12,25,28),'chick_w'); ell(im,(8,17,20,25),'chick_b'); ell(im,(16,4,28,16),'chick_w'); rect(im,19,1,24,4,'comb'); rect(im,27,9,30,11,'beak'); px(im,23,8,'black'); rect(im,24,14,25,17,'comb')
+        d.polygon([(6,16),(1,8),(9,13)],fill=P('chick_b')); [rect(im,x,28,x+1,31,'beak') for x in(11,17)]
+    elif n=='baju_baru':
+        d.polygon([(3,9),(11,3),(21,3),(29,9),(26,15),(23,13),(23,29),(9,29),(9,13),(6,15)],fill=P('batik'))
+        for x in range(10,23,4):
+            for y in range(8,28,5): px(im,x,y,'batik_l'); px(im,x+1,y+1,'batik_l')
+        d.polygon([(13,3),(16,8),(19,3)],fill=P('putih'))
+    elif n=='ziarah_makam':
+        ell(im,(2,22,29,31),'dirt'); rect(im,11,7,20,25,'stone_l'); ell(im,(11,4,20,11),'stone_l'); rect(im,11,22,20,25,'stone')
+        for x,y in((6,20),(25,21)): [ell(im,(x+a-2,y+b-2,x+a+2,y+b+2),'frangi') for a,b in((0,-2),(2,0),(0,2),(-2,0))]; px(im,x,y,'frangi_y')
+    elif n=='wayang_semalam':
+        d.polygon([(16,1),(26,12),(28,24),(16,30),(4,24),(6,12)],fill=P('kayu_ukir')); d.polygon([(16,5),(23,13),(24,23),(16,27),(8,23),(9,13)],fill=P('gold'))
+        d.line([(16,6),(16,28)],fill=P('kayu_ukir'),width=2); [d.line([(16,y),(16+s_*6,y-4)],fill=P('kayu_ukir')) for y in(12,17,22) for s_ in(-1,1)]; rect(im,15,28,17,31,'wood_d')
+    elif n=='tidur_siang':
+        rect(im,2,20,29,24,'bamboo'); [rect(im,x,24,x+1,30,'bamboo_d') for x in(4,26)]; ell(im,(4,14,12,21),'skin2'); rect(im,10,16,26,20,'cloth2')
+        for x,y,s_ in((16,2,5),(23,8,3)): d.line([(x,y),(x+s_,y),(x,y+s_),(x+s_,y+s_)],fill=P('magic'),width=2)
+    elif n=='kerja_bakti':
+        d.line([(6,30),(20,6)],fill=P('wood'),width=3); d.polygon([(16,4),(27,4),(26,11),(18,9)],fill=P('stone_l')); ell(im,(14,18,30,30),'bamboo'); ell(im,(16,19,28,24),'dirt')
+        for x in range(16,29,3): d.line([(x,22),(x,29)],fill=P('bamboo_d'))
+    elif n=='ngobrol_sahabat':
+        ell(im,(1,3,18,15),'white'); d.polygon([(5,13),(9,13),(4,18)],fill=P('white')); ell(im,(13,13,31,25),'leaf_l'); d.polygon([(26,23),(22,23),(28,29)],fill=P('leaf_l'))
+        for x in(6,10,14): px(im,x,9,'black')
+        for x in(18,22,26): px(im,x,19,'black')
+    elif n=='punya_anak':
+        ell(im,(4,6,28,30),'water_l'); ell(im,(9,8,23,22),'skin1'); ell(im,(8,5,24,13),'water_l'); px(im,13,15,'black'); px(im,19,15,'black'); px(im,11,18,'berry_l'); px(im,21,18,'berry_l'); d.arc((13,15,19,20),20,160,fill=P('black'))
+    elif n=='sawah_menguning':
+        rect(im,1,22,30,30,'paddy_w'); 
+        for x in range(3,30,5):
+            d.line([(x,28),(x+2,10)],fill=P('rice_yd'),width=2)
+            for k in range(3): ell(im,(x+1+k%2,9+k*3,x+4+k%2,12+k*3),'rice_y')
+        ell(im,(20,1,30,9),'fire_l')
+    elif n=='jajan_pasar':
+        d.polygon([(1,20),(16,12),(31,20),(16,28)],fill=P('banana_g')); d.line([(1,20),(31,20)],fill=P('leaf_d'))
+        for x,y in((10,17),(18,15),(14,21),(22,20)): ell(im,(x-4,y-4,x+4,y+4),'leaf_l'); px(im,x-1,y-3,'white'); px(im,x+2,y-2,'white'); px(im,x,y-1,'white')
+        for x,y in((6,22),(26,22)): ell(im,(x-3,y-2,x+3,y+2),'blossom')
+    elif n=='belajar_gamelan':
+        rect(im,2,4,29,6,'kayu_ukir'); rect(im,3,4,5,30,'kayu_ukir'); rect(im,26,4,28,30,'kayu_ukir'); d.line([(16,6),(16,9)],fill=P('outline'))
+        ell(im,(6,9,26,29),'gold_d'); ell(im,(8,11,24,27),'gold'); ell(im,(13,15,19,21),'gold_d'); ell(im,(14,16,17,19),'fire_w')
+    elif n=='rujak_bareng':
+        ell(im,(2,14,29,30),'stone_d'); ell(im,(4,15,27,26),'stone'); ell(im,(8,17,23,24),'dirt_d')
+        for x,y,c in((9,10,'mango'),(16,7,'leaf_l'),(23,11,'rambutan'),(13,13,'white'),(20,14,'mango_g')): rect(im,x-2,y-2,x+2,y+3,c)
+        d.line([(24,4),(28,20)],fill=P('stone_l'),width=3)
+    elif n=='bancakan_weton':
+        d.polygon([(0,22),(16,14),(31,22),(16,30)],fill=P('banana_g')); ell(im,(8,10,24,24),'white'); ell(im,(10,11,22,17),'white')
+        for x,y,c in((6,22,'leaf'),(25,22,'leaf_l'),(16,26,'carrot')): ell(im,(x-3,y-2,x+3,y+2),c)
+        ell(im,(18,15,25,21),'white'); ell(im,(20,17,23,20),'fire_l')
+    elif n=='pulang_kampung':
+        rect(im,14,10,16,30,'wood_d'); d.polygon([(4,6),(24,6),(29,10),(24,14),(4,14)],fill=P('wood_l')); d.line([(8,10),(22,10)],fill=P('wood_d'))
+        ell(im,(2,18,14,30),'batik'); ell(im,(4,20,12,27),'batik_l'); d.polygon([(6,19),(9,15),(11,19)],fill=P('batik'))
+    elif n=='ronda_malam':
+        m=new(); ell(m,(20,1,31,12),'white'); ell(m,(24,-1,34,9),'white'); im.paste(P('fire_w'),(0,0),ImageChops.subtract(m.split()[3].point(lambda v:255 if v else 0),Image.new('L',(32,32),0)))
+        mk=new(); ell(mk,(24,-1,34,9),'white'); im.paste((0,0,0,0),(0,0),mk.split()[3])
+        d.line([(12,1),(12,6)],fill=P('outline')); rect(im,7,6,17,29,'wood'); rect(im,7,6,8,29,'wood_l'); rect(im,11,10,13,25,'wood_d'); rect(im,7,13,17,13,'wood_d'); rect(im,7,22,17,22,'wood_d')
+        d.line([(19,30),(27,18)],fill=P('wood_l'),width=3)
+    elif n=='main_layangan':
+        d.polygon([(18,1),(29,11),(18,21),(7,11)],fill=P('merah')); d.polygon([(18,1),(29,11),(18,11)],fill=P('putih')); d.line([(18,1),(18,21)],fill=P('bamboo_d')); d.line([(7,11),(29,11)],fill=P('bamboo_d'))
+        pts=[(18,21),(15,24),(18,27),(14,30)]; d.line(pts,fill=P('fire')); d.line([(18,21),(2,31)],fill=P('white'))
+    elif n=='menang_lomba': piala_draw(im,d)
+    elif n=='tumpeng_syukuran':
+        ell(im,(1,22,30,31),'banana_g'); d.polygon([(16,2),(26,25),(6,25)],fill=P('rice_y')); d.polygon([(16,2),(20,12),(14,12)],fill=P('fire_w'))
+        for x,y,c in((5,25,'leaf'),(27,25,'carrot'),(16,28,'white'),(11,27,'merah')): ell(im,(x-3,y-2,x+3,y+2),c)
+        rect(im,15,0,17,3,'merah')
+    elif n=='mandi_kali':
+        rect(im,0,18,31,31,'water'); [d.arc((x,16,x+8,22),180,360,fill=P('water_l'),width=2) for x in(0,10,20)]
+        ell(im,(9,8,21,20),'skin3'); ell(im,(9,7,21,13),'hair4'); px(im,13,14,'black'); px(im,17,14,'black')
+        for x,y in((5,10),(25,8),(27,14)): ell(im,(x-1,y-2,x+1,y+1),'water_l')
+def wishes():
+    b=wish_bubble(); save(pop4(b,24,24),'ui/wish/wish_bubble.png',(24,24),4,'gelembung keinginan (awan pikiran) 4 frame: 0 kecil, 1 membesar, 2 normal, 3 bob; slot ikon 16x16 di (4,2) frame 2 dan (4,1) frame 3')
+    b=wish_bubble('fire_w','fire_d'); save(pop4(b,24,24),'ui/wish/wish_bubble_hampir.png',(24,24),4,'varian gelembung saat keinginan hampir kedaluwarsa (≤1 hari), slot sama')
+    save(b if False else wish_bubble(),'ui/wish/wish_bubble_static.png',note='24x24 statis = frame 2; slot 16x16 di (4,2)')
+    for n in WISH_LIST:
+        im=new(); wish_draw(n,im,ImageDraw.Draw(im)); im=outline(im)
+        save(im,f'icons/wishes/wish_{n}.png',note=f'keinginan {n} 32x32 (kartu panel Keinginan Warga)'); save(to16c(im),f'icons/wishes/wish_{n}_16.png',note='16x16 untuk slot gelembung')
+# ---------- 4. bar progres monumen ----------
+def progress_bars():
+    for nm,W,H,m,ih in(('',48,12,4,4),('_panel',96,20,6,8)):
+        im=new(W,H); e=W-1; f=H-1
+        rect(im,0,0,e,f,'outline'); rect(im,1,1,e-1,f-1,'wood_d'); rect(im,1,1,e-1,1,'wood_l'); rect(im,2,2,e-2,f-2,'wood')
+        y0=(H-ih)//2; rect(im,m-1,y0-1,W-m,y0+ih,'outline'); rect(im,m,y0,W-m-1,y0+ih-1,'char'); rect(im,m,y0,W-m-1,y0,'black')
+        for cx,cy in((1,1),(e-1,1),(1,f-1),(e-1,f-1)): px(im,cx,cy,'gold')
+        if nm=='_panel': batik_band(im,2,2,m-2,f-2); batik_band(im,W-m+1,2,e-2,f-2)
+        [im.putpixel(p_,(0,0,0,0)) for p_ in((0,0),(e,0),(0,f),(e,f))]
+        save(im,f'ui/progress/monument_bar_frame{nm}.png',note=f'9-slice {W}x{H}, margin {m} semua sisi; isi (track) di x {m}..{W-m-1}, y {y0}..{y0+ih-1} (tinggi {ih})')
+        fl=new(4,ih); rect(fl,0,0,3,ih-1,'leaf'); rect(fl,0,0,3,0,'leaf_l'); rect(fl,0,ih-1,3,ih-1,'leaf_d'); px(fl,1,1 if ih>4 else 0,'white') if ih>4 else None
+        if ih>4: rect(fl,2,2,3,ih-2,'pos_c')
+        save(fl,f'ui/progress/monument_bar_fill{nm}.png',note=f'4x{ih} tile isi hijau, ulang horizontal sepanjang progres')
+        fe=new(2,ih); rect(fe,0,0,1,ih-1,'leaf_l'); rect(fe,1,0,1,ih-1,'white'); save(fe,f'ui/progress/monument_bar_fill_end{nm}.png',note=f'2x{ih} ujung kanan isi (kilau), tempel di akhir fill')
+        dv=new(2,ih+4); rect(dv,0,0,1,ih+3,'outline'); rect(dv,0,1,0,ih+2,'gold'); save(dv,f'ui/progress/monument_bar_divider{nm}.png',note=f'2x{ih+4} pemisah segmen tahap, x = trackX + trackW*k/N - 1, y = {y0-2}')
+        gh=new(4,ih); rect(gh,0,0,3,ih-1,'pos_c'); [px(gh,x,y,'leaf_l') for x in(0,2) for y in range(ih) if (x+y)%2==0]
+        save(gh,f'ui/progress/monument_bar_fill_done{nm}.png',note=f'4x{ih} tile segmen tahap yang sudah selesai (hijau muda bercorak), dipakai di kiri segmen aktif')
+    sh=new(24,8)
+    for i in range(3):
+        p_=new(8,8); 
+        if i==0: ell(p_,(0,0,7,7),'outline'); ell(p_,(1,1,6,6),'char')
+        if i==1: ell(p_,(0,0,7,7),'outline'); ell(p_,(1,1,6,6),'gold'); ell(p_,(2,2,5,5),'fire_w')
+        if i==2: ell(p_,(0,0,7,7),'outline'); ell(p_,(1,1,6,6),'leaf'); ImageDraw.Draw(p_).line([(2,4),(3,5),(5,2)],fill=P('white'))
+        sh.paste(p_,(i*8,0))
+    save(sh,'ui/progress/monument_stage_pip.png',(8,8),3,'penanda tahap: 0 belum, 1 sedang dikerjakan, 2 selesai; deret N pip di kiri label "Tahap 2/3 — 64%"')
+    im=new(); fn=lambda im,d: (d.line([(6,28),(18,10)],fill=P('wood'),width=3), rect(im,12,4,26,11,'stone'), rect(im,12,4,26,5,'stone_l'), rect(im,24,6,28,9,'stone_d'))
+    im=icon_draw(lambda im,d: fn(im,d)); save(im,'ui/progress/icon_bangun.png',note='ikon palu kerja (Mulai tahap N / Kerja bakti) 32x32'); save(to16c(im),'ui/progress/icon_bangun_16.png',note='16x16')
+
+# ---------- 5. monumen per tahap riset + perancah bambu ----------
+def bamboo_pole(im,x,y0,y1):
+    rect(im,x,y0,x+1,y1,'bamboo'); rect(im,x+1,y0,x+1,y1,'bamboo_d'); px(im,x,y0,'bamboo_l')
+    for y in range(y0+5,y1,6): rect(im,x,y,x+1,y,'bamboo_d')
+def scaffold(im,x0,x1,ytop,ybot):
+    """perancah bambu di depan bangunan: tiang, palang, silang, ikatan ijuk"""
+    lay=new(im.width,im.height); d=ImageDraw.Draw(lay)
+    xs=[x0,x1-1]+[x for x in range(x0+40,x1-30,40)]
+    for x in xs: bamboo_pole(lay,x,ytop,ybot)
+    ys=list(range(ybot-12,ytop+2,-18))
+    for y in ys:
+        d.line([(x0-1,y),(x1,y)],fill=P('bamboo_d')); d.line([(x0-1,y-1),(x1,y-1)],fill=P('bamboo'))
+        for x in xs: px(lay,x,y,'ijuk'); px(lay,x+1,y-1,'ijuk')
+        rect(lay,x0,y-3,x1-1,y-2,'wood_l') if y==ys[len(ys)//2] else None
+    if len(ys)>1:
+        for x in xs[:2]:
+            d.line([(x,ys[0]),(x+(10 if x==x0 else -10),ys[1])],fill=P('bamboo_d'))
+    im.alpha_composite(outline(lay))
+    return im
+def research_stages(final,prev,name,tahap,N,nama,note,flat=False,river=None):
+    w,h=final.size; a=final.split()[3]; x0,y0,x1,y1=a.getbbox(); sh=new(w*4,h)
+    base=prev.copy() if prev is not None else None
+    def fond():
+        im=new(w,h); rect(im,x0+2,y1-8,x1-2,y1-3,'stone_d'); rect(im,x0+2,y1-8,x1-2,y1-8,'stone_l')
+        for x in range(x0+4,x1-3,6): rect(im,x,y1-9,x+3,y1-7,'stone')
+        for x in(x0+1,x1-2): rect(im,x,y1-14,x,y1-3,'wood_l')
+        ImageDraw.Draw(im).line([(x0+1,y1-13),(x1-2,y1-13)],fill=P('white')); return shadow(im,w//2,y1-2,(x1-x0)//2,3)
+    def start():
+        return base.copy() if base is not None else fond()
+    top=[next((y for y in range(h) if a.getpixel((x,y))>200),None) for x in range(w)]
+    def frame_lines():
+        lay=new(w,h); d=ImageDraw.Draw(lay)
+        for x in range(x0+3,x1-2,10):
+            t=top[x] if top[x] is not None else y1
+            d.line([(x,y1-8),(x,max(t+2,y0))],fill=P('wood'),width=2)
+        pts=[(x,top[x]+1) for x in range(x0,x1) if top[x] is not None and x%2==0]
+        for i in range(len(pts)-1): d.line([pts[i],pts[i+1]],fill=P('wood_l'))
+        bm=new(w,h); db=ImageDraw.Draw(bm)
+        for y in range(y1-20,y0,-12): db.line([(x0+3,y),(x1-3,y)],fill=P('wood_d'))
+        lay.paste(bm,(0,0),ImageChops.multiply(bm.split()[3],a.point(lambda v:255 if v>200 else 0)))
+        return outline(lay)
+    if flat:
+        b0=base.copy() if base is not None else river.copy()
+        def part(fr):
+            im=b0.copy(); cw=int(w*fr); im.alpha_composite(final.crop((0,0,cw,h)),(0,0)); return im
+        fs=[scaffold(b0.copy(),2,w-3,20,50),scaffold(part(1/3),2,w-3,20,50),scaffold(part(2/3),2,w-3,20,50),final]
+        for i,im in enumerate(fs): sh.paste(im,(i*w,0))
+        pv='bangunan tahap '+str(tahap-1) if prev is not None else 'sungai kosong'
+        save(sh,f'buildings/monuments/{name}_tahap{tahap}_stages.png',(w,h),4,f'{note}; tahap {tahap}/{N} "{nama}" sedang dibangun: 0 {pv} + perancah bambu, 1 sepertiga (kiri), 2 dua pertiga, 3 selesai; frame = min(3, floor(progres*3)); anchor tengah-bawah')
+        save(final,f'buildings/monuments/{name}_tahap{tahap}.png',note=f'{note}; tahap {tahap}/{N} "{nama}" selesai'); return
+    f0=scaffold(start(),x0+1,x1-2,max(0,y0+4),y1-4)
+    f1=start(); f1.alpha_composite(frame_lines()); f1=scaffold(f1,x0+1,x1-2,max(0,y0+4),y1-4)
+    f2=start(); f2.alpha_composite(frame_lines()); cut=y0+int((y1-y0)*0.45); f2.alpha_composite(final.crop((0,cut,w,h)),(0,cut)); f2=scaffold(f2,x0+1,x1-2,max(0,y0+4),y1-4)
+    for i,im in enumerate((f0,f1,f2,final)): sh.paste(im,(i*w,0))
+    pv='bangunan tahap '+str(tahap-1) if prev is not None else 'fondasi batu'
+    save(sh,f'buildings/monuments/{name}_tahap{tahap}_stages.png',(w,h),4,f'{note}; tahap {tahap}/{N} "{nama}" sedang dibangun: 0 {pv} + perancah bambu, 1 rangka, 2 setengah jadi, 3 selesai; frame = min(3, floor(progres*3)), selesai = 3; anchor tengah-bawah',)
+    save(final,f'buildings/monuments/{name}_tahap{tahap}.png',note=f'{note}; tahap {tahap}/{N} "{nama}" selesai')
+def dadak_merak(im,cx,cy,r,face=True):
+    d=ImageDraw.Draw(im)
+    for a in range(-85,86,10):
+        rr=math.radians(a-90); x,y=cx+r*math.cos(rr),cy+r*0.9*math.sin(rr)
+        d.line([(cx,cy),(x,y)],fill=P('merak'),width=max(2,r//8)); e=max(2,r//7)
+        ell(im,(x-e,y-e,x+e,y+e),'merak_l'); ell(im,(x-e+1,y-e+1,x+e-1,y+e-1),'merak_eye'); px(im,int(x),int(y),'merak_g')
+    if face:
+        fr=max(5,r//3); ell(im,(cx-fr,cy-fr//2,cx+fr,cy+fr+fr//2),'leo'); ell(im,(cx-fr+2,cy+fr//2,cx+fr-2,cy+fr+fr//2),'leo_l')
+        rect(im,cx-fr//2-1,cy,cx-fr//2+1,cy+1,'black'); rect(im,cx+fr//2-1,cy,cx+fr//2+1,cy+1,'black')
+        rect(im,cx-fr//2,cy+fr,cx+fr//2,cy+fr+1,'merah'); px(im,cx,cy-fr//2+1,'gold')
+        for k in(-1,1): px(im,cx+k*fr,cy+2,'spot')
+def goods(im,x0,x1,y,seed=1):
+    r=random.Random(seed); cols=['banana','mango','rice_y','carrot','leaf','rambutan','coco','corn','stone_l','berry']
+    for x in range(x0,x1-6,9):
+        ell(im,(x,y,x+7,y+5),'straw_d'); ell(im,(x+1,y-2,x+6,y+2),r.choice(cols)); px(im,x+2,y-1,'white')
+def platform(im,x0,x1,y0,y1,c='stone'):
+    rect(im,x0,y0,x1,y1,c); rect(im,x0,y0,x1,y0,c+'_l' if c+'_l' in PALETTE else 'stone_l'); rect(im,x0,y1-1,x1,y1,'stone_d')
+def pasar_legi(t):
+    im=new(128,96); d=ImageDraw.Draw(im)
+    if t==1:
+        rect(im,6,82,121,88,'dirt'); rect(im,6,86,121,88,'dirt_d')
+        for x in range(10,120,18): bamboo_pole(im,x,52,84)
+        for x0 in(8,66):
+            rect(im,x0+2,70,x0+52,73,'bamboo_l'); [rect(im,x,73,x,82,'bamboo_d') for x in(x0+4,x0+50)]; goods(im,x0+4,x0+52,66,x0)
+        ijuk_roof(im,2,64,30,54); ijuk_roof(im,62,126,30,54); rect(im,2,52,126,55,'bamboo')
+    elif t==2:
+        platform(im,4,123,84,90)
+        for x in range(8,122,16): rect(im,x,50,x+2,84,'wood'); px(im,x,50,'wood_l')
+        rect(im,10,68,118,71,'wood_l'); rect(im,10,71,118,72,'wood_d'); goods(im,12,118,64,7)
+        tile_roof(im,0,127,24,52); rect(im,0,50,127,53,'sirap'); rect(im,48,30,80,38,'wood_d'); rect(im,49,31,79,37,'mustaka')
+        for k,(x0,c) in enumerate(((8,'merah'),(46,'water'),(84,'leaf'))):
+            for x in range(x0,x0+34):
+                cc=c if ((x-x0)//4)%2==0 else 'putih'; rect(im,x,74,x,79,cc)
+            rect(im,x0+2,80,x0+31,84,'wood'); goods(im,x0+4,x0+32,79,k+3)
+        for x in(20,64,108): d.line([(x,53),(x,58)],fill=P('outline')); ell(im,(x-3,58,x+3,64),'fire_l'); px(im,x,60,'fire_w')
+    else:
+        platform(im,2,125,84,92)
+        rect(im,6,46,121,84,'brick'); [rect(im,x+(4 if (y//4)%2 else 0),y,x+(4 if (y//4)%2 else 0),y,'brick_d') for y in range(46,84,4) for x in range(6,121,8)]
+        [d.line([(6,y),(121,y)],fill=P('brick_d')) for y in range(49,84,4)]
+        for x0 in range(12,116,22):
+            d.rectangle([x0,58,x0+15,84],fill=P('char')); d.pieslice([x0,52,x0+15,66],180,360,fill=P('char')); goods(im,x0+1,x0+16,78,x0)
+            d.arc((x0-1,51,x0+16,67),180,360,fill=P('stone_l'),width=2)
+        rect(im,6,44,121,46,'stone_l')
+        tile_roof(im,0,127,14,44); rect(im,40,22,88,32,'wood_d'); rect(im,41,23,87,31,'parch'); 
+        for x in range(44,85,5): rect(im,x,25,x+3,29,'merah' if x<64 else 'wood_d')
+    return shadow(outline(im),64,90,60,4)
+def balai_megah_t(t):
+    im=new(128,96); d=ImageDraw.Draw(im)
+    def kentongan(x,y,big=True):
+        rect(im,x,y-30,x+2,y,'wood_d'); rect(im,x+16,y-30,x+18,y,'wood_d'); rect(im,x-1,y-32,x+19,y-29,'wood')
+        d.line([(x+9,y-29),(x+9,y-26)],fill=P('outline')); rect(im,x+5,y-26,x+13,y-4,'wood'); rect(im,x+5,y-26,x+6,y-4,'wood_l'); rect(im,x+8,y-22,x+10,y-8,'wood_d')
+    if t==1:
+        platform(im,10,96,82,88)
+        for x in(14,40,66,90): rect(im,x,54,x+3,82,'wood'); px(im,x,54,'wood_l')
+        d.polygon([(6,58),(22,36),(86,36),(102,58)],fill=P('sirap')); [d.line([(22-(y-36)*16/22,y),(86+(y-36)*16/22,y)],fill=P('wood_d')) for y in range(39,58,3)]
+        d.line([(6,58),(102,58)],fill=P('sirap_l'),width=2); kentongan(104,86)
+        rect(im,24,74,80,77,'wood_l')
+    else:
+        platform(im,4,123,82,90)
+        for x in range(10,120,18): rect(im,x,58,x+4,82,'kayu_ukir' if t==3 else 'wood'); rect(im,x,58,x+1,82,'wood_l')
+        if t==3:
+            rect(im,36,62,92,82,'kayu_ukir'); [rect(im,x,64,x+1,80,'gold') for x in range(40,90,6)]; rect(im,58,68,70,82,'wood_d')
+            for x in range(14,114,10): ell(im,(x,77,x+6,81),'gold_d'); ell(im,(x+1,77,x+5,79),'gold')
+            rect(im,96,66,108,80,'kayu_ukir'); ell(im,(97,66,107,76),'gold_d'); ell(im,(99,68,105,74),'gold')
+        else: rect(im,36,62,92,82,'wood_l'); [rect(im,x,62,x,82,'wood') for x in range(38,92,4)]; rect(im,58,68,70,82,'wood_d')
+        d.polygon([(0,62),(22,40),(106,40),(127,62)],fill=P('tile_roof'))
+        for y in range(43,62,3): ww=22-(y-40)*22/22; d.line([(ww,y),(127-ww,y)],fill=P('tile_roof_d'))
+        d.polygon([(30,40),(46,12),(82,12),(98,40)],fill=P('tile_roof')); [d.line([(46-(y-12)*16/28,y),(82+(y-12)*16/28,y)],fill=P('tile_roof_d')) for y in range(15,40,3)]
+        d.line([(46,12),(82,12)],fill=P('tile_roof_l'),width=2); d.line([(0,62),(127,62)],fill=P('tile_roof_l')); d.line([(22,40),(106,40)],fill=P('tile_roof_l'))
+        rect(im,13,64,15,66,'outline'); rect(im,11,66,17,80,'wood'); rect(im,11,66,12,80,'wood_l'); rect(im,13,69,15,77,'wood_d')
+        if t==3:
+            for x in(46,82): d.line([(x,12),(x+(4 if x<64 else -4),4)],fill=P('mustaka'),width=2)
+            [px(im,x,63,'gold') for x in range(4,124,3)]; [px(im,x,41,'gold') for x in range(24,105,3)]
+            rect(im,54,28,73,35,'kayu_ukir'); rect(im,55,29,72,34,'gold')
+            for x in(16,104): rect(im,x,70,x+5,73,'merah'); rect(im,x,73,x+5,76,'putih')
+        else: rect(im,54,28,73,35,'wood_d')
+    return shadow(outline(im),64,88,58,4)
+def masjid_t(t):
+    if t==3:
+        im=masjid(); d=ImageDraw.Draw(im)
+        b=new(128,128); db=ImageDraw.Draw(b); rect(b,0,104,3,118,'wood_d'); rect(b,22,104,25,118,'wood_d'); rect(b,0,102,25,104,'wood')
+        ell(b,(3,92,22,112),'wood'); ell(b,(3,92,10,112),'kayu_ukir'); ell(b,(18,93,23,111),'leather'); ell(b,(19,95,22,109),'parch')
+        [rect(b,x,93,x,111,'wood_d') for x in(8,13)]
+        im.alpha_composite(outline(b)); return im
+    im=new(128,128); d=ImageDraw.Draw(im)
+    if t==1:
+        rect(im,24,112,103,118,'stone'); rect(im,24,112,103,112,'stone_l'); rect(im,24,117,103,118,'stone_d')
+        bamboo_wall(im,30,84,97,112); rect(im,56,92,70,112,'wood_d'); rect(im,57,93,69,112,'wood')
+        for x in(36,80): rect(im,x,90,x+8,100,'wood_d'); rect(im,x+1,91,x+7,99,'bamboo_d')
+        y=86
+        for i,(w_,th) in enumerate(((44,16),(24,14))):
+            d.polygon([(64-w_,y),(64-w_*0.55,y-th),(64+w_*0.55,y-th),(64+w_,y)],fill=P('ijuk'))
+            for yy in range(int(y-th)+2,y,3): ww=w_*0.55+w_*0.45*(yy-(y-th))/th; d.line([(64-ww,yy),(64+ww,yy)],fill=P('ijuk_l'))
+            if i==0: rect(im,48,y-th-4,80,y-th,'bamboo_l')
+            y=y-th-4
+        rect(im,63,y-4,64,y+4,'wood_d'); ell(im,(61,y-7,66,y-2),'mustaka')
+        return shadow(outline(im),64,118,42,4)
+    rect(im,14,112,113,120,'stone_l'); rect(im,14,118,113,120,'stone_d')
+    rect(im,20,80,107,112,'wood'); [rect(im,x,80,x,112,'wood_d') for x in range(22,107,5)]; rect(im,20,80,107,82,'wood_l')
+    for x in(34,50,76,92): rect(im,x,90,x+8,104,'wood_d'); rect(im,x+1,92,x+7,104,'leaf_d')
+    rect(im,58,90,69,112,'wood_d'); rect(im,59,92,68,112,'kayu_ukir')
+    yt=tumpang(im,64,82,[58,38,20],15); rect(im,63,yt-8,64,yt,'mustaka'); ell(im,(60,yt-12,67,yt-5),'mustaka')
+    return shadow(outline(im),64,120,52,5)
+def bendungan_t(t):
+    im=new(96,64); d=ImageDraw.Draw(im)
+    up='water_d' if t==4 else 'water'
+    rect(im,0,4 if t==4 else 10,95,34,up); [rect(im,x,14+(x%7),x+5,14+(x%7),'water_l') for x in range(2,92,11)]
+    if t==4: rect(im,0,0,95,5,'grass'); rect(im,0,4,95,5,'grass_d')
+    rect(im,0,52,95,63,'water'); [rect(im,x,56+(x%5),x+4,56+(x%5),'water_l') for x in range(3,92,13)]
+    if t==0:
+        rect(im,0,34,95,51,'water'); [rect(im,x,40+(x%5),x+4,40+(x%5),'water_l') for x in range(5,92,12)]; return outline(im)
+    if t==1:
+        for x0 in range(0,96,12):
+            rect(im,x0,32,x0+11,46,'stone'); [ell(im,(x0+a,32+b,x0+a+4,32+b+4),'stone_l') for a,b in((1,1),(6,3),(2,7),(7,9))]
+            for x in range(x0,x0+12,4): rect(im,x,32,x,46,'bamboo_d')
+            for y in(32,39,46): rect(im,x0,y,x0+11,y,'bamboo_d')
+        for x in range(4,92,14): rect(im,x,46,x+5,56,'water_l'); rect(im,x+2,47,x+3,56,'foam')
+    else:
+        rect(im,0,34,95,44,'stone'); [rect(im,x,34+(x//10%2)*5,x+8,38+(x//10%2)*5,'stone_l') for x in range(0,96,10)]; rect(im,0,44,95,46,'stone_d')
+        for x in range(10,90,16): rect(im,x,44,x+7,54,'water_l'); rect(im,x+2,46,x+5,54,'foam')
+        if t>=2: rect(im,80,34,95,63,'stone_d'); rect(im,83,34,92,63,'water'); [px(im,86,y,'water_l') for y in range(36,62,4)]
+        if t>=3:
+            rect(im,38,18,57,34,'wood'); rect(im,38,18,39,34,'wood_d'); rect(im,56,18,57,34,'wood_d'); rect(im,40,24,55,33,'wood_l'); [rect(im,40,y,55,y,'wood_d') for y in(27,30)]
+            ell(im,(42,8,53,19),'stone_d'); ell(im,(44,10,51,17),(0,0,0,0)); d.line([(47,9),(47,18)],fill=P('stone_d')); d.line([(42,13),(53,13)],fill=P('stone_d')); rect(im,46,18,48,24,'stone_d')
+        if t==4:
+            rect(im,0,30,95,34,'brick'); rect(im,0,30,95,30,'stone_l'); [rect(im,x,26,x,30,'wood_d') for x in range(2,96,8)]; rect(im,0,26,95,26,'wood')
+    return outline(im)
+def pendopo_reog_t(t):
+    im=new(128,96); d=ImageDraw.Draw(im)
+    if t<3:
+        rect(im,14,82,113,88,'dirt'); rect(im,14,86,113,88,'dirt_d')
+        for x in(18,48,78,106): bamboo_pole(im,x,52,84)
+        rect(im,20,74,104,77,'bamboo_l')
+        ell(im,(30,66,44,80),'wood'); ell(im,(30,66,35,80),'leather'); ell(im,(40,67,45,79),'leather')
+        rect(im,56,68,72,74,'kayu_ukir'); ell(im,(58,58,70,70),'gold_d'); ell(im,(60,60,68,68),'gold')
+        if t==2:
+            rect(im,84,68,104,80,'kayu_ukir'); [rect(im,x,70,x+2,73,'gold') for x in range(86,103,4)]
+        ijuk_roof(im,8,120,22 if t==2 else 28,54); rect(im,8,52,120,55,'bamboo')
+        if t==2:
+            m=new(128,96); dadak_merak(m,64,64,22); im.alpha_composite(outline(m))
+    else:
+        platform(im,4,123,82,90)
+        for x in range(10,120,18): rect(im,x,58,x+4,82,'merah_d'); rect(im,x,58,x+1,82,'merah')
+        m=new(128,96); dadak_merak(m,64,62,22); im.alpha_composite(outline(m))
+        rect(im,24,72,48,80,'kayu_ukir'); [ell(im,(x,73,x+5,78),'gold') for x in range(26,46,6)]; ell(im,(84,64,100,80),'gold_d'); ell(im,(86,66,98,78),'gold'); rect(im,82,62,102,64,'kayu_ukir')
+        d.polygon([(0,60),(22,38),(106,38),(127,60)],fill=P('tile_roof'))
+        for y in range(41,60,3): ww=22-(y-38)*22/22; d.line([(ww,y),(127-ww,y)],fill=P('tile_roof_d'))
+        d.polygon([(32,38),(48,10),(80,10),(96,38)],fill=P('tile_roof')); [d.line([(48-(y-10)*16/28,y),(80+(y-10)*16/28,y)],fill=P('tile_roof_d')) for y in range(13,38,3)]
+        d.line([(48,10),(80,10)],fill=P('tile_roof_l'),width=2); d.line([(0,60),(127,60)],fill=P('gold')); d.line([(22,38),(106,38)],fill=P('gold'))
+        for x in(48,80): d.line([(x,10),(x+(4 if x<64 else -4),3)],fill=P('mustaka'),width=2)
+        rect(im,54,26,73,33,'merah_d'); rect(im,55,27,72,32,'gold')
+    return shadow(outline(im),64,88,56,4)
+RESEARCH_MON=[
+ ('masjid',masjid_t,['Langgar Bambu','Masjid Kayu',"Masjid Jami'"],'masjid 128x128 (tahap 1 memakai 3x3 tengah, tahap 2-3 4x4)'),
+ ('balai_megah',balai_megah_t,['Serambi & Kentongan Besar','Pendopo Joglo','Balai Megah (ukiran & gamelan)'],'balai desa megah 128x96 (4x3)'),
+ ('bendungan',bendungan_t,['Bendung Bronjong Bambu','Saluran Induk','Pintu Air','Bendungan & Embung'],'bendungan & irigasi 96x64 (3x2), letakkan melintang sungai'),
+ ('pendopo_reog',pendopo_reog_t,['Sanggar Latihan','Dadak Merak & Gamelan','Pendopo Agung'],'pendopo reog 128x96 (4x3)'),
+ ('pasar_legi',pasar_legi,['Los Bambu','Hari Pasaran','Pasar Batu Bata'],'pasar legi 128x96 (4x3), pasar tradisional Jawa'),
+]
+def monuments_8b(only=None):
+    for name,fn,names,note in RESEARCH_MON:
+        if only and name not in only: continue
+        prev=None; N=len(names)
+        for t in range(1,N+1):
+            fin=fn(t)
+            if name=='bendungan': research_stages(fin,prev,name,t,N,names[t-1],note,flat=True,river=bendungan_t(0))
+            else: research_stages(fin,prev,name,t,N,names[t-1],note)
+            prev=fin
+
+# ---------- 6. prop Agustusan ----------
+def agustus_8b():
+    im=new(64,128); rect(im,30,24,33,122,'wood_d'); [rect(im,30,y,33,y,'wood_l') for y in range(30,122,6)]; rect(im,24,120,39,124,'dirt_d')
+    rect(im,29,22,34,24,'wood'); [px(im,29,y,'water_l') for y in(60,80,100)]; [px(im,34,y+4,'water_l') for y in(60,80,100)]
+    save(shadow(outline(im),32,123,10,2),'decor/agustus/tiang_pinang.png',note='64x128 batang pinang licin tanpa hadiah (posisi sama dengan panjat_pinang.png); puncak tiang y=22, x 30-33')
+    hd=new(64,32); d=ImageDraw.Draw(hd); ell(hd,(6,4,57,14),'bamboo'); ell(hd,(9,6,54,12),(0,0,0,0)) if False else None
+    for x,c in((10,'cloth1'),(18,'banana'),(26,'cloth2'),(36,'leaf'),(44,'roof'),(52,'gold')):
+        d.line([(x,10),(x,18)],fill=P('straw_d')); rect(hd,x-3,18,x+3,24,c); px(hd,x-2,19,'white')
+    rect(hd,24,0,39,3,'merah'); rect(hd,24,3,39,6,'putih'); 
+    save(outline(hd),'decor/agustus/hadiah_pinang.png',note='64x32 cincin hadiah gantung; tempel di (tiangX-0, puncak tiang y 22 → offset y -10): pada kanvas tiang_pinang paste di (0,12); lepas/ambil satu per satu dengan menyembunyikan sprite ini saat menang')
+    for i,(kind,col) in enumerate((('',None),)):
+        pass
+    k=new(); d=ImageDraw.Draw(k); d.polygon([(8,10),(24,10),(26,28),(6,28)],fill=P('straw')); d.polygon([(8,10),(12,6),(20,6),(24,10)],fill=P('straw_l'))
+    rect(k,7,12,25,13,'straw_d'); [px(k,x,y,'straw_d') for x,y in((11,18),(19,21),(14,24),(22,16))]; d.line([(12,6),(10,3)],fill=P('straw_d')); d.line([(20,6),(22,3)],fill=P('straw_d'))
+    save(shadow(outline(k),16,29,9,2),'decor/agustus/karung.png',note='32x32 karung goni berdiri (prop lomba balap karung / tumpukan karung)')
+    k=new(); d=ImageDraw.Draw(k); ell(k,(3,14,29,28),'straw'); ell(k,(5,15,27,22),'straw_l'); [px(k,x,y,'straw_d') for x,y in((9,19),(16,24),(22,20))]; rect(k,26,18,30,24,'straw_d')
+    save(shadow(outline(k),16,28,12,2),'decor/agustus/karung_tergeletak.png',note='32x32 karung kosong tergeletak (garis start/finish)')
+    sh=new(64,16)
+    for f in range(2):
+        t=new(32,16); d=ImageDraw.Draw(t)
+        pts=[(x,8+int(round((1-f)*1.5*math.sin(x/32*2*math.pi)))) for x in range(32)]
+        for x,y in pts: rect(t,x,y-1,x,y+1,'straw_d' if (x//3)%2 else 'straw'); px(t,x,y-1,'straw_l') if (x//3)%2==0 else None
+        sh.paste(t,(f*32,0))
+    save(sh,'decor/agustus/tambang_segmen.png',(32,16),2,'tambang tarik tambang, tile horizontal seamless (y tengah=8, tebal 3px); frame 0 kendur, 1 tegang')
+    t=new(32,16); [rect(t,x,7,x,9,'straw_d' if (x//3)%2 else 'straw') for x in range(32)]; d=ImageDraw.Draw(t); d.polygon([(14,9),(18,9),(19,15),(13,15)],fill=P('merah')); rect(t,13,6,18,10,'merah_d')
+    save(t,'decor/agustus/tambang_tengah.png',note='32x16 bagian tengah tambang dengan pita merah (penanda menang), sambung dengan tambang_segmen')
+    g=new(); d=ImageDraw.Draw(g)
+    for r_ in(12,9,6): d.ellipse([16-r_,20-r_*0.55,16+r_,20+r_*0.55],outline=P('straw_d'),width=3); d.ellipse([16-r_,20-r_*0.55,16+r_,20+r_*0.55],outline=P('straw'),width=1)
+    d.line([(26,20),(30,26)],fill=P('straw_d'),width=3)
+    save(shadow(outline(g),16,27,12,2),'decor/agustus/tambang_gulung.png',note='32x32 tambang tergulung (disimpan setelah dibeli sekali)')
+    b=new(64,32); d=ImageDraw.Draw(b)
+    for y0 in(10,18):
+        rect(b,2,y0,61,y0+5,'wood'); rect(b,2,y0,61,y0,'wood_l'); rect(b,2,y0+5,61,y0+5,'wood_d')
+    for x in(10,30,50): rect(b,x-3,9,x+3,24,'merah' if x!=30 else 'leather'); rect(b,x-3,15,x+3,17,'wood_d')
+    save(shadow(outline(b),32,26,30,3),'decor/agustus/bakiak.png',note='64x32 bakiak (terompah panjang) 3 orang tampak atas, horizontal; kaki penduduk di x 10/30/50; untuk arah vertikal putar 90°')
+    sh=new(64,64)
+    for f in range(2):
+        im=new(32,64); d=ImageDraw.Draw(im); rect(im,0,4,31,5,'wood_d')
+        for x in(8,23):
+            sw=(1 if f else -1)*(1 if x==8 else -1); d.line([(x,6),(x+sw,16)],fill=P('white'))
+            ell(im,(x+sw-6,16,x+sw+6,28),'kerupuk'); [px(im,x+sw+a,22+b_,'kerupuk_d') for a,b_ in((-3,-2),(2,-3),(0,1),(-2,3),(3,2))]
+        sh.paste(outline(im),(f*32,0))
+    save(sh,'decor/agustus/kerupuk_gantung.png',(32,64),2,'tali dengan 2 kerupuk untuk lomba makan kerupuk, 2 frame ayun ~300ms; palang di y 4-5, kerupuk setinggi kepala penduduk (y 16-28)')
+    pi=icon_draw(piala_draw); save(pi,'decor/agustus/piala.png',note='32x32 piala juara (juara umum 14 hari / papan Teladan)')
+    save(to16c(pi),'icons/status/icon_piala_16.png',note='16x16 ikon piala kecil di atas kepala juara umum selama 14 hari; offset seperti Zzz (+16,-12)')
+    big=new(48,64); d=ImageDraw.Draw(big); d.chord((8,2,40,40),0,180,fill=P('gold')); rect(big,8,2,40,21,'gold'); rect(big,11,4,14,20,'fire_w'); d.arc((0,6,14,24),90,270,fill=P('gold_d'),width=3); d.arc((34,6,48,24),270,90,fill=P('gold_d'),width=3)
+    rect(big,21,36,27,44,'gold_d'); rect(big,12,44,36,52,'wood_d'); rect(big,10,52,38,58,'wood'); rect(big,16,46,32,50,'gold'); px(big,24,12,'white'); ell(big,(20,8,28,16),'fire_w'); ell(big,(22,10,26,14),'gold')
+    save(shadow(outline(big),24,58,16,3),'decor/agustus/piala_emas_besar.png',note='48x64 piala emas besar di Balai (Desa Teladan Nasional, tingkat 4)')
+# ---------- 7. kartu dilema, tunda, reaksi, ekspresi potret ----------
+def dilemma_8b():
+    for kind,hc,hl in(('ringan','pos_c','leaf_l'),('berat','roof','roof_l')):
+        W,H=64,80; im=new(W,H); e=W-1; f=H-1
+        rect(im,0,0,e,f,'outline'); rect(im,1,1,e-1,f-1,'wood_d'); rect(im,2,2,e-2,f-2,'parch'); rect(im,2,f-4,e-2,f-2,'parch_d')
+        rect(im,2,2,e-2,17,hc); rect(im,2,2,e-2,3,hl); batik_band(im,2,14,e-2,17); rect(im,2,18,e-2,18,'wood_d')
+        for cx,cy in((4,f-4),(e-4,f-4)): px(im,cx,cy,'gold_d')
+        [im.putpixel(p_,(0,0,0,0)) for p_ in((0,0),(e,0),(0,f),(e,f))]
+        save(im,f'ui/dilemma/kartu_dilema_{kind}.png',note=f'9-slice {W}x{H}: margin atas 20 (pita judul {hc}), bawah 8, kiri/kanan 8; judul di y 4-13, isi mulai y 22')
+        chip=new(8,12); rect(chip,0,0,7,11,'outline'); rect(chip,1,1,6,10,hc); rect(chip,1,1,6,2,hl)
+        save(chip,f'ui/dilemma/log_tanda_{kind}.png',note=f'8x12 penanda warna di kiri baris log akibat tertunda (warna sama dengan kartu {kind})')
+    def hourglass(im,d):
+        rect(im,6,2,25,5,'wood'); rect(im,6,26,25,29,'wood'); rect(im,6,2,25,2,'wood_l')
+        d.polygon([(9,6),(22,6),(17,15),(17,17),(22,25),(9,25),(14,17),(14,15)],fill=P('ice_l' if 'ice_l' in PALETTE else 'water_l'))
+        d.polygon([(11,8),(20,8),(16,14)],fill=P('sand')); d.polygon([(10,25),(21,25),(16,20)],fill=P('sand')); rect(im,15,15,16,22,'sand_d')
+        for x in(7,23): rect(im,x,5,x+1,26,'wood_d')
+    hg=icon_draw(hourglass); save(hg,'ui/dilemma/icon_tunda.png',note='ikon ⏳ akibat tertunda 32x32'); save(to16c(hg),'ui/dilemma/icon_tunda_16.png',note='16x16 (di kartu dan log)')
+    for n,face in(('suka','fire_l'),('cemas','water_l'),('netral','stone_l')):
+        r=new(12,12); ell(r,(1,1,10,10),face); px(r,4,4,'black'); px(r,7,4,'black'); d=ImageDraw.Draw(r)
+        if n=='suka': d.line([(3,7),(4,8),(7,8),(8,7)],fill=P('black'))
+        elif n=='cemas': d.line([(3,8),(4,7),(5,8),(6,7),(7,8),(8,7)],fill=P('black')); px(r,9,2,'water'); px(r,9,3,'water')
+        else: d.line([(4,8),(7,8)],fill=P('black'))
+        save(outline(r),f'ui/dilemma/reaksi_{n}.png',note='12x12 reaksi sifat (😊 suka / 😟 cemas / netral) di samping ikon sifat _16')
+    c=new(32,18); rect(c,0,0,31,17,'outline'); rect(c,1,1,30,16,'parch_d'); rect(c,1,1,30,1,'parch'); [c.putpixel(p_,(0,0,0,0)) for p_ in((0,0),(31,0),(0,17),(31,17))]
+    save(c,'ui/dilemma/reaksi_chip.png',note='32x18 latar chip reaksi: ikon sifat _16 di (1,1), ikon reaksi_* 12x12 di (18,3)')
+    EXPR=('netral','senang','marah','sedih','khawatir')
+    for i,v in enumerate(VARS):
+        skin,hair,cloth=v; base=Image.open(os.path.join(ROOT,f'ui/dilemma/portraits/portrait_villager_{i+1}.png')).convert('RGBA')
+        sh=new(32*5,32)
+        for k,ex in enumerate(EXPR):
+            im=base.copy(); d=ImageDraw.Draw(im)
+            rect(im,6,16,25,29,skin); rect(im,0,16,3,21,hair) if False else None
+            for y in range(24,26): [px(im,x,y,'berry_l') for x in(6,7,24,25)]
+            def eyes(h=6,pup=True):
+                for x0 in(8,20):
+                    rect(im,x0,24-h,x0+3,23,'black'); px(im,x0,24-h,'white'); px(im,x0+1,24-h,'white') if h>=4 else None
+            if ex=='netral': eyes(); rect(im,14,27,17,27,'outline')
+            elif ex=='senang':
+                for x0 in(8,20): d.line([(x0,21),(x0+1,19),(x0+2,19),(x0+3,21)],fill=P('black'),width=1); d.line([(x0,22),(x0+1,20),(x0+2,20),(x0+3,22)],fill=P('black'))
+                rect(im,12,26,19,27,'outline'); rect(im,13,28,18,28,'outline'); rect(im,13,27,18,27,'berry'); [px(im,x,y,'berry_l') for x in(5,6,7,8,23,24,25,26) for y in(24,25)]
+            elif ex=='marah':
+                for x0 in(8,20): rect(im,x0,20,x0+3,23,'black'); px(im,x0+1,21,'white')
+                d.line([(7,17),(12,19)],fill=P('outline'),width=2); d.line([(24,17),(19,19)],fill=P('outline'),width=2)
+                d.line([(13,28),(14,27),(17,27),(18,28)],fill=P('outline')); 
+                d.line([(25,2),(30,7)],fill=P('merah'),width=2); d.line([(30,2),(25,7)],fill=P('merah'),width=2)
+                for x in range(26,31): [px(im,x,y,'merah') for y in(1,)] if False else None
+            elif ex=='sedih':
+                eyes(5); d.line([(7,18),(11,16)],fill=P('outline'),width=1); d.line([(24,18),(20,16)],fill=P('outline'),width=1)
+                d.line([(13,28),(14,27),(17,27),(18,28)],fill=P('outline')); rect(im,9,24,10,27,'water_l'); px(im,9,28,'water')
+            elif ex=='khawatir':
+                for x0 in(9,21): rect(im,x0,20,x0+1,22,'black')
+                d.line([(7,17),(11,16)],fill=P('outline')); d.line([(24,17),(20,16)],fill=P('outline'))
+                d.line([(12,28),(13,27),(14,28),(15,27),(16,28),(17,27),(18,28),(19,27)],fill=P('outline'))
+                ell(im,(25,7,30,14),'water_l'); d.polygon([(27,3),(25,9),(30,9)],fill=P('water_l')); px(im,26,9,'white'); px(im,26,10,'white')
+            save(im,f'ui/dilemma/portraits/portrait_villager_{i+1}_{ex}.png',note=f'potret 32x32 ekspresi {ex} (wajah sama dengan portrait_villager_{i+1})')
+            sh.paste(im,(k*32,0))
+        save(sh,f'ui/dilemma/portraits/portrait_villager_{i+1}_ekspresi.png',(32,32),5,'sheet ekspresi 5 frame: 0 netral, 1 senang, 2 marah, 3 sedih, 4 khawatir')
+
+# ---------- 8. pengunjung ----------
+def acc_frame(v,extra):
+    def fn(dn,f,walk):
+        im=villager_frame(v,dn,f,walk); oy=-((1 if f in(1,3) else 0) if walk else 0); sw=([0,1,0,-1][f] if walk else 0)
+        lay=new(); extra(lay,ImageDraw.Draw(lay),dn,oy,sw); lay=outline(lay); im.alpha_composite(lay); return im
+    return fn
+def X_tengkulak(im,d,dn,oy,sw):
+    ell(im,(4,4+oy,27,9+oy),'leather'); ell(im,(9,-1+oy,22,7+oy),'leather'); rect(im,9,4+oy,22,5+oy,'wood_d')
+    if dn=='down': rect(im,19,19+oy,22,23+oy,'parch'); rect(im,19,19+oy,22,19+oy,'stone_d')
+    if dn in('left','right'):
+        x=6 if dn=='right' else 22; rect(im,x,17+oy,x+4,24+oy,'straw'); rect(im,x,17+oy,x+4,18+oy,'straw_d')
+def X_juragan(im,d,dn,oy,sw):
+    if dn!='up':
+        d.arc((10,13+oy,21,22+oy),20,160,fill=P('gold'),width=1); rect(im,15,21+oy,16,22+oy,'gold_d') if dn=='down' else None
+    if dn=='down': rect(im,13,16+oy,18,16+oy,'hair1'); px(im,12,17+oy,'hair1'); px(im,19,17+oy,'hair1')
+    rect(im,9,24+oy,22,25+oy,'gold_d')
+def X_mantri(im,d,dn,oy,sw):
+    if dn=='down': rect(im,22,22+oy-sw,27,27+oy-sw,'leather'); rect(im,23,21+oy-sw,26,21+oy-sw,'wood_d'); rect(im,24,23+oy-sw,25,26+oy-sw,'white'); rect(im,23,24+oy-sw,26,25+oy-sw,'white')
+    elif dn in('left','right'):
+        x=17+(sw*2 if dn=='right' else -sw*2)-2; rect(im,x,22+oy,x+5,27+oy,'leather'); rect(im,x+1,21+oy,x+4,21+oy,'wood_d')
+    else: rect(im,4,22+oy+sw,9,27+oy+sw,'leather')
+    if dn=='down': rect(im,15,17+oy,16,24+oy,'coat_d'); px(im,12,19+oy,'stone_l'); px(im,12,20+oy,'stone_l')
+def X_camat(im,d,dn,oy,sw):
+    rect(im,8,1+oy,23,6+oy,'black'); ell(im,(8,-1+oy,23,4+oy),'black'); px(im,9,1+oy,'stone_d')
+    if dn=='down':
+        rect(im,11,18+oy,13,20+oy,'khaki_d'); rect(im,18,18+oy,20,20+oy,'khaki_d'); px(im,19,18+oy,'gold'); px(im,12,21+oy,'merah'); px(im,13,21+oy,'putih')
+        rect(im,15,17+oy,16,24+oy,'khaki_d')
+    rect(im,10,24+oy,21,24+oy,'black')
+def X_kader(im,d,dn,oy,sw):
+    k='putih'
+    ell(im,(7,1+oy,24,19+oy),k); rect(im,9,14+oy,22,19+oy,k)
+    if dn=='down':
+        ell(im,(10,6+oy,21,17+oy),'skin2'); rect(im,12,11+oy,13,13+oy,'black'); rect(im,18,11+oy,19,13+oy,'black'); px(im,12,11+oy,'white'); px(im,18,11+oy,'white')
+        px(im,11,14+oy,'berry_l'); px(im,20,14+oy,'berry_l'); rect(im,13,20+oy,18,24+oy,'white'); rect(im,14,21+oy,17,21+oy,'kader_d')
+    elif dn=='right': ell(im,(15,7+oy,22,16+oy),'skin2'); rect(im,19,11+oy,20,13+oy,'black'); px(im,19,11+oy,'white')
+    elif dn=='left': ell(im,(9,7+oy,16,16+oy),'skin2'); rect(im,11,11+oy,12,13+oy,'black'); px(im,12,11+oy,'white')
+    else: rect(im,10,4+oy,21,5+oy,'kader_l')
+VISITORS=[('tengkulak',('skin2','hair1','cloth_e1'),X_tengkulak,'tengkulak bertopi (pengepul hasil panen), tas karung kecil'),
+ ('juragan',('skin1','hair_grey','batik'),X_juragan,'juragan berkalung emas, baju batik, berkumis'),
+ ('mantri',('skin3','hair1','coat'),X_mantri,'mantri kesehatan, baju putih, tas obat'),
+ ('pak_camat',('skin2','hair1','khaki'),X_camat,'Pak Camat berseragam khaki + peci'),
+ ('kader_posyandu',('skin2','hair1','kader'),X_kader,'kader posyandu: seragam merah muda + kerudung')]
+def reog_frame(dn,f,walk):
+    F=64; im=new(F,F); d=ImageDraw.Draw(im); step=[0,1,0,-1][f] if walk else 0; sway=[0,1,0,-1][f] if walk else ([0,0,1,0][f])
+    bob=-(1 if walk and f in(1,3) else 0)
+    for i,x in enumerate((26,35)):
+        st=step*(1 if i else -1)*2 if dn in('left','right') else 0; up=max(0,step*(1 if i else -1)) if dn in('down','up') else 0
+        rect(im,x+st,50-up,x+3+st,60-up,'black'); [rect(im,x+st,y-up,x+3+st,y-up,'merah') for y in(52,55,58)]; rect(im,x-1+st,60-up,x+4+st,61-up,'outline')
+    rect(im,24,40+bob,40,51+bob,'black'); rect(im,24,44+bob,40,45+bob,'merah'); rect(im,23,48+bob,41,50+bob,'gold')
+    for x in(23,39): rect(im,x,41+bob,x+2,47+bob,'skin3')
+    m=new(F,F); md=ImageDraw.Draw(m); cx=32+sway; cy=30+bob
+    if dn=='down': dadak_merak(m,cx,cy,26)
+    elif dn=='up':
+        dadak_merak(m,cx,cy,26,face=False); md.ellipse([cx-20,cy-20,cx+20,cy+16],outline=P('wood'),width=2); md.line([(cx,cy-20),(cx,cy+12)],fill=P('wood'),width=2)
+        for a in range(-60,61,30): rr=math.radians(a-90); md.line([(cx,cy+12),(cx+20*math.cos(rr),cy+16*math.sin(rr))],fill=P('wood_d'))
+    else:
+        s=1 if dn=='right' else -1; tmp=new(F,F); dadak_merak(tmp,32,cy,26,face=False); tmp=tmp.resize((30,F),Image.NEAREST); m.alpha_composite(tmp,(17+sway-s*5,7)); md.line([(26+sway-s*5,cy+7),(38+sway-s*5,cy+7)],fill=P('wood'),width=2)
+        hx=32+s*8; ell(m,(hx-7,cy+4,hx+7,cy+18),'leo'); ell(m,(hx-4+s*3,cy+10,hx+4+s*3,cy+18),'leo_l'); rect(m,hx+s*2-1,cy+8,hx+s*2+1,cy+9,'black'); rect(m,hx+s*4-2,cy+16,hx+s*4+2,cy+17,'merah'); px(m,hx-s*3,cy+7,'spot')
+    m=outline(m); out=outline(im); out.alpha_composite(m); return shadow(out,32,61,12,3)
+def reog_sheet():
+    sh=new(256,512)
+    for r_,dn in enumerate(['down','left','right','up']):
+        b=reog_frame(dn,0,False)
+        for f in range(4): sh.paste(reog_frame(dn,f,False),(f*64,r_*64)); sh.paste(reog_frame(dn,f,True),(f*64,(r_+4)*64))
+    return sh
+def visitors():
+    for n,v,x,note in VISITORS:
+        save(person_sheet(acc_frame(v,x)),f'characters/visitors/{n}.png',(32,32),32,f'{note}; format villager_N: 8 baris x 4 kolom, baris 0-3 diam, 4-7 jalan (bawah,kiri,kanan,atas); kaki y≈29')
+    save(reog_sheet(),'characters/visitors/reog_berjalan.png',(64,64),32,'reog berjalan (pembarong + dadak merak besar) 64x64/frame; 8 baris x 4 kolom: 0-3 diam (dadak bergoyang pelan), 4-7 jalan; arah bawah,kiri,kanan,atas; kaki di y≈61, anchor tengah-bawah (x 32)')
+    sh=animal_sheet(lambda dn,f,m: quad_frame(32,dn,f,m,('fire_d','chick_w','white'),dict(body=(10,16,22,23),leg=3,head_y=10,head_w=7,head_h=6,tail='long',ear='up',snout='white',spots=[(12,17),(17,16),(19,19)],spotc='fire')),32,('idle','walk'))
+    save(sh,'characters/fauna/kucing.png',(32,32),32,'kucing belang (putih-oranye) 32x32; baris 0-3 diam, 4-7 jalan; arah bawah,kiri,kanan,atas; format fauna')
+    k=new(); d=ImageDraw.Draw(k); ell(k,(6,16,26,27),'chick_w'); ell(k,(9,18,16,24),'fire'); ell(k,(18,17,26,25),'chick_w'); d.polygon([(19,18),(20,14),(22,17)],fill=P('fire_d')); d.polygon([(23,17),(25,14),(26,18)],fill=P('fire_d'))
+    d.line([(20,21),(22,21)],fill=P('black')); d.line([(23,21),(25,21)],fill=P('black')); d.arc((4,18,18,30),90,200,fill=P('fire'),width=2)
+    save(shadow(outline(k),16,27,10,2),'characters/fauna/kucing_tidur.png',note='32x32 kucing tidur melingkar (pakai bersama icon_zzz_anim)')
+    m=new(64,64); d=ImageDraw.Draw(m)
+    rect(m,4,36,47,40,'wood_l'); rect(m,4,40,47,52,'kader_l'); [rect(m,x,40,x+1,52,'kader') for x in range(6,47,6)]; rect(m,6,52,8,58,'wood_d'); rect(m,43,52,45,58,'wood_d')
+    rect(m,8,30,18,36,'water_l'); rect(m,9,31,17,35,'white'); rect(m,20,31,28,36,'leaf_l'); rect(m,21,32,27,32,'white'); rect(m,30,32,38,36,'fire_l'); rect(m,31,33,37,33,'white')
+    d.line([(46,58),(52,8)],fill=P('wood'),width=2); d.line([(62,58),(56,8)],fill=P('wood'),width=2); rect(m,48,6,60,8,'wood_d')
+    d.line([(54,8),(54,16)],fill=P('outline')); rect(m,49,16,59,19,'stone_l'); d.line([(54,19),(54,24)],fill=P('outline'))
+    d.chord((47,22,61,36),0,180,fill=P('batik')); d.line([(48,29),(60,29)],fill=P('batik_l'))
+    rect(m,10,14,30,26,'kader'); rect(m,11,15,29,25,'putih'); ell(m,(14,16,20,21),'kader'); ell(m,(19,16,25,21),'kader'); d.polygon([(14,19),(25,19),(19.5,24)],fill=P('kader')); rect(m,19,26,21,36,'wood_d')
+    save(shadow(outline(m),30,58,28,3),'buildings/posyandu_meja.png',note='64x64 meja posyandu: taplak merah muda, buku KMS, dacin (timbangan gantung bersarung), papan tanda posyandu; kader berdiri di depan/kiri')
+
+def stage8b():
+    traits_rel_8b(); wishes(); progress_bars(); monuments_8b(); agustus_8b(); dilemma_8b(); visitors()
+
+# ---------- TAHAP 8c: ikon padi resmi, sawah kering kemarau ----------
+def stage8c():
+    def padi_ikat(im,d):
+        for x,lean in((9,-5),(12,-3),(15,-1),(18,1),(21,3),(24,5)):
+            d.line([(16,30),(x,14)],fill=P('rice_yd'),width=2)
+            d.line([(x,14),(x+lean,6),(x+lean*1.6,10)],fill=P('rice_yd'),width=1)
+            for k in range(4): ell(im,(x+lean*(0.4+k*0.3)-2,5+k*2,x+lean*(0.4+k*0.3)+1,8+k*2),'rice_y')
+        d.polygon([(13,18),(19,18),(21,30),(11,30)],fill=P('straw')); [d.line([(x,19),(x+(x-16)//3,30)],fill=P('straw_d')) for x in(14,16,18)]
+        rect(im,11,21,21,23,'roof'); rect(im,11,21,21,21,'roof_l'); px(im,9,3,'fire_w'); px(im,23,4,'fire_w')
+    im=icon_draw(padi_ikat)
+    save(im,'icons/resources/icon_padi_ikat.png',note='ikon sumber daya Padi resmi 32x32 (seikat padi menguning diikat pita); format sama dengan icons/resources/icon_*.png. icon_padi.png (sementara dari Asisten Koding) TIDAK ditimpa')
+    # pola retak periodik 32x32 (seamless antar tile)
+    r=random.Random(77); pts=[(gx*8+r.uniform(1.5,6.5),gy*8+r.uniform(1.5,6.5)) for gx in range(4) for gy in range(4)]
+    def cell(x,y):
+        best=[]
+        for i,(a,b) in enumerate(pts):
+            dd=min(((x-a-ox)**2+(y-b-oy)**2) for ox in(-32,0,32) for oy in(-32,0,32)); best.append((dd,i))
+        best.sort(); return best[0][1], best[1][0]**0.5-best[0][0]**0.5
+    CR=[[cell(x+0.5,y+0.5) for x in range(32)] for y in range(32)]
+    sh=new(128,128)
+    for m in range(16):
+        im=new(); r=random.Random(m)
+        for y in range(32):
+            for x in range(32):
+                ci,edge=CR[y][x]
+                px(im,x,y,'dirt_d' if edge<0.7 else ('dirt_l' if edge<1.6 and (x+y)%3==0 else ('sand_d' if (ci%4==0 and (x*3+y)%7==0) else 'km_dirt')))
+        for _ in range(10): x,y=r.randrange(32),r.randrange(32)
+        for _ in range(12): r.randrange(32); r.randrange(32)
+        if not m&1: rect(im,0,0,31,3,'dirt'); rect(im,0,0,31,0,'grass'); rect(im,0,3,31,3,'dirt_d')
+        if not m&4: rect(im,0,28,31,31,'dirt'); rect(im,0,28,31,28,'grass'); rect(im,0,31,31,31,'dirt_d')
+        if not m&8: rect(im,0,0,3,31,'dirt'); rect(im,0,0,0,31,'grass'); rect(im,3,0,3,31,'dirt_d')
+        if not m&2: rect(im,28,0,31,31,'dirt'); rect(im,28,0,28,31,'grass'); rect(im,31,0,31,31,'dirt_d')
+        for _ in range(3):
+            x,y=r.randrange(32),r.randrange(32)
+            if im.getpixel((x,y))[:3]==PALETTE['dirt']: px(im,x,y,'grass_l')
+        sh.paste(im,((m%4)*32,(m//4)*32))
+    save(sh,'tiles/tropis/sawah_kering_autotile.png',(32,32),16,'sawah kering (kemarau tanpa irigasi): lumpur retak tanpa air, pematang identik; format & indeks PERSIS sawah_autotile (N1+E2+S4+W8, kolom i%4, baris i//4); retak seamless antar tile')
+    sh=new(192,32)
+    for st in range(6):
+        im=new()
+        for y in range(5,30,6):
+            for x in range(5,30,6):
+                if st==0: rect(im,x,y,x+1,y,'dirt_d'); px(im,x,y-1,'dirt_l')
+                elif st==1: px(im,x,y,'straw_d'); px(im,x,y-1,'straw'); px(im,x+1,y-1,'straw_l')
+                elif st==2: rect(im,x,y-3,x,y,'straw_d'); px(im,x+1,y-3,'straw'); px(im,x+2,y-2,'straw_l'); px(im,x-1,y-2,'straw')
+                elif st==3: rect(im,x,y-4,x,y,'straw_d'); px(im,x+1,y-4,'rice_yd'); px(im,x+2,y-3,'straw'); px(im,x-1,y-2,'straw'); px(im,x+2,y-2,'leaf_d')
+                elif st==4: rect(im,x,y-4,x,y,'straw_d'); px(im,x+1,y-4,'straw_l'); px(im,x+2,y-3,'straw_l'); px(im,x+2,y-2,'straw_l'); px(im,x-1,y-3,'straw')
+                elif st==5: px(im,x,y,'rice_yd'); px(im,x,y-1,'straw_d')
+        sh.paste(im,(st*32,0))
+    save(sh,'nature/crops/crop_padi_kering.png',(32,32),6,'OVERLAY padi layu di atas sawah_kering_autotile, indeks frame sama dengan crop_padi: 0 diolah (bongkah kering), 1 bibit layu, 2 tumbuh layu, 3 bunting layu, 4 menguning hampa (merunduk, pucat), 5 dipanen (jerami)')
+
+# =====================================================================
+# TAHAP 9: memancing, kolam/tambak, jamur & bakul, pangan hutan/sawah, ikon daya tarik & pendatang
+# =====================================================================
+_PAL16C=[v for v in PALETTE.values() if len(v)==3]  # snapshot palet 8b/8c
+def _q16(im32,cols):
+    s=im32.resize((16,16),Image.BOX); p=s.load()
+    for y in range(16):
+        for x in range(16):
+            c=p[x,y]; p[x,y]=(0,0,0,0) if c[3]<110 else min(cols,key=lambda q:sum((a-b)**2 for a,b in zip(q,c[:3])))+(255,)
+    return s
+PALETTE.update({'keong':(96,74,56),'keong_l':(150,120,88),'keong_mas':(212,158,72),'keong_egg':(236,118,168),
+ 'jamur_w':(244,236,220),'jamur_c':(206,170,128),'jamur_d':(146,104,72),'tiram':(204,200,192),'tiram_d':(150,146,140),'kuping':(116,62,52),'kuping_l':(160,96,80),
+ 'umbi':(148,98,62),'umbi_l':(194,148,102),'umbi_in':(236,224,196),'tambak':(104,150,138),'tambak_d':(76,116,104),'tambak_l':(150,190,176),
+ 'nila':(150,158,170),'nila_d':(100,108,124),'ikan_or':(232,128,60),'pisang_y':(246,214,74),'pisang_d':(196,160,40)})
+def to16d(im32): return _q16(im32,[v for v in PALETTE.values() if len(v)==3])
+# ---------- 1. memancing ----------
+DIRV={'down':(0,1),'left':(-1,0),'right':(1,0),'up':(0,-1)}
+HAND={'down':(32,40),'left':(23,39),'right':(41,39),'up':(40,36)}
+def seated(v,dn):
+    b=villager_frame(v,dn,0,False); b=squash(b,[25,26,27]); d=ImageDraw.Draw(b)
+    if dn=='down': rect(b,11,29,14,30,'cloth_d'); rect(b,17,29,20,30,'cloth_d'); rect(b,11,31,14,31,v[0]); rect(b,17,31,20,31,v[0])
+    elif dn in('left','right'):
+        s=1 if dn=='right' else -1; x0=16+s*2; rect(b,min(x0,x0+s*8),28,max(x0,x0+s*8),30,'cloth_d'); rect(b,x0+s*8-(1 if s<0 else 0),28,x0+s*8+(1 if s>0 else 0),30,v[0])
+    return b
+def small_fish(col='nila'):
+    f=new(10,6); d=ImageDraw.Draw(f); ell(f,(0,1,7,5),col); d.polygon([(7,3),(9,1),(9,5)],fill=P(col+'_d' if col+'_d' in PALETTE else 'ikan_or')); px(f,2,2,'black'); return outline(f)
+def fishing_frame(v,dn,f):
+    im=new(64,64); hx,hy=HAND[dn]; dx,dy=DIRV[dn]; reach=20 if dn in('down','up') else 18
+    fx,fy=hx+dx*reach,hy+dy*reach+(4 if dn in('left','right') else 0)
+    if dn=='up': fx,fy=32,hy-reach-2
+    body=seated(v,dn)
+    lay=new(64,64); d=ImageDraw.Draw(lay)
+    bob=[0,0,0,1,0,0,0,0][f]
+    if f==0: tip=(hx-dx*8,hy-16); line=None
+    elif f==1: tip=(hx+dx*12,hy-8); line=[tip,(hx+dx*(reach//2),hy-14+dy*6),(fx,fy)]
+    elif f in(2,3): tip=(hx+dx*12,hy-7); line=[tip,(fx,fy-1+bob)]
+    elif f in(4,5): tip=(hx+dx*9,hy-2+(f-4)); line=[tip,(fx,fy+1)]
+    elif f==6: tip=(hx+dx*3,hy-18); line=[tip,(hx+dx*8,hy-8)]
+    else: tip=(hx-dx*2,hy-16); line=[tip,(hx-dx*2+(4 if dn!='left' else -4),hy-8)]
+    # joran (melengkung saat strike)
+    if f in(4,5): mid=((hx+tip[0])/2+dy*2,(hy+tip[1])/2-3); d.line([(hx,hy),mid,tip],fill=P('bamboo_d'),width=2)
+    else: d.line([(hx,hy),tip],fill=P('bamboo_d'),width=2)
+    px(lay,int(tip[0]),int(tip[1]),'bamboo_l')
+    rip=new(64,64); dr=ImageDraw.Draw(rip)
+    if line: d.line(line,fill=P('stone_l'))
+    if f in(1,2,3): rect(lay,fx-1,fy-2+bob,fx,fy-1+bob,'merah'); rect(lay,fx-1,fy+bob,fx,fy+bob,'putih')
+    if f==3: dr.ellipse([fx-4,fy-1,fx+3,fy+2],outline=P('water_l'))
+    if f in(4,5):
+        for a,b in((-3,-2),(2,-3),(-4,1),(3,0),(0,-4)): px(rip,fx+a*(1+(f-4)),fy+b,'foam')
+        dr.ellipse([fx-5,fy-2,fx+4,fy+3],outline=P('water_l'))
+    if f==5:
+        ex_=20 if dn=='up' else 30; rect(lay,ex_,0,ex_+2,6,'fire_l'); rect(lay,ex_,8,ex_+2,9,'fire_l')  # tanda seru
+    if f in(6,7):
+        fs=small_fish('nila'); ex,ey=line[1]; lay.alpha_composite(fs,(int(ex)-5,int(ey)))
+        if f==7: [px(lay,int(ex)+a,int(ey)+b,'fire_w') for a,b in((-6,-1),(6,2),(0,-4))]
+    lay=outline(lay) if False else lay
+    im.alpha_composite(rip)
+    im.alpha_composite(body,(16,16)); im.alpha_composite(lay)
+    return im
+def fishing():
+    for i,v in enumerate(VARS):
+        sh=new(512,256)
+        for r_,dn in enumerate(('down','left','right','up')):
+            for f in range(8): sh.paste(fishing_frame(v,dn,f),(f*64,r_*64))
+        save(sh,f'characters/villager_{i+1}_memancing.png',(64,64),32,
+             'memancing duduk di tepi air, frame 64x64 (penduduk di tile tengah: offset 16,16 → tempel di tileX*32-16, tileY*32-16); baris = arah menghadap air (bawah,kiri,kanan,atas); kolom: 0-1 lempar, 2-3 tunggu (loop ~500ms), 4-5 strike (!), 6-7 tarik (ikan terangkat)')
+# kolam ikan & tambak
+def water_shimmer(im,x0,y0,x1,y1,f,col='water_l'):
+    for y in range(y0+2,y1-1,5):
+        for x in range(x0+2+((y//5+f)%3)*3,x1-3,9): rect(im,x,y,x+2,y,col)
+def kolam_ikan(f,isi):
+    im=new(64,64); d=ImageDraw.Draw(im)
+    ell(im,(2,12,61,59),'stone'); ell(im,(5,15,58,56),'water_d'); ell(im,(7,17,56,54),'water')
+    for a in range(0,360,30):
+        r_=math.radians(a); x,y=31.5+28*math.cos(r_),35.5+22*math.sin(r_); ell(im,(x-3,y-2,x+3,y+2),'stone_l' if a%60 else 'stone')
+    water_shimmer(im,12,22,52,50,f)
+    if isi:
+        for k,(x,y,c) in enumerate(((20,30,'nila'),(36,38,'ikan_or'),(28,44,'nila'),(42,26,'nila'))):
+            xx=x+(2 if (f+k)%2 else 0); ell(im,(xx,y,xx+7,y+3),c+'_d' if c=='nila' else 'fire_d'); px(im,xx+8,y+1,c+'_d' if c=='nila' else 'fire_d')
+        ell(im,(40,40,50,46),'leaf'); ell(im,(42,41,47,44),'leaf_l'); ell(im,(14,22,22,27),'leaf'); px(im,17,23,'blossom')
+    rect(im,48,4,50,20,'bamboo_d'); d.line([(49,4),(56,2)],fill=P('bamboo_d')); 
+    return shadow(outline(im),32,58,28,3)
+def tambak(f,isi):
+    im=new(96,64); d=ImageDraw.Draw(im)
+    rect(im,0,6,95,61,'dirt'); rect(im,0,6,95,7,'grass'); rect(im,0,60,95,61,'dirt_d')
+    for x0,x1 in((4,45),(50,91)):
+        rect(im,x0,11,x1,56,'tambak_d'); rect(im,x0+1,12,x1-1,55,'tambak'); water_shimmer(im,x0,12,x1,55,f,'tambak_l')
+        if isi:
+            for k in range(3):
+                xx=x0+6+k*12+((f+k)%2)*2; yy=20+k*11; ell(im,(xx,yy,xx+6,yy+2),'tambak_d'); px(im,xx+7,yy+1,'tambak_d')
+    rect(im,46,9,49,58,'dirt_l'); rect(im,46,9,46,58,'dirt_d')
+    rect(im,44,28,51,38,'wood'); rect(im,44,28,51,29,'wood_l'); rect(im,46,30,49,37,'wood_d')
+    for x in(2,93): rect(im,x,2,x+1,10,'bamboo_d')
+    rect(im,74,0,92,10,'ijuk') if False else None
+    k=(f%2)
+    cx,cy=70,34; d.ellipse([cx-6,cy-6,cx+6,cy+6],outline=P('wood_d'),width=1)
+    for a in range(k*45,360+k*45,90): r_=math.radians(a); d.line([(cx,cy),(cx+6*math.cos(r_),cy+6*math.sin(r_))],fill=P('wood'),width=2)
+    rect(im,cx-1,cy-1,cx+1,cy+1,'stone_d')
+    if isi: [px(im,cx+a,cy+b,'foam') for a,b in((-8,3),(8,-2),(-7,-4),(7,5))]
+    return outline(im)
+def ponds():
+    for name,fn,W,note in(('kolam_ikan',kolam_ikan,64,'kolam ikan batu 64x64 (2x2), ikan nila & mas + teratai; tiang bambu pakan'),
+                          ('tambak',tambak,96,'tambak kecil 96x64 (3x2): 2 petak + pematang + pintu air kayu + kincir aerator (berputar)')):
+        for isi in(True,False):
+            sh=new(W*2,64)
+            for f in range(2): sh.paste(fn(f,isi),(f*W,0))
+            save(sh,f'buildings/tropis/{name}{"" if isi else "_kosong"}.png',(W,64),2,f'{note}; {"berisi ikan" if isi else "kosong (baru dibuat / habis dipanen)"}; 2 frame air ~500ms')
+# ---------- 2. jamur & bakul ----------
+def cap(im,cx,by,w,h,c,cd,stem='jamur_w'):
+    rect(im,cx-max(1,w//4),by-h//2,cx+max(1,w//4),by,stem); ImageDraw.Draw(im).chord((cx-w,by-h,cx+w,by-h//2+h//2),180,360,fill=P(c))
+    ImageDraw.Draw(im).line([(cx-w,by-h//2),(cx+w,by-h//2)],fill=P(cd)); px(im,cx-w//2,by-h+2,'white')
+JAMUR={
+ 'kancing':lambda im,pts: [cap(im,x,y,s+2,s+3,'jamur_w','jamur_c') for x,y,s in pts],
+ 'payung':lambda im,pts: [cap(im,x,y,s+3,s+5,'jamur_c','jamur_d') for x,y,s in pts],
+ 'tiram':None,'kuping':None}
+def jamur_img(kind,banyak):
+    im=new(); d=ImageDraw.Draw(im)
+    if kind in('tiram','kuping'):
+        rect(im,4,22,27,28,'wood'); rect(im,4,22,27,23,'wood_l'); ell(im,(24,22,30,28),'wood_l'); ell(im,(25,23,29,27),'teak_bark' if 'teak_bark' in PALETTE else 'wood_d')
+        spots=[(8,21),(14,20),(20,21),(11,17),(18,17),(24,20)] if banyak else [(12,21),(19,21)]
+        for x,y in spots:
+            if kind=='tiram': d.chord((x-4,y-4,x+4,y+3),180,360,fill=P('tiram')); d.line([(x-4,y),(x+4,y)],fill=P('tiram_d')); px(im,x-1,y-3,'white')
+            else: ell(im,(x-3,y-3,x+3,y+2),'kuping'); ell(im,(x-1,y-2,x+2,y),'kuping_l')
+    else:
+        pts=[(9,26,3),(15,24,4),(21,27,3),(12,29,2),(25,25,2),(18,29,2)] if banyak else [(13,26,3),(19,28,2)]
+        JAMUR[kind](im,sorted(pts,key=lambda p:p[1]))
+        if banyak: [px(im,x,y,'leaf') for x,y in((5,29),(27,29),(7,24))]
+    return shadow(outline(im),16,29,11 if banyak else 7,2)
+def bakul(isi):
+    im=new(); d=ImageDraw.Draw(im)
+    d.polygon([(5,14),(27,14),(24,28),(8,28)],fill=P('bamboo')); ell(im,(4,11,28,17),'bamboo_d'); ell(im,(6,12,26,16),'wood_d')
+    for y in range(17,28,3): d.line([(6+(y-14)*3//14,y),(26-(y-14)*3//14,y)],fill=P('bamboo_d'))
+    for x in range(9,24,4): d.line([(x,15),(x+(1 if x>16 else -1),28)],fill=P('bamboo_l'))
+    if isi=='jamur':
+        for x,y,c in((10,12,'jamur_w'),(16,10,'jamur_c'),(22,12,'tiram'),(13,9,'jamur_c'),(19,8,'jamur_w')): d.chord((x-4,y-3,x+4,y+4),180,360,fill=P(c)); px(im,x-1,y-2,'white')
+    elif isi=='buah':
+        for x,y,c in((10,11,'mango'),(16,9,'rambutan'),(22,11,'mango_g'),(13,7,'pisang_y'),(19,7,'pisang_y')): ell(im,(x-3,y-3,x+3,y+3),c)
+    elif isi=='ikan':
+        for x,y,c in((9,10,'nila'),(15,8,'ikan_or'),(19,11,'nila')): ell(im,(x,y,x+8,y+3),c); px(im,x+9,y+1,'nila_d')
+    elif isi=='umbi':
+        for x,y in((10,11),(16,9),(22,11),(13,7)): ell(im,(x-4,y-2,x+4,y+3),'umbi'); px(im,x-2,y-1,'umbi_l')
+    elif isi=='keong':
+        for x,y in((10,11),(15,9),(21,11),(18,7)): ell(im,(x-3,y-2,x+3,y+3),'keong'); px(im,x,y,'keong_l')
+    return shadow(outline(im),16,28,10,2)
+def jamur_bakul():
+    for kind in('kancing','payung','tiram','kuping'):
+        for banyak in(True,False):
+            save(jamur_img(kind,banyak),f'nature/tropis/jamur_{kind}_{"banyak" if banyak else "sedikit"}.png',note=f'jamur {kind} 32x32 overlay di kaki pohon/hutan (anchor bawah y≈29); {"kelompok banyak = musim hujan" if banyak else "1-2 buah = kemarau/mareng"}' + ('; tumbuh di batang kayu lapuk' if kind in('tiram','kuping') else ''))
+    for isi in('kosong','jamur','buah','ikan','umbi','keong'):
+        save(bakul(isi),f'decor/pangan/bakul_{isi}.png',note=f'prop bakul bambu 32x32 {"kosong" if isi=="kosong" else "berisi "+isi} (anchor bawah y≈28); bisa juga dipakai sebagai ikon di panel')
+# ---------- 3. ikon pangan & sprite tanah ----------
+def I_pisang(im,d):
+    rect(im,14,2,17,8,'leaf_d')
+    for k,(x,a) in enumerate(((7,-30),(12,-12),(17,6),(22,24))):
+        d.arc((x-10,6,x+10,30),200+a//3,330+a//3,fill=P('pisang_d'),width=6); d.arc((x-9,7,x+9,29),205+a//3,320+a//3,fill=P('pisang_y'),width=3)
+    rect(im,13,6,18,10,'pisang_d')
+def I_kelapa(im,d):
+    ell(im,(2,6,22,28),'coco'); ell(im,(4,8,14,18),'coco_l'); [px(im,x,y,'black') for x,y in((9,22),(12,24),(15,22))]
+    ell(im,(14,14,30,30),'wood_d'); ell(im,(16,16,28,28),'white'); ell(im,(18,18,26,26),'umbi_in')
+def I_mangga(im,d):
+    ell(im,(5,8,27,29),'mango'); ell(im,(5,8,20,24),'mango_g'); ell(im,(9,11,15,17),'banana'); rect(im,15,3,16,9,'wood_d'); ell(im,(17,1,27,7),'leaf'); px(im,20,3,'leaf_l')
+def I_jamur(im,d): cap(im,13,28,9,14,'jamur_c','jamur_d'); cap(im,22,29,5,9,'jamur_w','jamur_c')
+def I_umbi(im,d):
+    ell(im,(3,10,25,24),'umbi'); ell(im,(5,11,16,17),'umbi_l'); [px(im,x,y,'wood_d') for x,y in((10,19),(17,15),(20,20))]
+    ell(im,(16,16,30,29),'umbi'); ell(im,(19,19,27,26),'umbi_in'); d.line([(4,12),(1,6)],fill=P('ubi_leaf'),width=2); ell(im,(0,1,7,7),'ubi_leaf')
+def I_keong(im,d):
+    ell(im,(2,22,28,29),'keong_l'); d.polygon([(24,24),(30,19),(28,26)],fill=P('keong_l'))
+    ell(im,(6,6,24,26),'keong'); d.arc((9,9,21,23),0,300,fill=P('keong_l'),width=2); ell(im,(13,13,17,18),'keong_l'); px(im,28,18,'black'); px(im,30,17,'black')
+def I_daya_tarik(im,d):
+    d.polygon([(2,15),(16,3),(30,15)],fill=P('roof')); d.line([(2,15),(16,3),(30,15)],fill=P('roof_l'),width=2)
+    rect(im,5,15,27,29,'wall_w'); rect(im,5,27,27,29,'wall_d')
+    for ox,oy in((16,21),): ell(im,(ox-7,oy-5,ox,oy+2),'berry'); ell(im,(ox-1,oy-5,ox+6,oy+2),'berry'); d.polygon([(ox-7,oy-1),(ox+6,oy-1),(ox-0.5,oy+7)],fill=P('berry')); px(im,ox-5,oy-3,'white')
+    for x,y in((27,4),(5,5)): px(im,x,y,'fire_w'); [px(im,x+a,y+b,'fire_l') for a,b in((1,0),(-1,0),(0,1),(0,-1))]
+def I_pendatang(im,d):
+    ell(im,(9,3,21,15),'skin2'); ell(im,(9,2,21,9),'hair1'); px(im,13,10,'black'); px(im,17,10,'black')
+    rect(im,9,15,21,25,'cloth2'); rect(im,10,25,13,30,'cloth_d'); rect(im,17,25,20,30,'cloth_d')
+    d.line([(20,18),(29,4)],fill=P('wood_d'),width=2); ell(im,(23,0,32,10),'batik'); px(im,26,3,'batik_l'); px(im,29,6,'batik_l')
+    rect(im,4,16,8,23,'cloth2'); d.polygon([(1,12),(6,8),(6,16)],fill=P('leaf'))  # tangan melambai + panah datang
+def pangan():
+    for n,fn,note in(('pisang',I_pisang,'pisang (sesisir)'),('kelapa',I_kelapa,'kelapa (utuh + belahan)'),('mangga',I_mangga,'mangga'),
+                     ('jamur',I_jamur,'jamur'),('umbi',I_umbi,'umbi hutan (uwi/gembili)'),('keong',I_keong,'keong sawah')):
+        save(icon_draw(fn),f'icons/resources/icon_{n}.png',note=f'ikon sumber daya {note} 32x32; format sama dengan icons/resources (tanpa _16, seperti ikon resource lain)')
+    for n,fn,note in(('daya_tarik',I_daya_tarik,'daya tarik desa (rumah + hati)'),('pendatang',I_pendatang,'pendatang tiba (orang membawa buntelan)')):
+        im=icon_draw(fn); save(im,f'icons/status/icon_{n}.png',note=f'ikon {note} 32x32'); save(to16d(im),f'icons/status/icon_{n}_16.png',note='16x16')
+    # umbi hutan di tanah
+    for dug in(False,True):
+        im=new(); d=ImageDraw.Draw(im)
+        if not dug:
+            d.line([(6,26),(12,18),(18,22),(24,14)],fill=P('ubi_leaf'),width=1)
+            for x,y in((6,24),(12,17),(18,21),(24,13),(14,26),(22,25)): d.polygon([(x,y-4),(x-4,y),(x,y+3),(x+4,y)],fill=P('ubi_leaf')); px(im,x,y-1,'leaf_l')
+            ell(im,(10,26,20,30),'umbi'); px(im,13,27,'umbi_l')
+        else:
+            ell(im,(6,20,26,30),'dirt_d'); ell(im,(8,22,24,28),'char'); [ell(im,(x-2,y-1,x+2,y+1),'dirt') for x,y in((4,22),(27,24),(25,29))]
+            ell(im,(10,18,22,24),'umbi'); ell(im,(12,19,17,21),'umbi_l'); d.line([(20,19),(26,14)],fill=P('ubi_leaf'))
+        save(shadow(outline(im),16,29,9,2),f'nature/tropis/umbi_hutan{"_digali" if dug else ""}.png',note='umbi hutan 32x32 di tanah: '+('bekas digali + umbi terangkat' if dug else 'sulur daun hati, umbi mengintip'))
+    # keong sawah overlay (2 frame merayap) + telur keong
+    sh=new(64,32)
+    for f in range(2):
+        im=new(); d=ImageDraw.Draw(im)
+        for k,(x,y) in enumerate(((8,12),(20,22),(24,8))):
+            xx=x+(1 if (f+k)%2 else 0); ell(im,(xx-3,y+2,xx+4,y+4),'keong_l'); px(im,xx+5,y+2,'keong_l'); ell(im,(xx-3,y-2,xx+2,y+3),'keong'); px(im,xx-1,y,'keong_l')
+        sh.paste(outline(im),(f*32,0))
+    save(sh,'characters/fauna/ambient/keong_sawah.png',(32,32),2,'overlay keong sawah 32x32 di atas tile sawah (3 keong), 2 frame merayap ~700ms; tanpa bayangan')
+    im=new(); rect(im,14,10,16,30,'rice_g'); [ell(im,(x-2,y-1,x+2,y+2),'keong_egg') for x,y in((15,12),(13,15),(17,15),(15,18),(13,21),(17,20))]
+    save(outline(im),'characters/fauna/ambient/telur_keong.png',note='32x32 telur keong (merah muda) di batang padi, opsional penanda hama keong')
+def stage9():
+    fishing(); ponds(); jamur_bakul(); pangan()
+
 if __name__=='__main__':
     tiles(); tree(); rock(); bush(True); bush(False); fields(); villagers(); campfire(); hut(); warehouse(); well(); mine(); wooden_house(); effects(); icons()
     for o in OUT: o['stage']=1
@@ -2475,5 +3373,11 @@ if __name__=='__main__':
     for o in OUT: o.setdefault('stage',7)
     stage8()
     for o in OUT: o.setdefault('stage',8)
+    n8=len(OUT); stage8b()
+    for o in OUT[n8:]: o['stage']=8; o['sub']='8b'
+    n8=len(OUT); stage8c()
+    for o in OUT[n8:]: o['stage']=8; o['sub']='8c'
+    stage9()
+    for o in OUT: o.setdefault('stage',9)
     json.dump(dict(palette=PALETTE,files=OUT),open(os.path.join(ROOT,'manifest.json'),'w'),indent=1)
     print(len(OUT),'files')

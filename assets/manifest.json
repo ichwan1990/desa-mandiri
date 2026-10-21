@@ -1230,6 +1230,116 @@
    40,
    36,
    44
+  ],
+  "keong": [
+   96,
+   74,
+   56
+  ],
+  "keong_l": [
+   150,
+   120,
+   88
+  ],
+  "keong_mas": [
+   212,
+   158,
+   72
+  ],
+  "keong_egg": [
+   236,
+   118,
+   168
+  ],
+  "jamur_w": [
+   244,
+   236,
+   220
+  ],
+  "jamur_c": [
+   206,
+   170,
+   128
+  ],
+  "jamur_d": [
+   146,
+   104,
+   72
+  ],
+  "tiram": [
+   204,
+   200,
+   192
+  ],
+  "tiram_d": [
+   150,
+   146,
+   140
+  ],
+  "kuping": [
+   116,
+   62,
+   52
+  ],
+  "kuping_l": [
+   160,
+   96,
+   80
+  ],
+  "umbi": [
+   148,
+   98,
+   62
+  ],
+  "umbi_l": [
+   194,
+   148,
+   102
+  ],
+  "umbi_in": [
+   236,
+   224,
+   196
+  ],
+  "tambak": [
+   104,
+   150,
+   138
+  ],
+  "tambak_d": [
+   76,
+   116,
+   104
+  ],
+  "tambak_l": [
+   150,
+   190,
+   176
+  ],
+  "nila": [
+   150,
+   158,
+   170
+  ],
+  "nila_d": [
+   100,
+   108,
+   124
+  ],
+  "ikan_or": [
+   232,
+   128,
+   60
+  ],
+  "pisang_y": [
+   246,
+   214,
+   74
+  ],
+  "pisang_d": [
+   196,
+   160,
+   40
   ]
  },
  "files": [
@@ -11607,6 +11717,510 @@
    "note": "OVERLAY padi layu di atas sawah_kering_autotile, indeks frame sama dengan crop_padi: 0 diolah (bongkah kering), 1 bibit layu, 2 tumbuh layu, 3 bunting layu, 4 menguning hampa (merunduk, pucat), 5 dipanen (jerami)",
    "stage": 8,
    "sub": "8c"
+  },
+  {
+   "file": "characters/villager_1_memancing.png",
+   "size": [
+    512,
+    256
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 32,
+   "note": "memancing duduk di tepi air, frame 64x64 (penduduk di tile tengah: offset 16,16 \u2192 tempel di tileX*32-16, tileY*32-16); baris = arah menghadap air (bawah,kiri,kanan,atas); kolom: 0-1 lempar, 2-3 tunggu (loop ~500ms), 4-5 strike (!), 6-7 tarik (ikan terangkat)",
+   "stage": 9
+  },
+  {
+   "file": "characters/villager_2_memancing.png",
+   "size": [
+    512,
+    256
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 32,
+   "note": "memancing duduk di tepi air, frame 64x64 (penduduk di tile tengah: offset 16,16 \u2192 tempel di tileX*32-16, tileY*32-16); baris = arah menghadap air (bawah,kiri,kanan,atas); kolom: 0-1 lempar, 2-3 tunggu (loop ~500ms), 4-5 strike (!), 6-7 tarik (ikan terangkat)",
+   "stage": 9
+  },
+  {
+   "file": "characters/villager_3_memancing.png",
+   "size": [
+    512,
+    256
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 32,
+   "note": "memancing duduk di tepi air, frame 64x64 (penduduk di tile tengah: offset 16,16 \u2192 tempel di tileX*32-16, tileY*32-16); baris = arah menghadap air (bawah,kiri,kanan,atas); kolom: 0-1 lempar, 2-3 tunggu (loop ~500ms), 4-5 strike (!), 6-7 tarik (ikan terangkat)",
+   "stage": 9
+  },
+  {
+   "file": "characters/villager_4_memancing.png",
+   "size": [
+    512,
+    256
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 32,
+   "note": "memancing duduk di tepi air, frame 64x64 (penduduk di tile tengah: offset 16,16 \u2192 tempel di tileX*32-16, tileY*32-16); baris = arah menghadap air (bawah,kiri,kanan,atas); kolom: 0-1 lempar, 2-3 tunggu (loop ~500ms), 4-5 strike (!), 6-7 tarik (ikan terangkat)",
+   "stage": 9
+  },
+  {
+   "file": "buildings/tropis/kolam_ikan.png",
+   "size": [
+    128,
+    64
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 2,
+   "note": "kolam ikan batu 64x64 (2x2), ikan nila & mas + teratai; tiang bambu pakan; berisi ikan; 2 frame air ~500ms",
+   "stage": 9
+  },
+  {
+   "file": "buildings/tropis/kolam_ikan_kosong.png",
+   "size": [
+    128,
+    64
+   ],
+   "frame": [
+    64,
+    64
+   ],
+   "frames": 2,
+   "note": "kolam ikan batu 64x64 (2x2), ikan nila & mas + teratai; tiang bambu pakan; kosong (baru dibuat / habis dipanen); 2 frame air ~500ms",
+   "stage": 9
+  },
+  {
+   "file": "buildings/tropis/tambak.png",
+   "size": [
+    192,
+    64
+   ],
+   "frame": [
+    96,
+    64
+   ],
+   "frames": 2,
+   "note": "tambak kecil 96x64 (3x2): 2 petak + pematang + pintu air kayu + kincir aerator (berputar); berisi ikan; 2 frame air ~500ms",
+   "stage": 9
+  },
+  {
+   "file": "buildings/tropis/tambak_kosong.png",
+   "size": [
+    192,
+    64
+   ],
+   "frame": [
+    96,
+    64
+   ],
+   "frames": 2,
+   "note": "tambak kecil 96x64 (3x2): 2 petak + pematang + pintu air kayu + kincir aerator (berputar); kosong (baru dibuat / habis dipanen); 2 frame air ~500ms",
+   "stage": 9
+  },
+  {
+   "file": "nature/tropis/jamur_kancing_banyak.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "jamur kancing 32x32 overlay di kaki pohon/hutan (anchor bawah y\u224829); kelompok banyak = musim hujan",
+   "stage": 9
+  },
+  {
+   "file": "nature/tropis/jamur_kancing_sedikit.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "jamur kancing 32x32 overlay di kaki pohon/hutan (anchor bawah y\u224829); 1-2 buah = kemarau/mareng",
+   "stage": 9
+  },
+  {
+   "file": "nature/tropis/jamur_payung_banyak.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "jamur payung 32x32 overlay di kaki pohon/hutan (anchor bawah y\u224829); kelompok banyak = musim hujan",
+   "stage": 9
+  },
+  {
+   "file": "nature/tropis/jamur_payung_sedikit.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "jamur payung 32x32 overlay di kaki pohon/hutan (anchor bawah y\u224829); 1-2 buah = kemarau/mareng",
+   "stage": 9
+  },
+  {
+   "file": "nature/tropis/jamur_tiram_banyak.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "jamur tiram 32x32 overlay di kaki pohon/hutan (anchor bawah y\u224829); kelompok banyak = musim hujan; tumbuh di batang kayu lapuk",
+   "stage": 9
+  },
+  {
+   "file": "nature/tropis/jamur_tiram_sedikit.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "jamur tiram 32x32 overlay di kaki pohon/hutan (anchor bawah y\u224829); 1-2 buah = kemarau/mareng; tumbuh di batang kayu lapuk",
+   "stage": 9
+  },
+  {
+   "file": "nature/tropis/jamur_kuping_banyak.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "jamur kuping 32x32 overlay di kaki pohon/hutan (anchor bawah y\u224829); kelompok banyak = musim hujan; tumbuh di batang kayu lapuk",
+   "stage": 9
+  },
+  {
+   "file": "nature/tropis/jamur_kuping_sedikit.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "jamur kuping 32x32 overlay di kaki pohon/hutan (anchor bawah y\u224829); 1-2 buah = kemarau/mareng; tumbuh di batang kayu lapuk",
+   "stage": 9
+  },
+  {
+   "file": "decor/pangan/bakul_kosong.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "prop bakul bambu 32x32 kosong (anchor bawah y\u224828); bisa juga dipakai sebagai ikon di panel",
+   "stage": 9
+  },
+  {
+   "file": "decor/pangan/bakul_jamur.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "prop bakul bambu 32x32 berisi jamur (anchor bawah y\u224828); bisa juga dipakai sebagai ikon di panel",
+   "stage": 9
+  },
+  {
+   "file": "decor/pangan/bakul_buah.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "prop bakul bambu 32x32 berisi buah (anchor bawah y\u224828); bisa juga dipakai sebagai ikon di panel",
+   "stage": 9
+  },
+  {
+   "file": "decor/pangan/bakul_ikan.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "prop bakul bambu 32x32 berisi ikan (anchor bawah y\u224828); bisa juga dipakai sebagai ikon di panel",
+   "stage": 9
+  },
+  {
+   "file": "decor/pangan/bakul_umbi.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "prop bakul bambu 32x32 berisi umbi (anchor bawah y\u224828); bisa juga dipakai sebagai ikon di panel",
+   "stage": 9
+  },
+  {
+   "file": "decor/pangan/bakul_keong.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "prop bakul bambu 32x32 berisi keong (anchor bawah y\u224828); bisa juga dipakai sebagai ikon di panel",
+   "stage": 9
+  },
+  {
+   "file": "icons/resources/icon_pisang.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "ikon sumber daya pisang (sesisir) 32x32; format sama dengan icons/resources (tanpa _16, seperti ikon resource lain)",
+   "stage": 9
+  },
+  {
+   "file": "icons/resources/icon_kelapa.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "ikon sumber daya kelapa (utuh + belahan) 32x32; format sama dengan icons/resources (tanpa _16, seperti ikon resource lain)",
+   "stage": 9
+  },
+  {
+   "file": "icons/resources/icon_mangga.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "ikon sumber daya mangga 32x32; format sama dengan icons/resources (tanpa _16, seperti ikon resource lain)",
+   "stage": 9
+  },
+  {
+   "file": "icons/resources/icon_jamur.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "ikon sumber daya jamur 32x32; format sama dengan icons/resources (tanpa _16, seperti ikon resource lain)",
+   "stage": 9
+  },
+  {
+   "file": "icons/resources/icon_umbi.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "ikon sumber daya umbi hutan (uwi/gembili) 32x32; format sama dengan icons/resources (tanpa _16, seperti ikon resource lain)",
+   "stage": 9
+  },
+  {
+   "file": "icons/resources/icon_keong.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "ikon sumber daya keong sawah 32x32; format sama dengan icons/resources (tanpa _16, seperti ikon resource lain)",
+   "stage": 9
+  },
+  {
+   "file": "icons/status/icon_daya_tarik.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "ikon daya tarik desa (rumah + hati) 32x32",
+   "stage": 9
+  },
+  {
+   "file": "icons/status/icon_daya_tarik_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16",
+   "stage": 9
+  },
+  {
+   "file": "icons/status/icon_pendatang.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "ikon pendatang tiba (orang membawa buntelan) 32x32",
+   "stage": 9
+  },
+  {
+   "file": "icons/status/icon_pendatang_16.png",
+   "size": [
+    16,
+    16
+   ],
+   "frame": [
+    16,
+    16
+   ],
+   "frames": 1,
+   "note": "16x16",
+   "stage": 9
+  },
+  {
+   "file": "nature/tropis/umbi_hutan.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "umbi hutan 32x32 di tanah: sulur daun hati, umbi mengintip",
+   "stage": 9
+  },
+  {
+   "file": "nature/tropis/umbi_hutan_digali.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "umbi hutan 32x32 di tanah: bekas digali + umbi terangkat",
+   "stage": 9
+  },
+  {
+   "file": "characters/fauna/ambient/keong_sawah.png",
+   "size": [
+    64,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 2,
+   "note": "overlay keong sawah 32x32 di atas tile sawah (3 keong), 2 frame merayap ~700ms; tanpa bayangan",
+   "stage": 9
+  },
+  {
+   "file": "characters/fauna/ambient/telur_keong.png",
+   "size": [
+    32,
+    32
+   ],
+   "frame": [
+    32,
+    32
+   ],
+   "frames": 1,
+   "note": "32x32 telur keong (merah muda) di batang padi, opsional penanda hama keong",
+   "stage": 9
   }
  ]
 }

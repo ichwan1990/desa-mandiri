@@ -1268,3 +1268,103 @@ Catatan:
 - **`icons/resources/icon_padi.png` sengaja tidak ditimpa.** Path itu sudah berisi ikon sementara buatan Asisten Koding (`tools/buat_ikon_padi.py`, dipakai di `tema.js` `RES_ICON`). Ikon resmi ada di `icon_padi_ikat.png`. Untuk memakainya, ubah `RES_ICON.gandum` ke path baru, atau salin file itu ke `icon_padi.png` bila pemilik proyek setuju menimpa.
 - **Tidak ada `icon_padi_16.png`.** Ikon sumber daya lain di `icons/resources/` tidak punya versi 16px.
 - Di kode, `sawah_kering_autotile` dapat menggantikan `drySawahImg()` (game.js) cukup dengan memakai indeks yang sama. Saat sawah kering, `sawah_water_anim` (kilau) jangan digambar.
+
+
+## Tahap 9: memancing, kolam/tambak, jamur & bakul, pangan hutan/sawah, daya tarik & pendatang
+
+Ada 36 file baru (manifest `stage: 9`). Semua file lama tidak berubah: md5 dicek pada 730 file (manifest + `icon_padi.png`). Generator: fungsi `stage9()`. Preview: `preview_stage9.png` (`tools/make_preview_stage9.py`).
+
+Palet bertambah: keong, jamur, tiram, kuping, umbi, tambak, nila, ikan_or, pisang_y. Agar ikon `_16` tahap 8b tetap stabil, `to16c` sekarang memakai snapshot `_PAL16C`. Ikon baru memakai `to16d`.
+
+### Aset yang SUDAH ADA (dipakai ulang, tidak dibuat ulang)
+
+| Kebutuhan | File yang ada |
+|---|---|
+| Pohon buah berbuah / tidak berbuah | `nature/tropis/tree_{pisang,kelapa,mangga,rambutan}.png` (berbuah) dan `_empty.png` (setelah dipetik), plus varian musim di `seasons/tropis/<musim>/tree_*_<musim>.png` |
+| Ikan melompat di sungai | `characters/fauna/ambient/ikan_lompat.png` |
+| Ikon ikan (sumber daya) | `icons/resources/icon_fish.png`. Sudah cocok, jadi tidak dibuat ulang. Ikan yang terangkat di sheet memancing memakai warna nila. |
+| Ikon buah umum | `icons/resources/icon_fruit.png` (pisang/kelapa/mangga kini punya ikon sendiri) |
+| Sawah untuk keong | `tiles/tropis/sawah_autotile.png` + `nature/crops/crop_padi.png` |
+| Embung (kolam tampung) | `buildings/tropis/embung.png` dari tahap 7. Kolam ikan di sini adalah bangunan terpisah. |
+
+### 1. Memancing
+- **Sheet:** `characters/villager_N_memancing.png` (N = 1–4), ukuran 512x256, frame **64x64**.
+- **Penempatan:** penduduk duduk di tile tengah frame (offset 16,16). Tempel di `(tileX*32−16, tileY*32−16)` pada tile tepi air yang bersebelahan dengan air.
+- **Baris** = arah menghadap air: 0 bawah, 1 kiri, 2 kanan, 3 atas.
+- **Kolom:**
+  - 0–1 lempar (~150ms per frame)
+  - 2–3 tunggu (loop ~500ms; pelampung naik-turun, riak di frame 3)
+  - 4–5 strike (joran melengkung, cipratan, tanda "!" di frame 5)
+  - 6–7 tarik (ikan terangkat, kilau di frame 7)
+- **Alur:** 0→1, ulang 2↔3 selama menunggu, lalu 4→5 saat dapat, lalu 6→7, lalu `icon_fish` +1. Bila gagal, kembali ke 2.
+- Pelampung jatuh ±18–22px di depan penduduk.
+
+**Kolam & tambak**
+- `buildings/tropis/kolam_ikan.png` (berisi) dan `kolam_ikan_kosong.png`: 128x64, 2 frame 64x64 (2x2 tile), air ~500ms. Kolam batu bundar berisi nila, mas, dan teratai.
+- `buildings/tropis/tambak.png` dan `tambak_kosong.png`: 192x64, 2 frame 96x64 (3x2). Isinya 2 petak air payau, pematang, pintu air, dan kincir aerator yang berputar antar frame.
+- Versi kosong dipakai untuk kolam yang baru dibangun atau sudah dipanen.
+
+### 2. Jamur & bakul
+- **Jamur:** `nature/tropis/jamur_<jenis>_<banyak|sedikit>.png`, 32x32 overlay dengan anchor bawah y≈29.
+  - Jenis: `kancing` (putih), `payung` (coklat), `tiram` (di batang lapuk), `kuping` (di batang lapuk).
+  - `banyak` = kelompok untuk musim hujan, `sedikit` = 1–2 buah untuk kemarau/mareng.
+  - Taruh di tile kaki pohon atau hutan. Jangan dipakai di sawah.
+- **Ikon jamur:** `icons/resources/icon_jamur.png`.
+- **Bakul:** `decor/pangan/bakul_{kosong,jamur,buah,ikan,umbi,keong}.png`, 32x32. Bisa jadi prop di tanah (anchor y≈28) atau ikon panel/pengumpulan.
+
+### 3. Pangan lain
+- **Ikon sumber daya 32x32** `icons/resources/icon_{pisang,kelapa,mangga,umbi,keong}.png`. Tidak ada `_16`, konsisten dengan ikon resource lain yang juga tidak punya `_16`.
+- **Umbi hutan:** `nature/tropis/umbi_hutan.png` (sulur daun hati + umbi mengintip) dan `umbi_hutan_digali.png` (bekas galian).
+- **Keong sawah:** `characters/fauna/ambient/keong_sawah.png`, 64x32, 2 frame merayap ~700ms, overlay tanpa bayangan di atas tile sawah.
+- **Telur keong:** `characters/fauna/ambient/telur_keong.png` (merah muda, opsional penanda hama).
+
+### 4. Ikon kecil
+- `icons/status/icon_daya_tarik.png` + `_16`: rumah + hati.
+- `icons/status/icon_pendatang.png` + `_16`: orang membawa buntelan.
+- Ukuran 32 untuk panel/log, 16 untuk bilah atas atau di atas kepala pendatang baru. Offset seperti Zzz: (+16, −12).
+
+| File | Ukuran | Frame | Catatan |
+|---|---|---|---|
+| `characters/villager_1_memancing.png` | 512x256 | 32 | memancing duduk di tepi air, frame 64x64 (penduduk di tile tengah: offset 16,16 → tempel di tileX*32-16, tileY*32-16); baris = arah menghadap air (bawah,kiri,kanan,atas); kolom: 0-1 lempar, 2-3 tunggu (loop ~500ms), 4-5 strike (!), 6-7 tarik (ikan terangkat) |
+| `characters/villager_2_memancing.png` | 512x256 | 32 | memancing duduk di tepi air, frame 64x64 (penduduk di tile tengah: offset 16,16 → tempel di tileX*32-16, tileY*32-16); baris = arah menghadap air (bawah,kiri,kanan,atas); kolom: 0-1 lempar, 2-3 tunggu (loop ~500ms), 4-5 strike (!), 6-7 tarik (ikan terangkat) |
+| `characters/villager_3_memancing.png` | 512x256 | 32 | memancing duduk di tepi air, frame 64x64 (penduduk di tile tengah: offset 16,16 → tempel di tileX*32-16, tileY*32-16); baris = arah menghadap air (bawah,kiri,kanan,atas); kolom: 0-1 lempar, 2-3 tunggu (loop ~500ms), 4-5 strike (!), 6-7 tarik (ikan terangkat) |
+| `characters/villager_4_memancing.png` | 512x256 | 32 | memancing duduk di tepi air, frame 64x64 (penduduk di tile tengah: offset 16,16 → tempel di tileX*32-16, tileY*32-16); baris = arah menghadap air (bawah,kiri,kanan,atas); kolom: 0-1 lempar, 2-3 tunggu (loop ~500ms), 4-5 strike (!), 6-7 tarik (ikan terangkat) |
+| `buildings/tropis/kolam_ikan.png` | 128x64 | 2 | kolam ikan batu 64x64 (2x2), ikan nila & mas + teratai; tiang bambu pakan; berisi ikan; 2 frame air ~500ms |
+| `buildings/tropis/kolam_ikan_kosong.png` | 128x64 | 2 | kolam ikan batu 64x64 (2x2), ikan nila & mas + teratai; tiang bambu pakan; kosong (baru dibuat / habis dipanen); 2 frame air ~500ms |
+| `buildings/tropis/tambak.png` | 192x64 | 2 | tambak kecil 96x64 (3x2): 2 petak + pematang + pintu air kayu + kincir aerator (berputar); berisi ikan; 2 frame air ~500ms |
+| `buildings/tropis/tambak_kosong.png` | 192x64 | 2 | tambak kecil 96x64 (3x2): 2 petak + pematang + pintu air kayu + kincir aerator (berputar); kosong (baru dibuat / habis dipanen); 2 frame air ~500ms |
+| `nature/tropis/jamur_kancing_banyak.png` | 32x32 | 1 | jamur kancing 32x32 overlay di kaki pohon/hutan (anchor bawah y≈29); kelompok banyak = musim hujan |
+| `nature/tropis/jamur_kancing_sedikit.png` | 32x32 | 1 | jamur kancing 32x32 overlay di kaki pohon/hutan (anchor bawah y≈29); 1-2 buah = kemarau/mareng |
+| `nature/tropis/jamur_payung_banyak.png` | 32x32 | 1 | jamur payung 32x32 overlay di kaki pohon/hutan (anchor bawah y≈29); kelompok banyak = musim hujan |
+| `nature/tropis/jamur_payung_sedikit.png` | 32x32 | 1 | jamur payung 32x32 overlay di kaki pohon/hutan (anchor bawah y≈29); 1-2 buah = kemarau/mareng |
+| `nature/tropis/jamur_tiram_banyak.png` | 32x32 | 1 | jamur tiram 32x32 overlay di kaki pohon/hutan (anchor bawah y≈29); kelompok banyak = musim hujan; tumbuh di batang kayu lapuk |
+| `nature/tropis/jamur_tiram_sedikit.png` | 32x32 | 1 | jamur tiram 32x32 overlay di kaki pohon/hutan (anchor bawah y≈29); 1-2 buah = kemarau/mareng; tumbuh di batang kayu lapuk |
+| `nature/tropis/jamur_kuping_banyak.png` | 32x32 | 1 | jamur kuping 32x32 overlay di kaki pohon/hutan (anchor bawah y≈29); kelompok banyak = musim hujan; tumbuh di batang kayu lapuk |
+| `nature/tropis/jamur_kuping_sedikit.png` | 32x32 | 1 | jamur kuping 32x32 overlay di kaki pohon/hutan (anchor bawah y≈29); 1-2 buah = kemarau/mareng; tumbuh di batang kayu lapuk |
+| `decor/pangan/bakul_kosong.png` | 32x32 | 1 | prop bakul bambu 32x32 kosong (anchor bawah y≈28); bisa juga dipakai sebagai ikon di panel |
+| `decor/pangan/bakul_jamur.png` | 32x32 | 1 | prop bakul bambu 32x32 berisi jamur (anchor bawah y≈28); bisa juga dipakai sebagai ikon di panel |
+| `decor/pangan/bakul_buah.png` | 32x32 | 1 | prop bakul bambu 32x32 berisi buah (anchor bawah y≈28); bisa juga dipakai sebagai ikon di panel |
+| `decor/pangan/bakul_ikan.png` | 32x32 | 1 | prop bakul bambu 32x32 berisi ikan (anchor bawah y≈28); bisa juga dipakai sebagai ikon di panel |
+| `decor/pangan/bakul_umbi.png` | 32x32 | 1 | prop bakul bambu 32x32 berisi umbi (anchor bawah y≈28); bisa juga dipakai sebagai ikon di panel |
+| `decor/pangan/bakul_keong.png` | 32x32 | 1 | prop bakul bambu 32x32 berisi keong (anchor bawah y≈28); bisa juga dipakai sebagai ikon di panel |
+| `icons/resources/icon_pisang.png` | 32x32 | 1 | ikon sumber daya pisang (sesisir) 32x32; format sama dengan icons/resources (tanpa _16, seperti ikon resource lain) |
+| `icons/resources/icon_kelapa.png` | 32x32 | 1 | ikon sumber daya kelapa (utuh + belahan) 32x32; format sama dengan icons/resources (tanpa _16, seperti ikon resource lain) |
+| `icons/resources/icon_mangga.png` | 32x32 | 1 | ikon sumber daya mangga 32x32; format sama dengan icons/resources (tanpa _16, seperti ikon resource lain) |
+| `icons/resources/icon_jamur.png` | 32x32 | 1 | ikon sumber daya jamur 32x32; format sama dengan icons/resources (tanpa _16, seperti ikon resource lain) |
+| `icons/resources/icon_umbi.png` | 32x32 | 1 | ikon sumber daya umbi hutan (uwi/gembili) 32x32; format sama dengan icons/resources (tanpa _16, seperti ikon resource lain) |
+| `icons/resources/icon_keong.png` | 32x32 | 1 | ikon sumber daya keong sawah 32x32; format sama dengan icons/resources (tanpa _16, seperti ikon resource lain) |
+| `icons/status/icon_daya_tarik.png` | 32x32 | 1 | ikon daya tarik desa (rumah + hati) 32x32 |
+| `icons/status/icon_daya_tarik_16.png` | 16x16 | 1 | 16x16 |
+| `icons/status/icon_pendatang.png` | 32x32 | 1 | ikon pendatang tiba (orang membawa buntelan) 32x32 |
+| `icons/status/icon_pendatang_16.png` | 16x16 | 1 | 16x16 |
+| `nature/tropis/umbi_hutan.png` | 32x32 | 1 | umbi hutan 32x32 di tanah: sulur daun hati, umbi mengintip |
+| `nature/tropis/umbi_hutan_digali.png` | 32x32 | 1 | umbi hutan 32x32 di tanah: bekas digali + umbi terangkat |
+| `characters/fauna/ambient/keong_sawah.png` | 64x32 | 2 | overlay keong sawah 32x32 di atas tile sawah (3 keong), 2 frame merayap ~700ms; tanpa bayangan |
+| `characters/fauna/ambient/telur_keong.png` | 32x32 | 1 | 32x32 telur keong (merah muda) di batang padi, opsional penanda hama keong |
+
+### Keterbatasan tahap 9
+- Pose duduk memancing diturunkan dari rig berdiri (kaki dipendekkan). Pada arah kiri/kanan dan atas, kaki duduk kurang terlihat.
+- Joran dan senar tidak ber-outline. Pada arah atas, senar melintas di samping kepala.
+- Belum ada varian musim untuk kolam dan tambak (mis. kering di kemarau), belum ada versi malam, dan belum ada animasi memberi pakan.
+- Jamur tidak punya varian beracun. Bila nanti diperlukan mekanik "salah petik", perlu aset tambahan.
+- Ikon pisang 32px berbentuk sesisir sederhana.
