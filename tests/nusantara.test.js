@@ -6,7 +6,7 @@ const path = require('path'); const SHOT = n => path.join(__dirname, '..', 'docs
 (async () => {
   const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1600, height: 900 } });
   const errs = []; p.on('console', m => m.type() === 'error' && errs.push(m.text())); p.on('pageerror', e => errs.push(String(e)));
-  await p.goto(process.env.GAME_URL || 'http://localhost:8095/'); await p.evaluate(() => localStorage.clear()); await p.reload();
+  await p.goto((() => { const u = new URL(process.env.GAME_URL || 'http://localhost:8095/'); u.searchParams.set('tema', 'indonesia'); return u.href; })()); // v9d: dipatok ke tema Nusantara await p.evaluate(() => localStorage.clear()); await p.reload();
   await p.waitForFunction(() => window.DESA_READY && window.DESA && DESA.state && DESA.allEvents().length, null, { timeout: 15000 });
   await p.click('#btnNew'); await p.click('#tutSkip');
   const r = await p.evaluate(() => { const S = DESA.state, C = CONFIG, A = DESA.addBuilding, out = {}, R = Math.random;

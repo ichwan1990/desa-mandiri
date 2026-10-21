@@ -7,7 +7,7 @@ const path = require('path'); const SHOT = n => path.join(__dirname, '..', 'docs
   const b = await chromium.launch(); const errs = [];
   const open = async (tema) => { const p = await b.newPage({ viewport: { width: 1600, height: 900 } });
     p.on('console', m => m.type() === 'error' && errs.push(m.text())); p.on('pageerror', e => errs.push(String(e)));
-    const U = new URL(process.env.GAME_URL || 'http://localhost:8095/'); if (tema) U.searchParams.set('tema', tema);
+    const U = new URL(process.env.GAME_URL || 'http://localhost:8095/'); U.searchParams.set('tema', tema || 'indonesia'); // v9d: null = Nusantara (dipatok, GAME_URL ?tema=sedang tidak berlaku)
     await p.goto(U.href); await p.evaluate(() => localStorage.clear()); await p.reload();
     await p.waitForFunction(() => window.DESA_READY && window.DESA && DESA.state && DESA.allEvents().length, null, { timeout: 15000 });
     await p.click('#btnNew'); await p.click('#tutSkip'); await p.click('[data-s="0"]').catch(() => {}); return p; };

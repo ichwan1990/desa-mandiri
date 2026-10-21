@@ -42,10 +42,25 @@ const { chromium } = require('playwright');
     const wf = await p.evaluate(() => { const S = DESA.state; S.era = 0; S.wolves = []; S.buildings = S.buildings.filter(b => b.type !== 'ladang'); S.villagers.forEach(v => { v.inside = null; });
       DESA.v9c.spawnWolf(); S.villagers.forEach(v => { v.inside = 999; }); const o = S.wolves[0]; if (!o) return { none: true }; let alive = 0; for (let i = 0; i < 40; i++) { DESA.v9c.updateWolf(o, 0.1); if (!o.gone) alive++; } return { alive, mode: o.mode, sniff: o.sniff != null }; });
     ok(T + ' hewan mengendus', wf.none || wf.alive === 40 && wf.sniff, wf);
+    // v9d (uji perangkat @51b6d4d): hewan siang (serigala sedang) mengendus ±12 dtk lalu pergi, tidak menggigit walau warga di luar dekatnya
+    const dw = await p.evaluate(() => { const S = DESA.state, C = CONFIG; S.era = 3; S.wolves = []; S.buildings = S.buildings.filter(b => b.type !== 'ladang'); S.t = Math.floor(S.t / C.DAY_LENGTH_SEC) * C.DAY_LENGTH_SEC + 0.4 * C.DAY_LENGTH_SEC;
+      S.villagers.forEach(v => { v.inside = null; v.health = 100; v.task = null; }); DESA.v9c.spawnWolf(); const o = S.wolves[0]; if (!o) return { none: true };
+      const v = S.villagers[0]; let t = 0; const h0 = S.villagers.map(x => x.health).join(); for (; t < 60 && !o.gone; t += 0.1) { v.x = o.x + 0.5; v.y = o.y; DESA.v9c.updateWolf(o, 0.1); }
+      return { t: Math.round(t), gone: o.gone || o.mode === 'pergi', bit: S.villagers.map(x => x.health).join() !== h0, mode: o.mode }; });
+    ok(T + ' hewan siang pergi tanpa gigit', !dw.none && !dw.bit && dw.gone && dw.t <= 30, dw);
+    // v9d: banner pangan = angka lencana (1 desimal), masa awal tanpa kata 'murung'
+    const bn = await p.evaluate(() => { const S = DESA.state, C = CONFIG; S.day = 3; S.fdShow = null; S.res.gandum = 0; S.res.makanan = DESA.life.foodPerDay() * 0.6; const w = DESA.warnings().find(x => x.k === "hunger");
+      S.day = C.FAMINE.graceDays + 2; const w2 = DESA.warnings().find(x => x.k === 'hunger'); return { t: w && w.t, badge: (document.getElementById('panganBadge') || {}).textContent, t2: w2 && w2.t }; });
+    ok(T + ' banner pangan', bn.t && /0[.,]6/.test(bn.t) && !/murung/.test(bn.t), bn);
     // 8) teks melayang: format sama (+4 Kayu) & bertumpuk naik
     const nt = await p.evaluate(() => { const S = DESA.state, v = S.villagers[0], N = DESA.v9c.notes; N.length = 0; DESA.v9c.notify('kayu', 4, v); DESA.v9c.notify('batu', 3, v); DESA.v9c.notify('air', 2, v);
-      return N.map(n => ({ s: `+${n.n} ${n.label}`, slot: n.slot })); });
-    ok(T + ' teks melayang', nt.length === 3 && /^\+4 \S/.test(nt[0].s) && nt[0].s !== '+4' && nt.map(n => n.slot).join() === '0,1,2', nt);
+      const ys = N.map(n => DESA.v9c.noteRise(n)).sort((a, b) => a - b); return { s: N.map(n => `+${n.n} ${n.label}`), gaps: ys.slice(1).map((y, i) => y - ys[i]) }; });
+    ok(T + ' teks melayang', nt.s.length === 3 && /^\+4 \S/.test(nt.s[0]) && nt.s[0] !== '+4' && nt.gaps.every(g => g >= 13), nt);
+    // repro uji perangkat @51b6d4d: +3 Air lalu +5 Kayu ~1.25 detik kemudian di titik yang sama -> tidak bertumpuk (pakai y sekarang, semua teks hidup dihitung)
+    const nt2 = await p.evaluate(() => { const S = DESA.state, v = S.villagers[0], N = DESA.v9c.notes, T = 32, out = [];
+      for (const dtAge of [0.3, 0.75, 1.25, 1.6, 1.9]) { N.length = 0; DESA.v9c.notify('air', 3, v); N.forEach(n => n.life -= dtAge); DESA.v9c.notify('kayu', 5, v);
+        const y = n => n.y * T - 4 - DESA.v9c.noteRise(n); out.push(Math.round(Math.abs(y(N[1]) - y(N[0])))); } return out; });
+    ok(T + ' teks melayang repro 1.25 dtk', nt2.every(d => d >= 13), nt2);
     // 9) ringkasan: pangan dari kejadian diberi label, bukan 'lain-lain'
     const sm = await p.evaluate(() => { const S = DESA.state; S.dayStats = {}; S.foodDayStart = S.res.makanan + (S.res.gandum || 0); DESA.v9c.applyEffects({ makanan: 6 }, 'event panen'); DESA.v9c.applyEffects({ makanan: -2 }, 'event tikus');
       const r = DESA.v9c.endOfDaySummary(); return { inn: r.foodIn, out: r.foodOut, txt: DESA.v9c.ioText(r.foodIn) + ' | ' + DESA.v9c.ioText(r.foodOut) }; });

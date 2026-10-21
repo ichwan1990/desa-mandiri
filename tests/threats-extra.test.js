@@ -2,7 +2,7 @@
 // kebutuhan air, pertahanan (pagar bambu, oncor, pos ronda + prioritas Jaga) menurunkan serangan babi hutan, serangan fatal baru tahun ke-2,
 // simpan/muat state baru (satwa liar, banjir, duka, sakit, makam), dan tata letak #warnbar di ponsel 390x844. Gagal bila ada error konsol.
 const { chromium } = require('playwright');
-const URL = process.env.GAME_URL || 'http://localhost:8095/';
+const URL = (() => { const u = new globalThis.URL(process.env.GAME_URL || 'http://localhost:8095/'); u.searchParams.set('tema', 'indonesia'); return u.href; })(); // v9d: tes khusus tema Nusantara -> tema dipatok (GAME_URL ?tema=sedang tidak berlaku)
 (async () => {
   const b = await chromium.launch(); const errs = []; const watch = p => { p.on('console', m => m.type() === 'error' && errs.push(m.text())); p.on('pageerror', e => errs.push(String(e))); };
   const p = await b.newPage({ viewport: { width: 1600, height: 900 } }); watch(p);
