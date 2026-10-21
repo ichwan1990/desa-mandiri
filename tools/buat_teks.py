@@ -3607,6 +3607,33 @@ data = copy.deepcopy(data)  # lepas dari objek PATCH_V173
 terapkan_patch_v151(data, PATCH_V174)
 with open("/workspace/village-game/tools/patch-v1.7.4.json","w",encoding="utf-8") as f:
     json.dump(PATCH_V174,f,ensure_ascii=False,indent=2); f.write("\n")
+# ===================== v1.7.5 (aditif): v12 (6ff5e7c) — angin kencang =====================
+# windStrike(): TX('angin.kencang_rusak', { bangunan: bname(b), jumlah: dmg }) & TX('angin.atap_bertahan', {}) -> log (array = variasi acak).
+# {bangunan} = nama bangunan yang rusak (menimpa {bangunan} acak bawaan fill()); {jumlah} = kerusakan. Variasi pertama = fallback kode.
+PATCH_V175 = {
+ "_patch": {"versi_dari": "1.7.4", "versi_ke": "1.7.5", "sifat": "hanya penambahan (tambah_key angin; menolak menimpa)",
+            "sumber": "Asisten Koding 21-10 15:55: 6ff5e7c v12 angin kencang Nusantara (mareng/labuh), event ikat atap"},
+ "tambah_key": {"angin": {"_catatan": "Log angin kencang (windStrike). Array variasi; tanpa awalan 'Hari ' dan tanpa '<'. kencang_rusak: {bangunan} = nama bangunan yang rusak, {jumlah} = kerusakan Kondisi.",
+   "kencang_rusak": [
+    "Angin kencang merobek atap {bangunan} (-{jumlah} Kondisi). Warga akan memperbaikinya.",
+    "Angin bertiup kencang dan menerbangkan sebagian atap {bangunan} (-{jumlah} Kondisi). Tukang segera bersiap memperbaikinya.",
+    "Embusan angin kencang menggoyang {bangunan} sampai atapnya robek (-{jumlah} Kondisi). Warga akan menambalnya bersama."],
+   "atap_bertahan": [
+    "Angin kencang bertiup, tapi atap yang sudah diikat tetap bertahan.",
+    "Angin menderu semalaman, tapi atap yang sudah diikat erat tetap di tempatnya.",
+    "Angin kencang menggoyang pepohonan. Untung atap sudah diikat dengan tali ijuk, semua tetap aman."]}},
+ "tambah_path": {},
+ "tambah_key_meta": {"catatan_v175": {
+   "bentuk": {"angin.kencang_rusak": "array 2-4 variasi (log); {bangunan} (nama bangunan rusak), {jumlah} (kerusakan)", "angin.atap_bertahan": "array 2-4 variasi (log); tanpa placeholder"},
+   "catatan_koding": "Angin saat ini hanya di Nusantara; tema sedang tetap punya teks (atap jerami diikat tali) agar berkas konsisten."}},
+ "tambah_entri_meta": {},
+ "set_meta": {"versi": "1.7.5"},
+}
+PATCH_V175 = copy.deepcopy(PATCH_V175)
+data = copy.deepcopy(data)  # lepas dari objek PATCH_V174
+terapkan_patch_v151(data, PATCH_V175)
+with open("/workspace/village-game/tools/patch-v1.7.5.json","w",encoding="utf-8") as f:
+    json.dump(PATCH_V175,f,ensure_ascii=False,indent=2); f.write("\n")
 with open("/workspace/village-game/tools/patch-v1.5.1.json","w",encoding="utf-8") as f:
     json.dump(PATCH_V151,f,ensure_ascii=False,indent=2); f.write("\n")
 with open("/workspace/village-game/tools/patch-v1.5.0.json","w",encoding="utf-8") as f:

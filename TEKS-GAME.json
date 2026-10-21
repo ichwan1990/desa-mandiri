@@ -1,7 +1,7 @@
 {
   "meta": {
     "judul_game": "Desa Mandiri",
-    "versi": "1.7.4",
+    "versi": "1.7.5",
     "bahasa": "id-ID",
     "encoding": "UTF-8",
     "nuansa": "Hangat, santai, dan menggemaskan. Pemain menjaga penduduk kecil yang hidup mandiri. Ancaman nyata tapi ringan (badai, babi hutan, wabah, kekurangan makanan), dengan kehangatan kebersamaan sebagai penyeimbang.",
@@ -893,6 +893,13 @@
         "peta_kejadian.*": "string pendek"
       },
       "catatan_koding": "'Bahan & Produksi' memakai '&' polos (bukan &amp;): aman di innerHTML/atribut karena diikuti spasi, dan tetap benar bila dipakai di canvas/textContent."
+    },
+    "catatan_v175": {
+      "bentuk": {
+        "angin.kencang_rusak": "array 2-4 variasi (log); {bangunan} (nama bangunan rusak), {jumlah} (kerusakan)",
+        "angin.atap_bertahan": "array 2-4 variasi (log); tanpa placeholder"
+      },
+      "catatan_koding": "Angin saat ini hanya di Nusantara; tema sedang tetap punya teks (atap jerami diikat tali) agar berkas konsisten."
     }
   },
   "penduduk": [
@@ -10542,5 +10549,18 @@
     "kesehatan": "Kesehatan",
     "kondisi": "Kondisi",
     "lihat_lokasi": "Klik untuk melihat lokasinya"
+  },
+  "angin": {
+    "_catatan": "Log angin kencang (windStrike). Array variasi; tanpa awalan 'Hari ' dan tanpa '<'. kencang_rusak: {bangunan} = nama bangunan yang rusak, {jumlah} = kerusakan Kondisi.",
+    "kencang_rusak": [
+      "Angin kencang merobek atap {bangunan} (-{jumlah} Kondisi). Warga akan memperbaikinya.",
+      "Angin bertiup kencang dan menerbangkan sebagian atap {bangunan} (-{jumlah} Kondisi). Tukang segera bersiap memperbaikinya.",
+      "Embusan angin kencang menggoyang {bangunan} sampai atapnya robek (-{jumlah} Kondisi). Warga akan menambalnya bersama."
+    ],
+    "atap_bertahan": [
+      "Angin kencang bertiup, tapi atap yang sudah diikat tetap bertahan.",
+      "Angin menderu semalaman, tapi atap yang sudah diikat erat tetap di tempatnya.",
+      "Angin kencang menggoyang pepohonan. Untung atap sudah diikat dengan tali ijuk, semua tetap aman."
+    ]
   }
 }

@@ -13,7 +13,7 @@ ronda -> jaga malam, padi/singkong -> gandum/kentang, kerbau -> sapi, reog -> ro
 import json, sys
 ROOT = "/workspace/village-game/"
 FILE = ROOT + "TEKS-TEMA-sedang.json"
-VERSI = "1.7.4-sedang.1"
+VERSI = "1.7.5-sedang.1"
 
 def O(teks, hasil, *tunda):
     o = {"teks": teks, "teks_hasil": hasil}
@@ -696,6 +696,16 @@ UI_V174 = {
   "terkunci_era": "Terbuka di era {era}", "terkunci_riset": "Butuh riset {riset}", "monumen_tujuan": "Monumen dibangun lewat panel Tujuan"},
  "peta_kejadian": {"pangan": "Pangan", "kesehatan": "Kesehatan", "kondisi": "Kondisi", "lihat_lokasi": "Klik untuk melihat lokasinya"},
 }
+# v1.7.5 (6ff5e7c): angin kencang (kini hanya Nusantara; teks sedang untuk konsistensi: atap jerami diikat tali)
+UI_V175 = {"angin": {
+ "kencang_rusak": [
+  "Angin kencang merobek atap {bangunan} (-{jumlah} Kondisi). Warga akan memperbaikinya.",
+  "Angin bertiup kencang dan menerbangkan sebagian atap {bangunan} (-{jumlah} Kondisi). Tukang segera bersiap memperbaikinya.",
+  "Embusan angin kencang menggoyang {bangunan} sampai atapnya robek (-{jumlah} Kondisi). Warga akan menambalnya bersama."],
+ "atap_bertahan": [
+  "Angin kencang bertiup, tapi atap yang sudah diikat tetap bertahan.",
+  "Angin menderu semalaman, tapi atap jerami yang sudah diikat tali tetap di tempatnya.",
+  "Angin kencang menggoyang pepohonan. Untung atap jerami sudah diikat erat dengan tali rami, semua tetap aman."]}}
 
 def gabung(dst, src):  # gabung rekursif (dict) tanpa menghapus key lain di overlay (mis. log_ancaman dari buat_overlay_sedang.js)
     for k, v in src.items():
@@ -719,10 +729,11 @@ def main():
     gabung(ov, UI_V172)
     gabung(ov, UI_V173)
     gabung(ov, UI_V174)
+    gabung(ov, UI_V175)
     ov["_cerita_sedang"] = {"versi": VERSI, "alat": "tools/buat_tema_sedang_cerita.py",
         "bagian": ["dilema", "dilema_ui", "momen_kecil", "agustusan", "kerja_bakti", "peringatan_dini.ancaman_monyet", "pangan", "otomatis", "keinginan", "monumen", "cerita", "teladan", "rencana_tahun",
                   "event_ui", "jenjang_kelaparan.tingkat.bahaya (masa awal)", "cerita_ui", "agustusan.pentas_reog", "dilema_ui.orang_orangan_berdiri", "log_ancaman.diusir_orang_orangan",
-                  "pangan.sumber.telur", "pangan.tugas.telur", "pangan.kandang", "bangunan_lokal (orang_orangan_sawah, kandang_ayam)", "hari_jadi_ringkasan", "dilema_ui.orang_orangan_teks_melayang", "petunjuk", "otomatis.gubuk_tambahan", "bangun_kategori", "peta_kejadian"],
+                  "pangan.sumber.telur", "pangan.tugas.telur", "pangan.kandang", "bangunan_lokal (orang_orangan_sawah, kandang_ayam)", "hari_jadi_ringkasan", "dilema_ui.orang_orangan_teks_melayang", "petunjuk", "otomatis.gubuk_tambahan", "bangun_kategori", "peta_kejadian", "angin"],
         "catatan": "Jalankan SETELAH node tools/buat_overlay_sedang.js (alat itu menulis ulang file ini dan menghapus bagian cerita)."}
     c = ov.get("_catatan", "")
     tambah = " Bagian cerita (dilema, momen_kecil, agustusan, kerja_bakti, dilema_ui, ancaman_monyet) serta pangan, otomatis, keinginan, monumen, cerita, teladan, rencana_tahun dari tools/buat_tema_sedang_cerita.py: jalankan sesudahnya."

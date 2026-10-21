@@ -2999,8 +2999,20 @@
   "kondisi": "Kondisi",
   "lihat_lokasi": "Klik untuk melihat lokasinya"
  },
+ "angin": {
+  "kencang_rusak": [
+   "Angin kencang merobek atap {bangunan} (-{jumlah} Kondisi). Warga akan memperbaikinya.",
+   "Angin bertiup kencang dan menerbangkan sebagian atap {bangunan} (-{jumlah} Kondisi). Tukang segera bersiap memperbaikinya.",
+   "Embusan angin kencang menggoyang {bangunan} sampai atapnya robek (-{jumlah} Kondisi). Warga akan menambalnya bersama."
+  ],
+  "atap_bertahan": [
+   "Angin kencang bertiup, tapi atap yang sudah diikat tetap bertahan.",
+   "Angin menderu semalaman, tapi atap jerami yang sudah diikat tali tetap di tempatnya.",
+   "Angin kencang menggoyang pepohonan. Untung atap jerami sudah diikat erat dengan tali rami, semua tetap aman."
+  ]
+ },
  "_cerita_sedang": {
-  "versi": "1.7.4-sedang.1",
+  "versi": "1.7.5-sedang.1",
   "alat": "tools/buat_tema_sedang_cerita.py",
   "bagian": [
    "dilema",
@@ -3031,7 +3043,8 @@
    "petunjuk",
    "otomatis.gubuk_tambahan",
    "bangun_kategori",
-   "peta_kejadian"
+   "peta_kejadian",
+   "angin"
   ],
   "catatan": "Jalankan SETELAH node tools/buat_overlay_sedang.js (alat itu menulis ulang file ini dan menghapus bagian cerita)."
  },

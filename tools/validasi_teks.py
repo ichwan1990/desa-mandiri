@@ -1,4 +1,4 @@
-"""Validasi TEKS-GAME.json v1.7.4 terhadap backup v1.0.0 (+allowlist tuning), v1.1.0, v1.2.0, v1.3.0, v1.4.0, v1.5.0, v1.5.1, v1.6.0, v1.6.1, v1.7.0, v1.7.1, v1.7.2, v1.7.3.
+"""Validasi TEKS-GAME.json v1.7.5 terhadap backup v1.0.0 (+allowlist tuning), v1.1.0, v1.2.0, v1.3.0, v1.4.0, v1.5.0, v1.5.1, v1.6.0, v1.6.1, v1.7.0, v1.7.1, v1.7.2, v1.7.3, v1.7.4.
 Sejak v1.4.0 (lokalisasi Indonesia) teks tampilan boleh berubah, tetapi semua key/struktur, semua angka/boolean, dan semua
 string berjenis id (id, tipe, target, era, musim, prasyarat, event_terkait, ...) harus tetap sama; placeholder teks yang berubah
 tidak boleh bertambah. Ditambah: cek kata terlarang (salju, serigala, harimau, ...) di semua teks tampilan, dan bagian baru v1.4/v1.5.
@@ -9,6 +9,7 @@ tidak muncul di teks cerita yang aktif di tema sedang).
 v1.6.0 hanya menambah key top-level pangan (pangan v9 game.js) + placeholder {buah}: semua key wajib ada di kedua tema (TEKS dan hasil
 gabungan sedang), placeholder sesuai yang diisi kode, tanpa kata khas Indonesia di pangan tema sedang (kecuali yang tidak dipakai tema itu).
 v1.6.1 (v9c) hanya menambah: otomatis.api_unggun/gubuk (array 2-4, {nama}/{nama2}), 10 pangan.keluar baru, daya_tarik.bahagia_syarat/murung.
+v1.7.5 hanya menambah angin.kencang_rusak ({bangunan} {jumlah}) & angin.atap_bertahan (array variasi log).
 v1.7.4 hanya menambah bangun_kategori (C.BUILD_CATS + terkunci_era {era} / terkunci_riset {riset} / monumen_tujuan) & peta_kejadian (string).
 v1.7.3 hanya menambah petunjuk.butuh_gubuk (string) & otomatis.gubuk_tambahan (array) dengan {gubuk} (+ meta.placeholder).
 v1.7.2 menambah tooltip_ancaman & orang_orangan_teks_melayang, mengoreksi 4 path terdaftar (KOREKSI_V172), dan melarang awalan 'Hari ' di teks log baru.
@@ -52,7 +53,7 @@ def sub(a, b, p, idk=False):
             teks_diubah.append(p)
     elif type(a) != type(b) or a != b: err.append(f"nilai/id berubah: {p} ({a!r} -> {b!r})")
 sub(old, new, "")
-if new["meta"]["versi"] != "1.7.4": err.append("meta.versi bukan 1.7.4")
+if new["meta"]["versi"] != "1.7.5": err.append("meta.versi bukan 1.7.5")
 for k in old:
     if list(new).index(k) != list(old).index(k): err.append(f"urutan key top-level berubah: {k}")
 m = new["meta"]
@@ -1039,6 +1040,45 @@ for sec in ("bangun_kategori", "peta_kejadian"):
     o = []; scan_t(ambil(sd, sec), sec, o)
     if o: sed_err.append(f"kata khas Indonesia di tema sedang: {sec}: " + ", ".join(f"'{w}' @ {p}" for p, w in o[:3]))
     cek_ph(ambil(sd, sec), ambil(new, sec), sec); walk_s(ambil(sd, sec), sec)
+# ---------- v1.7.5: v12 (6ff5e7c) — angin.kencang_rusak {bangunan} {jumlah}, angin.atap_bertahan ----------
+old174 = json.load(open(ROOT + "tools/TEKS-GAME.v1.7.4.json", encoding="utf-8"))
+teks_diubah.clear(); _n = len(err); sub(old174, new, "")
+if len(err) > _n: err.insert(_n, "^ perbedaan struktur/angka terhadap v1.7.4:")
+if teks_diubah: err.append(f"v1.7.5 hanya penambahan, tetapi {len(teks_diubah)} teks v1.7.4 berubah, mis. {teks_diubah[:3]}")
+for k in old174:
+    if list(new).index(k) != list(old174).index(k): err.append(f"urutan key top-level v1.7.4 berubah: {k}")
+if "catatan_v175" not in m: err.append("meta.catatan_v175 hilang")
+# path -> (placeholder persis seperti extra di game.js, wajib)
+V175 = {"angin.kencang_rusak": (("bangunan", "jumlah"), ("bangunan", "jumlah")), "angin.atap_bertahan": ((), ())}
+try:
+    _g = open(ROOT + "game.js", encoding="utf-8").read()
+    _ak = set(re.findall(r"TX\('angin\.(\w+)'", _g))
+    if _ak - {p.split(".")[1] for p in V175}: err.append(f"angin: key baru di game.js belum ada di daftar validator: {sorted(_ak - {p.split('.')[1] for p in V175})}")
+    for path, (ph, _w) in V175.items():
+        _x = re.search(r"TX\('" + re.escape(path) + r"', \{([^}]*)\}", _g)
+        if not _x: sed_warn.append(f"v1.7.5: {path} tidak lagi ditemukan di game.js"); continue
+        _k = set(re.findall(r"(?:^|,)\s*(\w+)\s*:", _x.group(1)))
+        if _k != set(ph): err.append(f"{path}: extra di game.js {sorted(_k)} != daftar validator {sorted(ph)}")
+except Exception as e: sed_warn.append(f"game.js tidak terbaca untuk cek v1.7.5 ({e})")
+def cek_v175(T, sumber):
+    for path, (ph, wajib) in V175.items():
+        v = ambil(T, path)
+        if not (isinstance(v, list) and 2 <= len(v) <= 4 and all(isinstance(x, str) for x in v)): err.append(f"{sumber}{path} harus array 2-4 variasi (log lewat TX)"); continue
+        for x in v:
+            cek_teks(x, path, sumber, ph, False)
+            if x.startswith("Hari "): err.append(f"{sumber}{path} jangan diawali 'Hari ' (log() menambahkannya)")
+            if "<" in x: err.append(f"{sumber}{path}: tanpa '<'")
+            for w in wajib:
+                if "{" + w + "}" not in x: err.append(f"{sumber}{path} harus memakai {{{w}}}")
+cek_v175(new, "")
+cek_v175(sd, "sedang:")
+if ambil(ov, "angin") is None: sed_err.append("overlay sedang tanpa angin (teks Nusantara akan dipakai)")
+o = []; scan_t(ambil(sd, "angin"), "angin", o)
+for x in sum((ambil(sd, p) or [] for p in V175), []):
+    for w in ("ijuk", "mareng", "labuh", "bambu", "rumbia", "ilalang"):
+        if re.search(r"(?<![\w-])" + w + r"(?![\w-])", x, re.I): o.append(("angin", w))
+if o: sed_err.append("kata khas Indonesia di tema sedang: angin: " + ", ".join(f"'{w}' @ {p}" for p, w in o[:3]))
+cek_ph(ambil(sd, "angin"), ambil(new, "angin"), "angin"); walk_s(ambil(sd, "angin"), "angin")
 err += sed_err
 # kata terlarang di SEMUA teks tampilan (bukan key, bukan string id, bukan meta teknis)
 META_TAMPIL = ("sumber_daya", "bangunan", "musim", "era", "hewan", "penyebab_kondisi", "bangunan_pertahanan", "tahap_usia", "status_hubungan",
@@ -1098,9 +1138,10 @@ print(f"v1.7.1: pangan telur (sumber, tugas {len(new['pangan']['tugas']['telur']
 print(f"v1.7.2: tooltip_ancaman, orang_orangan_teks_melayang {len(ambil(new, 'dilema_ui.orang_orangan_teks_melayang'))} variasi | koreksi {len(KOREKSI_V172)} path | teks lama berawalan 'Hari {{hari}}:' (dibuang fill()): {len(hari_lama)}")
 print(f"v1.7.3: petunjuk.butuh_gubuk | otomatis.gubuk_tambahan {len(new['otomatis']['gubuk_tambahan'])} variasi (sedang {len(sd['otomatis']['gubuk_tambahan'])}) | placeholder {{gubuk}}")
 print(f"v1.7.4: bangun_kategori {len(KATEGORI)} kategori + terkunci_era/terkunci_riset/monumen_tujuan | peta_kejadian 4 | placeholder {{era}} {{riset}}")
+print(f"v1.7.5: angin.kencang_rusak {len(new['angin']['kencang_rusak'])} variasi, angin.atap_bertahan {len(new['angin']['atap_bertahan'])} variasi (sedang {len(sd['angin']['kencang_rusak'])}/{len(sd['angin']['atap_bertahan'])})")
 print(f"tema sedang: overlay {len([k for k in ov if not k.startswith('_')])} bagian | cerita: dilema {len(ov.get('dilema', {}).get('__byId', []))}, momen {len([k for k in ov.get('momen_kecil', {}) if not k.startswith('_')])}, "
       f"lomba {len(ov.get('agustusan', {}).get('lomba', {}))} | kata khas Indonesia di cerita aktif: {sum(len(v) for k, v in kena.items() if k in aktif)}")
 print(f"tema sedang: STORY_DISABLE bisa dicabut: {bisa_cabut or '-'}" + (f" | masih perlu disable: {tetap}" if tetap else "") + f" | STORY_PATCH enabled:false bisa dicabut: {patch_cabut or '-'}")
 for w in sed_warn: print(" peringatan:", w)
 if err: print("GAGAL:"); [print(" -", e) for e in err]; sys.exit(1)
-print("OK: JSON valid, struktur/id/angka lama utuh (TUNING_V10 + 14 retuning, v1.0-v1.7.3), overlay sedang bersih, kata terlarang bersih, semua efek/tipe/target/placeholder terdaftar.")
+print("OK: JSON valid, struktur/id/angka lama utuh (TUNING_V10 + 14 retuning, v1.0-v1.7.4), overlay sedang bersih, kata terlarang bersih, semua efek/tipe/target/placeholder terdaftar.")
