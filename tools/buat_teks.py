@@ -3222,6 +3222,74 @@ def terapkan_patch_v150(data, patch):
     return terapkan_patch(data, patch)
 PATCH_V150 = copy.deepcopy(PATCH_V150)
 terapkan_patch_v150(data, PATCH_V150)
+# ===================== v1.5.1 (aditif): key yang di kode masih memakai fallback =====================
+# terapkan_patch memasang objek patch apa adanya (tanpa salinan); salin data supaya penambahan v1.5.1+ tidak ikut mengubah PATCH_V150 (patch-v1.5.0.json)
+data = copy.deepcopy(data)
+# Dibaca game.js lewat TX(path, extra, fallback): array -> dipilih acak; teks lalu lewat fill() (awalan "Hari {hari}:" dibuang,
+# karena log() sudah menambahkannya). Tanpa awalan di sini, sama seperti fallback-nya.
+PATCH_V151 = {
+ "_patch": {"versi_dari": "1.5.0", "versi_ke": "1.5.1", "sifat": "hanya penambahan sub-key (tambah_path; menolak menimpa)",
+            "sumber": "Asisten Koding 17-10 15:07: key yang di game.js (Story P0 352aed4) masih memakai fallback"},
+ "tambah_path": {
+  "kerja_bakti.kenduri": [
+   "Kenduri kecil di balai: nasi dan lauk dibagi untuk warga dan tetangga. Semua pulang dengan perut kenyang.",
+   "Selamatan sederhana malam ini. Lumbung sedang lega, jadi sebagian bekal dibagikan ke tetangga.",
+   "{nama} ikut membagikan nasi berkat dari kenduri. Tetangga yang menerima tersenyum lebar.",
+   "Kenduri di balai: doa bersama, makan bersama, lalu bercerita sampai larut.",
+   "Kenduri kecil di balai: {jumlah} porsi nasi dan lauk dibagi untuk warga dan tetangga."],
+  "kerja_bakti.kenduri_syukuran": [
+   "Syukuran sederhana: warga makan bersama, {jumlah} porsi habis dengan gembira.",
+   "Syukuran kecil di halaman balai. {jumlah} porsi nasi dan sayur dinikmati bersama sambil bercanda."],
+  "kerja_bakti.kenduri_sedekah": [
+   "Sedekah ke desa tetangga: {jumlah} porsi diantar dengan bakul. Tetangga berterima kasih.",
+   "{nama} dan {nama2} mengantar {jumlah} porsi ke desa tetangga. Pulangnya mereka membawa salam hangat."],
+  "kerja_bakti.log_mulai": [
+   "Warga bergotong royong seharian. Capek, tapi hati senang.",
+   "Kentongan berbunyi pagi-pagi. Seluruh warga turun bekerja bersama sampai sore.",
+   "{nama} dan {nama2} memimpin gotong royong. Pekerjaan berat terasa ringan bila dikerjakan bersama."],
+  "dilema_ui.syukuran_panen": [
+   "Tasyakuran panen: {jumlah} porsi dimasak bersama dan dibagi ke tetangga.",
+   "Syukuran panen di balai desa. {jumlah} porsi nasi dan sayur dibagikan, doa syukur mengalun pelan.",
+   "Panen kali ini cukup melimpah. Warga memasak {jumlah} porsi dan membaginya dengan desa sebelah."],
+  "dilema_ui.utang_lunas": [
+   "Utang ke rentenir dilunasi. Warga menarik napas lega.",
+   "Rentenir datang menagih, dan desa membayar lunas. \"Semoga tidak perlu meminjam lagi,\" kata para tetua.",
+   "Catatan utang dicoret. Desa kembali bebas dari tagihan."],
+  "dilema_ui.utang_sita": [
+   "Utang belum terbayar. Rentenir menyita separuh kayu, batu, dan papan desa.",
+   "Gudang belum cukup untuk membayar. Rentenir membawa pergi separuh kayu, batu, dan papan. Warga terdiam sedih.",
+   "Rentenir menyita separuh kayu, batu, dan papan desa. \"Lain kali kita kerja bakti saja,\" bisik para tetua."],
+  "agustusan.panitia.setuju": "Setuju",
+  "momen_kecil.judul": "Momen Kecil"},
+ "tambah_key_meta": {
+  "catatan_v151": {
+   "riset": "Asisten Riset (17-10) mengonfirmasi: angka tabel opsi pertama dilema kelas B benar (validator: pangan opsi 1 >= -6), dan 5 akibat tertunda usulan_dokumen tetap dipertahankan (boleh diabaikan kode).",
+   "bentuk": {
+    "kerja_bakti.kenduri": "array variasi; {jumlah} = porsi, boleh dipakai sejak 98960a0 (kode mengisi {jumlah} untuk ketiga bentuk kenduri)",
+    "kerja_bakti.kenduri_syukuran / kenduri_sedekah": "array variasi; {jumlah} = porsi (bentuk kenduri bergantian, cerita.js kenduri.forms)",
+    "kerja_bakti.log_mulai": "array variasi; tanpa {jumlah}",
+    "dilema_ui.syukuran_panen": "array variasi; {jumlah} = porsi",
+    "dilema_ui.utang_lunas / utang_sita": "array variasi; tanpa {jumlah}",
+    "agustusan.panitia.setuju": "string (label tombol)",
+    "momen_kecil.judul": "string (judul kartu momen kecil); bukan id momen"},
+   "awalan_hari": "Key v1.5.1 tanpa awalan \"Hari {hari}:\" (seperti fallback). Teks v1.5.0 yang berawalan tetap aman: fill() membuangnya."}},
+ "tambah_entri_meta": {}, "tambah_key": {},
+ "set_meta": {"versi": "1.5.1"},
+}
+def terapkan_patch_v151(data, patch):
+    for path, nilai in patch["tambah_path"].items():
+        *induk, akhir = path.split(".")
+        node = data
+        for k in induk:
+            if not isinstance(node.get(k), dict): raise SystemExit(f"{path}: induk {k} tidak ada / bukan dict")
+            node = node[k]
+        if akhir in node: raise SystemExit(f"{path} sudah ada (v1.5.1 hanya menambah)")
+        node[akhir] = copy.deepcopy(nilai)
+    return terapkan_patch(data, patch)
+PATCH_V151 = copy.deepcopy(PATCH_V151)
+terapkan_patch_v151(data, PATCH_V151)
+with open("/workspace/village-game/tools/patch-v1.5.1.json","w",encoding="utf-8") as f:
+    json.dump(PATCH_V151,f,ensure_ascii=False,indent=2); f.write("\n")
 with open("/workspace/village-game/tools/patch-v1.5.0.json","w",encoding="utf-8") as f:
     json.dump(PATCH_V150,f,ensure_ascii=False,indent=2); f.write("\n")
 with open("/workspace/village-game/tools/patch-v1.4.0.json","w",encoding="utf-8") as f:

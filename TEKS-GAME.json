@@ -1,7 +1,7 @@
 {
   "meta": {
     "judul_game": "Desa Mandiri",
-    "versi": "1.5.0",
+    "versi": "1.5.1",
     "bahasa": "id-ID",
     "encoding": "UTF-8",
     "nuansa": "Hangat, santai, dan menggemaskan. Pemain menjaga penduduk kecil yang hidup mandiri. Ancaman nyata tapi ringan (badai, babi hutan, wabah, kekurangan makanan), dengan kehangatan kebersamaan sebagai penyeimbang.",
@@ -801,6 +801,19 @@
       "YEAR_GOALS": "rencana_tahun",
       "DILEMMAS": "dilema",
       "MOMEN_KECIL": "momen_kecil"
+    },
+    "catatan_v151": {
+      "riset": "Asisten Riset (17-10) mengonfirmasi: angka tabel opsi pertama dilema kelas B benar (validator: pangan opsi 1 >= -6), dan 5 akibat tertunda usulan_dokumen tetap dipertahankan (boleh diabaikan kode).",
+      "bentuk": {
+        "kerja_bakti.kenduri": "array variasi; {jumlah} = porsi, boleh dipakai sejak 98960a0 (kode mengisi {jumlah} untuk ketiga bentuk kenduri)",
+        "kerja_bakti.kenduri_syukuran / kenduri_sedekah": "array variasi; {jumlah} = porsi (bentuk kenduri bergantian, cerita.js kenduri.forms)",
+        "kerja_bakti.log_mulai": "array variasi; tanpa {jumlah}",
+        "dilema_ui.syukuran_panen": "array variasi; {jumlah} = porsi",
+        "dilema_ui.utang_lunas / utang_sita": "array variasi; tanpa {jumlah}",
+        "agustusan.panitia.setuju": "string (label tombol)",
+        "momen_kecil.judul": "string (judul kartu momen kecil); bukan id momen"
+      },
+      "awalan_hari": "Key v1.5.1 tanpa awalan \"Hari {hari}:\" (seperti fallback). Teks v1.5.0 yang berawalan tetap aman: fill() membuangnya."
     }
   },
   "penduduk": [
@@ -7755,6 +7768,26 @@
     "selesai": [
       "Hari {hari}: Kerja bakti selesai. Desa bersih, monumen makin tinggi, dan semua makin akrab.",
       "Hari {hari}: Sore yang lelah tapi bahagia. Warga makan bersama di bawah pohon beringin."
+    ],
+    "kenduri": [
+      "Kenduri kecil di balai: nasi dan lauk dibagi untuk warga dan tetangga. Semua pulang dengan perut kenyang.",
+      "Selamatan sederhana malam ini. Lumbung sedang lega, jadi sebagian bekal dibagikan ke tetangga.",
+      "{nama} ikut membagikan nasi berkat dari kenduri. Tetangga yang menerima tersenyum lebar.",
+      "Kenduri di balai: doa bersama, makan bersama, lalu bercerita sampai larut.",
+      "Kenduri kecil di balai: {jumlah} porsi nasi dan lauk dibagi untuk warga dan tetangga."
+    ],
+    "kenduri_syukuran": [
+      "Syukuran sederhana: warga makan bersama, {jumlah} porsi habis dengan gembira.",
+      "Syukuran kecil di halaman balai. {jumlah} porsi nasi dan sayur dinikmati bersama sambil bercanda."
+    ],
+    "kenduri_sedekah": [
+      "Sedekah ke desa tetangga: {jumlah} porsi diantar dengan bakul. Tetangga berterima kasih.",
+      "{nama} dan {nama2} mengantar {jumlah} porsi ke desa tetangga. Pulangnya mereka membawa salam hangat."
+    ],
+    "log_mulai": [
+      "Warga bergotong royong seharian. Capek, tapi hati senang.",
+      "Kentongan berbunyi pagi-pagi. Seluruh warga turun bekerja bersama sampai sore.",
+      "{nama} dan {nama2} memimpin gotong royong. Pekerjaan berat terasa ringan bila dikerjakan bersama."
     ]
   },
   "teladan": {
@@ -7811,7 +7844,8 @@
       "tukar_peserta": "Tukar peserta",
       "log": [
         "Hari {hari}: Panitia 17-an dibentuk di pendopo. {nama} terpilih jadi ketua dan langsung sibuk mencatat."
-      ]
+      ],
+      "setuju": "Setuju"
     },
     "umbul_umbul": [
       "Hari {hari}: Umbul-umbul merah putih berkibar di sepanjang jalan desa. Semua jadi bersemangat."
@@ -9935,7 +9969,22 @@
         "Hari {hari}: {nama} yang {sifat} terlihat kecewa dengan keputusan itu.",
         "Hari {hari}: {nama} yang {sifat} menghela napas panjang. Ia kurang setuju."
       ]
-    }
+    },
+    "syukuran_panen": [
+      "Tasyakuran panen: {jumlah} porsi dimasak bersama dan dibagi ke tetangga.",
+      "Syukuran panen di balai desa. {jumlah} porsi nasi dan sayur dibagikan, doa syukur mengalun pelan.",
+      "Panen kali ini cukup melimpah. Warga memasak {jumlah} porsi dan membaginya dengan desa sebelah."
+    ],
+    "utang_lunas": [
+      "Utang ke rentenir dilunasi. Warga menarik napas lega.",
+      "Rentenir datang menagih, dan desa membayar lunas. \"Semoga tidak perlu meminjam lagi,\" kata para tetua.",
+      "Catatan utang dicoret. Desa kembali bebas dari tagihan."
+    ],
+    "utang_sita": [
+      "Utang belum terbayar. Rentenir menyita separuh kayu, batu, dan papan desa.",
+      "Gudang belum cukup untuk membayar. Rentenir membawa pergi separuh kayu, batu, dan papan. Warga terdiam sedih.",
+      "Rentenir menyita separuh kayu, batu, dan papan desa. \"Lain kali kita kerja bakti saja,\" bisik para tetua."
+    ]
   },
   "momen_kecil": {
     "_catatan": "MOMEN_KECIL (spec §3.4): pilihan cepat tanpa biaya sumber daya (hanya mood/hubungan); opsi pertama selalu netral. Angka di balance.js; catatan_efek = ringkasan spec.",
@@ -10146,6 +10195,7 @@
         }
       ],
       "catatan_efek": "maafkan 0 / ajari: peringatan ancaman berikutnya sedikit lebih awal (sekali)"
-    }
+    },
+    "judul": "Momen Kecil"
   }
 }

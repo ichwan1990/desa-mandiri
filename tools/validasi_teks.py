@@ -1,11 +1,14 @@
-"""Validasi TEKS-GAME.json v1.5.0 terhadap backup v1.0.0 (+allowlist tuning), v1.1.0, v1.2.0, v1.3.0, v1.4.0.
+"""Validasi TEKS-GAME.json v1.5.1 terhadap backup v1.0.0 (+allowlist tuning), v1.1.0, v1.2.0, v1.3.0, v1.4.0, v1.5.0.
 Sejak v1.4.0 (lokalisasi Indonesia) teks tampilan boleh berubah, tetapi semua key/struktur, semua angka/boolean, dan semua
 string berjenis id (id, tipe, target, era, musim, prasyarat, event_terkait, ...) harus tetap sama; placeholder teks yang berubah
 tidak boleh bertambah. Ditambah: cek kata terlarang (salju, serigala, harimau, ...) di semua teks tampilan, dan bagian baru v1.4/v1.5.
-v1.5.0 (tokoh, cerita, tujuan) hanya menambah: bagian baru, entri meta, dan pencapaian A25-A32 (satu-satunya list lama yang boleh bertambah)."""
-import json, re, sys
+v1.5.0 (tokoh, cerita, tujuan) hanya menambah: bagian baru, entri meta, dan pencapaian A25-A32 (satu-satunya list lama yang boleh bertambah).
+v1.5.1 hanya menambah sub-key yang di kode masih memakai fallback (kerja_bakti.kenduri/log_mulai, dilema_ui.syukuran_panen/utang_*, ...).
+Ditambah cek overlay tema sedang TEKS-TEMA-sedang.json (path ada di TEKS, hanya teks, placeholder terdaftar, kata khas Indonesia
+tidak muncul di teks cerita yang aktif di tema sedang). Path lain bisa diberikan lewat env TEKS_FILE / TEKS_SEDANG (untuk uji negatif)."""
+import json, re, sys, os, copy, subprocess
 ROOT = "/workspace/village-game/"
-new = json.load(open(ROOT + "TEKS-GAME.json", encoding="utf-8"))
+new = json.load(open(os.environ.get("TEKS_FILE", ROOT + "TEKS-GAME.json"), encoding="utf-8"))
 old = json.load(open(ROOT + "tools/TEKS-GAME.v1.0.0.json", encoding="utf-8"))
 err = []
 # Tuning pangan yang disetujui tim riset (Okt 2026): hanya nilai hadiah ini yang boleh beda dari v1.0.0.
@@ -39,7 +42,7 @@ def sub(a, b, p, idk=False):
             teks_diubah.append(p)
     elif type(a) != type(b) or a != b: err.append(f"nilai/id berubah: {p} ({a!r} -> {b!r})")
 sub(old, new, "")
-if new["meta"]["versi"] != "1.5.0": err.append("meta.versi bukan 1.5.0")
+if new["meta"]["versi"] != "1.5.1": err.append("meta.versi bukan 1.5.1")
 for k in old:
     if list(new).index(k) != list(old).index(k): err.append(f"urutan key top-level berubah: {k}")
 m = new["meta"]
@@ -379,7 +382,7 @@ if all(k in new for k in V15):
     for need in ("piagam", "tanpa_piagam", "ending_mandiri"):
         if not Y5.get(need): err.append(f"rencana_tahun.{need} kosong")
     MK = new["momen_kecil"]
-    if ids(MK) != SPEC_MOMEN: err.append("momen_kecil != MOMEN_KECIL spec (12 id)")
+    if [k for k in ids(MK) if k != "judul"] != SPEC_MOMEN: err.append("momen_kecil != MOMEN_KECIL spec (12 id)")
     D5 = new["dilema"]
     if [d["id"] for d in D5] != SPEC_DILEMA: err.append("dilema != DILEMMAS spec (24 id, urutan D01-D24)")
     if len(D5) < 15: err.append("dilema kurang dari 15")
@@ -417,6 +420,7 @@ if all(k in new for k in V15):
         if d["kelas"] == "R":  # spec §3.2: R boleh sebelum hari 25 -> opsi 1 pangan >= -2, opsi lain >= -4, hadiah pangan <= +3
             if any(d["pilihan"][0]["efek"].get(f, 0) < -2 for f in PANGAN): err.append(f"{src} (R) opsi pertama harus aman (pangan >= -2)")
             if any(pl["efek"].get(f, 0) < -4 or pl["efek"].get(f, 0) > 3 for pl in d["pilihan"] for f in PANGAN): err.append(f"{src} (R) pangan di luar -4..+3")
+        # Asisten Riset 17-10: angka tabel opsi pertama kelas B dikonfirmasi benar; batas -6 tetap.
         elif any(d["pilihan"][0]["efek"].get(f, 0) < -6 for f in PANGAN): err.append(f"{src} (B) opsi pertama terlalu mahal (pangan < -6)")
     kunci_t = [t["kunci"] for d in D5 for pl in d["pilihan"] for t in pl.get("tertunda", [])]
     asal = {}
@@ -426,6 +430,166 @@ if all(k in new for k in V15):
                 if asal.setdefault(t["kunci"], d["id"]) != d["id"]: err.append(f"kunci akibat tertunda {t['kunci']} dipakai dua dilema")
     for need in ("banjir_hulu", "kiriman_terima_kasih", "harga_beras_naik", "suap_bocor", "timbangan_curang"):
         if need not in kunci_t: err.append(f"akibat tertunda spec {need} hilang")
+# ---------- v1.5.1: key yang di kode masih memakai fallback (game.js TX) ----------
+# Akibat tertunda bertanda usulan_dokumen (5) tetap dipertahankan (Asisten Riset 17-10); kode boleh mengabaikannya.
+old15 = json.load(open(ROOT + "tools/TEKS-GAME.v1.5.0.json", encoding="utf-8"))
+teks_diubah.clear(); _n = len(err); sub(old15, new, "")
+if len(err) > _n: err.insert(_n, "^ perbedaan struktur/angka terhadap v1.5.0:")
+if teks_diubah: err.append(f"v1.5.1 hanya penambahan, tetapi {len(teks_diubah)} teks v1.5.0 berubah, mis. {teks_diubah[:3]}")
+for k in old15:
+    if list(new).index(k) != list(old15).index(k): err.append(f"urutan key top-level v1.5 berubah: {k}")
+def ambil(d, path):
+    for k in path.split("."):
+        if not isinstance(d, dict) or k not in d: return None
+        d = d[k]
+    return d
+# path -> (tipe, {jumlah} wajib/terlarang/bebas); sesuai TX() di game.js (352aed4): array = variasi acak
+V151 = {"kerja_bakti.kenduri": ("list", "bebas"), "kerja_bakti.log_mulai": ("list", "tanpa"),
+        "kerja_bakti.kenduri_syukuran": ("list", "wajib"), "kerja_bakti.kenduri_sedekah": ("list", "wajib"),
+        "dilema_ui.syukuran_panen": ("list", "wajib"), "dilema_ui.utang_lunas": ("list", "tanpa"), "dilema_ui.utang_sita": ("list", "tanpa"),
+        "agustusan.panitia.setuju": ("str", "tanpa"), "momen_kecil.judul": ("str", "tanpa")}
+def cek_v151(T, sumber):
+    for path, (tp, jml) in V151.items():
+        v = ambil(T, path)
+        if tp == "str":
+            if not isinstance(v, str) or not v.strip(): err.append(f"{sumber}{path} harus string tidak kosong"); continue
+            vs = [v]
+        else:
+            if not (isinstance(v, list) and len(v) >= 2 and all(isinstance(x, str) and x.strip() for x in v)): err.append(f"{sumber}{path} harus array >= 2 variasi string"); continue
+            vs = v
+        for t in vs:
+            if jml == "tanpa" and "{jumlah}" in t: err.append(f"{sumber}{path} memakai {{jumlah}} padahal kode tidak mengisinya: {t[:40]}")
+            if jml == "wajib" and "{jumlah}" not in t: err.append(f"{sumber}{path} harus memakai {{jumlah}} (porsi): {t[:40]}")
+            if t.startswith("Hari {hari}"): err.append(f"{sumber}{path} jangan diawali 'Hari {{hari}}:' (log() sudah menambahkannya)")
+cek_v151(new, "")
+if "catatan_v151" not in m: err.append("meta.catatan_v151 hilang")
+# ---------- tema sedang: TEKS-TEMA-sedang.json (overlay mergeTextOverlay di game.js) ----------
+SEDANG = os.environ.get("TEKS_SEDANG", ROOT + "TEKS-TEMA-sedang.json")
+ov = json.load(open(SEDANG, encoding="utf-8"))
+sed_err, sed_warn = [], []
+def merge(base, o):  # salinan mergeTextOverlay (game.js)
+    if base is None or not isinstance(o, dict): return base if o is None else o
+    if "__byId" in o:
+        if not isinstance(base, list): return base
+        for x in o["__byId"]:
+            i = next((j for j, b in enumerate(base) if isinstance(b, dict) and b.get("id", b.get("kode")) == x["id"]), None)
+            if i is not None: base[i] = merge(base[i], {k: v for k, v in x.items() if k != "id"})
+        return base
+    if "__byIdx" in o:
+        if not isinstance(base, list): return base
+        for i, x in o["__byIdx"].items():
+            if int(i) < len(base): base[int(i)] = merge(base[int(i)], x)
+        return base
+    if not isinstance(base, dict): return o
+    for k, v in o.items(): base[k] = merge(base[k], v) if k in base else v
+    return base
+BUKAN_TEKS = ID_KEYS | {"efek", "efek_tertunda", "hadiah", "kunci", "peluang", "hari_tunda", "kelas", "mekanik_lain", "usulan_dokumen", "catatan_efek"}
+def cek_ov(b, o, p):  # overlay hanya boleh menimpa teks yang sudah ada di TEKS-GAME.json
+    if isinstance(o, dict) and "__byId" in o:
+        if not isinstance(b, list): sed_err.append(f"__byId pada non-list @ {p}"); return
+        for x in o["__byId"]:
+            hit = [e for e in b if isinstance(e, dict) and e.get("id", e.get("kode")) == x.get("id")]
+            if not hit: sed_err.append(f"id {x.get('id')} tidak ada di TEKS @ {p}"); continue
+            cek_ov(hit[0], {k: v for k, v in x.items() if k != "id"}, f"{p}[{x['id']}]")
+    elif isinstance(o, dict) and "__byIdx" in o:
+        if not isinstance(b, list): sed_err.append(f"__byIdx pada non-list @ {p}"); return
+        for i, x in o["__byIdx"].items():
+            if not i.isdigit() or int(i) >= len(b): sed_err.append(f"indeks {i} di luar list @ {p}"); continue
+            cek_ov(b[int(i)], x, f"{p}[{i}]")
+    elif isinstance(o, dict):
+        if not isinstance(b, dict): sed_err.append(f"objek menimpa non-objek @ {p}"); return
+        for k, v in o.items():
+            if k.startswith("_"): continue
+            if k in BUKAN_TEKS: sed_err.append(f"overlay menimpa data non-teks '{k}' @ {p}"); continue
+            if k not in b: sed_err.append(f"path tidak ada di TEKS-GAME.json: {p}/{k}"); continue
+            cek_ov(b[k], v, f"{p}/{k}")
+    elif isinstance(o, list):
+        if not isinstance(b, list) or not all(isinstance(x, str) for x in o) or not all(isinstance(x, str) for x in b): sed_err.append(f"larik biasa hanya untuk larik string (menggantikan seluruh larik) @ {p}")
+        elif not o: sed_err.append(f"larik kosong @ {p}")
+    elif isinstance(o, str):
+        if not isinstance(b, str): sed_err.append(f"string menimpa {type(b).__name__} @ {p}")
+    else: sed_err.append(f"overlay berisi nilai non-teks {o!r} @ {p}")
+cek_ov(new, {k: v for k, v in ov.items() if not k.startswith("_")}, "")
+sd = merge(copy.deepcopy(new), copy.deepcopy(ov))
+# id cerita yang aktif di kode (cerita.js) & daftar disable tema sedang (tema.js); cadangan bila node tidak ada
+P0_DILEMA = ["rombongan_pendatang", "pencuri_singkong", "obat_sakit", "kerbau_tetangga", "monyet_kebun", "ronda_wajib", "tikus_lumbung",
+             "minta_hujan", "buka_hutan", "tengkulak_padi", "rentenir", "tanggap_reog"]
+P0_MOMEN = SPEC_MOMEN
+try:
+    _js = ("global.CONFIG={};const vm=require('vm');vm.runInThisContext(require('fs').readFileSync('cerita.js','utf8'));"
+           "console.log(JSON.stringify([Object.keys(CONFIG.DILEMMAS),Object.keys(CONFIG.MOMEN_KECIL.list||CONFIG.MOMEN_KECIL)]))")
+    P0_DILEMA, P0_MOMEN = json.loads(subprocess.run(["node", "-e", _js], cwd=ROOT, capture_output=True, text=True, timeout=20).stdout)
+except Exception as e: sed_warn.append(f"cerita.js tidak terbaca lewat node ({e}); memakai daftar P0 bawaan")
+_tm = open(ROOT + "tema.js", encoding="utf-8").read()
+_m = re.search(r"STORY_DISABLE:\s*\[([^\]]*)\]", _tm)
+DISABLE = re.findall(r"'([^']+)'", _m.group(1)) if _m else []
+_m = re.search(r"STORY_PATCH:\s*\{(.*)\},\s*$", _tm, re.M)
+PATCH_OFF = re.findall(r"(\w+):\s*\{\s*enabled:\s*false", _m.group(1)) if _m else []
+# Kata khas Indonesia/Nusantara yang tidak boleh muncul di teks cerita tema sedang (kecuali SEDANG_SENGAJA)
+KHAS_ID = ["kenduri", "selamatan", "ronda", "peronda", "pos ronda", "agustus", "agustusan", "17-an", "tujuh belasan", "tirakatan", "padi", "gabah", "sawah",
+           "tegalan", "pematang", "gropyokan", "reog", "warok", "jathil", "jathilan", "dadak merak", "gamelan", "kendang", "kentongan", "jamu", "kunyit",
+           "temulawak", "suwuk", "dukun", "mbah", "mantri", "singkong", "kerbau", "tengkulak", "peci", "berpeci", "juragan", "pecel", "sambal", "tumpeng",
+           "monyet", "pisang", "kelapa", "oncor", "gotong royong", "bergotong royong", "pendopo", "langgar", "beringin", "merah putih", "kerupuk", "pinang",
+           "jenang", "perkutut", "tubruk", "macapat", "campursari", "dolanan", "genderuwo", "istisqa", "kancil", "rentenir", "kemarau", "mareng", "labuh",
+           "caping", "janur", "bakiak", "kelereng", "gapura", "camat", "kecamatan", "kades", "kendi", "gorengan", "sholat", "subuh", "indonesia raya",
+           "lidi", "bakul", "nusantara", "kampung", "sarung", "batik", "wayang", "sate", "rendang", "weton", "pasaran", "macan tutul", "babi hutan",
+           "syukuran", "tasyakuran", "sedekah", "kabupaten", "lurah", "bancakan"]
+SEDANG_SENGAJA = set()  # (path, kata) yang memang disengaja; kosong saat ini
+RXI = re.compile(r"(?<![\w-])(" + "|".join(re.escape(w) for w in sorted(KHAS_ID, key=len, reverse=True)) + r")(?![\w-])", re.I)
+CERITA_SEDANG = ["dilema", "dilema_ui", "momen_kecil", "agustusan", "kerja_bakti"]
+def scan(x, p, out, idk=False):
+    if isinstance(x, str):
+        if not idk:
+            for hit in RXI.finditer(x):
+                if (p, hit.group(1).lower()) not in SEDANG_SENGAJA: out.append((p, hit.group(1)))
+    elif isinstance(x, dict):
+        for k, v in x.items():
+            if not k.startswith("_") and k not in BUKAN_TEKS: scan(v, f"{p}/{k}", out, idk or (k in ID_KEYS and not (isinstance(v, list) and v and isinstance(v[0], dict))))
+    elif isinstance(x, list): [scan(v, f"{p}[{i}]", out, idk) for i, v in enumerate(x)]
+kena = {}
+for sec in CERITA_SEDANG:
+    if sec == "dilema":
+        for d in sd["dilema"]:
+            o = []; scan({k: v for k, v in d.items() if k != "id"}, "dilema/" + d["id"], o)
+            if o: kena[d["id"]] = o
+    elif sec == "momen_kecil":
+        for k, v in sd["momen_kecil"].items():
+            if isinstance(v, dict):
+                o = []; scan(v, "momen_kecil/" + k, o)
+                if o: kena[k] = o
+    else:
+        o = []; scan(sd[sec], sec, o)
+        if o: kena[sec] = o
+o = []; scan(sd["peringatan_dini"]["ancaman_monyet"], "peringatan_dini/ancaman_monyet", o)
+if o: kena["ancaman_monyet"] = o
+aktif = set(P0_DILEMA) | set(P0_MOMEN) | {"dilema_ui", "kerja_bakti", "agustusan", "ancaman_monyet"}
+for k, hits in kena.items():
+    msg = f"kata khas Indonesia di tema sedang: {k}: " + ", ".join(f"'{w}' @ {p}" for p, w in hits[:3]) + (f" (+{len(hits) - 3})" if len(hits) > 3 else "")
+    (sed_err if k in aktif else sed_warn).append(msg + ("" if k in aktif else " [belum dipakai cerita.js]"))
+for path in V151:  # key baru v1.5.1 juga harus punya padanan sedang bila teksnya khas Indonesia (dicek lewat scan di atas)
+    pass
+cek_v151(sd, "sedang:")
+for d in sd["dilema"]:  # teks_tertunda opsi tetap selaras tertunda[0] setelah overlay
+    for j, pl in enumerate(d["pilihan"]):
+        if pl.get("tertunda") and pl.get("teks_tertunda") != pl["tertunda"][0].get("teks_tertunda"): sed_err.append(f"sedang: dilema.{d['id']}[{j}] teks_tertunda != tertunda[0]")
+# placeholder di bagian cerita sedang hasil gabungan
+def walk_s(x, p):
+    if isinstance(x, str):
+        for k in re.findall(r"\{(\w+)\}", x):
+            if k not in ph_ok_s: sed_err.append(f"placeholder tak terdaftar {{{k}}} @ sedang:{p}")
+    elif isinstance(x, dict): [walk_s(v, f"{p}/{k}") for k, v in x.items()]
+    elif isinstance(x, list): [walk_s(v, f"{p}[{i}]") for i, v in enumerate(x)]
+ph_ok_s = {k.strip("{}") for k in m["placeholder"]}
+for sec in CERITA_SEDANG: walk_s(sd[sec], sec)
+walk_s(sd["peringatan_dini"]["ancaman_monyet"], "peringatan_dini/ancaman_monyet")
+# bagian cerita harus ada (menangkap bila buat_overlay_sedang.js dijalankan ulang tanpa buat_tema_sedang_cerita.py)
+for sec in CERITA_SEDANG:
+    if sec not in ov: sed_err.append(f"TEKS-TEMA-sedang.json tanpa bagian {sec}: jalankan python3 tools/buat_tema_sedang_cerita.py")
+if "ancaman_monyet" not in ov.get("peringatan_dini", {}): sed_err.append("TEKS-TEMA-sedang.json tanpa peringatan_dini.ancaman_monyet (rubah)")
+bisa_cabut = [x for x in DISABLE if x not in kena]
+tetap = [x for x in DISABLE if x in kena]
+patch_cabut = [x for x in PATCH_OFF if {"AGUSTUSAN": "agustusan", "MONKEY": "ancaman_monyet"}.get(x, x) not in kena]
+err += sed_err
 # kata terlarang di SEMUA teks tampilan (bukan key, bukan string id, bukan meta teknis)
 META_TAMPIL = ("sumber_daya", "bangunan", "musim", "era", "hewan", "penyebab_kondisi", "bangunan_pertahanan", "tahap_usia", "status_hubungan",
                "cabang_teknologi", "skill", "kebutuhan", "milestone_anak", "judul_game", "nuansa")
@@ -475,5 +639,10 @@ if all(k in new for k in V15):
           + f" | monumen {len(SPEC_MONUMEN)} ({sum(SPEC_MONUMEN.values())} tahap) | lomba {len(ids(new['agustusan']['lomba']))} | dilema {len(new['dilema'])}"
           + f" ({sum(d['kelas']=='R' for d in new['dilema'])} R / {sum(d['kelas']=='B' for d in new['dilema'])} B), akibat tertunda {_nt}"
           + f" | pencapaian baru {len(aids) - 24} | teks v1.5 {sum(1 for k in V15 for _ in daftar(new[k]))}")
+print(f"v1.5.1: key baru {len(V151)} ({', '.join(V151)})")
+print(f"tema sedang: overlay {len([k for k in ov if not k.startswith('_')])} bagian | cerita: dilema {len(ov.get('dilema', {}).get('__byId', []))}, momen {len([k for k in ov.get('momen_kecil', {}) if not k.startswith('_')])}, "
+      f"lomba {len(ov.get('agustusan', {}).get('lomba', {}))} | kata khas Indonesia di cerita aktif: {sum(len(v) for k, v in kena.items() if k in aktif)}")
+print(f"tema sedang: STORY_DISABLE bisa dicabut: {bisa_cabut or '-'}" + (f" | masih perlu disable: {tetap}" if tetap else "") + f" | STORY_PATCH enabled:false bisa dicabut: {patch_cabut or '-'}")
+for w in sed_warn: print(" peringatan:", w)
 if err: print("GAGAL:"); [print(" -", e) for e in err]; sys.exit(1)
-print("OK: JSON valid, struktur/id/angka lama utuh (TUNING_V10 + 14 retuning, v1.0-v1.4), kata terlarang bersih, semua efek/tipe/target/placeholder terdaftar.")
+print("OK: JSON valid, struktur/id/angka lama utuh (TUNING_V10 + 14 retuning, v1.0-v1.5.0), overlay sedang bersih, kata terlarang bersih, semua efek/tipe/target/placeholder terdaftar.")
