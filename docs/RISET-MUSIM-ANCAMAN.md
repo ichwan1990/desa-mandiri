@@ -3,9 +3,30 @@
 Acuan: **The Little Land** (cuaca terbaca, ancaman malam, konsekuensi tanpa “punish RNG”), Banished (musim dingin = stok), RimWorld (peringatan dini + cerita).  
 Nuansa tetap **cozy**: ancaman nyata, tapi selalu ada tanda, cara cegah, dan recovery.
 
+> **Status implementasi (dicek terhadap kode 2026-10-23, QC S-06).** Dokumen ini adalah spec tema empat musim (`?tema=sedang`, `THEMES.sedang` di `tema.js`); kerangkanya juga dipakai tema Nusantara (babi hutan = kerangka `THREAT.wolf`). Bagian yang belum ada ditandai **[BACKLOG]**; angka yang berbeda diselaraskan ke kode dengan "(spec lama: X)".
+>
+> Ringkas: **10 Terimplementasi · 4 Sebagian · 0 Backlog**
+
+| § | Fitur | Status | Catatan kode |
+|---|-------|--------|--------------|
+| 1 | Efek semi | Terimplementasi | `THEMES.sedang.SEASON_FX.semi` |
+| 1 | Efek panas | Terimplementasi | `yieldMult` 1.0 (bonus panen dihapus) |
+| 1 | Efek gugur | Sebagian | `forageMult` 1.0; berburu (daging + kulit) belum ada |
+| 1 | Efek dingin | Terimplementasi | `hungerMult` 2.0 |
+| 1 | `YEAR_SCALE` tahun 2+ | Terimplementasi | tambahan lapar dari `LATE` belum ada |
+| 2.1 | Serigala malam (jejak → mendekat → serang → usai) | Terimplementasi | `THREAT.wolf`, angka kill diubah ANALISA v2 |
+| 2.1 / 3 | Pagar, obor, menara jaga, makam | Terimplementasi | biaya & kerja sama dengan spec |
+| 2.2 | Sakit ringan/parah + rawat | Terimplementasi | `severeDeathPerDay` 0.15 |
+| 2.2 | Kematian, makam, duka | Sebagian | duka per hubungan ada; pengurangan duka oleh festival/T20 belum ada |
+| 2.2 | Pergi (`LEAVE`) | Terimplementasi | + `starveDays`, `minPop`, `cooldownDays` |
+| 2.3 | Kebakaran | Sebagian | dapur/bengkel saat panas ada; pemicu badai petir belum ada |
+| 2.4 | Banjir kecil | Sebagian | `FLOOD` ada; mitigasi tech T10 Parit Air belum ada (T09–T20 belum dibuat) |
+| 2.5 | Jenjang kelaparan | Terimplementasi | `FAMINE` (+ `graceDays`) |
+| 3 | Prioritas darurat `jaga`/`padam`/`rawat`/`makam` | Terimplementasi | `DEFAULT_PRIO`, `SCHEDULE.urgentJobs` |
+
 Sasaran: musim dan ancaman **terasa** (beda tiap musim, malam berbahaya, kematian bermakna), tanpa membuat early game unfair.
 
-Status sekarang (`balance.js`): 4 musim × 7 hari, `WINTER_HUNGER_MULT` 1.5, event ringan (badai/hewan/wabah sebagai pilihan teks). Dokumen ini **menaikkan ketegangan** dengan sistem yang bisa diantisipasi.
+Status sekarang (`balance.js`): 4 musim × 7 hari, `WINTER_HUNGER_MULT` 2.0 (spec lama: 1.5), event ringan (badai/hewan/wabah sebagai pilihan teks). Dokumen ini **menaikkan ketegangan** dengan sistem yang bisa diantisipasi.
 
 ---
 
@@ -40,7 +61,7 @@ Status sekarang (`balance.js`): 4 musim × 7 hari, `WINTER_HUNGER_MULT` 1.5, eve
 | Air cepat habis | `WATER.perDayPerPop` × **1.35** | Sumur jadi kritis |
 | Kekeringan | Chance **0.10**/hari (max 1×/panas) | Event pilihan; ladang grow +1 hari selama 3 hari bila gagal mitigasi |
 | Kebakaran | Chance malam **0.06** jika ada dapur/bengkel tanpa “aman” (lihat §2) | |
-| Panen awal | `yield` × **1.05** (panas kering) | Sedikit bonus hasil |
+| Panen awal | `yield` × **1.0** (spec lama: 1.05) | Bonus dihapus (nerf pangan) |
 | Peringatan | foodDays air &lt; 3 → banner kuning; asap tipis di dapur = risiko api | |
 
 ### Gugur (`gugur`) — panen & stok
@@ -48,7 +69,7 @@ Status sekarang (`balance.js`): 4 musim × 7 hari, `WINTER_HUNGER_MULT` 1.5, eve
 | Efek | Angka | Catatan |
 |------|-------|---------|
 | Panen raya window | Bobot `panen_raya` × **1.5** (tetap maks 1×/tahun) | Hadiah sudah di-nerf §7 TAHAP3 |
-| Berburu | Node/hewan buru: chance daging +kulit; `gather` makanan hutan × **1.2** | Era dusun+ |
+| Berburu **[BACKLOG]** | Node/hewan buru: chance daging +kulit; `gather` makanan hutan × **1.0** (spec lama: 1.2) | Era dusun+ |
 | Persiapan dingin | UI target buffer = `WINTER_BUFFER_DAYS` (**8**, tahun 2+: **10**) | Banner jika di bawah target mulai hari ke-4 gugur |
 | Mood “syukur” | Jika foodDays ≥ 10 di akhir gugur: mood desa +**8** sekali | Reward perencanaan |
 | Peringatan | “Sisa X hari sebelum dingin. Stok Y/Z hari.” tiap fajar hari 4–7 gugur | |
@@ -57,7 +78,7 @@ Status sekarang (`balance.js`): 4 musim × 7 hari, `WINTER_HUNGER_MULT` 1.5, eve
 
 | Efek | Angka | Catatan |
 |------|-------|---------|
-| Lapar | `WINTER_HUNGER_MULT` **1.5** (tahun 2+ +0.15 dari LATE) | Sudah ada |
+| Lapar | `WINTER_HUNGER_MULT` **2.0** (spec lama: 1.5); tahun 2+ +0.15 dari LATE **[BACKLOG]** | Sudah ada; dengan Lumbung ×1.6 (`GRANARY_HARD_HUNGER_MULT`) |
 | Tanaman | Tetap **tidak tumbuh** | Sudah ada |
 | Dingin ekstrem | Chance **0.12**/hari; 1 hari: hunger × **1.8**, mood decay × **2.5** jika jauh dari api/rumah | Peringatan sore sebelumnya |
 | Kayu bakar | Api unggun konsumsi **2 kayu/hari** di dingin (0 di musim lain V1 musim-ancaman) | Tech T01: ×0.8 |
@@ -70,9 +91,9 @@ Status sekarang (`balance.js`): 4 musim × 7 hari, `WINTER_HUNGER_MULT` 1.5, eve
 ```js
 SEASON_FX: {
   semi:  { plantTimeMult: 0.85, growDaysAdd: -0.5, rainChance: 0.40, floodChance: 0.08, chopTimeMultRain: 1.10 },
-  panas: { waterMult: 1.35, droughtChance: 0.10, fireNightChance: 0.06, yieldMult: 1.05 },
-  gugur: { panenRayaWeightMult: 1.5, forageMult: 1.2, winterWarnFromDayInSeason: 4 },
-  dingin:{ hungerMult: 1.5, extremeChance: 0.12, extremeHungerMult: 1.8, campfireWoodPerDay: 2, sickChancePerLowMood: 0.08 },
+  panas: { waterMult: 1.35, droughtChance: 0.10, fireNightChance: 0.06, yieldMult: 1.0 /* spec lama: 1.05 */ },
+  gugur: { panenRayaWeightMult: 1.5, forageMult: 1.0 /* spec lama: 1.2 */, hardWarnFromDay: 4 },
+  dingin:{ hungerMult: 2.0 /* spec lama: 1.5 */, extremeChance: 0.12, extremeHungerMult: 1.8, campfireWoodPerDay: 2, sickChancePerLowMood: 0.08 },
 },
 YEAR_SCALE: { // mulai tahun game ke-2 (hari 29+)
   threatChanceMult: 1.25,
@@ -99,7 +120,9 @@ YEAR_SCALE: { // mulai tahun game ke-2 (hari 29+)
 **Efek serangan (jika mengenai penduduk):**
 - HP kesehatan −**25–40** (bukan one-shot tahun 1).
 - Mood −**15**; 30% chance “trauma” (mood cap 70 selama 3 hari).
-- Tahun 2+: 10% chance kematian jika HP &lt; 20 saat digigit **dan** tidak ada menara/pagar dalam 8 tile.
+- Tahun 2+: 25% chance kematian (spec lama: 10%) jika HP &lt; 20 saat digigit **dan** tidak ada menara/pagar dalam 4 tile (spec lama: 8 tile). Sumber: paket ancaman ANALISA-PLAYTEST v2 (eksperimen D).
+- HP setelah gigitan dijepit minimal 1 (tahun 1) / 0,5 (tahun 2+), jadi gigitan sendiri tidak pernah membunuh.
+- Tema Nusantara memakai kerangka ini untuk babi hutan dengan angka sendiri (`CONFIG.THREAT.babi`, lihat RISET-INDONESIA §3.3 dan RISET-QC-TINDAKLANJUT §8.3).
 
 **Pertahanan (counter):**
 
@@ -118,7 +141,10 @@ THREAT: {
     baseNightChance: 0.05,     // naik di dingin ×1.4, tahun2 ×1.25
     warnHoursBefore: 0.15,     // frac hari (~18 menit game @1x day=120s → ~18s)
     damage: [25, 40],
-    killChanceIfLowHp: 0.10,   // hanya tahun 2+
+    killChanceIfLowHp: 0.25,   // hanya tahun 2+ (spec lama: 0.10)
+    killHpBelow: 20, killSafeRadius: 4, // spec lama: radius 8
+    attackFrac: [0.85, 0.95], count: [1, 2], moodHit: 15, traumaChance: 0.3, traumaDays: 3, traumaMoodCap: 70,
+    torchWoodPerNights: 2,
     fencePathMult: 3,
     torchSafeRadius: 3,
     torchHitMult: 0.4,
@@ -139,7 +165,7 @@ SICKNESS: {
   lightDays: [2, 4],
   workMult: 0.7,
   severeFromHpBelow: 40,
-  severeDeathPerDay: 0.08,     // jika tidak dirawat
+  severeDeathPerDay: 0.15,     // jika tidak dirawat (spec lama: 0.08)
   careCost: { makanan: 5 },
   careSeconds: 80,
 },
@@ -148,7 +174,7 @@ SICKNESS: {
 **Kematian:**
 - Sebab: kelaparan HP 0, sakit parah tanpa rawat, serigala (jarang), event pilihan buruk tahun 2+.
 - Alur: tubuh → tugas `makam` → bangunan `makam` (1 tile, kayu 5) atau makam komunal di balai.
-- **Duka:** semua penduduk mood −**20** instan, lalu −**3**/hari selama **5** hari (diminished jika festival/T20 dalam 7 hari).
+- **Duka:** semua penduduk mood −**20** instan, lalu −**3**/hari selama **5** hari (diminished jika festival/T20 dalam 7 hari **[BACKLOG]**).
 - Nama tetap di log & panel “kenangan” singkat (1 baris).
 
 **Pergi (leave):**
@@ -166,7 +192,7 @@ DEATH: { griefMoodInstant: -20, griefDays: 5, griefPerDay: -3, graveCost: { kayu
 | Pemicu | Syarat | Peringatan |
 |--------|--------|------------|
 | Panas + dapur/bengkel | `fireNightChance` | Asap UI + log sore “Bau asap aneh dari dapur…” |
-| Badai petir | Event badai pilihan buruk | Kilat di langit 0,5 hari sebelumnya |
+| Badai petir **[BACKLOG]** | Event badai pilihan buruk | Kilat di langit 0,5 hari sebelumnya |
 | Pemain abaikan | Bangunan hp &lt; 40 dekat api | Banner |
 
 **Fase:** asap (1 jam game) → api pada 1 bangunan → menyebar ke tile tetangga tiap ~30 dtk game jika tidak dipadamkan.
@@ -179,7 +205,7 @@ DEATH: { griefMoodInstant: -20, griefDays: 5, griefPerDay: -3, graveCost: { kayu
 
 - Peringatan: “Sungai naik” pagi hari.
 - Efek 1 hari: tile dalam 2 kolom dari `RIVER_X` tidak bisa ditanami/dilalui nyaman (speed ×0.5); ladang di zona itu `grow` ditunda +1 hari.
-- Cegah/mitigasi: tech T10 Parit Air mengurangi durasi jadi 0,5 hari &amp; nullify delay ladang; atau jangan tanam di tepi sungai.
+- Cegah/mitigasi: tech T10 Parit Air **[BACKLOG]** mengurangi durasi jadi 0,5 hari &amp; nullify delay ladang; atau jangan tanam di tepi sungai.
 - Tidak menenggelamkan penduduk tahun 1.
 
 ### 2.5 Kelaparan (dengan peringatan dini)

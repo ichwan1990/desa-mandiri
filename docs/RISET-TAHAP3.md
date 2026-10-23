@@ -188,3 +188,7 @@ Perlu nama/deskripsi ID untuk: 20 node tech, 18 achievement, tooltip harga pasar
 ---
 
 *Dokumen riset tahap 3 — angka final tetap di-playtest lewat `tests/balance-sim.test.js` (perpanjang ke hari 80+).*
+
+---
+
+*Tindak lanjut QC 2026-10-23 (§8: balance S-07/S-08 & regrow T-01) ada di `docs/RISET-QC-TINDAKLANJUT.md`.*
