@@ -1,4 +1,5 @@
-"""Validasi TEKS-GAME.json v1.7.5 terhadap backup v1.0.0 (+allowlist tuning), v1.1.0, v1.2.0, v1.3.0, v1.4.0, v1.5.0, v1.5.1, v1.6.0, v1.6.1, v1.7.0, v1.7.1, v1.7.2, v1.7.3, v1.7.4.
+"""Validasi TEKS-GAME.json v1.8.0 terhadap backup v1.0.0 (+allowlist tuning), v1.1.0, v1.2.0, v1.3.0, v1.4.0, v1.5.0, v1.5.1, v1.6.0, v1.6.1, v1.7.0, v1.7.1, v1.7.2, v1.7.3, v1.7.4, v1.7.5.
+v1.8.0 (QC 2026-10-23): koreksi R-05 terdaftar (tools/teks_v180.py), T-03/simpan, S-01, R-07 nama sedang, S-03 pindai penuh teks efektif sedang (tools/cakupan_sedang.py).
 Sejak v1.4.0 (lokalisasi Indonesia) teks tampilan boleh berubah, tetapi semua key/struktur, semua angka/boolean, dan semua
 string berjenis id (id, tipe, target, era, musim, prasyarat, event_terkait, ...) harus tetap sama; placeholder teks yang berubah
 tidak boleh bertambah. Ditambah: cek kata terlarang (salju, serigala, harimau, ...) di semua teks tampilan, dan bagian baru v1.4/v1.5.
@@ -36,6 +37,12 @@ ID_KEYS = {"id", "tipe", "target", "era", "cabang", "id_bangunan", "kategori", "
 LIST_BOLEH_TAMBAH = {"/pencapaian"}  # v1.5: A25-A32 ditambahkan di akhir (item lama tetap dibandingkan)
 PH = lambda t: set(re.findall(r"\{(\w+)\}", t))
 teks_diubah = []
+# v1.8.0 (R-05): koreksi kapitalisasi/ejaan terdaftar = aturan tools/teks_v180.py diterapkan ke snapshot v1.7.5 (+ KOREKSI_V180 eksplisit).
+# Hanya path ini, dan hanya bila nilainya persis hasil aturan, yang boleh berbeda dari backup lama mana pun.
+sys.path.insert(0, ROOT + "tools")
+import teks_v180, cakupan_sedang
+old175 = json.load(open(ROOT + "tools/TEKS-GAME.v1.7.5.json", encoding="utf-8"))
+KOREKSI_R05 = teks_v180.ubah_r05(old175, ID_KEYS)
 def sub(a, b, p, idk=False):
     if isinstance(a, dict):
         if not isinstance(b, dict): err.append(f"tipe berubah: {p}"); return
@@ -49,11 +56,12 @@ def sub(a, b, p, idk=False):
         for i, x in enumerate(a): sub(x, b[i], f"{p}[{i}]", idk)
     elif isinstance(a, str) and isinstance(b, str) and not idk:
         if a != b:
+            if p in KOREKSI_R05 and b == KOREKSI_R05[p][1]: return
             if not PH(b) <= PH(a): err.append(f"placeholder baru di teks yang diubah {PH(b) - PH(a)}: {p}")
             teks_diubah.append(p)
     elif type(a) != type(b) or a != b: err.append(f"nilai/id berubah: {p} ({a!r} -> {b!r})")
 sub(old, new, "")
-if new["meta"]["versi"] != "1.7.5": err.append("meta.versi bukan 1.7.5")
+if new["meta"]["versi"] != "1.8.0": err.append("meta.versi bukan 1.8.0")
 for k in old:
     if list(new).index(k) != list(old).index(k): err.append(f"urutan key top-level berubah: {k}")
 m = new["meta"]
@@ -511,7 +519,7 @@ def cek_ov(b, o, p):  # overlay hanya boleh menimpa teks yang sudah ada di TEKS-
         if not isinstance(b, dict): sed_err.append(f"objek menimpa non-objek @ {p}"); return
         for k, v in o.items():
             if k.startswith("_"): continue
-            if k in BUKAN_TEKS and not (k == "hasil" and re.fullmatch(r"/cerita/\w+/langkah\[\d+\]", p)) and not (k == "target" and p == "/hari_jadi_ringkasan" and isinstance(v, str)): sed_err.append(f"overlay menimpa data non-teks '{k}' @ {p}"); continue
+            if k in BUKAN_TEKS and not (k == "hasil" and re.fullmatch(r"/cerita/\w+/langkah\[\d+\]", p)) and not (k == "target" and p == "/hari_jadi_ringkasan" and isinstance(v, str)) and not (k == "hadiah" and p == "/hubungan/log" and isinstance(b.get(k), list)): sed_err.append(f"overlay menimpa data non-teks '{k}' @ {p}"); continue
             if k not in b: sed_err.append(f"path tidak ada di TEKS-GAME.json: {p}/{k}"); continue
             cek_ov(b[k], v, f"{p}/{k}")
     elif isinstance(o, list):
@@ -1079,6 +1087,106 @@ for x in sum((ambil(sd, p) or [] for p in V175), []):
         if re.search(r"(?<![\w-])" + w + r"(?![\w-])", x, re.I): o.append(("angin", w))
 if o: sed_err.append("kata khas Indonesia di tema sedang: angin: " + ", ".join(f"'{w}' @ {p}" for p, w in o[:3]))
 cek_ph(ambil(sd, "angin"), ambil(new, "angin"), "angin"); walk_s(ambil(sd, "angin"), "angin")
+# ---------- v1.8.0: QC 2026-10-23 — T-03 (17an/haji/gelar per tema), simpan, R-05 (koreksi terdaftar), R-07 (nama sedang), S-01, S-03 (pindai penuh sedang) ----------
+teks_diubah.clear(); _n = len(err); sub(old175, new, "")
+if len(err) > _n: err.insert(_n, "^ perbedaan struktur/angka terhadap v1.7.5:")
+if teks_diubah: err.append(f"v1.8.0 hanya penambahan + koreksi R-05 terdaftar, tetapi {len(teks_diubah)} teks v1.7.5 lain berubah, mis. {teks_diubah[:3]}")
+for k in old175:
+    if list(new).index(k) != list(old175).index(k): err.append(f"urutan key top-level v1.7.5 berubah: {k}")
+for sec in old175["meta"]:
+    if isinstance(old175["meta"][sec], dict) and list(new["meta"][sec])[:len(old175["meta"][sec])] != list(old175["meta"][sec]): err.append(f"urutan meta.{sec} berubah (v1.7.5)")
+if "catatan_v180" not in m: err.append("meta.catatan_v180 hilang")
+if "{tema}" not in m["placeholder"]: err.append("placeholder {tema} (v1.8.0) tidak terdaftar")
+def nilai_di(T, p):
+    o = T
+    for x in re.findall(r"[^/\[\]]+", p):
+        if isinstance(o, list) and x.isdigit() and int(x) < len(o): o = o[int(x)]
+        elif isinstance(o, dict) and x in o: o = o[x]
+        else: return None
+    return o
+# koreksi R-05 wajib terpasang (bukan sekadar diizinkan) dan tidak diawali 'Hari '
+for p, (lama, baru) in KOREKSI_R05.items():
+    v = nilai_di(new, p)
+    if v != baru: err.append(f"koreksi R-05 belum diterapkan: {p} ({v!r} != {baru!r})")
+    elif v.startswith("Hari "): err.append(f"teks koreksi R-05 diawali 'Hari ': {p}")
+for p, s in teks_v180.jalan_teks(new, "", ID_KEYS):
+    if not teks_v180.LEWATI.search(p) and teks_v180.r05(s) != s: err.append(f"R-05: kapitalisasi/ejaan belum seragam @ {p}: {s[:60]}")
+for p, s in teks_v180.jalan_teks({k: v for k, v in ov.items() if not k.startswith("_")}, "", ID_KEYS):
+    if "/_" not in p and teks_v180.r05(s) != s: sed_err.append(f"R-05: kapitalisasi/ejaan belum seragam @ sedang:{p}: {s[:60]}")
+# T-03 + simpan: path -> (placeholder persis seperti extra di game.js, wajib, jenis)
+V180 = {"keinginan.tabungan_haji.log_berangkat": (("nama", "jumlah"), ("nama", "jumlah"), "log"), "keinginan._ui.log_berangkat": (("nama", "jumlah"), ("nama", "jumlah"), "log"),
+        "keinginan.tabungan_haji.gelar_l": ((), (), "gelar"), "keinginan.tabungan_haji.gelar_p": ((), (), "gelar"),
+        "agustusan.panitia.label": ((), (), "label"), "agustusan.ikon_log": ((), (), "ikon"),
+        "menu.simpan_berhasil": ((), (), "log"), "menu.simpan_gagal": ((), (), "log"), "menu.simpan_tema_beda": (("tema",), ("tema",), "log")}
+try:
+    _g = open(ROOT + "game.js", encoding="utf-8").read()
+    if not re.search(r"const ex = \{ nama: v\.name, jumlah: days \}; log\('🧳 ' \+ TX\('keinginan\.' \+ why \+ '\.log_berangkat', ex, TX\('keinginan\._ui\.log_berangkat', ex", _g):
+        sed_warn.append("v1.8.0: keinginan.<id>.log_berangkat tidak lagi dibaca seperti a1e04f7 (ex = {nama, jumlah}); periksa placeholder")
+    if "TX('keinginan.' + id + (v.sex === 'P' ? '.gelar_p' : '.gelar_l'), {}" not in _g: sed_warn.append("v1.8.0: gelar_l/gelar_p tidak lagi dibaca seperti a1e04f7")
+    if not re.search(r"\$\{v\.gelar && a\.why === 'tabungan_haji' \? v\.gelar \+ ' ' : ''\}\$\{v\.name\}", _g): sed_warn.append("v1.8.0: gelar tidak lagi dipakai di depan nama; periksa bentuk gelar")
+    for path in ("agustusan.ikon_log", "agustusan.panitia.label", "menu.simpan_berhasil", "menu.simpan_gagal", "menu.simpan_tema_beda"):
+        _x = re.search(r"TX\('" + re.escape(path) + r"', \{([^}]*)\}", _g)
+        if not _x: sed_warn.append(f"v1.8.0: {path} tidak lagi ditemukan di game.js"); continue
+        _k = set(re.findall(r"(?:^|,)\s*(\w+)\s*:", _x.group(1)))
+        if _k != set(V180[path][0]): err.append(f"{path}: extra di game.js {sorted(_k)} != daftar validator {sorted(V180[path][0])}")
+except Exception as e: sed_warn.append(f"game.js tidak terbaca untuk cek v1.8.0 ({e})")
+def cek_v180(T, sumber):
+    for path, (ph, wajib, jenis) in V180.items():
+        v = ambil(T, path)
+        if not (isinstance(v, str) and v.strip()): err.append(f"{sumber}{path} harus string tidak kosong"); continue
+        cek_teks(v, path, sumber, ph, False)
+        for w in wajib:
+            if "{" + w + "}" not in v: err.append(f"{sumber}{path} harus memakai {{{w}}}")
+        if v.startswith("Hari "): err.append(f"{sumber}{path} jangan diawali 'Hari ' (log() menambahkannya)")
+        if "<" in v: err.append(f"{sumber}{path}: tanpa '<'")
+        if jenis == "gelar" and (len(v) > 16 or not v[0].isupper() or re.search(r"[.!?{]", v)): err.append(f"{sumber}{path}: gelar = satu sapaan pendek berhuruf kapital di depan nama: {v!r}")
+        if jenis == "ikon" and re.search(r"[A-Za-z0-9{]", v): err.append(f"{sumber}{path}: ikon log harus emoji saja: {v!r}")
+        if jenis == "label" and (len(v) > 24 or '"' in v): err.append(f"{sumber}{path}: label pendek tanpa kutip ganda: {v!r}")
+cek_v180(new, "")
+cek_v180(sd, "sedang:")
+for path in ("agustusan.panitia.label", "agustusan.ikon_log", "keinginan.tabungan_haji.log_berangkat", "keinginan.tabungan_haji.gelar_l",
+             "keinginan.tabungan_haji.gelar_p", "keinginan._ui.log_berangkat"):
+    if ambil(ov, path) is None: sed_err.append(f"overlay sedang tanpa {path} (teks Nusantara akan dipakai)")
+for path in ("keinginan.tabungan_haji.gelar_l", "keinginan.tabungan_haji.gelar_p"):
+    if ambil(sd, path) in ("Haji", "Hajjah"): sed_err.append(f"sedang:{path} masih gelar Nusantara")
+if ambil(sd, "agustusan.ikon_log") == "🇮🇩": sed_err.append("sedang:agustusan.ikon_log masih bendera Indonesia")
+# S-01: {pasangan} di duka_harian = pasangan ATAU warga terdekat (cadangan kode 'Keluarganya', berhuruf kapital) -> hanya di awal kalimat
+try:
+    if not re.search(r"duka_harian', \{ nama: G\.name, pasangan: G\.pasangan \|\| 'Keluarganya' \}", open(ROOT + "game.js", encoding="utf-8").read()):
+        sed_warn.append("S-01: griefDaily tidak lagi mengirim {pasangan} seperti a1e04f7 (cadangan 'Keluarganya'); periksa duka_harian")
+except Exception as e: sed_warn.append(f"game.js tidak terbaca untuk cek S-01 ({e})")
+for T, sumber in ((new, ""), (sd, "sedang:")):
+    for path in ("duka.duka_harian", "lansia_berpulang.duka.duka_harian"):
+        for x in (lambda y: y if isinstance(y, list) else [y] if isinstance(y, str) else [])(ambil(T, path)):
+            for h in re.finditer(r"\{pasangan\}", x):
+                pre = re.sub(r"^Hari \{hari\}:\s*", "", x[:h.start()])
+                if pre and not re.search(r"[.!?]\"?\s+$", pre): err.append(f"S-01: {sumber}{path}: {{pasangan}} (bisa 'Keluarganya') hanya di awal kalimat: {x}")
+# R-07: nama warga/bayi/pedagang tema sedang
+_np = [p["nama"] for p in new["penduduk"]]; _ns = [p["nama"] for p in sd["penduduk"]]
+_bayi_n = set(new["kelahiran"]["nama_bayi"]["laki_laki"] + new["kelahiran"]["nama_bayi"]["perempuan"])
+_bayi_s = sd["kelahiran"]["nama_bayi"]["laki_laki"] + sd["kelahiran"]["nama_bayi"]["perempuan"]
+if len(set(_ns)) != len(_ns): sed_err.append("R-07: nama penduduk tema sedang tidak unik")
+if set(_ns) & (set(_np) | _bayi_n): sed_err.append(f"R-07: nama Nusantara di penduduk tema sedang: {sorted(set(_ns) & (set(_np) | _bayi_n))}")
+if set(_bayi_s) & (set(_np) | _bayi_n): sed_err.append(f"R-07: nama Nusantara di nama_bayi tema sedang: {sorted(set(_bayi_s) & (set(_np) | _bayi_n))}")
+if len(set(_bayi_s)) != len(_bayi_s) or not sd["kelahiran"]["nama_bayi"]["laki_laki"] or not sd["kelahiran"]["nama_bayi"]["perempuan"]: sed_err.append("R-07: nama_bayi sedang kosong / ganda")
+for n in _ns:
+    if n not in m["peta_sifat_penduduk"]: err.append(f"R-07: nama sedang {n} tidak ada di meta.peta_sifat_penduduk (newcomerTraits)")
+if set(sd["dialog_pedagang"]["nama_pedagang"]) & set(new["dialog_pedagang"]["nama_pedagang"]): sed_err.append("R-07: nama pedagang Nusantara di tema sedang")
+# S-03: pindai SELURUH teks efektif tema sedang (TEKS + overlay) kecuali bagian yang terbukti tidak dibaca di tema sedang (tools/cakupan_sedang.py)
+_K = cakupan_sedang.baca_kode(ROOT, new, ov); _K["tak_dipakai"] = SEDANG_TAK_DIPAKAI
+_nn = [p["nama"] for p in new["penduduk"]] + sorted(_bayi_n) + [re.sub(r"^\w+ ", "", n) for n in new["dialog_pedagang"]["nama_pedagang"]]
+S03_HIT, S03_NONAKTIF, _bukti = cakupan_sedang.pindai(sd, _K, cakupan_sedang.nama_khusus(new, _nn))
+for b in _bukti: err.append("S-03: pengecualian bagian nonaktif tidak lagi benar: " + b)
+_per = {}
+for p, w, x in S03_HIT: _per.setdefault(re.split(r"[/\[]", p)[1], []).append((p, w))
+for sec, hs in _per.items():
+    sed_err.append(f"S-03 kata/nama khas Indonesia di teks efektif tema sedang: {sec}: " + ", ".join(f"'{w}' @ {p}" for p, w in hs[:4]) + (f" (+{len(hs) - 4})" if len(hs) > 4 else ""))
+# R-08: setiap patch punya snapshot versi asal
+for f in sorted(os.listdir(ROOT + "tools")):
+    _m = re.fullmatch(r"patch-v([\d.]+)\.json", f)
+    if _m:
+        _dari = json.load(open(ROOT + "tools/" + f, encoding="utf-8"))["_patch"].get("versi_dari")
+        if _dari and not os.path.exists(ROOT + f"tools/TEKS-GAME.v{_dari}.json"): err.append(f"R-08: snapshot tools/TEKS-GAME.v{_dari}.json (asal {f}) tidak ada")
 err += sed_err
 # kata terlarang di SEMUA teks tampilan (bukan key, bukan string id, bukan meta teknis)
 META_TAMPIL = ("sumber_daya", "bangunan", "musim", "era", "hewan", "penyebab_kondisi", "bangunan_pertahanan", "tahap_usia", "status_hubungan",
@@ -1144,4 +1252,5 @@ print(f"tema sedang: overlay {len([k for k in ov if not k.startswith('_')])} bag
 print(f"tema sedang: STORY_DISABLE bisa dicabut: {bisa_cabut or '-'}" + (f" | masih perlu disable: {tetap}" if tetap else "") + f" | STORY_PATCH enabled:false bisa dicabut: {patch_cabut or '-'}")
 for w in sed_warn: print(" peringatan:", w)
 if err: print("GAGAL:"); [print(" -", e) for e in err]; sys.exit(1)
-print("OK: JSON valid, struktur/id/angka lama utuh (TUNING_V10 + 14 retuning, v1.0-v1.7.4), overlay sedang bersih, kata terlarang bersih, semua efek/tipe/target/placeholder terdaftar.")
+print(f"v1.8.0: T-03/simpan {len(V180)} key | koreksi R-05 {len(KOREKSI_R05)} path | sedang: penduduk {len(_ns)} nama Eropa, bayi {len(_bayi_s)}, pedagang {len(sd['dialog_pedagang']['nama_pedagang'])} | S-03 pindai penuh: temuan {len(S03_HIT)}, bagian nonaktif terbukti {len(S03_NONAKTIF)}")
+print(f"OK: JSON valid, struktur/id/angka lama utuh (TUNING_V10 + 14 retuning, v1.0-v{new['meta']['versi']}), overlay sedang bersih, kata terlarang bersih, semua efek/tipe/target/placeholder terdaftar.")

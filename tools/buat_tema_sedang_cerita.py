@@ -12,8 +12,9 @@ ronda -> jaga malam, padi/singkong -> gandum/kentang, kerbau -> sapi, reog -> ro
 """
 import json, sys
 ROOT = "/workspace/village-game/"
+sys.path.insert(0, ROOT + "tools")
 FILE = ROOT + "TEKS-TEMA-sedang.json"
-VERSI = "1.7.5-sedang.1"
+VERSI = "1.8.0-sedang.1"
 
 def O(teks, hasil, *tunda):
     o = {"teks": teks, "teks_hasil": hasil}
@@ -707,6 +708,242 @@ UI_V175 = {"angin": {
   "Angin menderu semalaman, tapi atap jerami yang sudah diikat tali tetap di tempatnya.",
   "Angin kencang menggoyang pepohonan. Untung atap jerami sudah diikat erat dengan tali rami, semua tetap aman."]}}
 
+# ---------------- v1.8.0 (QC 2026-10-23) ----------------
+# T-03: label/ikon festival, berangkat ziarah & gelar (key yang dibaca game.js a1e04f7; bagian agustusan/keinginan ditulis utuh di sini)
+FESTIVAL["panitia"]["label"] = "Festival Panen"
+FESTIVAL["ikon_log"] = "🎉"
+KEINGINAN["tabungan_haji"].update({
+ "log_berangkat": "{nama} berangkat berziarah ke biara tua di balik pegunungan selama {jumlah} hari.",
+ "gelar_l": "Peziarah", "gelar_p": "Peziarah"})  # dipakai di depan nama: "Peziarah Anna kembali ke desa." (netral gender)
+KEINGINAN["_ui"]["log_berangkat"] = "{nama} berangkat mengunjungi kerabat jauh selama {jumlah} hari."
+# S-05: dilema P1 (belum dipakai cerita.js; siap bila diaktifkan) — pesta keluarga, ladang warisan, air, pohon ek, penyuluh, jalan, jaga malam, hutan ek
+DILEMA += [
+ D("hajatan", "Pesta Keluarga", "{nama} ingin mengadakan pesta keluarga. Keluarganya bertanya: sederhana saja, atau besar-besaran?",
+   O("Jamuan sederhana", "Jamuan sederhana di Balai Desa terasa khidmat dan hangat."),
+   O("Pai besar dan musik biola", "Pai besar dihidangkan dan biola mengalun. Semua warga makan dan tertawa bersama.",
+     "Doa restu dari pesta hari {hari_keputusan} seolah terkabul. Keluarga {nama} sangat bahagia."),
+   O("Pesta besar dengan tari rakyat", "Pesta paling meriah yang pernah ada! Penonton dari desa sebelah berdatangan.",
+     "Dapur terasa kosong setelah pesta hari {hari_keputusan}. Warga mulai mengencangkan ikat pinggang.")),
+ D("tanah_warisan", "Ladang Warisan", "{nama} dan {nama2} sama-sama merasa berhak atas sepetak ladang. Keduanya datang ke kepala desa.",
+   O("Bagi rata", "Ladang dibagi dua dengan patok kayu. Keduanya kurang puas, tapi menerima."),
+   O("Berikan kepada yang menggarap", "{nama} mendapat ladangnya. {nama2} pulang dengan wajah merah.",
+     "Sejak keputusan hari {hari_keputusan}, {nama} dan {nama2} saling buang muka."),
+   O("Musyawarah di Balai", "Musyawarah panjang di Balai, ditemani teh dan kue apel.",
+     "Musyawarah hari {hari_keputusan} membuahkan hasil. {nama} dan {nama2} bersalaman dan tertawa.")),
+ D("rebutan_air", "Rebutan Air", "Air tinggal sedikit di puncak musim kering. Warga berselisih: air untuk minum atau untuk ladang?",
+   O("Utamakan air minum", "Air minum aman. Sebagian gandum terpaksa layu."),
+   O("Giliran dari penjaga parit", "Penjaga parit desa membagi giliran air dengan adil. Tidak ada yang puas sepenuhnya, tapi semua rukun."),
+   O("Utamakan ladang", "Air dialirkan ke ladang. Gandum selamat, tapi ember di rumah-rumah hampir kosong.",
+     "Beberapa warga minum air keruh sejak air dialirkan ke ladang hari {hari_keputusan}. Perut mulas menyerang. Ingat, rebus air minum!")),
+ D("beringin_keramat", "Pohon Ek Tua", "Pohon ek tua di tengah desa menghalangi lahan baru. Pedagang kayu sudah menawar. Para tetua menggeleng.",
+   O("Rawat dan adakan perayaan kecil", "Perayaan kecil di bawah pohon ek. Akar-akarnya dibersihkan, dan anak-anak kembali berayun di sana."),
+   O("Pangkas dahannya saja", "Dahan-dahan besar dipangkas. Pohon ek masih berdiri, walau tidak serimbun dulu.",
+     "Tupai-tupai yang dulu tinggal di dahan pohon ek pindah ke loteng rumah warga sejak pemangkasan hari {hari_keputusan}."),
+   O("Tebang pohonnya", "Pohon ek tumbang dengan suara berdebum. Kayu melimpah, tapi tengah desa terasa gersang.",
+     "Beberapa warga bermimpi buruk sejak pohon ek ditebang hari {hari_keputusan}. Desa terasa kehilangan sesuatu.")),
+ D("pupuk_penyuluh", "Penyuluh Pertanian", "Penyuluh dari kota datang menawarkan pupuk kimia gratis. \"Panen pasti melimpah!\" katanya.",
+   None,
+   O("Terima pupuk kimia", "Gandum tumbuh hijau pekat. Panen berikutnya terlihat menjanjikan.",
+     "Tanah ladang mengeras sejak pupuk kimia hari {hari_keputusan}. Kompos bisa memulihkannya pelan-pelan."),
+   O("Tolak dengan sopan", "Penyuluh mengangguk dan pergi. Ladang tetap seperti biasa.")),
+ D("jalan_desa", "Jalan Desa", "Jalan desa becek dan berlubang. Ada tawaran membangunnya bersama, atau membayar orang luar.",
+   None,
+   O("Kerja bersama sehari penuh", "Seluruh desa meratakan jalan dengan cangkul dan batu. Lelah, tapi bangga.",
+     "Dewan kota terkesan dengan kerja bersama hari {hari_keputusan} dan mengirim bahan untuk jalan desa!")),
+ D("ketua_ronda", "Memilih Ketua Jaga Malam", "Regu jaga malam butuh ketua. {nama} dan {nama2} sama-sama ingin memimpin.",
+   O("Musyawarah, ketua bergilir", "Ketua jaga malam bergilir setiap minggu. Keduanya setuju dan bersalaman."),
+   O("Pilih {nama}", "{nama} menjadi ketua jaga malam. {nama2} menyalami dengan senyum tipis.",
+     "{nama2} masih iri sejak {nama} dipilih jadi ketua jaga malam hari {hari_keputusan}."),
+   O("Pilih {nama2}", "{nama2} menjadi ketua jaga malam. Menara Jaga jadi ramai canda.",
+     "{nama} masih iri sejak {nama2} dipilih jadi ketua jaga malam hari {hari_keputusan}.")),
+ D("tambang_pasir", "Tambang Pasir Sungai", "Pasir sungai bisa ditambang untuk bangunan. Seorang pengusaha dari luar juga menawarkan kerja sama.",
+   O("Tolak, biarkan sungai tetap jernih", "Sungai tetap jernih. Anak-anak masih bisa berenang dan menangkap ikan."),
+   O("Tambang kecil oleh warga", "Warga menambang pasir sedikit demi sedikit selama seminggu.",
+     "Tebing sungai tergerus sejak penambangan hari {hari_keputusan}. Air lebih cepat meluap, ikan makin sedikit."),
+   O("Serahkan ke pengusaha luar", "Gerobak-gerobak pengusaha datang dan pergi, dan sekantong koin \"uang teh\" terselip di meja balai. Batu dan perkakas menumpuk, tapi sungai jadi keruh.",
+     "Sungai yang ditambang sejak hari {hari_keputusan} meluap dan merusak jembatan. Ikan hampir hilang.",
+     "Kabar soal kantong koin dari pengusaha hari {hari_keputusan} sampai ke telinga warga yang jujur. Mereka kecewa, dan suasana desa jadi canggung.")),
+ D("sekolah_kota", "Sekolah di Kota", "{nama} masih muda dan haus ilmu. Ada tawaran sekolah atau bekerja di kota.",
+   None, None,
+   O("Bekerja di kota 21 hari", "{nama} berangkat bekerja di kota. Rumahnya terasa sepi.",
+     "{nama} pulang dari kota setelah bekerja sejak hari {hari_keputusan}, membawa perkakas dan kopi untuk desa.",
+     "Surat dari {nama}: ia betah di kota dan akan pulang seminggu lagi.",
+     "{nama} pulang dari kota bersama calon pendamping hidupnya! Desa heboh dan bahagia.")),
+ D("penebang_liar", "Penebang Liar", "Malam-malam terdengar suara gergaji dari hutan ek. Ada penebang liar!",
+   None,
+   O("Lapor ke penjaga hutan", "Laporan dikirim ke penjaga hutan.",
+     "Penjaga hutan datang menindaklanjuti laporan hari {hari_keputusan} dan berterima kasih dengan sedikit kayu."),
+   O("Beli kayu murah dari mereka", "Kayu murah didapat, tapi hati warga tidak tenang.",
+     "Hutan ek makin gundul sejak hari {hari_keputusan}. Lereng jadi rawan longsor.")),
+]
+# T-02: semua teks Nusantara yang masih terbaca di tema sedang (temuan QC + pindai penuh tools/cakupan_sedang.py), R-07: nama Eropa.
+# Digabung per id/indeks (gabung_id) ke bagian yang sudah dibuat tools/buat_overlay_sedang.js, tanpa menghapus isinya.
+import teks_v180
+from teks_v180 import NAMA_SEDANG, NAMA_BAYI_SEDANG, PEDAGANG_SEDANG, r05
+def I(**kv): return {"__byIdx": {k.lstrip("_"): v for k, v in kv.items()}}
+T02_V180 = {
+ "meta": {"bangunan": {"api_unggun": "Api Unggun", "gubuk": "Gubuk", "gudang": "Gudang", "ladang": "Ladang", "sumur": "Sumur",
+   "tempat_penebangan": "Tempat Penebangan", "tambang": "Tambang", "dapur": "Dapur", "bengkel_alat": "Bengkel Alat", "rumah_kayu": "Rumah Kayu",
+   "lumbung": "Lumbung", "pasar": "Pasar", "balai_desa": "Balai Desa"}},
+ "penduduk": {"__byIdx": {str(i): {"nama": n} for i, n in enumerate(NAMA_SEDANG)}},
+ "kelahiran": {"nama_bayi": NAMA_BAYI_SEDANG,
+   "syukuran": I(_0="Desa mengadakan pesta kecil menyambut {bayi}. Ada kue madu, lagu riang, dan doa bersama.")},
+ "dialog_pedagang": {"nama_pedagang": PEDAGANG_SEDANG},
+ "log_harian": {"sosial": I(_7="{nama} merasa rindu tanah asalnya, tapi senyum teman-teman membuatnya betah."),
+   "temuan": I(_4="{nama} menemukan sebuah guci tua berisi benih. Mungkin bisa ditanam?")},
+ "event_acak": {"__byId": [
+   {"id": "hewan_buas", "judul": "Serigala Mendekati Ladang", "deskripsi": "Seekor serigala besar keluar dari semak dan mendekati ladang! Penduduk panik.",
+    "pilihan": I(_0={"teks_hasil": "Dengan teriakan dan obor, serigala itu berhasil dihalau. Ia kabur meninggalkan rusa buruannya, jadi desa mendapat daging dan kulit."},
+                 _1={"teks_hasil": "Pagar kayu berdiri tepat waktu. Serigala itu menggeram pelan, lalu kembali ke hutan."},
+                 _2={"teks_hasil": "Serigala itu mengobrak-abrik ladang sebelum pergi. Panen kali ini berkurang."})},
+   {"id": "festival_desa", "pilihan": I(_1={"teks": "Perayaan sederhana"})}]},
+ "pencapaian": {"__byId": [
+   {"id": "A23", "nama": "Pengusir Serigala", "deskripsi": "Hadapi serigala di ladang sebanyak 3 kali.",
+    "teks_terbuka": "Serigala abu-abu itu sepertinya datang lagi hanya untuk melihat-lihat. Penduduk mulai memberinya nama."},
+   {"id": "A25", "nama": "Nyali Lonceng Jaga", "deskripsi": "Seorang penakut menjadi pemberani lewat cerita Nyali Lonceng Jaga.",
+    "teks_terbuka": "Teng-teng-teng! Siapa sangka, si penakut kini paling nyaring membunyikan lonceng jaga."},
+   {"id": "A28", "nama": "Juara Panjat Tiang Licin", "deskripsi": "Menangkan lomba panjat tiang licin.",
+    "teks_terbuka": "Belepotan lemak dan lumpur, tapi hadiah di puncak tiang berhasil diraih!"},
+   {"id": "A31", "nama": "Sang Peziarah", "deskripsi": "Wujudkan keinginan menabung untuk ziarah jauh."},
+   {"id": "A32", "teks_terbuka": "Kapel Batu, Balai, Bendungan, Aula Tari Rakyat, dan Pasar Mingguan. Desa Mandiri yang sesungguhnya."}]},
+ "pasar": {"pesan_fluktuasi": {"__byId": [{"id": "setelah_kekeringan", "teks": "Musim kering membuat pangan sulit dicari. Harga beli makanan ikut naik."}]}},
+ "event_era_lanjut": {"__byId": [
+   {"id": "kerbau_nyasar", "judul": "Sapi Tersesat", "deskripsi": "Seekor sapi besar berjalan santai ke tengah desa, lalu berbaring di depan Gudang. Sepertinya ia tersesat.",
+    "pilihan": I(_0={"teks_hasil": "Si sapi betah dan mau membantu menarik kayu. Anak-anak menamainya \"Nyonya Besar\"."},
+                 _2={"teks_hasil": "Sapi itu tidur seharian di depan Gudang. Tak ada yang tega membangunkannya."})},
+   {"id": "ilmuwan_pengembara", "pilihan": I(_0={"teks": "Undang makan malam"})},
+   {"id": "rombongan_seniman", "deskripsi": "Gerobak warna-warni berhenti di depan Balai Desa. Ada pemain biola, penari, dan seekor anjing kecil bertopi."},
+   {"id": "pilek_musim_gugur", "pilihan": I(_0={"teks_hasil": "Teh jahe madu mengepul di setiap rumah. Bersin-bersin cepat mereda."})}]},
+ "musim_pembuka": {"musim_gugur_syukur": {"variasi": [
+   "Lumbung penuh sebelum salju datang. Penduduk berkumpul untuk pesta panen kecil. Kerja keras kalian terbayar!",
+   "Semua karung tersusun rapi. Malam ini desa makan bersama, hangat dan tenang menyambut musim dingin."]}},
+ "event_musiman": {"__byId": [{"id": "dingin_ekstrem", "deskripsi": "Angin beku bertiup sejak fajar. Air di ember membeku dan napas berubah jadi kabut tebal."}]},
+ "penduduk_sakit": {"ringan": {"mulai": I(_2="{nama} batuk kecil sejak pagi. {nama2} membuatkan teh jahe madu untuknya.")}},
+ "pemakaman": {"per_penyebab": {"tua": I(_1="Umur {nama} panjang dan penuh kebaikan. Hari ini terasa lebih seperti perayaan hidupnya daripada duka.")}},
+ "log_jadwal": {"berpasangan": {"bangun_pagi": I(_1="{pasangan} membangunkan {nama} dengan bau roti hangat dari tungku.")}},
+ "log_hubungan": {"menikah": I(
+   _1="Pesta pernikahan sederhana untuk {nama} dan {pasangan}. Ada musik, tarian, dan kue pengantin kecil buatan Dapur.",
+   _2="Di bawah lengkung rangkaian bunga liar, {nama} dan {pasangan} resmi menjadi suami istri. Para tetua memberi restu sambil tersenyum haru.")},
+ "kehamilan": {"masa_kehamilan": I(_0="{ibu} mengidam apel asam. {ayah} mencarinya sampai ke ujung hutan.")},
+ "tumbuh_kembang": {"menjadi_dewasa": I(_1="Desa mengadakan pesta kecil karena {nama} telah dewasa. Ia memilih menekuni {skill}.")},
+ "lansia_berpulang": {"pemakaman": {"upacara": I(_1="Pemakaman {nama} terasa seperti pesta kenangan. Semua orang mengenang masa mudanya yang konon sangat jahil.")}},
+ "sifat": {
+  "rajin": {"deskripsi": "Selalu mulai kerja paling awal dan jarang mengeluh. Paling senang saat kerja bersama.",
+            "log_terlihat": ["{nama} sudah di ladang sebelum ayam berkokok. Ternyata ia rajin sekali."]},
+  "malas": {"deskripsi": "Tidak suka terburu-buru. Katanya, hidup itu dinikmati pelan-pelan di bangku depan rumah."},
+  "pemberani": {"deskripsi": "Paling depan saat serigala datang, membawa obor dan lonceng.",
+                "tooltip": "Lebih pandai mengusir ancaman dan suka ikut jaga malam; tidak mudah trauma."},
+  "periang": {"tooltip": "Suasana hati lebih baik dan menghibur warga di sekitarnya; jago lomba gigit apel.",
+              "log_terlihat": ["{nama} bersenandung sepanjang jalan ke ladang. Yang mendengar ikut tersenyum."]},
+  "pemurung": {"log_terlihat": ["{nama} duduk sendirian di pagar ladang sambil memandangi awan. Ia memang suka merenung."]},
+  "dermawan": {"log_terlihat": ["{nama} membagi bekal rotinya untuk teman yang lupa membawa. Ia memang dermawan."]},
+  "pelit": {"deskripsi": "Menyimpan setiap butir gandum. Pandai menawar harga dengan pedagang.",
+            "log_terlihat": ["{nama} menghitung karung gandum dua kali sebelum tidur. Tidak ada yang terbuang sia-sia."]},
+  "suka_menolong": {"tooltip": "Lebih cepat saat kerja bersama, merawat, dan membangun; anak serumah belajar lebih cepat."},
+  "jujur": {"tooltip": "Mudah dipercaya warga; pedagang tidak berani curang timbangan bila ada dia.",
+            "log_terlihat": ["{nama} mengembalikan uang kembalian yang kelebihan ke pedagang. \"Ini bukan hak saya, Tuan.\""]},
+  "jahil": {"log_terlihat": ["{nama} menyembunyikan topi jerami temannya di atas pohon apel. Semua tertawa, kecuali pemilik topi."]},
+  "cerdas": {"log_terlihat": ["{nama} menghitung karung gandum di lumbung tanpa coretan sedikit pun. Semua kagum."]},
+  "religius": {"deskripsi": "Rajin berdoa dan menenangkan orang lain saat berduka.",
+               "tooltip": "Senang bila ada Kapel Batu; duka lebih cepat reda; istirahat sejenak sekali sepekan.",
+               "log_terlihat": ["Suara {nama} menyanyikan lagu pujian terdengar lembut dari rumahnya setiap senja."]},
+  "perantau": {"nama": "Pengelana", "kata": "pengelana", "deskripsi": "Pernah mengembara jauh dan membawa keahlian dari kota.",
+               "tooltip": "Datang dengan sedikit keahlian; keinginannya lebih sering muncul dan kadang rindu tanah asalnya."},
+  "pandai_masak": {"deskripsi": "Sup dan rotinya terkenal sampai ke desa sebelah.",
+                   "tooltip": "Masakan Dapur lebih mengenyangkan; biaya jamuan dan pesta lebih hemat.",
+                   "log_terlihat": ["Aroma sup bawang dari dapur {nama} membuat semua orang tiba-tiba lapar."]},
+  "seniman": {"deskripsi": "Menari, bermain biola, dan mengukir. Malam di api unggun jadi lebih indah karenanya.",
+              "tooltip": "Membuat api unggun, festival, dan lomba lebih meriah; cepat membangun Aula Tari Rakyat.",
+              "log_terlihat": ["{nama} mengukir burung hantu kecil dari sepotong kayu. Detailnya membuat semua orang terdiam."]},
+  "log_sifat": {
+   "jahil_kejahilan": [
+    "{nama} menukar sepatu kayu {nama2} dengan yang kebesaran. Semua yang melihat tertawa terpingkal-pingkal.",
+    "{nama} pura-pura jadi orang-orangan di ladang. {nama2} kaget setengah mati, lalu ikut tertawa.",
+    "{nama} menaruh katak kecil di topi jerami {nama2}. Balai Desa jadi ramai oleh tawa.",
+    "Kejahilan {nama} kali ini kelewatan sedikit. {nama2} cemberut seharian."],
+   "jahil_minta_maaf": ["{nama} membawakan kue apel untuk {nama2} sebagai tanda minta maaf atas kejahilannya."],
+   "ramah_sambutan": I(_2="Berkat sambutan hangat {nama}, {nama2} langsung merasa betah di desa."),
+   "jujur_tolak_suap": I(_0="{nama} menolak sekantong koin \"uang teh\" dari orang luar. \"Maaf, Tuan. Desa kami tidak begitu caranya.\""),
+   "jujur_suap_diterima": [
+    "{nama} terdiam lama setelah tahu desa menerima \"uang teh\". Ia kecewa, tapi tetap menghormati kepala desa.",
+    "\"Semoga ini yang terakhir,\" kata {nama} pelan soal kantong koin dari saudagar luar."],
+   "jujur_timbangan": [
+    "{nama} memeriksa timbangan pedagang gandum dan menemukan batu kecil di bawahnya. Pedagang itu tersipu dan menimbang ulang dengan benar.",
+    "Karena ada {nama} yang teliti dan jujur, pedagang gandum tidak berani bermain-main dengan timbangan."]}},
+ "hubungan": {"log": {
+  "menjadi_teman": I(_0="{nama} dan {nama2} ternyata sama-sama suka keju asap. Sejak itu mereka berteman.",
+                     _2="{nama} dan {nama2} duduk berdua di Menara Jaga sambil makan kentang rebus. Pertemanan baru dimulai.",
+                     _3="{nama} mengajari {nama2} membuat layang-layang. Kini mereka sering terlihat bersama."),
+  "menjadi_sahabat": I(_1="{nama2} menambal mantel {nama} yang sobek tanpa diminta. Begitulah sahabat."),
+  "menjadi_rival": I(_0="{nama} dan {nama2} saling buang muka di pagar ladang. Sepertinya mereka sedang bersaing."),
+  "bertengkar": [
+   "{nama} dan {nama2} berdebat soal siapa yang lupa menutup pintu Gudang. Suara mereka terdengar sampai ladang.",
+   "{nama} cemberut karena {nama2} memakan kue apel terakhir. Mereka saling diam seharian.",
+   "{nama} dan {nama2} berebut giliran air di parit ladang. Wajah keduanya merah padam.",
+   "{nama2} menertawakan layang-layang {nama} yang tersangkut di pohon ek. {nama} tersinggung dan pergi."],
+  "berbaikan": I(_0="{nama} datang ke rumah {nama2} membawa sepiring kue apel. \"Maaf ya,\" katanya. Mereka berpelukan.",
+                 _1="Setelah ditengahi para tetua di Balai Desa, {nama} dan {nama2} bersalaman dan tertawa canggung."),
+  "jatuh_cinta": I(_0="Jantung {nama} berdebar setiap kali {pasangan} lewat membawa ember air. Wajahnya memerah seperti apel.",
+                   _1="{nama} memetik bunga liar dan menyelipkannya diam-diam di jendela {pasangan}.",
+                   _3="Di bawah bulan purnama, {nama} memberanikan diri mengajak {pasangan} melihat kunang-kunang di padang rumput."),
+  "gosip": I(_1="{nama} membawa kabar terbaru ke Balai Desa. {nama2} mendengarkan dengan mata membulat."),
+  "hadiah": I(_1="{nama} menyelipkan sepotong permen madu ke tangan {nama2}. \"Untukmu,\" katanya."),
+  "menolong": I(_1="{nama} menarik {nama2} menjauh dari serigala yang menggeram. Sejak malam itu mereka sangat dekat."),
+  "ronda_bareng": [
+   "{nama} dan {nama2} berjaga malam berdua, bergantian membunyikan lonceng dan bercerita.",
+   "Di Menara Jaga, {nama} mengajari {nama2} irama lonceng tanda aman. Malam terasa singkat."]}},
+}
+
+def gabung_id(dst, src):
+    """gabung rekursif yang paham __byId/__byIdx: entri yang sudah ada (mis. dari buat_overlay_sedang.js) digabung per id/indeks, tidak diganti utuh"""
+    for k, v in src.items():
+        d = dst.get(k)
+        if isinstance(v, dict) and "__byId" in v and isinstance(d, dict) and "__byId" in d:
+            for e in v["__byId"]:
+                hit = next((x for x in d["__byId"] if x.get("id") == e["id"]), None)
+                if hit is None: d["__byId"].append(json.loads(json.dumps(e)))
+                else: gabung_id(hit, {kk: vv for kk, vv in e.items() if kk != "id"})
+        elif isinstance(v, dict) and "__byIdx" in v and isinstance(d, dict) and "__byIdx" in d:
+            for i, e in v["__byIdx"].items():
+                if isinstance(e, dict) and isinstance(d["__byIdx"].get(i), dict): gabung_id(d["__byIdx"][i], e)
+                else: d["__byIdx"][i] = json.loads(json.dumps(e))
+        elif isinstance(v, dict) and "__byIdx" in v and isinstance(d, list) and all(isinstance(x, str) for x in v["__byIdx"].values()):
+            for i, e in v["__byIdx"].items(): d[int(i)] = e  # larik utuh di overlay: timpa indeksnya saja
+        elif isinstance(v, dict) and "__byIdx" not in v and "__byId" not in v and isinstance(d, dict) and "__byIdx" not in d and "__byId" not in d: gabung_id(d, v)
+        else: dst[k] = json.loads(json.dumps(v))
+    return dst
+
+def r05_overlay(x, kunci=""):
+    """R-05 (tools/teks_v180.py) untuk seluruh teks overlay, termasuk bagian buat_overlay_sedang.js (hanya kapitalisasi/ejaan)"""
+    if isinstance(x, str): return r05(x)
+    if isinstance(x, dict): return {k: (v if k.startswith("_") or k == "id" else r05_overlay(v, k)) for k, v in x.items()}
+    if isinstance(x, list): return [r05_overlay(v, kunci) for v in x]
+    return x
+
+def selaras_hari(o, t):
+    """v1.8.0: teks TEKS yang dikoreksi R-05 kehilangan awalan lama 'Hari {hari}: ' -> padanan overlay di path yang sama ikut dibuang
+    (fill() memang membuangnya; placeholder sedang tetap subset teks Nusantara)"""
+    if isinstance(o, str):
+        return teks_v180.HARI_LAMA.sub("", o) if isinstance(t, str) and "{hari}" not in t else o
+    if isinstance(o, dict) and "__byId" in o and isinstance(t, list):
+        for e in o["__byId"]:
+            hit = next((x for x in t if isinstance(x, dict) and x.get("id", x.get("kode")) == e.get("id")), None)
+            if hit is not None:
+                for k in list(e):
+                    if k != "id" and k in hit: e[k] = selaras_hari(e[k], hit[k])
+        return o
+    if isinstance(o, dict) and "__byIdx" in o and isinstance(t, list):
+        for i in list(o["__byIdx"]):
+            if int(i) < len(t): o["__byIdx"][i] = selaras_hari(o["__byIdx"][i], t[int(i)])
+        return o
+    if isinstance(o, dict) and isinstance(t, dict):
+        for k in list(o):
+            if not k.startswith("_") and k in t: o[k] = selaras_hari(o[k], t[k])
+        return o
+    if isinstance(o, list) and isinstance(t, list) and all(isinstance(x, str) for x in o):
+        return [selaras_hari(x, t[i]) if i < len(t) else x for i, x in enumerate(o)]
+    return o
+
 def gabung(dst, src):  # gabung rekursif (dict) tanpa menghapus key lain di overlay (mis. log_ancaman dari buat_overlay_sedang.js)
     for k, v in src.items():
         if isinstance(v, dict) and isinstance(dst.get(k), dict) and "__byIdx" not in v and "__byId" not in v: gabung(dst[k], v)
@@ -730,10 +967,14 @@ def main():
     gabung(ov, UI_V173)
     gabung(ov, UI_V174)
     gabung(ov, UI_V175)
+    gabung_id(ov, T02_V180)
+    ov = r05_overlay(ov)
+    ov = selaras_hari(ov, json.load(open(ROOT + "TEKS-GAME.json", encoding="utf-8")))
     ov["_cerita_sedang"] = {"versi": VERSI, "alat": "tools/buat_tema_sedang_cerita.py",
         "bagian": ["dilema", "dilema_ui", "momen_kecil", "agustusan", "kerja_bakti", "peringatan_dini.ancaman_monyet", "pangan", "otomatis", "keinginan", "monumen", "cerita", "teladan", "rencana_tahun",
                   "event_ui", "jenjang_kelaparan.tingkat.bahaya (masa awal)", "cerita_ui", "agustusan.pentas_reog", "dilema_ui.orang_orangan_berdiri", "log_ancaman.diusir_orang_orangan",
-                  "pangan.sumber.telur", "pangan.tugas.telur", "pangan.kandang", "bangunan_lokal (orang_orangan_sawah, kandang_ayam)", "hari_jadi_ringkasan", "dilema_ui.orang_orangan_teks_melayang", "petunjuk", "otomatis.gubuk_tambahan", "bangun_kategori", "peta_kejadian", "angin"],
+                  "pangan.sumber.telur", "pangan.tugas.telur", "pangan.kandang", "bangunan_lokal (orang_orangan_sawah, kandang_ayam)", "hari_jadi_ringkasan", "dilema_ui.orang_orangan_teks_melayang", "petunjuk", "otomatis.gubuk_tambahan", "bangun_kategori", "peta_kejadian", "angin",
+                  "v1.8.0 T02_V180 (digabung per id/indeks): meta.bangunan, penduduk[].nama, kelahiran, dialog_pedagang.nama_pedagang, log_harian, event_acak, pencapaian, pasar, event_era_lanjut, musim_pembuka, event_musiman, penduduk_sakit, pemakaman, log_jadwal, log_hubungan, kehamilan, tumbuh_kembang, lansia_berpulang, sifat, hubungan", "R-05 kapitalisasi seluruh overlay (tools/teks_v180.py)"],
         "catatan": "Jalankan SETELAH node tools/buat_overlay_sedang.js (alat itu menulis ulang file ini dan menghapus bagian cerita)."}
     c = ov.get("_catatan", "")
     tambah = " Bagian cerita (dilema, momen_kecil, agustusan, kerja_bakti, dilema_ui, ancaman_monyet) serta pangan, otomatis, keinginan, monumen, cerita, teladan, rencana_tahun dari tools/buat_tema_sedang_cerita.py: jalankan sesudahnya."

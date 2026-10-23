@@ -1,0 +1,739 @@
+{
+  "_patch": {
+    "versi_dari": "1.7.5",
+    "versi_ke": "1.8.0",
+    "sifat": "penambahan (tambah_path T-03 + menu.simpan_*, entri meta) + koreksi R-05 terdaftar (ubah_teks; aturan tools/teks_v180.py, dikecualikan sempit di validator)",
+    "sumber": "QC 2026-10-23 (village-game-QC/QC-LAPORAN-2026-10-23.md) T-02, T-03, S-01, S-03, S-05, R-05, R-07, R-08; Asisten Koding a1e04f7 (v16)"
+  },
+  "ubah_teks": [
+    {
+      "path": "meta/bangunan/api_unggun",
+      "lama": "Api unggun",
+      "baru": "Api Unggun"
+    },
+    {
+      "path": "meta/bangunan/gubuk",
+      "lama": "Gubuk bambu",
+      "baru": "Gubuk Bambu"
+    },
+    {
+      "path": "meta/bangunan/ladang",
+      "lama": "Ladang (tegalan)",
+      "baru": "Ladang (Tegalan)"
+    },
+    {
+      "path": "meta/bangunan/tempat_penebangan",
+      "lama": "Tempat penebangan",
+      "baru": "Tempat Penebangan"
+    },
+    {
+      "path": "meta/bangunan/bengkel_alat",
+      "lama": "Bengkel alat",
+      "baru": "Bengkel Alat"
+    },
+    {
+      "path": "meta/bangunan/rumah_kayu",
+      "lama": "Rumah kayu",
+      "baru": "Rumah Panggung"
+    },
+    {
+      "path": "meta/bangunan/lumbung",
+      "lama": "Lumbung padi",
+      "baru": "Lumbung Padi"
+    },
+    {
+      "path": "meta/bangunan/balai_desa",
+      "lama": "Balai desa (pendopo)",
+      "baru": "Balai Desa"
+    },
+    {
+      "path": "meta/musim/3/pesan",
+      "lama": "Sawah mulai kering dan air menyusut. Semoga lumbung padi cukup penuh.",
+      "baru": "Sawah mulai kering dan air menyusut. Semoga Lumbung Padi cukup penuh."
+    },
+    {
+      "path": "meta/bangunan_pertahanan/menara_jaga",
+      "lama": "Pos ronda",
+      "baru": "Pos Ronda"
+    },
+    {
+      "path": "meta/bangunan_pertahanan/orang_orangan_sawah",
+      "lama": "Orang-orangan sawah",
+      "baru": "Orang-orangan Sawah"
+    },
+    {
+      "path": "log_harian/kerja/9",
+      "lama": "Hari {hari}: {nama} membuat perkakas baru di Bengkel alat. Bunyi palunya terdengar sampai sungai.",
+      "baru": "{nama} membuat perkakas baru di Bengkel Alat. Bunyi palunya terdengar sampai sungai."
+    },
+    {
+      "path": "log_harian/kerja/10",
+      "lama": "Hari {hari}: {nama} kelelahan dan tertidur pulas di dekat Api unggun.",
+      "baru": "{nama} kelelahan dan tertidur pulas di dekat Api Unggun."
+    },
+    {
+      "path": "log_harian/sosial/0",
+      "lama": "Hari {hari}: {nama} dan {nama2} bercerita di dekat Api unggun sampai larut malam.",
+      "baru": "{nama} dan {nama2} bercerita di dekat Api Unggun sampai larut malam."
+    },
+    {
+      "path": "event_acak/5/pilihan/0/teks",
+      "lama": "Simpan semua di Lumbung padi",
+      "baru": "Simpan semua di Lumbung Padi"
+    },
+    {
+      "path": "event_acak/5/pilihan/0/teks_hasil",
+      "lama": "Lumbung padi penuh sesak. Kemarau tidak lagi menakutkan.",
+      "baru": "Lumbung Padi penuh sesak. Kemarau tidak lagi menakutkan."
+    },
+    {
+      "path": "tutorial/3/teks",
+      "lama": "Pilih bangunan dari menu, lalu letakkan di peta. Mulailah dengan Api unggun dan Gubuk agar penduduk punya tempat beristirahat.",
+      "baru": "Pilih bangunan dari menu, lalu letakkan di peta. Mulailah dengan Api Unggun dan Gubuk agar penduduk punya tempat beristirahat."
+    },
+    {
+      "path": "quest_awal/0/deskripsi",
+      "lama": "Malam pertama akan segera tiba. Bangun Api unggun agar penduduk merasa hangat dan aman.",
+      "baru": "Malam pertama akan segera tiba. Bangun Api Unggun agar penduduk merasa hangat dan aman."
+    },
+    {
+      "path": "quest_awal/8/deskripsi",
+      "lama": "Bangun Lumbung padi dan isi dengan stok makanan sebelum kemarau tiba.",
+      "baru": "Bangun Lumbung Padi dan isi dengan stok makanan sebelum kemarau tiba."
+    },
+    {
+      "path": "quest_awal/9/deskripsi",
+      "lama": "Bangun Rumah kayu dan Dapur, lalu capai 8 penduduk untuk naik ke era Dusun.",
+      "baru": "Bangun Rumah Panggung dan Dapur, lalu capai 8 penduduk untuk naik ke era Dusun."
+    },
+    {
+      "path": "menu/slogan_acak/0",
+      "lama": "Api unggun sudah menyala. Penduduk menunggumu.",
+      "baru": "Api Unggun sudah menyala. Penduduk menunggumu."
+    },
+    {
+      "path": "teknologi/0/teks_selesai",
+      "lama": "{nama} menyelesaikan riset Api Terjaga. Api unggun kini menyala tenang semalaman, dan semua orang ingin duduk di dekatnya.",
+      "baru": "{nama} menyelesaikan riset Api Terjaga. Api Unggun kini menyala tenang semalaman, dan semua orang ingin duduk di dekatnya."
+    },
+    {
+      "path": "teknologi/11/teks_terbuka",
+      "lama": "Bengkel alat sudah berdiri. Denting palunya mengundang ide-ide baru.",
+      "baru": "Bengkel Alat sudah berdiri. Denting palunya mengundang ide-ide baru."
+    },
+    {
+      "path": "teknologi/15/teks_terbuka",
+      "lama": "Balai desa sudah berdiri, tapi kabar masih menyebar dari mulut ke mulut.",
+      "baru": "Balai Desa sudah berdiri, tapi kabar masih menyebar dari mulut ke mulut."
+    },
+    {
+      "path": "pencapaian/0/deskripsi",
+      "lama": "Bangun Api unggun pertama desa.",
+      "baru": "Bangun Api Unggun pertama desa."
+    },
+    {
+      "path": "pencapaian/19/deskripsi",
+      "lama": "Bangun Balai desa.",
+      "baru": "Bangun Balai Desa."
+    },
+    {
+      "path": "pencapaian/19/teks_terbuka",
+      "lama": "Balai desa berdiri. Sekarang ada tempat untuk rapat, pesta, dan berteduh bersama.",
+      "baru": "Balai Desa berdiri. Sekarang ada tempat untuk rapat, pesta, dan berteduh bersama."
+    },
+    {
+      "path": "pencapaian/33/nama",
+      "lama": "Ramah Tamah",
+      "baru": "Ramah-tamah"
+    },
+    {
+      "path": "event_era_lanjut/0/deskripsi",
+      "lama": "Malam-malam terdengar cicit kecil dari Lumbung padi. Sekeluarga tikus sawah gemuk ternyata sedang berpesta gabah!",
+      "baru": "Malam-malam terdengar cicit kecil dari Lumbung Padi. Sekeluarga tikus sawah gemuk ternyata sedang berpesta gabah!"
+    },
+    {
+      "path": "event_era_lanjut/2/pilihan/0/teks",
+      "lama": "Perbaiki di Bengkel alat",
+      "baru": "Perbaiki di Bengkel Alat"
+    },
+    {
+      "path": "event_era_lanjut/8/deskripsi",
+      "lama": "Gerobak warna-warni berhenti di depan Balai desa. Ada pemain gamelan, penari jaranan, dan seekor monyet kecil berpeci.",
+      "baru": "Gerobak warna-warni berhenti di depan Balai Desa. Ada pemain gamelan, penari jaranan, dan seekor monyet kecil berpeci."
+    },
+    {
+      "path": "event_era_lanjut/11/pilihan/0/teks",
+      "lama": "Damaikan di Balai desa",
+      "baru": "Damaikan di Balai Desa"
+    },
+    {
+      "path": "event_era_lanjut/12/deskripsi",
+      "lama": "Sepasang bangau putih membangun sarang besar di atap Balai desa. Konon, ini pertanda baik!",
+      "baru": "Sepasang bangau putih membangun sarang besar di atap Balai Desa. Konon, ini pertanda baik!"
+    },
+    {
+      "path": "quest_lanjutan/3/deskripsi",
+      "lama": "Bangun Bengkel alat agar desa bisa membuat perkakas, papan, dan batu bata sendiri.",
+      "baru": "Bangun Bengkel Alat agar desa bisa membuat perkakas, papan, dan batu bata sendiri."
+    },
+    {
+      "path": "quest_lanjutan/8/deskripsi",
+      "lama": "Penuhi syarat era Kota Kecil: penduduk, Lumbung, Bengkel alat, Pasar, perkakas, dan stok pangan yang aman.",
+      "baru": "Penuhi syarat era Kota Kecil: penduduk, Lumbung, Bengkel Alat, Pasar, perkakas, dan stok pangan yang aman."
+    },
+    {
+      "path": "quest_lanjutan/9/deskripsi",
+      "lama": "Bangun Balai desa sebagai tempat musyawarah, pesta, dan pusat ilmu desa.",
+      "baru": "Bangun Balai Desa sebagai tempat musyawarah, pesta, dan pusat ilmu desa."
+    },
+    {
+      "path": "quest_lanjutan/9/teks_selesai",
+      "lama": "Balai desa berdiri megah di tengah kota. Malam ini, seluruh penduduk berkumpul di bawah satu atap.",
+      "baru": "Balai Desa berdiri megah di tengah kota. Malam ini, seluruh penduduk berkumpul di bawah satu atap."
+    },
+    {
+      "path": "musim_pembuka/musim_dingin/variasi/2",
+      "lama": "Daun jati mulai meranggas. Semoga lumbung padi cukup penuh dan sumur tetap berair sampai hujan pertama.",
+      "baru": "Daun jati mulai meranggas. Semoga Lumbung Padi cukup penuh dan sumur tetap berair sampai hujan pertama."
+    },
+    {
+      "path": "musim_pembuka/musim_gugur_stok_kurang/variasi/1",
+      "lama": "Lumbung padi masih terlalu ringan untuk menghadapi kemarau. Ayo kumpulkan bekal selagi sempat!",
+      "baru": "Lumbung Padi masih terlalu ringan untuk menghadapi kemarau. Ayo kumpulkan bekal selagi sempat!"
+    },
+    {
+      "path": "musim_pembuka/musim_kemarau/variasi/2",
+      "lama": "Daun jati mulai meranggas. Semoga lumbung padi cukup penuh dan sumur tetap berair sampai hujan pertama.",
+      "baru": "Daun jati mulai meranggas. Semoga Lumbung Padi cukup penuh dan sumur tetap berair sampai hujan pertama."
+    },
+    {
+      "path": "musim_pembuka/musim_mareng_stok_kurang/variasi/1",
+      "lama": "Lumbung padi masih ringan. Jemur gaplek dan simpan gabah selagi sempat!",
+      "baru": "Lumbung Padi masih ringan. Jemur gaplek dan simpan gabah selagi sempat!"
+    },
+    {
+      "path": "musim_pembuka/musim_hujan_kayu_bakar/variasi/1",
+      "lama": "Udara malam basah dan nyamuk banyak. Api unggun butuh {jumlah} kayu bakar setiap hari.",
+      "baru": "Udara malam basah dan nyamuk banyak. Api Unggun butuh {jumlah} kayu bakar setiap hari."
+    },
+    {
+      "path": "musim_pembuka/musim_hujan_api_padam/variasi/0",
+      "lama": "Kayu bakar habis! Api unggun meredup, malam terasa lembap.",
+      "baru": "Kayu bakar habis! Api Unggun meredup, malam terasa lembap."
+    },
+    {
+      "path": "musim_pembuka/musim_hujan_api_padam/variasi/1",
+      "lama": "Api unggun padam diguyur gerimis dan tidak ada kayu kering lagi. Ayo cari ranting di bawah rumpun bambu!",
+      "baru": "Api Unggun padam diguyur gerimis dan tidak ada kayu kering lagi. Ayo cari ranting di bawah rumpun bambu!"
+    },
+    {
+      "path": "peringatan_dini/ancaman_serigala/tingkat/bahaya/saran",
+      "lama": "Jauhkan penduduk dari kegelapan. Obor, Pagar bambu, dan Pos ronda dengan kentongan membuat desa lebih aman.",
+      "baru": "Jauhkan penduduk dari kegelapan. Obor, Pagar bambu, dan Pos Ronda dengan kentongan membuat desa lebih aman."
+    },
+    {
+      "path": "peringatan_dini/ancaman_babi_hutan/tingkat/bahaya/saran",
+      "lama": "Pukul kentongan dari Pos ronda dan jauhkan penduduk dari kegelapan.",
+      "baru": "Pukul kentongan dari Pos Ronda dan jauhkan penduduk dari kegelapan."
+    },
+    {
+      "path": "peringatan_dini/ancaman_macan_tutul/tingkat/bahaya/saran",
+      "lama": "Pukul kentongan bertalu-talu dari Pos ronda. Jangan dikejar.",
+      "baru": "Pukul kentongan bertalu-talu dari Pos Ronda. Jangan dikejar."
+    },
+    {
+      "path": "event_musiman/2/pilihan/0/teks_hasil",
+      "lama": "Orang-orangan sawah bertopi caping berdiri gagah. Pipit-pipit kabur ke semak liar sambil mencicit kesal.",
+      "baru": "Orang-orangan Sawah bertopi caping berdiri gagah. Pipit-pipit kabur ke semak liar sambil mencicit kesal."
+    },
+    {
+      "path": "log_ancaman/diusir/2",
+      "lama": "Hari {hari}: {nama} memukul kentongan dari Pos ronda. Babi hutan lari terbirit-birit ke hutan.",
+      "baru": "{nama} memukul kentongan dari Pos Ronda. Babi hutan lari terbirit-birit ke hutan."
+    },
+    {
+      "path": "log_ancaman/kayu_bakar_habis/0",
+      "lama": "Hari {hari}: Kayu bakar habis! Api unggun meredup dan penduduk merapatkan sarung.",
+      "baru": "Kayu bakar habis! Api Unggun meredup dan penduduk merapatkan sarung."
+    },
+    {
+      "path": "log_ancaman/kayu_bakar_habis/1",
+      "lama": "Hari {hari}: Api unggun hampir padam. {nama} berlari ke hutan mencari ranting kering.",
+      "baru": "Api Unggun hampir padam. {nama} berlari ke hutan mencari ranting kering."
+    },
+    {
+      "path": "log_ancaman/pos_ronda_usir/0",
+      "lama": "Hari {hari}: Dari Pos ronda, {nama} memukul kentongan. Babi hutan lari ke hutan.",
+      "baru": "Dari Pos Ronda, {nama} memukul kentongan. Babi hutan lari ke hutan."
+    },
+    {
+      "path": "log_ancaman/monyet_diusir/1",
+      "lama": "Hari {hari}: Orang-orangan sawah bergoyang ditiup angin. Monyet-monyet ragu dan pergi.",
+      "baru": "Orang-orangan Sawah bergoyang ditiup angin. Monyet-monyet ragu dan pergi."
+    },
+    {
+      "path": "log_ancaman/macan_diusir/0",
+      "lama": "Hari {hari}: Kentongan bertalu-talu dari Pos ronda. Macan tutul jawa mundur ke dalam hutan tanpa ada yang terluka.",
+      "baru": "Kentongan bertalu-talu dari Pos Ronda. Macan tutul jawa mundur ke dalam hutan tanpa ada yang terluka."
+    },
+    {
+      "path": "log_ancaman/diusir_orang_orangan/0",
+      "lama": "Orang-orangan sawah bergoyang ditiup angin. Seekor {hewan} ragu dan mundur ke hutan.",
+      "baru": "Orang-orangan Sawah bergoyang ditiup angin. Seekor {hewan} ragu dan mundur ke hutan."
+    },
+    {
+      "path": "log_ancaman/diusir_orang_orangan/2",
+      "lama": "Orang-orangan sawah di tepi ladang membuat {hewan} ragu. Hasil ladang selamat hari ini.",
+      "baru": "Orang-orangan Sawah di tepi ladang membuat {hewan} ragu. Hasil ladang selamat hari ini."
+    },
+    {
+      "path": "penduduk_meninggal/per_penyebab/dingin/0",
+      "lama": "Hari {hari}: Tubuh {nama} terlalu lemah menghadapi cuaca buruk musim ini, dan ia berpulang malam ini. Api unggun dinyalakan lebih besar untuknya.",
+      "baru": "Tubuh {nama} terlalu lemah menghadapi cuaca buruk musim ini, dan ia berpulang malam ini. Api Unggun dinyalakan lebih besar untuknya."
+    },
+    {
+      "path": "pemakaman/per_penyebab/kelaparan/0",
+      "lama": "Di depan Makam {nama}, desa berjanji untuk selalu mengisi lumbung padi sebelum kemarau.",
+      "baru": "Di depan Makam {nama}, desa berjanji untuk selalu mengisi Lumbung Padi sebelum kemarau."
+    },
+    {
+      "path": "pemakaman/makam_komunal/0",
+      "lama": "Nama {nama} diukir di dinding kenangan Balai desa, di antara nama-nama yang kita sayangi.",
+      "baru": "Nama {nama} diukir di dinding kenangan Balai Desa, di antara nama-nama yang kita sayangi."
+    },
+    {
+      "path": "pemakaman/makam_komunal/1",
+      "lama": "Lilin kecil dinyalakan di Balai desa untuk {nama}. Siapa pun boleh mampir untuk menyapanya.",
+      "baru": "Lilin kecil dinyalakan di Balai Desa untuk {nama}. Siapa pun boleh mampir untuk menyapanya."
+    },
+    {
+      "path": "bangunan_ancaman/bangunan_menara_jaga/tooltip",
+      "lama": "Pos ronda berkentongan untuk berjaga dan memberi tanda bahaya.",
+      "baru": "Pos Ronda berkentongan untuk berjaga dan memberi tanda bahaya."
+    },
+    {
+      "path": "bangunan_ancaman/bangunan_menara_jaga/deskripsi",
+      "lama": "Dari pos ronda, peronda bisa melihat babi hutan atau macan tutul yang mendekat dan mengusirnya sekali setiap malam dengan bunyi kentongan. Butuh penduduk dengan prioritas Jaga, atau penduduk yang sedang luang.",
+      "baru": "Dari Pos Ronda, peronda bisa melihat babi hutan atau macan tutul yang mendekat dan mengusirnya sekali setiap malam dengan bunyi kentongan. Butuh penduduk dengan prioritas Jaga, atau penduduk yang sedang luang."
+    },
+    {
+      "path": "bangunan_ancaman/bangunan_menara_jaga/selesai",
+      "lama": "Hari {hari}: Pos ronda berdiri, lengkap dengan kentongan bambu. {nama} memukulnya tiga kali sambil tersenyum lebar.",
+      "baru": "Pos Ronda berdiri, lengkap dengan kentongan bambu. {nama} memukulnya tiga kali sambil tersenyum lebar."
+    },
+    {
+      "path": "bangunan_ancaman/bangunan_menara_jaga/usir",
+      "lama": "Hari {hari}: Dari Pos ronda, {nama} melihat babi hutan mendekat dan memukul kentongan. Mereka lari ke hutan.",
+      "baru": "Dari Pos Ronda, {nama} melihat babi hutan mendekat dan memukul kentongan. Mereka lari ke hutan."
+    },
+    {
+      "path": "bangunan_ancaman/bangunan_menara_jaga/kosong",
+      "lama": "Pos ronda tidak ada perondanya malam ini.",
+      "baru": "Pos Ronda tidak ada perondanya malam ini."
+    },
+    {
+      "path": "bangunan_ancaman/bangunan_menara_jaga/terkunci",
+      "lama": "Pos ronda terbuka di era Desa Pertanian.",
+      "baru": "Pos Ronda terbuka di era Desa Pertanian."
+    },
+    {
+      "path": "prioritas_darurat/jaga/tooltip",
+      "lama": "Ronda di Pos ronda dan sekitar desa saat malam, membawa kentongan.",
+      "baru": "Ronda di Pos Ronda dan sekitar desa saat malam, membawa kentongan."
+    },
+    {
+      "path": "log_hubungan/menikah/3",
+      "lama": "Hari {hari}: {nama} dan {pasangan} menikah di Balai desa. Malam itu desa bernyanyi sampai bintang bermunculan.",
+      "baru": "{nama} dan {pasangan} menikah di Balai Desa. Malam itu desa bernyanyi sampai bintang bermunculan."
+    },
+    {
+      "path": "lansia_berpulang/pemakaman/warisan/0",
+      "lama": "{nama} meninggalkan buku catatan kecil berisi resep, petuah, dan gambar-gambar lucu. Kini disimpan di Balai desa.",
+      "baru": "{nama} meninggalkan buku catatan kecil berisi resep, petuah, dan gambar-gambar lucu. Kini disimpan di Balai Desa."
+    },
+    {
+      "path": "event_lokal/14/deskripsi",
+      "lama": "Sudah lama tidak ada ronda. Beberapa penduduk mengusulkan jadwal ronda bergiliran di pos ronda.",
+      "baru": "Sudah lama tidak ada ronda. Beberapa penduduk mengusulkan jadwal ronda bergiliran di Pos Ronda."
+    },
+    {
+      "path": "event_lokal/14/pilihan/1/teks_hasil",
+      "lama": "Pos ronda jadi tempat paling ramai di malam hari. Desa terasa aman dan akrab.",
+      "baru": "Pos Ronda jadi tempat paling ramai di malam hari. Desa terasa aman dan akrab."
+    },
+    {
+      "path": "bangunan_lokal/gubuk_bambu/nama",
+      "lama": "Gubuk bambu",
+      "baru": "Gubuk Bambu"
+    },
+    {
+      "path": "bangunan_lokal/lumbung_padi/nama",
+      "lama": "Lumbung padi",
+      "baru": "Lumbung Padi"
+    },
+    {
+      "path": "bangunan_lokal/pendopo/nama",
+      "lama": "Balai desa (pendopo)",
+      "baru": "Balai Desa (pendopo)"
+    },
+    {
+      "path": "bangunan_lokal/orang_orangan_sawah/nama",
+      "lama": "Orang-orangan sawah",
+      "baru": "Orang-orangan Sawah"
+    },
+    {
+      "path": "bangunan_lokal/pos_ronda/nama",
+      "lama": "Pos ronda + kentongan",
+      "baru": "Pos Ronda + kentongan"
+    },
+    {
+      "path": "bangunan_lokal/kandang_ayam/nama",
+      "lama": "Kandang ayam",
+      "baru": "Kandang Ayam"
+    },
+    {
+      "path": "hubungan/log/menjadi_teman/2",
+      "lama": "Hari {hari}: {nama} dan {nama2} duduk berdua di pos ronda sambil makan singkong rebus. Pertemanan baru dimulai.",
+      "baru": "{nama} dan {nama2} duduk berdua di Pos Ronda sambil makan singkong rebus. Pertemanan baru dimulai."
+    },
+    {
+      "path": "hubungan/log/ronda_bareng/1",
+      "lama": "Hari {hari}: Di pos ronda, {nama} mengajari {nama2} irama kentongan tanda aman. Malam terasa singkat.",
+      "baru": "Di Pos Ronda, {nama} mengajari {nama2} irama kentongan tanda aman. Malam terasa singkat."
+    },
+    {
+      "path": "keinginan/ronda_malam/deskripsi",
+      "lama": "Berjaga malam di pos ronda sambil memukul kentongan.",
+      "baru": "Berjaga malam di Pos Ronda sambil memukul kentongan."
+    },
+    {
+      "path": "keinginan/ronda_malam/teks_muncul/0",
+      "lama": "{nama} memeriksa kentongan di pos ronda. \"Malam ini aku mau ikut jaga.\"",
+      "baru": "{nama} memeriksa kentongan di Pos Ronda. \"Malam ini aku mau ikut jaga.\""
+    },
+    {
+      "path": "monumen/balai_megah/deskripsi",
+      "lama": "Balai desa diperluas menjadi pusat musyawarah dan kesenian desa.",
+      "baru": "Balai Desa diperluas menjadi pusat musyawarah dan kesenian desa."
+    },
+    {
+      "path": "monumen/balai_megah/tahap/0/mulai",
+      "lama": "Hari {hari}: Balai desa akan diperluas. {nama} memilih batang kayu terbaik untuk kentongan besar.",
+      "baru": "Balai Desa akan diperluas. {nama} memilih batang kayu terbaik untuk kentongan besar."
+    },
+    {
+      "path": "dilema/21/deskripsi",
+      "lama": "Pos ronda butuh ketua. {nama} dan {nama2} sama-sama ingin memimpin.",
+      "baru": "Pos Ronda butuh ketua. {nama} dan {nama2} sama-sama ingin memimpin."
+    },
+    {
+      "path": "dilema/21/pilihan/2/teks_hasil",
+      "lama": "{nama2} menjadi ketua ronda. Pos ronda jadi ramai canda.",
+      "baru": "{nama2} menjadi ketua ronda. Pos Ronda jadi ramai canda."
+    },
+    {
+      "path": "dilema/23/pilihan/0/teks",
+      "lama": "Sholat istisqa dan doa bersama",
+      "baru": "Salat istisqa dan doa bersama"
+    },
+    {
+      "path": "dilema_ui/syukuran_panen/1",
+      "lama": "Syukuran panen di balai desa. {jumlah} porsi nasi dan sayur dibagikan, doa syukur mengalun pelan.",
+      "baru": "Syukuran panen di Balai Desa. {jumlah} porsi nasi dan sayur dibagikan, doa syukur mengalun pelan."
+    },
+    {
+      "path": "dilema_ui/orang_orangan_berdiri/0",
+      "lama": "Orang-orangan sawah berdiri di tepi ladang, bajunya berkibar ditiup angin.",
+      "baru": "Orang-orangan Sawah berdiri di tepi ladang, bajunya berkibar ditiup angin."
+    },
+    {
+      "path": "momen_kecil/burung_perkutut/deskripsi",
+      "lama": "Seekor burung perkutut liar hinggap di pos ronda dan bersuara merdu.",
+      "baru": "Seekor burung perkutut liar hinggap di Pos Ronda dan bersuara merdu."
+    },
+    {
+      "path": "momen_kecil/kentongan_iseng/deskripsi",
+      "lama": "Anak-anak memukul kentongan pos ronda iseng-iseng. Warga sempat panik!",
+      "baru": "Anak-anak memukul kentongan Pos Ronda iseng-iseng. Warga sempat panik!"
+    },
+    {
+      "path": "otomatis/api_unggun/3",
+      "lama": "{nama} mengumpulkan ranting kering dan batu kali. Api unggun pertama siap dinyalakan!",
+      "baru": "{nama} mengumpulkan ranting kering dan batu kali. Api Unggun pertama siap dinyalakan!"
+    }
+  ],
+  "tambah_key": {},
+  "tambah_path": {
+    "keinginan.tabungan_haji.log_berangkat": "{nama} berangkat menunaikan ibadah haji selama {jumlah} hari.",
+    "keinginan.tabungan_haji.gelar_l": "Haji",
+    "keinginan.tabungan_haji.gelar_p": "Hajjah",
+    "keinginan._ui.log_berangkat": "{nama} berangkat ke kampung halaman selama {jumlah} hari.",
+    "agustusan.panitia.label": "17 Agustus",
+    "agustusan.ikon_log": "🇮🇩",
+    "menu.simpan_berhasil": "Permainan disimpan.",
+    "menu.simpan_gagal": "Gagal menyimpan. Penyimpanan peramban penuh atau diblokir.",
+    "menu.simpan_tema_beda": "Simpanan ini dibuat di tema {tema}. Buka tema itu untuk melanjutkannya."
+  },
+  "tambah_key_meta": {
+    "catatan_v180": {
+      "bentuk": {
+        "keinginan.<id>.log_berangkat": "string (log, tanpa awalan 'Hari '); {nama}, {jumlah} = lama pergi (hari). Cadangan: keinginan._ui.log_berangkat",
+        "keinginan.tabungan_haji.gelar_l / gelar_p": "string; sapaan di depan nama saat kembali ('{gelar} {nama} kembali ke desa.'). Sedang: 'Peziarah' (netral gender)",
+        "agustusan.panitia.label": "string; label kecil kartu panitia (innerHTML lewat qAttr)",
+        "agustusan.ikon_log": "string emoji; awalan log panitia/lomba",
+        "menu.simpan_berhasil / simpan_gagal": "string (log); tanpa placeholder",
+        "menu.simpan_tema_beda": "string (log); {tema} = id tema simpanan (L0._tema)"
+      },
+      "r05": "Nama bangunan Title Case seperti BUILDING_NAMES (Pos Ronda, Balai Desa, Lumbung Padi, Gubuk Bambu, Bengkel Alat, Menara Jaga) di posisi mana pun; Api Unggun / Kandang Ayam / Orang-orangan Sawah / Rumah Kayu hanya bila ditulis berhuruf awal kapital (bentuk kecil = kata benda umum). Sholat -> Salat, Ramah Tamah -> Ramah-tamah. meta.bangunan = BUILDING_NAMES tema indonesia (Rumah Panggung, Balai Desa). Aturan: tools/teks_v180.py.",
+      "r07": "Tema sedang memakai nama Eropa (overlay penduduk[].nama, kelahiran.nama_bayi, dialog_pedagang.nama_pedagang). meta.peta_sifat_penduduk mendapat entri nama sedang dengan sifat yang sama seperti nama Nusantara di indeks yang sama.",
+      "s01": "{pasangan} di duka_harian = pasangan almarhum ATAU warga terdekat (game.js S.grief.pasangan), cadangan 'Keluarganya' berhuruf kapital -> {pasangan} hanya di awal kalimat (dicek validator).",
+      "catatan_koding": "{tema} di menu.simpan_tema_beda saat ini id mentah ('sedang'/'indonesia'); sebaiknya kirim nama tema yang ramah. Fallback 'Pak Darto' (game.js spawnMerchant), C.NAMES (balance.js), nama era 'Dusun' (C.ERAS) dan bangunan 'Tambak' masih dari kode."
+    }
+  },
+  "tambah_entri_meta": {
+    "placeholder": {
+      "{tema}": "Id tema tempat simpanan dibuat (menu.simpan_tema_beda; L0._tema)"
+    },
+    "peta_sifat_penduduk": {
+      "Anna": [
+        "rajin",
+        "periang"
+      ],
+      "Hans": [
+        "sabar",
+        "rajin"
+      ],
+      "Greta": [
+        "ramah",
+        "pandai_masak"
+      ],
+      "Jakob": [
+        "suka_menolong"
+      ],
+      "Elise": [
+        "cerdas"
+      ],
+      "Lukas": [
+        "sabar",
+        "rajin"
+      ],
+      "Marta": [
+        "suka_menolong"
+      ],
+      "Matthias": [
+        "periang",
+        "jahil"
+      ],
+      "Klara": [
+        "ahli_tani"
+      ],
+      "Pieter": [
+        "rajin"
+      ],
+      "Ingrid": [
+        "pemurung",
+        "suka_menolong"
+      ],
+      "Emil": [
+        "cerdas",
+        "rajin"
+      ],
+      "Anton": [
+        "periang",
+        "cerdas"
+      ],
+      "Rosa": [
+        "seniman"
+      ],
+      "Karl": [
+        "rajin"
+      ],
+      "Helena": [
+        "ramah"
+      ],
+      "Felix": [
+        "cerdas"
+      ],
+      "Lotte": [
+        "rajin"
+      ],
+      "Oskar": [
+        "sabar"
+      ],
+      "Agnes": [
+        "periang",
+        "ramah"
+      ],
+      "Henrik": [
+        "pemberani"
+      ],
+      "Mathilde": [
+        "jujur"
+      ],
+      "Tobias": [
+        "pemberani",
+        "suka_menolong"
+      ],
+      "Frida": [
+        "periang",
+        "rajin"
+      ],
+      "Konrad": [
+        "seniman",
+        "periang"
+      ],
+      "Ida": [
+        "sabar"
+      ],
+      "Bruno": [
+        "pemberani",
+        "ramah"
+      ],
+      "Sofie": [
+        "cerdas"
+      ],
+      "Johanna": [
+        "ramah",
+        "cerdas"
+      ],
+      "Leon": [
+        "sabar",
+        "religius"
+      ],
+      "Liesel": [
+        "rajin"
+      ],
+      "Albert": [
+        "perantau"
+      ],
+      "Margit": [
+        "seniman"
+      ],
+      "Frans": [
+        "pelit"
+      ],
+      "Brigitte": [
+        "ramah"
+      ],
+      "Gustav": [
+        "pandai_masak"
+      ],
+      "Johan": [
+        "pemberani",
+        "perantau"
+      ],
+      "Hanne": [
+        "jujur"
+      ],
+      "Willem": [
+        "rajin",
+        "cerdas"
+      ],
+      "Elin": [
+        "cerdas"
+      ],
+      "Ernst": [
+        "pemberani"
+      ],
+      "Astrid": [
+        "pelit",
+        "rajin"
+      ],
+      "Otto": [
+        "rajin",
+        "suka_menolong"
+      ],
+      "Maren": [
+        "seniman",
+        "periang"
+      ],
+      "Rudolf": [
+        "ahli_tani",
+        "sabar"
+      ],
+      "Isolde": [
+        "cerdas"
+      ],
+      "Stefan": [
+        "rajin"
+      ],
+      "Wilma": [
+        "religius"
+      ],
+      "Theresa": [
+        "jahil",
+        "dermawan"
+      ],
+      "Viktor": [
+        "pemberani"
+      ],
+      "Arne": [
+        "rajin",
+        "pemberani"
+      ],
+      "Paulina": [
+        "ramah",
+        "cerdas"
+      ],
+      "Amalie": [
+        "periang"
+      ],
+      "Bastian": [
+        "rajin"
+      ],
+      "Dirk": [
+        "pemberani",
+        "cerdas"
+      ],
+      "Cecilia": [
+        "ahli_tani",
+        "suka_menolong"
+      ],
+      "Erik": [
+        "rajin",
+        "jujur"
+      ],
+      "Dora": [
+        "pemberani",
+        "jujur"
+      ],
+      "Florian": [
+        "periang"
+      ],
+      "Edith": [
+        "suka_menolong"
+      ],
+      "Georg": [
+        "pemberani"
+      ],
+      "Lena": [
+        "seniman"
+      ],
+      "Jonas": [
+        "pemberani",
+        "rajin"
+      ],
+      "Nora": [
+        "suka_menolong",
+        "sabar"
+      ],
+      "Kasper": [
+        "sabar"
+      ],
+      "Olga": [
+        "seniman",
+        "rajin"
+      ],
+      "Lars": [
+        "cerdas"
+      ],
+      "Vera": [
+        "cerdas",
+        "rajin"
+      ]
+    }
+  },
+  "set_meta": {
+    "versi": "1.8.0"
+  }
+}

@@ -10,8 +10,8 @@
    "Hari {hari}: {nama} dan {nama2} bekerja sama mengangkut {jumlah} {sumber_daya} ke Gudang.",
    "Hari {hari}: {nama} menanam benih gandum di Ladang dengan hati-hati.",
    "Hari {hari}: {nama} mengolah gandum menjadi {jumlah} roti hangat di Dapur.",
-   "Hari {hari}: {nama} membuat perkakas baru di Bengkel alat. Bunyi palunya terdengar sampai sungai.",
-   "Hari {hari}: {nama} kelelahan dan tertidur pulas di dekat Api unggun.",
+   "{nama} membuat perkakas baru di Bengkel Alat. Bunyi palunya terdengar sampai sungai.",
+   "{nama} kelelahan dan tertidur pulas di dekat Api Unggun.",
    "Hari {hari}: {nama} berhenti bekerja sebentar untuk makan. Perut kenyang, kerja pun senang."
   ],
   "cuaca": [
@@ -20,9 +20,19 @@
    "Hari {hari}: Kabut pagi menutupi desa. {nama} hampir tersesat ke sungai.",
    "Hari {hari}: Angin kencang menggoyang pepohonan. Atap Gubuk berderit-derit.",
    "Hari {hari}: Musim {musim} telah tiba. {pesan_musim}",
-   "Hari {hari}: Udara musim dingin menusuk tulang. Api unggun menyala lebih lama malam ini.",
+   "Udara musim dingin menusuk tulang. Api Unggun menyala lebih lama malam ini.",
    "Hari {hari}: Pelangi muncul setelah hujan. {nama} berhenti sejenak untuk memandanginya."
-  ]
+  ],
+  "sosial": {
+   "__byIdx": {
+    "7": "{nama} merasa rindu tanah asalnya, tapi senyum teman-teman membuatnya betah."
+   }
+  },
+  "temuan": {
+   "__byIdx": {
+    "4": "{nama} menemukan sebuah guci tua berisi benih. Mungkin bisa ditanam?"
+   }
+  }
  },
  "event_acak": {
   "__byId": [
@@ -55,21 +65,22 @@
    },
    {
     "id": "hewan_buas",
-    "deskripsi": "Seekor babi hutan besar menerobos semak dan mendekati ladang! Penduduk panik.",
+    "deskripsi": "Seekor serigala besar keluar dari semak dan mendekati ladang! Penduduk panik.",
     "pilihan": {
      "__byIdx": {
       "0": {
-       "teks_hasil": "Dengan teriakan dan obor, babi hutan berhasil dihalau. Desa bahkan mendapat daging dan kulit."
+       "teks_hasil": "Dengan teriakan dan obor, serigala itu berhasil dihalau. Ia kabur meninggalkan rusa buruannya, jadi desa mendapat daging dan kulit."
       },
       "1": {
        "teks": "Bangun pagar darurat",
-       "teks_hasil": "Pagar kayu berdiri tepat waktu. Babi hutan mendengus lalu pergi."
+       "teks_hasil": "Pagar kayu berdiri tepat waktu. Serigala itu menggeram pelan, lalu kembali ke hutan."
       },
       "2": {
-       "teks_hasil": "Babi hutan berpesta di ladang. Panen kali ini berkurang."
+       "teks_hasil": "Serigala itu mengobrak-abrik ladang sebelum pergi. Panen kali ini berkurang."
       }
      }
-    }
+    },
+    "judul": "Serigala Mendekati Ladang"
    },
    {
     "id": "serigala_malam",
@@ -168,7 +179,7 @@
        "teks_hasil": "Desa penuh lampu, musik, dan masakan lezat. Semua orang bahagia."
       },
       "1": {
-       "teks": "Syukuran sederhana",
+       "teks": "Perayaan sederhana",
        "teks_hasil": "Doa dan makan bersama yang sederhana, tapi terasa sangat bermakna."
       }
      }
@@ -200,7 +211,7 @@
  },
  "menu": {
   "slogan_acak": [
-   "Api unggun sudah menyala. Penduduk menunggumu.",
+   "Api Unggun sudah menyala. Penduduk menunggumu.",
    "Hari ini cerah. Cocok untuk menanam sesuatu.",
    "Ada bau roti hangat dari arah dapur...",
    "Penduduk sedang bersenandung sambil bekerja.",
@@ -314,6 +325,33 @@
     "id": "A27",
     "nama": "Tujuh Musim Dingin",
     "teks_terbuka": "Tujuh musim dingin terlewati bersama. Desa ini tumbuh kuat seperti pohon ek."
+   },
+   {
+    "id": "A23",
+    "nama": "Pengusir Serigala",
+    "deskripsi": "Hadapi serigala di ladang sebanyak 3 kali.",
+    "teks_terbuka": "Serigala abu-abu itu sepertinya datang lagi hanya untuk melihat-lihat. Penduduk mulai memberinya nama."
+   },
+   {
+    "id": "A25",
+    "nama": "Nyali Lonceng Jaga",
+    "deskripsi": "Seorang penakut menjadi pemberani lewat cerita Nyali Lonceng Jaga.",
+    "teks_terbuka": "Teng-teng-teng! Siapa sangka, si penakut kini paling nyaring membunyikan lonceng jaga."
+   },
+   {
+    "id": "A28",
+    "nama": "Juara Panjat Tiang Licin",
+    "deskripsi": "Menangkan lomba panjat tiang licin.",
+    "teks_terbuka": "Belepotan lemak dan lumpur, tapi hadiah di puncak tiang berhasil diraih!"
+   },
+   {
+    "id": "A31",
+    "nama": "Sang Peziarah",
+    "deskripsi": "Wujudkan keinginan menabung untuk ziarah jauh."
+   },
+   {
+    "id": "A32",
+    "teks_terbuka": "Kapel Batu, Balai, Bendungan, Aula Tari Rakyat, dan Pasar Mingguan. Desa Mandiri yang sesungguhnya."
    }
   ]
  },
@@ -339,6 +377,10 @@
     {
      "id": "setelah_panen_raya",
      "teks": "Setelah panen raya, gandum ada di mana-mana. Harga jualnya turun untuk beberapa hari."
+    },
+    {
+     "id": "setelah_kekeringan",
+     "teks": "Musim kering membuat pangan sulit dicari. Harga beli makanan ikut naik."
     }
    ]
   },
@@ -363,14 +405,18 @@
    },
    {
     "id": "kerbau_nyasar",
-    "deskripsi": "Seekor kerbau besar berjalan santai ke tengah desa, lalu berbaring di depan Gudang. Sepertinya ia tersesat.",
+    "deskripsi": "Seekor sapi besar berjalan santai ke tengah desa, lalu berbaring di depan Gudang. Sepertinya ia tersesat.",
     "pilihan": {
      "__byIdx": {
       "0": {
-       "teks_hasil": "Si kerbau betah dan mau membantu menarik kayu. Ia dinamai \"Mbok Besar\" oleh anak-anak."
+       "teks_hasil": "Si sapi betah dan mau membantu menarik kayu. Anak-anak menamainya \"Nyonya Besar\"."
+      },
+      "2": {
+       "teks_hasil": "Sapi itu tidur seharian di depan Gudang. Tak ada yang tega membangunkannya."
       }
      }
-    }
+    },
+    "judul": "Sapi Tersesat"
    },
    {
     "id": "percikan_dapur",
@@ -387,7 +433,8 @@
     "pilihan": {
      "__byIdx": {
       "0": {
-       "teks_hasil": "Sambil makan, pengembara menjelaskan banyak hal. Riset desa maju pesat!"
+       "teks_hasil": "Sambil makan, pengembara menjelaskan banyak hal. Riset desa maju pesat!",
+       "teks": "Undang makan malam"
       }
      }
     }
@@ -428,7 +475,7 @@
    },
    {
     "id": "rombongan_seniman",
-    "deskripsi": "Gerobak warna-warni berhenti di depan Balai desa. Ada pemain gamelan, penari, dan seekor monyet kecil berpeci."
+    "deskripsi": "Gerobak warna-warni berhenti di depan Balai Desa. Ada pemain biola, penari, dan seekor anjing kecil bertopi."
    },
    {
     "id": "pilek_musim_gugur",
@@ -438,7 +485,7 @@
      "__byIdx": {
       "0": {
        "teks": "Seduh jahe dan madu",
-       "teks_hasil": "Wedang jahe mengepul di setiap rumah. Bersin-bersin cepat mereda."
+       "teks_hasil": "Teh jahe madu mengepul di setiap rumah. Bersin-bersin cepat mereda."
       },
       "2": {
        "teks": "Bekerja sambil pakai syal"
@@ -522,14 +569,14 @@
   "musim_gugur_syukur": {
    "kapan": "Akhir musim gugur jika stok pangan aman",
    "variasi": [
-    "Lumbung penuh sebelum salju datang. Penduduk berkumpul untuk syukuran kecil. Kerja keras kalian terbayar!",
+    "Lumbung penuh sebelum salju datang. Penduduk berkumpul untuk pesta panen kecil. Kerja keras kalian terbayar!",
     "Semua karung tersusun rapi. Malam ini desa makan bersama, hangat dan tenang menyambut musim dingin."
    ]
   },
   "musim_dingin_kayu_bakar": {
    "kapan": "Saat api unggun memakai kayu bakar di musim dingin",
    "variasi": [
-    "Api unggun melahap kayu bakar lebih banyak di musim dingin. Pastikan tumpukan kayu tidak habis.",
+    "Api Unggun melahap kayu bakar lebih banyak di musim dingin. Pastikan tumpukan kayu tidak habis.",
     "Kayu bakar tinggal sedikit. Kalau api padam, malam akan terasa sangat panjang."
    ]
   },
@@ -595,7 +642,7 @@
       "Lolongan terdengar makin dekat. Penduduk yang masih di luar sebaiknya segera pulang.",
       "Mata-mata kecil berkilat di balik semak. Serigala sedang mengintai desa malam ini."
      ],
-     "saran": "Jauhkan penduduk dari kegelapan. Obor, Pagar, dan Menara jaga membuat desa lebih aman."
+     "saran": "Jauhkan penduduk dari kegelapan. Obor, Pagar, dan Menara Jaga membuat desa lebih aman."
     },
     "reda": {
      "teks": [
@@ -788,7 +835,7 @@
    {
     "id": "dingin_ekstrem",
     "judul": "Hari Paling Dingin",
-    "deskripsi": "Angin beku bertiup sejak subuh. Air di ember membeku dan napas berubah jadi kabut tebal.",
+    "deskripsi": "Angin beku bertiup sejak fajar. Air di ember membeku dan napas berubah jadi kabut tebal.",
     "pilihan": {
      "__byIdx": {
       "0": {
@@ -883,7 +930,7 @@
   "diusir": [
    "Hari {hari}: Cahaya obor membuat serigala ragu. Mereka berbalik ke hutan tanpa mendekat.",
    "Hari {hari}: Pagar kayu menghalangi jalan serigala. Mereka berputar-putar lalu pergi dengan kesal.",
-   "Hari {hari}: {nama} meniup terompet dari Menara jaga. Serigala lari terbirit-birit ke hutan.",
+   "{nama} meniup terompet dari Menara Jaga. Serigala lari terbirit-birit ke hutan.",
    "Hari {hari}: {nama} dan {nama2} berjaga semalaman. Tidak ada satu pun serigala yang berani mendekat."
   ],
   "serigala_usai": [
@@ -895,8 +942,8 @@
    "Hari {hari}: Jari-jari {nama} kaku kedinginan. Ia buru-buru menghangatkan diri di dekat api unggun."
   ],
   "kayu_bakar_habis": [
-   "Hari {hari}: Kayu bakar habis! Api unggun meredup dan penduduk merapatkan selimut.",
-   "Hari {hari}: Api unggun hampir padam. {nama} berlari ke hutan mencari ranting kering."
+   "Kayu bakar habis! Api Unggun meredup dan penduduk merapatkan selimut.",
+   "Api Unggun hampir padam. {nama} berlari ke hutan mencari ranting kering."
   ],
   "diusir_orang_orangan": [
    "Orang-orangan di ladang gandum bergoyang ditiup angin. Seekor {hewan} ragu dan mundur ke hutan.",
@@ -909,7 +956,12 @@
    "istirahat": [
     "Hari {hari}: {nama} tidur siang di gubuk, berselimut tebal. Teman-teman menjaga suara agar tidak berisik.",
     "Hari {hari}: {nama} beristirahat sambil memandangi hujan dari jendela."
-   ]
+   ],
+   "mulai": {
+    "__byIdx": {
+     "2": "{nama} batuk kecil sejak pagi. {nama2} membuatkan teh jahe madu untuknya."
+    }
+   }
   },
   "per_penyebab": {
    "dingin": [
@@ -921,7 +973,7 @@
  "penduduk_meninggal": {
   "per_penyebab": {
    "dingin": [
-    "Hari {hari}: {nama} tak kuat melawan dingin yang menggigit dan berpulang malam ini. Api unggun dinyalakan lebih besar untuknya.",
+    "{nama} tak kuat melawan dingin yang menggigit dan berpulang malam ini. Api Unggun dinyalakan lebih besar untuknya.",
     "Hari {hari}: Musim dingin terlalu berat bagi {nama}. Ia tertidur di bawah selimut tebal dan tidak bangun lagi.",
     "Hari {hari}: {nama} berpulang di malam paling dingin. Desa berkumpul, saling menghangatkan dalam diam."
    ]
@@ -940,7 +992,12 @@
    ],
    "dingin": [
     "Api kecil dinyalakan di samping Makam {nama}, supaya ia tidak kedinginan lagi."
-   ]
+   ],
+   "tua": {
+    "__byIdx": {
+     "1": "Umur {nama} panjang dan penuh kebaikan. Hari ini terasa lebih seperti perayaan hidupnya daripada duka."
+    }
+   }
   }
  },
  "penduduk_pergi": {
@@ -966,10 +1023,10 @@
    "nama": "Menara Jaga",
    "tooltip": "Menara tinggi untuk melihat bahaya dari jauh.",
    "deskripsi": "Dari menara, penjaga bisa melihat serigala yang mendekat dan mengusirnya sekali setiap malam. Butuh penduduk dengan prioritas Jaga, atau penduduk yang sedang luang.",
-   "selesai": "Hari {hari}: Menara jaga berdiri tegak. {nama} naik ke puncaknya dan melambai ke seluruh desa.",
-   "usir": "Hari {hari}: Dari Menara jaga, {nama} melihat serigala mendekat dan meniup terompet. Mereka lari ke hutan.",
-   "kosong": "Menara jaga tidak ada penjaganya malam ini.",
-   "terkunci": "Menara jaga terbuka di era Desa Pertanian."
+   "selesai": "Menara Jaga berdiri tegak. {nama} naik ke puncaknya dan melambai ke seluruh desa.",
+   "usir": "Dari Menara Jaga, {nama} melihat serigala mendekat dan meniup terompet. Mereka lari ke hutan.",
+   "kosong": "Menara Jaga tidak ada penjaganya malam ini.",
+   "terkunci": "Menara Jaga terbuka di era Desa Pertanian."
   },
   "bangunan_makam": {
    "selesai": "Hari {hari}: Makam untuk {nama} selesai dibuat. Bunga-bunga liar mulai ditanam di sekitarnya."
@@ -977,7 +1034,7 @@
  },
  "prioritas_darurat": {
   "jaga": {
-   "tooltip": "Berjaga di Menara jaga dan sekitar desa saat malam."
+   "tooltip": "Berjaga di Menara Jaga dan sekitar desa saat malam."
   }
  },
  "log_jadwal": {
@@ -985,12 +1042,24 @@
    "Hari {hari}: {nama} tidur di luar dan menggigil sepanjang malam. Ia sangat butuh rumah.",
    "Hari {hari}: Angin malam menusuk. {nama} yang tidur di luar bangun dengan hidung merah dan suasana hati buruk.",
    "Hari {hari}: {nama} tidak bisa tidur karena kedinginan di luar. Bangun Gubuk agar ia bisa beristirahat hangat."
-  ]
+  ],
+  "berpasangan": {
+   "bangun_pagi": {
+    "__byIdx": {
+     "1": "{pasangan} membangunkan {nama} dengan bau roti hangat dari tungku."
+    }
+   }
+  }
  },
  "tumbuh_kembang": {
   "ulang_tahun_anak": [
    "Hari {hari}: {nama} berulang tahun ke-{umur}! {ibu} membuat kue kecil dari madu dan gandum."
-  ]
+  ],
+  "menjadi_dewasa": {
+   "__byIdx": {
+    "1": "Desa mengadakan pesta kecil karena {nama} telah dewasa. Ia memilih menekuni {skill}."
+   }
+  }
  },
  "dilema": {
   "__byId": [
@@ -1438,13 +1507,336 @@
       }
      }
     }
+   },
+   {
+    "id": "hajatan",
+    "judul": "Pesta Keluarga",
+    "deskripsi": "{nama} ingin mengadakan pesta keluarga. Keluarganya bertanya: sederhana saja, atau besar-besaran?",
+    "pilihan": {
+     "__byIdx": {
+      "0": {
+       "teks": "Jamuan sederhana",
+       "teks_hasil": "Jamuan sederhana di Balai Desa terasa khidmat dan hangat."
+      },
+      "1": {
+       "teks": "Pai besar dan musik biola",
+       "teks_hasil": "Pai besar dihidangkan dan biola mengalun. Semua warga makan dan tertawa bersama.",
+       "teks_tertunda": "Doa restu dari pesta hari {hari_keputusan} seolah terkabul. Keluarga {nama} sangat bahagia.",
+       "tertunda": {
+        "__byIdx": {
+         "0": {
+          "teks_tertunda": "Doa restu dari pesta hari {hari_keputusan} seolah terkabul. Keluarga {nama} sangat bahagia."
+         }
+        }
+       }
+      },
+      "2": {
+       "teks": "Pesta besar dengan tari rakyat",
+       "teks_hasil": "Pesta paling meriah yang pernah ada! Penonton dari desa sebelah berdatangan.",
+       "teks_tertunda": "Dapur terasa kosong setelah pesta hari {hari_keputusan}. Warga mulai mengencangkan ikat pinggang.",
+       "tertunda": {
+        "__byIdx": {
+         "0": {
+          "teks_tertunda": "Dapur terasa kosong setelah pesta hari {hari_keputusan}. Warga mulai mengencangkan ikat pinggang."
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   {
+    "id": "tanah_warisan",
+    "judul": "Ladang Warisan",
+    "deskripsi": "{nama} dan {nama2} sama-sama merasa berhak atas sepetak ladang. Keduanya datang ke kepala desa.",
+    "pilihan": {
+     "__byIdx": {
+      "0": {
+       "teks": "Bagi rata",
+       "teks_hasil": "Ladang dibagi dua dengan patok kayu. Keduanya kurang puas, tapi menerima."
+      },
+      "1": {
+       "teks": "Berikan kepada yang menggarap",
+       "teks_hasil": "{nama} mendapat ladangnya. {nama2} pulang dengan wajah merah.",
+       "teks_tertunda": "Sejak keputusan hari {hari_keputusan}, {nama} dan {nama2} saling buang muka.",
+       "tertunda": {
+        "__byIdx": {
+         "0": {
+          "teks_tertunda": "Sejak keputusan hari {hari_keputusan}, {nama} dan {nama2} saling buang muka."
+         }
+        }
+       }
+      },
+      "2": {
+       "teks": "Musyawarah di Balai",
+       "teks_hasil": "Musyawarah panjang di Balai, ditemani teh dan kue apel.",
+       "teks_tertunda": "Musyawarah hari {hari_keputusan} membuahkan hasil. {nama} dan {nama2} bersalaman dan tertawa.",
+       "tertunda": {
+        "__byIdx": {
+         "0": {
+          "teks_tertunda": "Musyawarah hari {hari_keputusan} membuahkan hasil. {nama} dan {nama2} bersalaman dan tertawa."
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   {
+    "id": "rebutan_air",
+    "judul": "Rebutan Air",
+    "deskripsi": "Air tinggal sedikit di puncak musim kering. Warga berselisih: air untuk minum atau untuk ladang?",
+    "pilihan": {
+     "__byIdx": {
+      "0": {
+       "teks": "Utamakan air minum",
+       "teks_hasil": "Air minum aman. Sebagian gandum terpaksa layu."
+      },
+      "1": {
+       "teks": "Giliran dari penjaga parit",
+       "teks_hasil": "Penjaga parit desa membagi giliran air dengan adil. Tidak ada yang puas sepenuhnya, tapi semua rukun."
+      },
+      "2": {
+       "teks": "Utamakan ladang",
+       "teks_hasil": "Air dialirkan ke ladang. Gandum selamat, tapi ember di rumah-rumah hampir kosong.",
+       "teks_tertunda": "Beberapa warga minum air keruh sejak air dialirkan ke ladang hari {hari_keputusan}. Perut mulas menyerang. Ingat, rebus air minum!",
+       "tertunda": {
+        "__byIdx": {
+         "0": {
+          "teks_tertunda": "Beberapa warga minum air keruh sejak air dialirkan ke ladang hari {hari_keputusan}. Perut mulas menyerang. Ingat, rebus air minum!"
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   {
+    "id": "beringin_keramat",
+    "judul": "Pohon Ek Tua",
+    "deskripsi": "Pohon ek tua di tengah desa menghalangi lahan baru. Pedagang kayu sudah menawar. Para tetua menggeleng.",
+    "pilihan": {
+     "__byIdx": {
+      "0": {
+       "teks": "Rawat dan adakan perayaan kecil",
+       "teks_hasil": "Perayaan kecil di bawah pohon ek. Akar-akarnya dibersihkan, dan anak-anak kembali berayun di sana."
+      },
+      "1": {
+       "teks": "Pangkas dahannya saja",
+       "teks_hasil": "Dahan-dahan besar dipangkas. Pohon ek masih berdiri, walau tidak serimbun dulu.",
+       "teks_tertunda": "Tupai-tupai yang dulu tinggal di dahan pohon ek pindah ke loteng rumah warga sejak pemangkasan hari {hari_keputusan}.",
+       "tertunda": {
+        "__byIdx": {
+         "0": {
+          "teks_tertunda": "Tupai-tupai yang dulu tinggal di dahan pohon ek pindah ke loteng rumah warga sejak pemangkasan hari {hari_keputusan}."
+         }
+        }
+       }
+      },
+      "2": {
+       "teks": "Tebang pohonnya",
+       "teks_hasil": "Pohon ek tumbang dengan suara berdebum. Kayu melimpah, tapi tengah desa terasa gersang.",
+       "teks_tertunda": "Beberapa warga bermimpi buruk sejak pohon ek ditebang hari {hari_keputusan}. Desa terasa kehilangan sesuatu.",
+       "tertunda": {
+        "__byIdx": {
+         "0": {
+          "teks_tertunda": "Beberapa warga bermimpi buruk sejak pohon ek ditebang hari {hari_keputusan}. Desa terasa kehilangan sesuatu."
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   {
+    "id": "pupuk_penyuluh",
+    "judul": "Penyuluh Pertanian",
+    "deskripsi": "Penyuluh dari kota datang menawarkan pupuk kimia gratis. \"Panen pasti melimpah!\" katanya.",
+    "pilihan": {
+     "__byIdx": {
+      "1": {
+       "teks": "Terima pupuk kimia",
+       "teks_hasil": "Gandum tumbuh hijau pekat. Panen berikutnya terlihat menjanjikan.",
+       "teks_tertunda": "Tanah ladang mengeras sejak pupuk kimia hari {hari_keputusan}. Kompos bisa memulihkannya pelan-pelan.",
+       "tertunda": {
+        "__byIdx": {
+         "0": {
+          "teks_tertunda": "Tanah ladang mengeras sejak pupuk kimia hari {hari_keputusan}. Kompos bisa memulihkannya pelan-pelan."
+         }
+        }
+       }
+      },
+      "2": {
+       "teks": "Tolak dengan sopan",
+       "teks_hasil": "Penyuluh mengangguk dan pergi. Ladang tetap seperti biasa."
+      }
+     }
+    }
+   },
+   {
+    "id": "jalan_desa",
+    "judul": "Jalan Desa",
+    "deskripsi": "Jalan desa becek dan berlubang. Ada tawaran membangunnya bersama, atau membayar orang luar.",
+    "pilihan": {
+     "__byIdx": {
+      "1": {
+       "teks": "Kerja bersama sehari penuh",
+       "teks_hasil": "Seluruh desa meratakan jalan dengan cangkul dan batu. Lelah, tapi bangga.",
+       "teks_tertunda": "Dewan kota terkesan dengan kerja bersama hari {hari_keputusan} dan mengirim bahan untuk jalan desa!",
+       "tertunda": {
+        "__byIdx": {
+         "0": {
+          "teks_tertunda": "Dewan kota terkesan dengan kerja bersama hari {hari_keputusan} dan mengirim bahan untuk jalan desa!"
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   {
+    "id": "ketua_ronda",
+    "judul": "Memilih Ketua Jaga Malam",
+    "deskripsi": "Regu jaga malam butuh ketua. {nama} dan {nama2} sama-sama ingin memimpin.",
+    "pilihan": {
+     "__byIdx": {
+      "0": {
+       "teks": "Musyawarah, ketua bergilir",
+       "teks_hasil": "Ketua jaga malam bergilir setiap minggu. Keduanya setuju dan bersalaman."
+      },
+      "1": {
+       "teks": "Pilih {nama}",
+       "teks_hasil": "{nama} menjadi ketua jaga malam. {nama2} menyalami dengan senyum tipis.",
+       "teks_tertunda": "{nama2} masih iri sejak {nama} dipilih jadi ketua jaga malam hari {hari_keputusan}.",
+       "tertunda": {
+        "__byIdx": {
+         "0": {
+          "teks_tertunda": "{nama2} masih iri sejak {nama} dipilih jadi ketua jaga malam hari {hari_keputusan}."
+         }
+        }
+       }
+      },
+      "2": {
+       "teks": "Pilih {nama2}",
+       "teks_hasil": "{nama2} menjadi ketua jaga malam. Menara Jaga jadi ramai canda.",
+       "teks_tertunda": "{nama} masih iri sejak {nama2} dipilih jadi ketua jaga malam hari {hari_keputusan}.",
+       "tertunda": {
+        "__byIdx": {
+         "0": {
+          "teks_tertunda": "{nama} masih iri sejak {nama2} dipilih jadi ketua jaga malam hari {hari_keputusan}."
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   {
+    "id": "tambang_pasir",
+    "judul": "Tambang Pasir Sungai",
+    "deskripsi": "Pasir sungai bisa ditambang untuk bangunan. Seorang pengusaha dari luar juga menawarkan kerja sama.",
+    "pilihan": {
+     "__byIdx": {
+      "0": {
+       "teks": "Tolak, biarkan sungai tetap jernih",
+       "teks_hasil": "Sungai tetap jernih. Anak-anak masih bisa berenang dan menangkap ikan."
+      },
+      "1": {
+       "teks": "Tambang kecil oleh warga",
+       "teks_hasil": "Warga menambang pasir sedikit demi sedikit selama seminggu.",
+       "teks_tertunda": "Tebing sungai tergerus sejak penambangan hari {hari_keputusan}. Air lebih cepat meluap, ikan makin sedikit.",
+       "tertunda": {
+        "__byIdx": {
+         "0": {
+          "teks_tertunda": "Tebing sungai tergerus sejak penambangan hari {hari_keputusan}. Air lebih cepat meluap, ikan makin sedikit."
+         }
+        }
+       }
+      },
+      "2": {
+       "teks": "Serahkan ke pengusaha luar",
+       "teks_hasil": "Gerobak-gerobak pengusaha datang dan pergi, dan sekantong koin \"uang teh\" terselip di meja balai. Batu dan perkakas menumpuk, tapi sungai jadi keruh.",
+       "teks_tertunda": "Sungai yang ditambang sejak hari {hari_keputusan} meluap dan merusak jembatan. Ikan hampir hilang.",
+       "tertunda": {
+        "__byIdx": {
+         "0": {
+          "teks_tertunda": "Sungai yang ditambang sejak hari {hari_keputusan} meluap dan merusak jembatan. Ikan hampir hilang."
+         },
+         "1": {
+          "teks_tertunda": "Kabar soal kantong koin dari pengusaha hari {hari_keputusan} sampai ke telinga warga yang jujur. Mereka kecewa, dan suasana desa jadi canggung."
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   {
+    "id": "sekolah_kota",
+    "judul": "Sekolah di Kota",
+    "deskripsi": "{nama} masih muda dan haus ilmu. Ada tawaran sekolah atau bekerja di kota.",
+    "pilihan": {
+     "__byIdx": {
+      "2": {
+       "teks": "Bekerja di kota 21 hari",
+       "teks_hasil": "{nama} berangkat bekerja di kota. Rumahnya terasa sepi.",
+       "teks_tertunda": "{nama} pulang dari kota setelah bekerja sejak hari {hari_keputusan}, membawa perkakas dan kopi untuk desa.",
+       "tertunda": {
+        "__byIdx": {
+         "0": {
+          "teks_tertunda": "{nama} pulang dari kota setelah bekerja sejak hari {hari_keputusan}, membawa perkakas dan kopi untuk desa."
+         },
+         "1": {
+          "teks_tertunda": "Surat dari {nama}: ia betah di kota dan akan pulang seminggu lagi."
+         },
+         "2": {
+          "teks_tertunda": "{nama} pulang dari kota bersama calon pendamping hidupnya! Desa heboh dan bahagia."
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   {
+    "id": "penebang_liar",
+    "judul": "Penebang Liar",
+    "deskripsi": "Malam-malam terdengar suara gergaji dari hutan ek. Ada penebang liar!",
+    "pilihan": {
+     "__byIdx": {
+      "1": {
+       "teks": "Lapor ke penjaga hutan",
+       "teks_hasil": "Laporan dikirim ke penjaga hutan.",
+       "teks_tertunda": "Penjaga hutan datang menindaklanjuti laporan hari {hari_keputusan} dan berterima kasih dengan sedikit kayu.",
+       "tertunda": {
+        "__byIdx": {
+         "0": {
+          "teks_tertunda": "Penjaga hutan datang menindaklanjuti laporan hari {hari_keputusan} dan berterima kasih dengan sedikit kayu."
+         }
+        }
+       }
+      },
+      "2": {
+       "teks": "Beli kayu murah dari mereka",
+       "teks_hasil": "Kayu murah didapat, tapi hati warga tidak tenang.",
+       "teks_tertunda": "Hutan ek makin gundul sejak hari {hari_keputusan}. Lereng jadi rawan longsor.",
+       "tertunda": {
+        "__byIdx": {
+         "0": {
+          "teks_tertunda": "Hutan ek makin gundul sejak hari {hari_keputusan}. Lereng jadi rawan longsor."
+         }
+        }
+       }
+      }
+     }
+    }
    }
   ]
  },
  "dilema_ui": {
   "syukuran_panen": [
    "Pesta panen: {jumlah} porsi sup dan roti dimasak bersama dan dibagi ke tetangga.",
-   "Makan syukur panen di balai desa. {jumlah} porsi dibagikan, lagu syukur mengalun pelan.",
+   "Makan syukur panen di Balai Desa. {jumlah} porsi dibagikan, lagu syukur mengalun pelan.",
    "Panen kali ini cukup melimpah. Warga memanggang {jumlah} porsi roti dan membaginya dengan desa sebelah."
   ],
   "utang_lunas": [
@@ -1555,7 +1947,7 @@
   },
   "burung_perkutut": {
    "judul": "Burung Robin di Menara Jaga",
-   "deskripsi": "Seekor burung robin berdada jingga hinggap di menara jaga dan bersiul merdu.",
+   "deskripsi": "Seekor burung robin berdada jingga hinggap di Menara Jaga dan bersiul merdu.",
    "pilihan": {
     "__byIdx": {
      "0": {
@@ -1594,7 +1986,7 @@
   },
   "kentongan_iseng": {
    "judul": "Lonceng Iseng",
-   "deskripsi": "Anak-anak membunyikan lonceng menara jaga iseng-iseng. Warga sempat panik!",
+   "deskripsi": "Anak-anak membunyikan lonceng Menara Jaga iseng-iseng. Warga sempat panik!",
    "pilihan": {
     "__byIdx": {
      "0": {
@@ -1618,7 +2010,7 @@
    "tahun1": "Tahun pertama: warga urunan seadanya, lomba gratis.",
    "setuju": "Setuju",
    "log": [
-    "Hari {hari}: Panitia Festival Panen dibentuk di balai desa. {nama} terpilih jadi ketua dan langsung sibuk mencatat."
+    "Panitia Festival Panen dibentuk di Balai Desa. {nama} terpilih jadi ketua dan langsung sibuk mencatat."
    ],
    "label": "Festival Panen"
   },
@@ -1796,12 +2188,12 @@
     ]
    }
   },
+  "ikon_log": "🎉",
   "pentas_reog": [
    "Pentas tari rakyat di aula! Biola dan tambur mengiringi, anak-anak ikut berputar.",
    "Penari bertopi bunga melompat seirama tambur. Warga bertepuk tangan, anak-anak menirukan langkahnya.",
    "Malam ini ada pentas tari rakyat di aula desa. {nama} menonton paling depan dengan mata berbinar."
-  ],
-  "ikon_log": "🎉"
+  ]
  },
  "kerja_bakti": {
   "tombol": "Kerja bersama",
@@ -1945,7 +2337,7 @@
    "Warga menyusun batu dan kayu: api unggun pertama akan dinyalakan di perkemahan.",
    "Tanpa menunggu aba-aba, {nama} dan {nama2} menata batu melingkar. Sebentar lagi api unggun pertama menyala.",
    "Angin malam bertiup dingin. Warga sepakat menyalakan api unggun di tengah perkemahan.",
-   "{nama} mengumpulkan ranting kering dan batu sungai. Api unggun pertama siap dinyalakan!"
+   "{nama} mengumpulkan ranting kering dan batu sungai. Api Unggun pertama siap dinyalakan!"
   ],
   "gubuk": [
    "Warga tak tahan tidur di bawah langit: mereka mulai mendirikan gubuk sendiri.",
@@ -2003,7 +2395,7 @@
   },
   "rumah_panggung": {
    "judul": "Punya rumah kayu sendiri",
-   "deskripsi": "Rumah kayu beratap jerami dengan cerobong kecil: hangat, kokoh, dan aman dari angin.",
+   "deskripsi": "Rumah Kayu beratap jerami dengan cerobong kecil: hangat, kokoh, dan aman dari angin.",
    "teks_muncul": [
     "{nama} sering memandangi lahan di dekat sungai. Sepertinya ia memimpikan rumah kayu sendiri."
    ],
@@ -2011,7 +2403,7 @@
     "Hari {hari}: {nama} membuka pintu rumah kayu barunya. Matanya berkaca-kaca bahagia."
    ],
    "teks_kecewa": [
-    "Hari {hari}: Rumah kayu impian {nama} belum juga berdiri. Ia mulai murung."
+    "Rumah Kayu impian {nama} belum juga berdiri. Ia mulai murung."
    ]
   },
   "nonton_reog": {
@@ -2040,7 +2432,7 @@
     "Hari {hari}: Tabungan {nama} belum cukup tahun ini. \"Masih ada tahun depan,\" katanya tabah."
    ],
    "tombol": "Setor ke celengan",
-   "log_berangkat": "{nama} berangkat ziarah jauh selama {jumlah} hari.",
+   "log_berangkat": "{nama} berangkat berziarah ke biara tua di balik pegunungan selama {jumlah} hari.",
    "gelar_l": "Peziarah",
    "gelar_p": "Peziarah"
   },
@@ -2077,7 +2469,7 @@
     "{nama} memandangi kain-kain di gerobak pedagang. \"Bagus sekali untuk Festival Panen...\""
    ],
    "teks_terpenuhi": [
-    "Hari {hari}: {nama} memakai baju barunya dan berputar-putar di depan balai desa. Semua memuji."
+    "{nama} memakai baju barunya dan berputar-putar di depan Balai Desa. Semua memuji."
    ],
    "teks_kecewa": [
     "Hari {hari}: {nama} memakai baju lamanya lagi. Tidak apa-apa, katanya, walau sedikit kecewa."
@@ -2234,9 +2626,9 @@
   },
   "ronda_malam": {
    "judul": "Ikut jaga malam",
-   "deskripsi": "Berjaga malam di menara jaga sambil memegang lentera dan lonceng.",
+   "deskripsi": "Berjaga malam di Menara Jaga sambil memegang lentera dan lonceng.",
    "teks_muncul": [
-    "{nama} memeriksa lonceng di menara jaga. \"Malam ini aku mau ikut jaga.\""
+    "{nama} memeriksa lonceng di Menara Jaga. \"Malam ini aku mau ikut jaga.\""
    ],
    "teks_terpenuhi": [
     "Hari {hari}: {nama} berjaga semalaman dengan bangga. Desa aman di bawah penjagaannya."
@@ -2352,12 +2744,12 @@
   },
   "balai_megah": {
    "nama": "Balai Desa Megah",
-   "deskripsi": "Balai desa diperluas menjadi pusat musyawarah dan kesenian desa.",
+   "deskripsi": "Balai Desa diperluas menjadi pusat musyawarah dan kesenian desa.",
    "tahap": {
     "__byIdx": {
      "0": {
       "nama": "Serambi & Lonceng Besar",
-      "mulai": "Hari {hari}: Balai desa akan diperluas. {nama} memilih kayu terbaik untuk tiang lonceng besar.",
+      "mulai": "Balai desa akan diperluas. {nama} memilih kayu terbaik untuk tiang lonceng besar.",
       "progres": [
        "Serambi depan mulai dibangun.",
        "Lantai papan serambi dipasang rapi.",
@@ -2904,12 +3296,12 @@
  },
  "rencana_tahun": {
   "pembuka": [
-   "Hari {hari}: Selamat Hari Jadi! Warga berkumpul di balai desa menyusun Rencana Desa Tahun ke-{tahun}.",
+   "Selamat Hari Jadi! Warga berkumpul di Balai Desa menyusun Rencana Desa Tahun ke-{tahun}.",
    "Hari {hari}: Tahun ke-{tahun} dimulai. Kepala desa membacakan rencana tahun ini di depan warga."
   ],
   "piagam": [
    "Hari {hari}: Piagam Tahunan diraih! Kerja keras tahun ini dipajang di dinding Balai.",
-   "Hari {hari}: Tahun ini berhasil! Piagam Tahunan dibingkai kayu ek dan digantung di balai desa."
+   "Tahun ini berhasil! Piagam Tahunan dibingkai kayu ek dan digantung di Balai Desa."
   ],
   "nama_target": {
    "tanpa_jenjang": "Lewati musim dingin tanpa krisis pangan",
@@ -2956,7 +3348,7 @@
    "tooltip_ancaman": "Membuat {pencuri} urung mencuri dari ladang. Tidak mempan melawan {hewan}; untuk itu pakai {pagar}."
   },
   "kandang_ayam": {
-   "nama": "Kandang ayam",
+   "nama": "Kandang Ayam",
    "tooltip": "Kandang kayu kecil beratap jerami. Telurnya menambah makanan."
   }
  },
@@ -3017,8 +3409,513 @@
    "Angin kencang menggoyang pepohonan. Untung atap jerami sudah diikat erat dengan tali rami, semua tetap aman."
   ]
  },
+ "meta": {
+  "bangunan": {
+   "api_unggun": "Api Unggun",
+   "gubuk": "Gubuk",
+   "gudang": "Gudang",
+   "ladang": "Ladang",
+   "sumur": "Sumur",
+   "tempat_penebangan": "Tempat Penebangan",
+   "tambang": "Tambang",
+   "dapur": "Dapur",
+   "bengkel_alat": "Bengkel Alat",
+   "rumah_kayu": "Rumah Kayu",
+   "lumbung": "Lumbung",
+   "pasar": "Pasar",
+   "balai_desa": "Balai Desa"
+  }
+ },
+ "penduduk": {
+  "__byIdx": {
+   "0": {
+    "nama": "Anna"
+   },
+   "1": {
+    "nama": "Hans"
+   },
+   "2": {
+    "nama": "Greta"
+   },
+   "3": {
+    "nama": "Jakob"
+   },
+   "4": {
+    "nama": "Elise"
+   },
+   "5": {
+    "nama": "Lukas"
+   },
+   "6": {
+    "nama": "Marta"
+   },
+   "7": {
+    "nama": "Matthias"
+   },
+   "8": {
+    "nama": "Klara"
+   },
+   "9": {
+    "nama": "Pieter"
+   },
+   "10": {
+    "nama": "Ingrid"
+   },
+   "11": {
+    "nama": "Emil"
+   },
+   "12": {
+    "nama": "Anton"
+   },
+   "13": {
+    "nama": "Rosa"
+   },
+   "14": {
+    "nama": "Karl"
+   },
+   "15": {
+    "nama": "Helena"
+   },
+   "16": {
+    "nama": "Felix"
+   },
+   "17": {
+    "nama": "Lotte"
+   },
+   "18": {
+    "nama": "Oskar"
+   },
+   "19": {
+    "nama": "Agnes"
+   },
+   "20": {
+    "nama": "Henrik"
+   },
+   "21": {
+    "nama": "Mathilde"
+   },
+   "22": {
+    "nama": "Tobias"
+   },
+   "23": {
+    "nama": "Frida"
+   },
+   "24": {
+    "nama": "Konrad"
+   },
+   "25": {
+    "nama": "Ida"
+   },
+   "26": {
+    "nama": "Bruno"
+   },
+   "27": {
+    "nama": "Sofie"
+   },
+   "28": {
+    "nama": "Johanna"
+   },
+   "29": {
+    "nama": "Leon"
+   },
+   "30": {
+    "nama": "Liesel"
+   },
+   "31": {
+    "nama": "Albert"
+   },
+   "32": {
+    "nama": "Margit"
+   },
+   "33": {
+    "nama": "Frans"
+   },
+   "34": {
+    "nama": "Brigitte"
+   },
+   "35": {
+    "nama": "Gustav"
+   },
+   "36": {
+    "nama": "Johan"
+   },
+   "37": {
+    "nama": "Hanne"
+   },
+   "38": {
+    "nama": "Willem"
+   },
+   "39": {
+    "nama": "Elin"
+   },
+   "40": {
+    "nama": "Ernst"
+   },
+   "41": {
+    "nama": "Astrid"
+   },
+   "42": {
+    "nama": "Otto"
+   },
+   "43": {
+    "nama": "Maren"
+   },
+   "44": {
+    "nama": "Rudolf"
+   },
+   "45": {
+    "nama": "Isolde"
+   },
+   "46": {
+    "nama": "Stefan"
+   },
+   "47": {
+    "nama": "Wilma"
+   },
+   "48": {
+    "nama": "Theresa"
+   },
+   "49": {
+    "nama": "Viktor"
+   },
+   "50": {
+    "nama": "Arne"
+   },
+   "51": {
+    "nama": "Paulina"
+   },
+   "52": {
+    "nama": "Amalie"
+   },
+   "53": {
+    "nama": "Bastian"
+   },
+   "54": {
+    "nama": "Dirk"
+   },
+   "55": {
+    "nama": "Cecilia"
+   },
+   "56": {
+    "nama": "Erik"
+   },
+   "57": {
+    "nama": "Dora"
+   },
+   "58": {
+    "nama": "Florian"
+   },
+   "59": {
+    "nama": "Edith"
+   },
+   "60": {
+    "nama": "Georg"
+   },
+   "61": {
+    "nama": "Lena"
+   },
+   "62": {
+    "nama": "Jonas"
+   },
+   "63": {
+    "nama": "Nora"
+   },
+   "64": {
+    "nama": "Kasper"
+   },
+   "65": {
+    "nama": "Olga"
+   },
+   "66": {
+    "nama": "Lars"
+   },
+   "67": {
+    "nama": "Vera"
+   }
+  }
+ },
+ "kelahiran": {
+  "nama_bayi": {
+   "laki_laki": [
+    "Ben",
+    "Finn",
+    "Theo",
+    "Max",
+    "Paul",
+    "Noah",
+    "Elias",
+    "Jan",
+    "Till",
+    "Ole",
+    "Mats",
+    "Simon",
+    "Timo",
+    "Hugo",
+    "Leo",
+    "Milo",
+    "Anders",
+    "Benno",
+    "Carl",
+    "Linus",
+    "Fritz",
+    "Kai",
+    "Nils",
+    "Sven",
+    "Valentin",
+    "Wim",
+    "Hannes",
+    "Jasper",
+    "Lennart",
+    "Mattis"
+   ],
+   "perempuan": [
+    "Mia",
+    "Ella",
+    "Lina",
+    "Emma",
+    "Lea",
+    "Hanna",
+    "Pia",
+    "Maja",
+    "Lotta",
+    "Ronja",
+    "Thea",
+    "Nele",
+    "Alma",
+    "Frieda",
+    "Ilse",
+    "Jule",
+    "Karla",
+    "Linnea",
+    "Merle",
+    "Romy",
+    "Selma",
+    "Tilda",
+    "Wiebke",
+    "Ylva",
+    "Zoe",
+    "Marlene",
+    "Annika",
+    "Britta",
+    "Elsa",
+    "Fenja"
+   ]
+  },
+  "syukuran": {
+   "__byIdx": {
+    "0": "Desa mengadakan pesta kecil menyambut {bayi}. Ada kue madu, lagu riang, dan doa bersama."
+   }
+  }
+ },
+ "dialog_pedagang": {
+  "nama_pedagang": [
+   "Tuan Albrecht",
+   "Nyonya Hedwig",
+   "Paman Ruben",
+   "Bibi Marthe",
+   "Tuan Lorenz",
+   "Nyonya Beatrix",
+   "Kakek Wendel",
+   "Nona Clara"
+  ]
+ },
+ "log_hubungan": {
+  "menikah": {
+   "__byIdx": {
+    "1": "Pesta pernikahan sederhana untuk {nama} dan {pasangan}. Ada musik, tarian, dan kue pengantin kecil buatan Dapur.",
+    "2": "Di bawah lengkung rangkaian bunga liar, {nama} dan {pasangan} resmi menjadi suami istri. Para tetua memberi restu sambil tersenyum haru."
+   }
+  }
+ },
+ "kehamilan": {
+  "masa_kehamilan": {
+   "__byIdx": {
+    "0": "{ibu} mengidam apel asam. {ayah} mencarinya sampai ke ujung hutan."
+   }
+  }
+ },
+ "lansia_berpulang": {
+  "pemakaman": {
+   "upacara": {
+    "__byIdx": {
+     "1": "Pemakaman {nama} terasa seperti pesta kenangan. Semua orang mengenang masa mudanya yang konon sangat jahil."
+    }
+   }
+  }
+ },
+ "sifat": {
+  "rajin": {
+   "deskripsi": "Selalu mulai kerja paling awal dan jarang mengeluh. Paling senang saat kerja bersama.",
+   "log_terlihat": [
+    "{nama} sudah di ladang sebelum ayam berkokok. Ternyata ia rajin sekali."
+   ]
+  },
+  "malas": {
+   "deskripsi": "Tidak suka terburu-buru. Katanya, hidup itu dinikmati pelan-pelan di bangku depan rumah."
+  },
+  "pemberani": {
+   "deskripsi": "Paling depan saat serigala datang, membawa obor dan lonceng.",
+   "tooltip": "Lebih pandai mengusir ancaman dan suka ikut jaga malam; tidak mudah trauma."
+  },
+  "periang": {
+   "tooltip": "Suasana hati lebih baik dan menghibur warga di sekitarnya; jago lomba gigit apel.",
+   "log_terlihat": [
+    "{nama} bersenandung sepanjang jalan ke ladang. Yang mendengar ikut tersenyum."
+   ]
+  },
+  "pemurung": {
+   "log_terlihat": [
+    "{nama} duduk sendirian di pagar ladang sambil memandangi awan. Ia memang suka merenung."
+   ]
+  },
+  "dermawan": {
+   "log_terlihat": [
+    "{nama} membagi bekal rotinya untuk teman yang lupa membawa. Ia memang dermawan."
+   ]
+  },
+  "pelit": {
+   "deskripsi": "Menyimpan setiap butir gandum. Pandai menawar harga dengan pedagang.",
+   "log_terlihat": [
+    "{nama} menghitung karung gandum dua kali sebelum tidur. Tidak ada yang terbuang sia-sia."
+   ]
+  },
+  "suka_menolong": {
+   "tooltip": "Lebih cepat saat kerja bersama, merawat, dan membangun; anak serumah belajar lebih cepat."
+  },
+  "jujur": {
+   "tooltip": "Mudah dipercaya warga; pedagang tidak berani curang timbangan bila ada dia.",
+   "log_terlihat": [
+    "{nama} mengembalikan uang kembalian yang kelebihan ke pedagang. \"Ini bukan hak saya, Tuan.\""
+   ]
+  },
+  "jahil": {
+   "log_terlihat": [
+    "{nama} menyembunyikan topi jerami temannya di atas pohon apel. Semua tertawa, kecuali pemilik topi."
+   ]
+  },
+  "cerdas": {
+   "log_terlihat": [
+    "{nama} menghitung karung gandum di lumbung tanpa coretan sedikit pun. Semua kagum."
+   ]
+  },
+  "religius": {
+   "deskripsi": "Rajin berdoa dan menenangkan orang lain saat berduka.",
+   "tooltip": "Senang bila ada Kapel Batu; duka lebih cepat reda; istirahat sejenak sekali sepekan.",
+   "log_terlihat": [
+    "Suara {nama} menyanyikan lagu pujian terdengar lembut dari rumahnya setiap senja."
+   ]
+  },
+  "perantau": {
+   "nama": "Pengelana",
+   "kata": "pengelana",
+   "deskripsi": "Pernah mengembara jauh dan membawa keahlian dari kota.",
+   "tooltip": "Datang dengan sedikit keahlian; keinginannya lebih sering muncul dan kadang rindu tanah asalnya."
+  },
+  "pandai_masak": {
+   "deskripsi": "Sup dan rotinya terkenal sampai ke desa sebelah.",
+   "tooltip": "Masakan Dapur lebih mengenyangkan; biaya jamuan dan pesta lebih hemat.",
+   "log_terlihat": [
+    "Aroma sup bawang dari dapur {nama} membuat semua orang tiba-tiba lapar."
+   ]
+  },
+  "seniman": {
+   "deskripsi": "Menari, bermain biola, dan mengukir. Malam di api unggun jadi lebih indah karenanya.",
+   "tooltip": "Membuat api unggun, festival, dan lomba lebih meriah; cepat membangun Aula Tari Rakyat.",
+   "log_terlihat": [
+    "{nama} mengukir burung hantu kecil dari sepotong kayu. Detailnya membuat semua orang terdiam."
+   ]
+  },
+  "log_sifat": {
+   "jahil_kejahilan": [
+    "{nama} menukar sepatu kayu {nama2} dengan yang kebesaran. Semua yang melihat tertawa terpingkal-pingkal.",
+    "{nama} pura-pura jadi orang-orangan di ladang. {nama2} kaget setengah mati, lalu ikut tertawa.",
+    "{nama} menaruh katak kecil di topi jerami {nama2}. Balai Desa jadi ramai oleh tawa.",
+    "Kejahilan {nama} kali ini kelewatan sedikit. {nama2} cemberut seharian."
+   ],
+   "jahil_minta_maaf": [
+    "{nama} membawakan kue apel untuk {nama2} sebagai tanda minta maaf atas kejahilannya."
+   ],
+   "ramah_sambutan": {
+    "__byIdx": {
+     "2": "Berkat sambutan hangat {nama}, {nama2} langsung merasa betah di desa."
+    }
+   },
+   "jujur_tolak_suap": {
+    "__byIdx": {
+     "0": "{nama} menolak sekantong koin \"uang teh\" dari orang luar. \"Maaf, Tuan. Desa kami tidak begitu caranya.\""
+    }
+   },
+   "jujur_suap_diterima": [
+    "{nama} terdiam lama setelah tahu desa menerima \"uang teh\". Ia kecewa, tapi tetap menghormati kepala desa.",
+    "\"Semoga ini yang terakhir,\" kata {nama} pelan soal kantong koin dari saudagar luar."
+   ],
+   "jujur_timbangan": [
+    "{nama} memeriksa timbangan pedagang gandum dan menemukan batu kecil di bawahnya. Pedagang itu tersipu dan menimbang ulang dengan benar.",
+    "Karena ada {nama} yang teliti dan jujur, pedagang gandum tidak berani bermain-main dengan timbangan."
+   ]
+  }
+ },
+ "hubungan": {
+  "log": {
+   "menjadi_teman": {
+    "__byIdx": {
+     "0": "{nama} dan {nama2} ternyata sama-sama suka keju asap. Sejak itu mereka berteman.",
+     "2": "{nama} dan {nama2} duduk berdua di Menara Jaga sambil makan kentang rebus. Pertemanan baru dimulai.",
+     "3": "{nama} mengajari {nama2} membuat layang-layang. Kini mereka sering terlihat bersama."
+    }
+   },
+   "menjadi_sahabat": {
+    "__byIdx": {
+     "1": "{nama2} menambal mantel {nama} yang sobek tanpa diminta. Begitulah sahabat."
+    }
+   },
+   "menjadi_rival": {
+    "__byIdx": {
+     "0": "{nama} dan {nama2} saling buang muka di pagar ladang. Sepertinya mereka sedang bersaing."
+    }
+   },
+   "bertengkar": [
+    "{nama} dan {nama2} berdebat soal siapa yang lupa menutup pintu Gudang. Suara mereka terdengar sampai ladang.",
+    "{nama} cemberut karena {nama2} memakan kue apel terakhir. Mereka saling diam seharian.",
+    "{nama} dan {nama2} berebut giliran air di parit ladang. Wajah keduanya merah padam.",
+    "{nama2} menertawakan layang-layang {nama} yang tersangkut di pohon ek. {nama} tersinggung dan pergi."
+   ],
+   "berbaikan": {
+    "__byIdx": {
+     "0": "{nama} datang ke rumah {nama2} membawa sepiring kue apel. \"Maaf ya,\" katanya. Mereka berpelukan.",
+     "1": "Setelah ditengahi para tetua di Balai Desa, {nama} dan {nama2} bersalaman dan tertawa canggung."
+    }
+   },
+   "jatuh_cinta": {
+    "__byIdx": {
+     "0": "Jantung {nama} berdebar setiap kali {pasangan} lewat membawa ember air. Wajahnya memerah seperti apel.",
+     "1": "{nama} memetik bunga liar dan menyelipkannya diam-diam di jendela {pasangan}.",
+     "3": "Di bawah bulan purnama, {nama} memberanikan diri mengajak {pasangan} melihat kunang-kunang di padang rumput."
+    }
+   },
+   "gosip": {
+    "__byIdx": {
+     "1": "{nama} membawa kabar terbaru ke Balai Desa. {nama2} mendengarkan dengan mata membulat."
+    }
+   },
+   "hadiah": {
+    "__byIdx": {
+     "1": "{nama} menyelipkan sepotong permen madu ke tangan {nama2}. \"Untukmu,\" katanya."
+    }
+   },
+   "menolong": {
+    "__byIdx": {
+     "1": "{nama} menarik {nama2} menjauh dari serigala yang menggeram. Sejak malam itu mereka sangat dekat."
+    }
+   },
+   "ronda_bareng": [
+    "{nama} dan {nama2} berjaga malam berdua, bergantian membunyikan lonceng dan bercerita.",
+    "Di Menara Jaga, {nama} mengajari {nama2} irama lonceng tanda aman. Malam terasa singkat."
+   ]
+  }
+ },
  "_cerita_sedang": {
-  "versi": "1.7.5-sedang.1",
+  "versi": "1.8.0-sedang.1",
   "alat": "tools/buat_tema_sedang_cerita.py",
   "bagian": [
    "dilema",
@@ -3050,7 +3947,9 @@
    "otomatis.gubuk_tambahan",
    "bangun_kategori",
    "peta_kejadian",
-   "angin"
+   "angin",
+   "v1.8.0 T02_V180 (digabung per id/indeks): meta.bangunan, penduduk[].nama, kelahiran, dialog_pedagang.nama_pedagang, log_harian, event_acak, pencapaian, pasar, event_era_lanjut, musim_pembuka, event_musiman, penduduk_sakit, pemakaman, log_jadwal, log_hubungan, kehamilan, tumbuh_kembang, lansia_berpulang, sifat, hubungan",
+   "R-05 kapitalisasi seluruh overlay (tools/teks_v180.py)"
   ],
   "catatan": "Jalankan SETELAH node tools/buat_overlay_sedang.js (alat itu menulis ulang file ini dan menghapus bagian cerita)."
  },

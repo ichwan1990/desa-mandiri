@@ -3634,6 +3634,64 @@ data = copy.deepcopy(data)  # lepas dari objek PATCH_V174
 terapkan_patch_v151(data, PATCH_V175)
 with open("/workspace/village-game/tools/patch-v1.7.5.json","w",encoding="utf-8") as f:
     json.dump(PATCH_V175,f,ensure_ascii=False,indent=2); f.write("\n")
+# ===================== v1.8.0: QC 2026-10-23 (T-03, simpan, R-05, R-07, S-01) =====================
+# T-03: key yang Koding tambahkan langsung ke TEKS di a1e04f7 (game.js membacanya) kini dibuat generator ini (nilai sama), agar tidak hilang
+#   saat buat_teks.py dijalankan ulang: keinginan.tabungan_haji.log_berangkat/gelar_l/gelar_p, keinginan._ui.log_berangkat,
+#   agustusan.panitia.label, agustusan.ikon_log. log_berangkat: ex = { nama, jumlah: hari pergi } lalu log('🧳 ' + ...) -> tanpa awalan 'Hari '.
+#   gelar: v.gelar dipakai di log kembali `${gelar} ${nama} kembali ke desa.` -> gelar = kata sapaan di depan nama.
+# Simpan (saveGame/loadGame): menu.simpan_berhasil {}, menu.simpan_gagal {}, menu.simpan_tema_beda { tema: L0._tema } -> log() (tanpa awalan 'Hari ').
+# R-05: kapitalisasi nama bangunan & ejaan baku lewat tools/teks_v180.py (aturan sama dipakai validator & generator tema sedang);
+#   semua path yang berubah tercatat di patch (ubah_teks) dan dikecualikan sempit di validator (hanya bila hasilnya = r05(lama) atau KOREKSI_V180).
+# R-07: nama warga tema sedang -> meta.peta_sifat_penduduk mendapat entri nama sedang (sifat sama dengan nama Nusantara di indeks penduduk yang sama).
+import sys as _sys
+_sys.path.insert(0, "/workspace/village-game/tools")
+import teks_v180
+ID_KEYS_V180 = {"id", "tipe", "target", "era", "cabang", "id_bangunan", "kategori", "musim", "prasyarat", "event_terkait", "syarat_tambahan",
+                "syarat", "tujuan", "hasil", "id_kode", "urutan", "pilihan_index", "rahasia", "status_tech", "status_musim_ancaman",
+                "status_jadwal_keluarga", "bahasa", "encoding"}  # = ID_KEYS validator
+data = copy.deepcopy(data)  # lepas dari objek PATCH_V175
+_R05 = teks_v180.ubah_r05(data, ID_KEYS_V180)
+UBAH_V180 = {teks_v180.ke_path_ubah(p): baru for p, (lama, baru) in _R05.items()}
+UBAH_V180_HASIL = terapkan_ubah(data, UBAH_V180)
+_PETA = data["meta"]["peta_sifat_penduduk"]
+PETA_SEDANG = {n: list(_PETA[p["nama"]]) for n, p in zip(teks_v180.NAMA_SEDANG, data["penduduk"]) if p["nama"] in _PETA}
+PATCH_V180 = {
+ "_patch": {"versi_dari": "1.7.5", "versi_ke": "1.8.0",
+            "sifat": "penambahan (tambah_path T-03 + menu.simpan_*, entri meta) + koreksi R-05 terdaftar (ubah_teks; aturan tools/teks_v180.py, dikecualikan sempit di validator)",
+            "sumber": "QC 2026-10-23 (village-game-QC/QC-LAPORAN-2026-10-23.md) T-02, T-03, S-01, S-03, S-05, R-05, R-07, R-08; Asisten Koding a1e04f7 (v16)"},
+ "ubah_teks": UBAH_V180_HASIL,
+ "tambah_key": {},
+ "tambah_path": {
+  "keinginan.tabungan_haji.log_berangkat": "{nama} berangkat menunaikan ibadah haji selama {jumlah} hari.",
+  "keinginan.tabungan_haji.gelar_l": "Haji",
+  "keinginan.tabungan_haji.gelar_p": "Hajjah",
+  "keinginan._ui.log_berangkat": "{nama} berangkat ke kampung halaman selama {jumlah} hari.",
+  "agustusan.panitia.label": "17 Agustus",
+  "agustusan.ikon_log": "🇮🇩",
+  "menu.simpan_berhasil": "Permainan disimpan.",
+  "menu.simpan_gagal": "Gagal menyimpan. Penyimpanan peramban penuh atau diblokir.",
+  "menu.simpan_tema_beda": "Simpanan ini dibuat di tema {tema}. Buka tema itu untuk melanjutkannya."},
+ "tambah_key_meta": {"catatan_v180": {
+   "bentuk": {
+    "keinginan.<id>.log_berangkat": "string (log, tanpa awalan 'Hari '); {nama}, {jumlah} = lama pergi (hari). Cadangan: keinginan._ui.log_berangkat",
+    "keinginan.tabungan_haji.gelar_l / gelar_p": "string; sapaan di depan nama saat kembali ('{gelar} {nama} kembali ke desa.'). Sedang: 'Peziarah' (netral gender)",
+    "agustusan.panitia.label": "string; label kecil kartu panitia (innerHTML lewat qAttr)",
+    "agustusan.ikon_log": "string emoji; awalan log panitia/lomba",
+    "menu.simpan_berhasil / simpan_gagal": "string (log); tanpa placeholder",
+    "menu.simpan_tema_beda": "string (log); {tema} = id tema simpanan (L0._tema)"},
+   "r05": "Nama bangunan Title Case seperti BUILDING_NAMES (Pos Ronda, Balai Desa, Lumbung Padi, Gubuk Bambu, Bengkel Alat, Menara Jaga) di posisi mana pun; Api Unggun / Kandang Ayam / Orang-orangan Sawah / Rumah Kayu hanya bila ditulis berhuruf awal kapital (bentuk kecil = kata benda umum). Sholat -> Salat, Ramah Tamah -> Ramah-tamah. meta.bangunan = BUILDING_NAMES tema indonesia (Rumah Panggung, Balai Desa). Aturan: tools/teks_v180.py.",
+   "r07": "Tema sedang memakai nama Eropa (overlay penduduk[].nama, kelahiran.nama_bayi, dialog_pedagang.nama_pedagang). meta.peta_sifat_penduduk mendapat entri nama sedang dengan sifat yang sama seperti nama Nusantara di indeks yang sama.",
+   "s01": "{pasangan} di duka_harian = pasangan almarhum ATAU warga terdekat (game.js S.grief.pasangan), cadangan 'Keluarganya' berhuruf kapital -> {pasangan} hanya di awal kalimat (dicek validator).",
+   "catatan_koding": "{tema} di menu.simpan_tema_beda saat ini id mentah ('sedang'/'indonesia'); sebaiknya kirim nama tema yang ramah. Fallback 'Pak Darto' (game.js spawnMerchant), C.NAMES (balance.js), nama era 'Dusun' (C.ERAS) dan bangunan 'Tambak' masih dari kode."}},
+ "tambah_entri_meta": {
+  "placeholder": {"{tema}": "Id tema tempat simpanan dibuat (menu.simpan_tema_beda; L0._tema)"},
+  "peta_sifat_penduduk": PETA_SEDANG},
+ "set_meta": {"versi": "1.8.0"},
+}
+PATCH_V180 = copy.deepcopy(PATCH_V180)
+terapkan_patch_v151(data, PATCH_V180)
+with open("/workspace/village-game/tools/patch-v1.8.0.json","w",encoding="utf-8") as f:
+    json.dump(PATCH_V180,f,ensure_ascii=False,indent=2); f.write("\n")
 with open("/workspace/village-game/tools/patch-v1.5.1.json","w",encoding="utf-8") as f:
     json.dump(PATCH_V151,f,ensure_ascii=False,indent=2); f.write("\n")
 with open("/workspace/village-game/tools/patch-v1.5.0.json","w",encoding="utf-8") as f:
