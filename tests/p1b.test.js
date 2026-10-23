@@ -41,7 +41,7 @@ const { chromium } = require('playwright');
       return r; }, k.id);
     ok(T + ' telur', e.stock >= 1 && e.perDay > 0 && e.perDay <= 2 && e.info, e); ok(T + ' tugas ambil telur', e.task === 'telur' && e.taken >= 1, e); ok(T + ' ayam berkeliaran', e.hens >= 3 && e.moved && e.near, e);
     if (!tema && !only) { await p.evaluate(({ x, y }) => { const S = DESA.state, C = CONFIG, fr = C.DAY_LENGTH_SEC; S.t = Math.floor(S.t / fr) * fr + 0.4 * fr; S.villagers.forEach(v => v.task = null); DESA.p1.view(x + 1.5, y + 1, 3); }, k);
-      await p.waitForTimeout(1500); await p.screenshot({ path: '../docs/screenshots/v9-kandang.png' }); }
+      await p.waitForTimeout(1500); await p.screenshot({ path: require('./shotdir')('v9-kandang.png') }); }
     // ---- cerita penakut_babi: setelah pilihan pertama (ronda), langkah 1 menunggu malam hewan liar mendekat -> lanjut (dulu hanya serangan nyata: malam 'mengintai' = macet) ----
     const pb = await p.evaluate(() => { const S = DESA.state, C = CONFIG, P = DESA.p1, r = {}; S.event = null; S.story = null; S.chains = { active: [], done: {}, last: -99 }; S.day = 60; S.t = 59.3 * C.DAY_LENGTH_SEC; S.era = 2; S.lastAttackDay = S.day - 3; S.lastThreatNearDay = null;
       const v = S.villagers.find(o => o.age > 16) || S.villagers[0]; S.villagers.forEach(o => o.traits = (o.traits || []).filter(t => t !== 'penakut')); v.traits = ['penakut'];
@@ -70,7 +70,7 @@ const { chromium } = require('playwright');
     ok(T + ' hari jadi ringkasan', h.pending && h.R.tahun === 1 && h.R.births === 2 && h.R.built === 9 && h.R.wishes === 6 && h.R.stages === 1 && h.R.mons >= 1 && h.log && h.acc, h);
     ok(T + ' hari jadi target', !h.goals || h.R.goals >= 3, h);
     ok(T + ' hari jadi modal', h.open && /hjm/.test(h.cls) && h.btn >= 1 && /Lahir|lahir/.test(h.txt) && h.skin, { ...h, txt: h.txt.slice(0, 200) });
-    if (!tema && !only) { await p.waitForTimeout(500); await p.screenshot({ path: '../docs/screenshots/v9-harijadi.png' }); }
+    if (!tema && !only) { await p.waitForTimeout(500); await p.screenshot({ path: require('./shotdir')('v9-harijadi.png') }); }
     const cl = await p.evaluate(() => { const S = DESA.state; document.querySelector('#modal [data-ev]:not([disabled])').click(); return { ev: S.event, shown: document.getElementById('modal').style.display, pend: S.hjPending, cls: document.getElementById('modal').className }; });
     ok(T + ' hari jadi tutup', !cl.ev && cl.shown === 'none' && !cl.pend && cl.cls === 'panel', cl);
     // fallback modal mandiri (tanpa event Hari Jadi)

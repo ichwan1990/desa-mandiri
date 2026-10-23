@@ -26,7 +26,7 @@ const path = require('path');
   await p.fill('#mkQty', '12'); await p.selectOption('#mkGive', 'kayu'); await p.selectOption('#mkGet', 'makanan'); await p.waitForTimeout(150);
   const t0 = await p.evaluate(() => DESA.state.trades); await p.click('#mkDo'); r.uiTrade = (await p.evaluate(() => DESA.state.trades)) === t0 + 1;
   await p.evaluate(() => { const m = DESA.state.merchant; DESA.setZoom(2); DESA.centerCam(m.x, m.y - 2); }); await p.waitForTimeout(300);
-  await p.screenshot({ path: path.join(__dirname, '..', 'docs', 'screenshots', 'v4-market.png') });
+  await p.screenshot({ path: require('./shotdir')('v4-market.png') });
   // pergi
   r.leaves = await p.evaluate(() => { const S = DESA.state; for (let i = 0; i < 3000 && S.merchant; i++) { DESA.step(0.1); if (S.event) { const e = [...document.querySelectorAll('[data-ev]')].find(x => !x.disabled); e && e.click(); } } return !S.merchant; });
   const ok = r.closedAtStart && r.arrive.state === 'berdagang' && r.arrive.crossedBridge && r.arrive.open && r.trade.ok && r.trade.n === r.trade.expect && r.trade.kayuSpent === 10 &&

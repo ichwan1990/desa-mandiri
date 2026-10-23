@@ -143,13 +143,13 @@ const { chromium } = require('playwright');
         S.buildings.forEach(b => b.mon && b.type !== 'masjid' && (b.mon.act = null)); S.t = Math.floor(S.t / C.DAY_LENGTH_SEC) * C.DAY_LENGTH_SEC + 0.42 * C.DAY_LENGTH_SEC;
         S.teladan = { tier: 1, years: { 1: 1 }, history: [] }; S.teladanPoin = 1; S.goals = null; S.day = 85; P.goalsDaily(); S.day = 120;
         P.view(m.x + 2, m.y + 2, 2); document.getElementById('tujuanpanel').style.display = 'block'; P.tujuanPanelUI(); document.getElementById('toasts').innerHTML = ''; return { m, st: bm.mon, pend: bp && bp.mon }; });
-      ok('screenshot monumen siap', at.st.act === 1, at); await p.waitForTimeout(900); await p.screenshot({ path: '../docs/screenshots/v9-monumen.png' });
+      ok('screenshot monumen siap', at.st.act === 1, at); await p.waitForTimeout(900); await p.screenshot({ path: require('./shotdir')('v9-monumen.png') });
       await p.evaluate(() => { document.getElementById('tujuanpanel').style.display = 'none'; }); }
     if (!tema && !only) { await p.evaluate(() => { const S = DESA.state; S.t = 0.45 * CONFIG.DAY_LENGTH_SEC; S.villagers.forEach(v => { v.wish = null; v.task = null; });
         ['nasi_pecel', 'kopi_pagi', 'main_layangan', 'tabungan_haji'].forEach((id, i) => { const v = S.villagers[i]; if (v) DESA.p1.wishStart(v, id); }); if (S.villagers[1]) S.villagers[1].wish.until = S.day + 1;
         S.villagers.forEach((v, i) => { v.x = 20 + (i % 4) * 1.6; v.y = 14 + Math.floor(i / 4) * 1.8; v.task = { kind: 'diam', target: { x: v.x, y: v.y } }; }); DESA.p1.view(21, 15, 2.5);
         DESA.p1.wishUI(); document.getElementById('wish').scrollIntoView(); });
-      await p.waitForTimeout(900); await p.screenshot({ path: '../docs/screenshots/v9-keinginan.png' }); }
+      await p.waitForTimeout(900); await p.screenshot({ path: require('./shotdir')('v9-keinginan.png') }); }
     await p.close(); }
   await b.close();
   const E = errs.filter(e => !/favicon|ERR_|404/.test(e));

@@ -10,6 +10,6 @@ const { chromium } = require('playwright');
     return { log: S.log.slice(0,12), q: S.questIdx, b: S.buildings.map(b=>b.type+(b.done?'✓':'…')), day: S.day, res: S.res, pop: S.villagers.length, v: S.villagers.map(v => [v.name, v.hunger|0, v.energy|0, v.mood|0, v.task && v.task.kind]) }; });
   await p.click('#save'); const saved = await p.evaluate(() => !!localStorage.getItem('desaMandiriSave'));
   await p.click('#load'); await p.waitForTimeout(1500);
-  await p.screenshot({ path: require('path').join(__dirname, '..', 'docs', 'screenshots', 'screenshot-v1.png') });
+  await p.screenshot({ path: require('./shotdir')('screenshot-v1.png') });
   console.log(JSON.stringify({ r, saved, errs })); if (errs.length) { console.error('GAGAL: ada error konsol'); process.exitCode = 1; } await b.close();
 })();

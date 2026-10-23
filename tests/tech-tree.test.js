@@ -14,7 +14,7 @@ const path = require('path');
   await p.click('[data-research="T01"]');
   r.paid = await p.evaluate(() => DESA.state.res.kayu); // 60 - 15
   r.busyOthers = await p.evaluate(() => !document.querySelector('[data-research]'));
-  await p.screenshot({ path: path.join(__dirname, '..', 'docs', 'screenshots', 'v4-tech.png') });
+  await p.screenshot({ path: require('./shotdir')('v4-tech.png') });
   r.done = await p.evaluate(() => { const S = DESA.state; S.prio.riset = 3; S.res.makanan = 60; S.res.air = 40;
     for (let i = 0; i < 6000 && S.research; i++) { DESA.step(0.1); if (S.event) { const e = [...document.querySelectorAll('[data-ev]')].find(x => !x.disabled); e && e.click(); } }
     return { techDone: S.techDone, radius: DESA.techVal('api_radius', 1), day: S.day, log: S.log.find(l => l.includes('menyelesaikan riset')) }; });

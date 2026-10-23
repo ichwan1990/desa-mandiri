@@ -26,7 +26,7 @@ const SHOT = process.env.SHOTS !== '0';
     ok(T + ' klik terkunci tidak menaruh', pl.placing == null, pl);
     await p.click('#buildmenu [data-b="ladang"]');
     ok(T + ' klik terbuka memulai penempatan', await p.evaluate(() => DESA.v11.placing === 'ladang' && getComputedStyle(document.getElementById('buildmenu')).display === 'none'));
-    if (!tema && SHOT) { await p.evaluate(() => { DESA.v11.openBuildCat('tempat_tinggal'); }); await p.mouse.move(5, 300); await p.screenshot({ path: '../docs/screenshots/v11-bangun.png' }); await p.evaluate(() => DESA.v11.openBuildCat('tempat_tinggal')); }
+    if (!tema && SHOT) { await p.evaluate(() => { DESA.v11.openBuildCat('tempat_tinggal'); }); await p.mouse.move(5, 300); await p.screenshot({ path: require('./shotdir')('v11-bangun.png') }); await p.evaluate(() => DESA.v11.openBuildCat('tempat_tinggal')); }
     for (const w of [1280, 1366, 1500]) for (const h of [768, 860]) { await p.setViewportSize({ width: w, height: h }); await p.waitForTimeout(120);
       const th = await p.evaluate(() => { DESA.v11.openBuildCat('keamanan'); const r = document.getElementById('top').offsetHeight; DESA.v11.openBuildCat('keamanan'); return r; }); ok(`${T} #top ${w}x${h} <= 80`, th <= 80, th); }
     await p.setViewportSize({ width: 412, height: 860 }); await p.waitForTimeout(150);
@@ -43,7 +43,7 @@ const SHOT = process.env.SHOTS !== '0';
       return { diff, px: before.length / 4 }; });
     ok(T + ' pagar tunggal tergambar', pg.diff > pg.px * 0.08, pg);
     if (!tema && SHOT) { await p.evaluate(() => { const C = CONFIG, x = C.CAMP.x + 6, y = C.CAMP.y + 5; for (let i = 1; i < 5; i++) DESA.addBuilding('pagar', x + i, y, true); for (let i = 1; i < 3; i++) DESA.addBuilding('pagar', x + 4, y + i, true); DESA.addBuilding('pagar', x + 1, y + 3, true); DESA.p1.view(x + 2, y + 1, 2); });
-      await p.waitForTimeout(200); await p.screenshot({ path: '../docs/screenshots/v11-pagar.png' }); }
+      await p.waitForTimeout(200); await p.screenshot({ path: require('./shotdir')('v11-pagar.png') }); }
     await p.close();
     // ---- 3) kejadian di peta ----
     p = await open(tema);
@@ -81,7 +81,7 @@ const SHOT = process.env.SHOTS !== '0';
       const n0 = S.villagers.length; DESA.v9c.applyEffects({ penduduk: 1 }, 'tes'); r.pendatang = S.villagers.length > n0 && V.activeMarkers().some(m => m.k === 'pendatang');
       return r; });
     ok(T + ' banjir/api/rusak punya posisi & penanda', ot.flood && ot.floodMarker && ot.fire && ot.rusak && ot.rusak2 && ot.pendatang, ot);
-    if (!tema && SHOT) { await p.evaluate(() => { const S = DESA.state, o = S.wolves[0], f = (DESA.addBuilding('ladang', 27, 32, true), S.buildings[S.buildings.length - 1]); if (o) { o.mode = 'jalan'; if (f) { o.x = f.x + 1.2; o.y = f.y + 0.2; S.buildings.forEach(b => { if (b.type === 'obor') b.fuel = 0; }); DESA.v11.wreckField(o, f); } DESA.p1.view(Math.round(o.x), Math.round(o.y), 2); } }); await p.waitForTimeout(1900); await p.screenshot({ path: '../docs/screenshots/v11-babi.png' }); } // v15: babi baru merusak ladang -> debu, tanah cokelat, teks melayang
+    if (!tema && SHOT) { await p.evaluate(() => { const S = DESA.state, o = S.wolves[0], f = (DESA.addBuilding('ladang', 27, 32, true), S.buildings[S.buildings.length - 1]); if (o) { o.mode = 'jalan'; if (f) { o.x = f.x + 1.2; o.y = f.y + 0.2; S.buildings.forEach(b => { if (b.type === 'obor') b.fuel = 0; }); DESA.v11.wreckField(o, f); } DESA.p1.view(Math.round(o.x), Math.round(o.y), 2); } }); await p.waitForTimeout(1900); await p.screenshot({ path: require('./shotdir')('v11-babi.png') }); } // v15: babi baru merusak ladang -> debu, tanah cokelat, teks melayang
     await p.close(); }
   await b.close();
   if (errs.length) fails.push('console: ' + errs.slice(0, 3).join(' | '));

@@ -27,8 +27,8 @@ const { chromium } = require('playwright');
   // winter, evening view
   await p.evaluate(() => { const S = DESA.state; S.t = (S.day - 1) * 120 + 120 * 0.8; DESA.setZoom(2); const v = S.villagers[0]; DESA.centerCam((v.x + 22) / 2, (v.y + 20) / 2); });
   await p.click('[data-s="1"]'); await p.waitForTimeout(1200);
-  await p.screenshot({ path: require('path').join(__dirname, '..', 'docs', 'screenshots', 'screenshot-v3.png') });
+  await p.screenshot({ path: require('./shotdir')('screenshot-v3.png') });
   await p.evaluate(() => { const S = DESA.state; S.t = (S.day - 1 - 14) * 120 + 60; }); await p.waitForTimeout(800);
-  await p.screenshot({ path: require('path').join(__dirname, '..', 'docs', 'screenshots', 'screenshot-v3-siang.png') });
+  await p.screenshot({ path: require('./shotdir')('screenshot-v3-siang.png') });
   console.log(JSON.stringify({ sprites, r, errs, warns }, null, 1)); if (errs.length) { console.error('GAGAL: ada error konsol'); process.exitCode = 1; } await b.close();
 })();

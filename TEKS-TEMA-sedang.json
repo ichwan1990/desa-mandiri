@@ -1619,7 +1619,8 @@
    "setuju": "Setuju",
    "log": [
     "Hari {hari}: Panitia Festival Panen dibentuk di balai desa. {nama} terpilih jadi ketua dan langsung sibuk mencatat."
-   ]
+   ],
+   "label": "Festival Panen"
   },
   "umbul_umbul": [
    "Hari {hari}: Untaian bendera warna-warni dibentangkan di sepanjang jalan desa. Semua jadi bersemangat.",
@@ -1799,7 +1800,8 @@
    "Pentas tari rakyat di aula! Biola dan tambur mengiringi, anak-anak ikut berputar.",
    "Penari bertopi bunga melompat seirama tambur. Warga bertepuk tangan, anak-anak menirukan langkahnya.",
    "Malam ini ada pentas tari rakyat di aula desa. {nama} menonton paling depan dengan mata berbinar."
-  ]
+  ],
+  "ikon_log": "🎉"
  },
  "kerja_bakti": {
   "tombol": "Kerja bersama",
@@ -2037,7 +2039,10 @@
    "teks_kecewa": [
     "Hari {hari}: Tabungan {nama} belum cukup tahun ini. \"Masih ada tahun depan,\" katanya tabah."
    ],
-   "tombol": "Setor ke celengan"
+   "tombol": "Setor ke celengan",
+   "log_berangkat": "{nama} berangkat ziarah jauh selama {jumlah} hari.",
+   "gelar_l": "Peziarah",
+   "gelar_p": "Peziarah"
   },
   "mancing_sore": {
    "judul": "Memancing sore di sungai",
@@ -2295,7 +2300,8 @@
    ]
   },
   "_ui": {
-   "otomatis": "menunggu kesempatan"
+   "otomatis": "menunggu kesempatan",
+   "log_berangkat": "{nama} berangkat mengunjungi kerabat jauh selama {jumlah} hari."
   }
  },
  "monumen": {

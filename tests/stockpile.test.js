@@ -37,7 +37,7 @@ const path = require('path');
     DESA.notify('makanan', 4, { x: 26, y: 18.6 }); DESA.notify('kayu', 5, { x: 24, y: 18.4 }); });
   const carryDrawn = await p.evaluate(() => DESA.state.villagers.every(v => v.carry));
   await p.waitForTimeout(500);
-  await p.screenshot({ path: path.join(__dirname, '..', 'docs', 'screenshots', 'v5-stockpile.png') });
+  await p.screenshot({ path: require('./shotdir')('v5-stockpile.png') });
   // tema empat musim: musim dingin -> varian _winter; tema Nusantara: tanpa salju (varian _winter tidak dimuat)
   const winter = await p.evaluate(() => { const S = DESA.state; S.day = 22; return CONFIG.THEME === 'sedang' ? DESA.season() === 'dingin' && !!ASSETS.stockpile_kayu_4_winter.image : !ASSETS.stockpile_kayu_4_winter && DESA.season() === 'kemarau'; });
   // gudang menyimpan barang (hanya tampilan): sebelum gudang tumpukan tanah tampak; gudang utuh -> tumpukan hilang + penanda isi 0-4; gudang hancur/dibongkar -> tumpukan kembali
@@ -49,13 +49,13 @@ const path = require('path');
   await q.evaluate(() => { const S = DESA.state; S.t = 120 * 0.4; DESA.addBuilding('apiunggun', 22, 20, true); Object.assign(S.res, { kayu: 60, batu: 20, makanan: 15, air: 10 }); DESA.setZoom(3); DESA.centerCam(24, 19.5); S.villagers.forEach((v, i) => { v.x = 20 + i; v.y = 23; v.task = null; }); });
   await q.waitForTimeout(300);
   const g = { before: await q.evaluate(() => DESA.pilesVisible()), beforeDraws: await pileDraws() };
-  await q.screenshot({ path: path.join(__dirname, '..', 'docs', 'screenshots', 'v8-stockpile-sebelum.png') });
+  await q.screenshot({ path: require('./shotdir')('v8-stockpile-sebelum.png') });
   await q.evaluate(() => DESA.addBuilding('gudang', 25, 17, true)); await q.waitForTimeout(200);
   Object.assign(g, await q.evaluate(() => { const S = DESA.state, C = CONFIG, cap = C.STOCKPILE.capacity, out = { after: DESA.pilesVisible(), store: DESA.storeBuilding() && DESA.storeBuilding().type };
     const set = f => { for (const r of ['kayu', 'batu', 'air']) S.res[r] = cap[r] * f; S.res.makanan = cap.makanan * f; S.res.gandum = 0; return DESA.storeFillLevel(); };
     out.levels = [set(0), set(0.05), set(0.4), set(0.7), set(1.2)]; set(0.7); return out; }));
   g.afterDraws = await pileDraws(); await q.waitForTimeout(200);
-  await q.screenshot({ path: path.join(__dirname, '..', 'docs', 'screenshots', 'v8-stockpile-gudang.png') });
+  await q.screenshot({ path: require('./shotdir')('v8-stockpile-gudang.png') });
   Object.assign(g, await q.evaluate(() => { const S = DESA.state, gd = S.buildings.find(x => x.type === 'gudang'); gd.hp = 0; return { destroyed: DESA.pilesVisible(), anchorNotRuin: DESA.stockpiles().every(p => !(p.x >= 25 && p.x < 28 && p.y >= 17 && p.y < 19)) }; }));
   g.destroyedDraws = await pileDraws();
   Object.assign(g, await q.evaluate(() => { const S = DESA.state, gd = S.buildings.find(x => x.type === 'gudang'); gd.hp = 100; const mid = DESA.pilesVisible(); S.buildings.splice(S.buildings.indexOf(gd), 1); return { repaired: mid, demolished: DESA.pilesVisible() }; }));

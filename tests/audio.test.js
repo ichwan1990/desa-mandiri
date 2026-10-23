@@ -21,7 +21,7 @@ const { chromium } = require('playwright');
   const box = await p.locator('#c').boundingBox();
   const pos = await p.evaluate(() => { const c = DESA.cam, v = DESA.state.villagers[0]; return { sx: (v.x * 32 + 16 - c.x) * c.zoom, sy: (v.y * 32 + 16 - c.y) * c.zoom }; });
   await p.mouse.click(box.x + pos.sx, box.y + pos.sy); await p.waitForTimeout(400);
-  await p.screenshot({ path: '../docs/screenshots/v4-audio-bars.png' });
+  await p.screenshot({ path: require('./shotdir')('v4-audio-bars.png') });
   r.barBg = await p.evaluate(() => [...document.querySelectorAll('.bar>i[class^=f-]')].slice(0, 3).map(i => getComputedStyle(i).backgroundImage.slice(0, 60)));
   await p.reload(); await p.waitForFunction(() => window.DESA_READY && window.DESA && DESA.state, null, { timeout: 20000 }); await p.click('#btnSettings'); r.persist = await p.evaluate(() => [document.getElementById('setMusik').value, document.getElementById('setEfek').value]);
   const ok = !r.beforeGesture && r.afterGesture && r.saved.musik === 20 && r.saved.efek === 40 && r.muted[0] && r.muted[2] === true && !r.unmuted && r.barBg.length > 0 && r.barBg.every(x => x.includes('bar_fill')) && r.persist[0] === '20' && errs.length === 0;

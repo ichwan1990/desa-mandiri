@@ -34,7 +34,7 @@ const { chromium } = require('playwright');
       for (let i = 0; i < 6; i++) { v.health = 40; v.task = null; v.inside = false; DESA.biteVillager({ x: v.x, y: v.y }, v); if (!S.villagers.includes(v)) dead++; }
       Math.random = rnd; o.dead = dead; o.hp = v.health; return o; });
     ok(T + ' serangan tahun 1 tak membunuh', k.dead === 0 && k.hp >= 1, k);
-    if (k.cfg) ok(T + ' babi config', k.cfg.join('|') === '30-50|70|0.3|0.07', k);
+    if (k.cfg) ok(T + ' babi config', k.cfg.join('|') === '30-50|30|0.15|0.07', k);
     await p.close(); }
   await b.close();
   if (errs.length) fails.push('console: ' + errs.slice(0, 3).join(' | '));

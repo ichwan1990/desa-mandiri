@@ -90,7 +90,7 @@ const { chromium } = require('playwright');
   const tipShown = await p.evaluate(() => { const el = document.getElementById('fieldTip'); return el && el.style.display !== 'none' ? el.textContent : null; });
   ok('tooltip ladang tampil', tipShown && /kemarau/i.test(tipShown), tipShown);
   await p.evaluate(() => { document.querySelectorAll('.toast').forEach(e => e.remove()); DESA.notes.forEach(n => n.life = 1.8); DESA.pangan.render(); });
-  await p.screenshot({ path: '../docs/screenshots/v9-pangan.png' });
+  await p.screenshot({ path: require('./shotdir')('v9-pangan.png') });
   // 9) tangkapan layar v9-memancing: warga memancing di tepi sungai (aset tahap 9) + kolam ikan
   const fishShot = await p.evaluate(() => { const S = DESA.state, C = CONFIG, cam = DESA.cam; S.t = 2.4 * C.DAY_LENGTH_SEC; S.day = 3; S.event = null;
     const bank = S.banks.find(b => S.tiles[b.y][b.x] !== 2 && Math.abs(b.x - C.CAMP.x) < 14) || S.banks[0], v = S.villagers[0], w = S.villagers[1];
@@ -101,7 +101,7 @@ const { chromium } = require('playwright');
     DESA.notes.length = 0; DESA.centerCam(bank.x, bank.y); DESA.setZoom(2); DESA.centerCam(bank.x, bank.y); document.getElementById('fieldTip') && (document.getElementById('fieldTip').style.display = 'none');
     DESA.pangan.render(); return { bank, pond: !!k, fish: S.fish, label: DESA.pangan.panganLabel('memancing') }; });
   ok('kolam ikan + stok', fishShot.pond && Object.values(fishShot.fish.ponds)[0] > 0 && fishShot.label === 'Ikan', fishShot);
-  await p.mouse.move(5, 5); await p.waitForTimeout(600); await p.evaluate(() => document.querySelectorAll('.toast').forEach(e => e.remove())); await p.screenshot({ path: '../docs/screenshots/v9-memancing.png' });
+  await p.mouse.move(5, 5); await p.waitForTimeout(600); await p.evaluate(() => document.querySelectorAll('.toast').forEach(e => e.remove())); await p.screenshot({ path: require('./shotdir')('v9-memancing.png') });
   // 10) tema sedang: memancing & jamur ada, padanan umbi liar; pohon buah tropis & keong tidak ada; teks melayang tetap berlabel
   const q = await open('sedang');
   const sd = await q.evaluate(() => { const F = CONFIG.FOOD_SOURCES, S = DESA.state; const v = S.villagers[0]; v.carry = { res: 'makanan', n: 5, src: 'ikan' }; DESA.pangan.deposit(v);

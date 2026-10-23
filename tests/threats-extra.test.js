@@ -98,7 +98,7 @@ const URL = (() => { const u = new globalThis.URL(process.env.GAME_URL || 'http:
     return { mobile: document.body.classList.contains('mobile'), n: items.length, kinds: items.map(e => e.dataset.warn), texts: items.map(e => e.textContent.trim()),
       inView: rects.every(q => q.left >= 0 && q.right <= innerWidth + 0.5 && q.top >= 0 && q.bottom <= innerHeight), onCanvas: rects.every(q => q.top >= cv.top - 1 && q.bottom <= cv.bottom + 1),
       overlap, minFont: Math.min(...items.map(e => parseFloat(getComputedStyle(e).fontSize))), noScroll: document.documentElement.scrollWidth <= innerWidth }; });
-  await m.screenshot({ path: require('path').join(__dirname, '..', 'docs', 'screenshots', 'v7-warnings-mobile.png') });
+  await m.screenshot({ path: require('./shotdir')('v7-warnings-mobile.png') });
   const mobOk = mob.mobile && mob.n >= 4 && mob.inView && mob.onCanvas && !mob.overlap && mob.minFont >= 10 && mob.noScroll; console.log('banner ponsel', JSON.stringify(mob));
   const ok = r.theme === 'indonesia' && r.anniv.ok && r.spoil.ok && r.kemarau.ok && r.defense.ok && r.fatal.ok && saveOk && mobOk && errs.length === 0;
   console.log(errs.length ? errs.slice(0, 5) : 'no errors', ok ? 'LULUS' : 'GAGAL'); await b.close(); process.exit(ok ? 0 : 1);

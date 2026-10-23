@@ -2,7 +2,7 @@
 // tanaman tegalan (padi berhenti di kemarau tanpa irigasi; jagung/singkong tetap tumbuh x1.25), babi hutan merusak ladang, teks event tanpa salju/serigala,
 // panen raya hanya di mareng, aset tropis (tanpa salju). Simpan screenshot musim hujan, kemarau & malam.
 const { chromium } = require('playwright');
-const path = require('path'); const SHOT = n => path.join(__dirname, '..', 'docs', 'screenshots', n);
+const path = require('path'); const SHOT = n => require('./shotdir')(n);
 (async () => {
   const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1600, height: 900 } });
   const errs = []; p.on('console', m => m.type() === 'error' && errs.push(m.text())); p.on('pageerror', e => errs.push(String(e)));

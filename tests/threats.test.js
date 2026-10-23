@@ -1,7 +1,7 @@
 // Tema empat musim (?tema=sedang) — musim & ancaman (docs/RISET-MUSIM-ANCAMAN.md): kelaparan, kayu bakar, sakit & rawat, pergi, serigala, kebakaran, banjir, kematian & makam, skala tahun.
 const { chromium } = require('playwright');
 const path = require('path');
-const SHOT = n => path.join(__dirname, '..', 'docs', 'screenshots', n);
+const SHOT = n => require('./shotdir')(n);
 (async () => {
   const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1600, height: 900 } });
   const errs = []; p.on('console', m => m.type() === 'error' && errs.push(m.text())); p.on('pageerror', e => errs.push(String(e)));

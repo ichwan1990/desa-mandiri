@@ -9,7 +9,7 @@ const path = require('path');
   const r = {};
   r.menuVisible = await p.isVisible('#menu'); r.continueHiddenNoSave = !(await p.isVisible('#btnContinue'));
   const t0 = await p.evaluate(() => DESA.state.t); await p.waitForTimeout(600); r.pausedInMenu = (await p.evaluate(() => DESA.state.t)) === t0;
-  await p.screenshot({ path: path.join(__dirname, '..', 'docs', 'screenshots', 'v4-menu.png') });
+  await p.screenshot({ path: require('./shotdir')('v4-menu.png') });
   // pengaturan
   await p.click('#btnSettings'); await p.selectOption('#setSpeed', '2'); await p.fill('#setMusik', '40'); await p.click('#btnBack');
   r.settingsSaved = await p.evaluate(() => JSON.parse(localStorage.getItem('desaMandiriSettings')));

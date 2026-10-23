@@ -10,6 +10,15 @@ window.CONFIG = {
   CARRY: { kayu: 5, batu: 5, makanan: 1 },        // hasil per angkutan
   GATHER_TIME: { kayu: 25, batu: 16, makanan: 14 }, // tebang 20-30s, buah 8-12s
   NODE_AMOUNT: { kayu: 25, batu: 40, makanan: 6 },
+  // QC T-01 (docs/RISET-QC-TINDAKLANJUT.md §8.4): pohon & batu tumbuh lagi di petak kosong jauh dari bangunan. Laju/hari = min(maxPerDay, (cap - hidup) x chancePerMissingDay) x musim.
+  // Tunggul/bekas batu menunggu delayDays; 70% tunas muncul <=3 petak dari tunggul matang. Tunas pohon 40% kayu, +15%/hari x musim, tidak bisa ditebang sampai penuh.
+  NODE_REGROW: {
+    pohon: { cap: 100, startDay: 10, delayDays: 6, chancePerMissingDay: 0.02, maxPerDay: 2, tunasFrac: 0.4, tunasGrow: 0.15, tunasChoppable: false,
+      season: { hujan: 1.5, labuh: 1.2, mareng: 1.0, kemarau: 0, semi: 1.5, panas: 0.7, gugur: 1.0, dingin: 0 } },
+    batu: { cap: 28, startDay: 30, delayDays: 20, chancePerMissingDay: 0.01, maxPerDay: 0.3, amountFrac: 0.5, season: null },
+    jarakBangunan: 3, nearStump: 0.7 },
+  // keputusan balance 23-10: batas keras stok kayu/batu (di atas ini warga berhenti mengumpulkan sumber daya tsb)
+  RES_HARD_CAP: { kayu: { base: 150, perPop: 15 }, batu: { base: 80, perPop: 8 } },
   BUSH_REGROW_SEC: 360,
   HUNGER_PER_DAY: 25, ENERGY_PER_DAY: 20,
   HUNGER_CRIT: 25, MEAL_AT: 60, ENERGY_CRIT: 20, // MEAL_AT (v9b 50 -> v9c 60): makan biasa saat lapar <= 60 (porsi ~3-4, tiap ~1.6 hari) bila stok >= 1 hari; di bawah HUNGER_CRIT tetap makan apa pun stoknya SLEEP_AT_NIGHT_BELOW: 70,
@@ -252,6 +261,7 @@ window.CONFIG = {
   SKILL_GAIN: 0.02, // skill naik per angkutan; efek: waktu kerja / (1+skill*0.5)
   NAMES: ['Sari','Budi','Dewi','Agus','Rina','Joko','Wati','Eko','Lina','Hadi','Tari','Yudi','Ayu','Bayu'],
   WATER_SURPLUS_DAYS: 8, // stok air >= ini (hari) -> kerja air turun prioritas
+  CAPING_TECH: 'T02',  // caping kemarau (exposureMood): T13 belum ada -> Keranjang Anyam (anyaman); ganti 'T13' bila T13 ditambahkan
   RES_SOFT_CAP: { kayu: 120, batu: 35 }, // per 2 penduduk; di atas ini kerja tsb turun prioritas
   // Aturan event acak: bobot (default 1, bisa juga 'bobot' di TEKS-GAME.json; config menang), musim yang diizinkan,
   // maksPerTahun (direset tiap musim Semi), cooldownHari.

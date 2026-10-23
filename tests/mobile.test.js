@@ -43,7 +43,7 @@ const { chromium } = require('playwright');
   await p.tap('#drawerbtn'); await p.waitForTimeout(400);
   r.drawer = await p.evaluate(() => { const s = document.getElementById('side').getBoundingClientRect(); return { open: document.body.classList.contains('drawer-open'), top: Math.round(s.top), h: Math.round(s.height) }; });
   r.targets = await p.evaluate(() => [...document.querySelectorAll('#top button')].filter(b => b.offsetParent).map(b => b.getBoundingClientRect().height).reduce((a, h) => Math.min(a, h), 99));
-  await p.screenshot({ path: '../docs/screenshots/v4-mobile.png' });
+  await p.screenshot({ path: require('./shotdir')('v4-mobile.png') });
   await p.tap('#drawerbtn'); await p.waitForTimeout(300); r.drawerClosed = await p.evaluate(() => !document.body.classList.contains('drawer-open'));
   const ok = r.layout.mobile && r.layout.cw === 390 && r.layout.sideHidden && r.layout.scrollW <= 392 && r.pan.dx > 40 && r.pan.dy > 30
     && z1 > z0 && z2 < z1 && r.vpanel && r.placed === 1 && r.drawer.open && r.drawer.top < 844 * 0.6 && r.targets >= 40 && r.drawerClosed && errs.length === 0;

@@ -68,14 +68,14 @@ const { chromium } = require('playwright');
     c.x = (L.lap.x + 3.5) * T - document.getElementById('c').width / 2 / c.zoom; c.y = (L.lap.y + 1.5) * T - document.getElementById('c').height / 2 / c.zoom;
     return { current: L.current, atField: S.villagers.filter(v => Math.abs(v.x - L.lap.x - 3) < 6 && Math.abs(v.y - L.lap.y - 2) < 5).length, pop: S.villagers.length }; });
   await p.waitForTimeout(700);
-  await p.screenshot({ path: '../docs/screenshots/v8-agustusan.png' });
+  await p.screenshot({ path: require('./shotdir')('v8-agustusan.png') });
   const r5 = await p.evaluate(() => { const S = DESA.state, out = {}; for (let i = 0; i < 1 * 1200 && S.lomba.stage < 7; i++) { DESA.step(0.1); if (S.event) { S.event = null; } }
     for (const id of ['tarik_tambang', 'panjat_pinang', 'balap_karung', 'makan_kerupuk'].filter(id => !S.lomba.picked.includes(id))) DESA.story.runLomba(id); // lomba ke-4 dijalankan langsung
     out.results = S.lomba.results.map(x => x.id); out.juara = S.lomba.juara; out.piala = S.villagers.some(v => v.pialaUntil >= S.day); out.stage = S.lomba.stage; return out; });
   // tangkapan layar kartu dilema (berat, dengan reaksi sifat)
   await p.evaluate(() => { const S = DESA.state; S.event = null; S.story = null; S.villagers[0].traits = ['pelit', 'rajin']; S.villagers[1].traits = ['religius', 'sabar']; S.director.lastById = {}; S.director.lastCat = {};
     Object.assign(S.res, { kayu: 10, batu: 5 }); S.t = (S.day) * CONFIG.DAY_LENGTH_SEC + 0.42 * CONFIG.DAY_LENGTH_SEC; DESA.step(0.1); S.event = null; DESA.story.openDilemma('rentenir'); });
-  await p.waitForTimeout(500); await p.screenshot({ path: '../docs/screenshots/v8-dilema.png' });
+  await p.waitForTimeout(500); await p.screenshot({ path: require('./shotdir')('v8-dilema.png') });
   const r6 = await p.evaluate(() => ({ card: !!document.querySelector('#modal .dcard.kB'), opts: document.querySelectorAll('#modal .opt').length, tunda: !!document.querySelector('#modal .hint') }));
   // tema sedang: Agustusan & dilema khas Nusantara mati, Juru Cerita tetap jalan
   const q = await open(null, 'sedang');

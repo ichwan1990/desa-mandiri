@@ -2,7 +2,7 @@
 // sifat (pendiri/pendatang/bayi, konflik), hubungan S.rel (awal, batas +6/hari, lantai, tingkat, pelupaan), pasangan butuh skor >= 50, pengali hamil,
 // kelahiran (keluarga 60/50, sifat tersembunyi), mati tua, duka per hubungan, simpan/muat, tata letak 900-1560px. Screenshot v6-night.png & v6-family.png.
 const { chromium } = require('playwright');
-const path = require('path'); const SHOT = n => path.join(__dirname, '..', 'docs', 'screenshots', n);
+const path = require('path'); const SHOT = n => require('./shotdir')(n);
 (async () => {
   const b = await chromium.launch(); const errs = [];
   const p = await b.newPage({ viewport: { width: 1600, height: 900 } });

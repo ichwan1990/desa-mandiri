@@ -62,7 +62,7 @@ window.THEMES = {
     TUJUAN_DISABLE: [],   // v1.7.0: overlay sedang (keinginan/monumen/cerita/teladan/rencana_tahun) menutup semua teks P1 -> semua konten P1 aktif
     STORY_PATCH: { MONKEY: { hewan: 'rubah', icon: '🦊', fallback: 'Seekor rubah menyelinap ke ladang dan membawa lari makanan!' } },
     TRAITS_PATCH: { founderNeedOneOf: null }, // aturan pengaman RISET-CERITA-TUJUAN §5.1: median d24 > 48 setelah efek sifat (55) -> hapus syarat sifat kerja pendiri
-    MOOD_COMFORT_PATCH: { base: 64 }, // v9b: musim dingin menekan mood -> batas nyaman sedikit lebih tinggi supaya desa bahagia aktif ~25-45% hari seperti Nusantara
+    MOOD_COMFORT_PATCH: { base: 65 }, // 23-10: 64 -> 65 // v9b: musim dingin menekan mood -> batas nyaman sedikit lebih tinggi supaya desa bahagia aktif ~25-45% hari seperti Nusantara
     SCHEDULE_PATCH: { dayWorkMult: 1.12, daySpeedMult: 1.2 }, // kompensasi jam tidur per tema (sim d24: 1.35 -> ~56; 1.2 + efek sifat -> 51-55; 1.12 -> lihat README)
     // pangan v9: musim empat-musim untuk memancing & jamur; pohon buah tropis, umbi hutan & keong sawah tidak ada (null = mati). Kolam Ikan membeku sebagian di musim dingin.
     FOOD_SOURCES_PATCH: { meramu: { label: 'Buah beri', time: 20 }, telur: { season: { semi: 1.1, panas: 1.0, gugur: 0.9, dingin: 0.5 } }, memancing: { season: { semi: 1.1, panas: 0.85, gugur: 0.9, dingin: 0.4 }, pondSeasonMin: 0.6 }, jamur: { season: { semi: 1.0, panas: 0.2, gugur: 1.0, dingin: 0 } }, buah: null, keong: null,
@@ -159,8 +159,8 @@ window.THEMES = {
 THEMES.sedang.TERMS = { hewan: 'serigala', ancaman: 'Serigala', ikon: '🐺' };
 // babi hutan: kerangka serigala (jejak -> mendekat -> beraksi -> pergi), sasaran utama ladang; melukai penduduk baru mulai era Dusun
 CONFIG.THREAT.babi = Object.assign({}, CONFIG.THREAT.wolf, {
-  minEra: 'perkemahan', injureFromEra: 'dusun', baseNightChance: 0.07, hardMult: 1.3, plotsDamaged: [1, 2], damage: [30, 50], killHpBelow: 70, killChanceIfLowHp: 0.3, speed: 2.8, count: [1, 2],
-  fencePathMult: 3, torchHitMult: 0.4, torchSafeRadius: 3, fieldFirst: true,
+  minEra: 'perkemahan', injureFromEra: 'dusun', baseNightChance: 0.07, hardMult: 1.3, plotsDamaged: [1, 2], damage: [30, 50], killHpBelow: 30, killChanceIfLowHp: 0.15, speed: 2.8, count: [1, 2],
+  fencePathMult: 3, torchHitMult: 0.4, torchSafeRadius: 3, fieldFirst: true, torchNoKill: true, // 23-10: killHpBelow 70->30, kill 0.3->0.15, oncor menyala <=3 petak = tak ada kematian (tahun 1 tetap tanpa kematian)
 });
 CONFIG.THREAT.wolf.hardMult = CONFIG.THREAT.wolf.winterMult;
 (function applyTheme() {

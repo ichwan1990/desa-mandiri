@@ -25,6 +25,6 @@ const { chromium } = require('playwright');
     return { onWater, day: S.day, res: S.res, b: S.buildings.map(b => b.type + (b.done ? '✓' : '')), v: S.villagers.map(v => [v.name, v.x.toFixed(1), v.y.toFixed(1), v.task && v.task.kind]) }; });
   await p.evaluate(() => { DESA.setZoom(2); DESA.centerCam(DESA.state.villagers[0].x, DESA.state.villagers[0].y); });
   await p.waitForTimeout(500);
-  await p.screenshot({ path: require('path').join(__dirname, '..', 'docs', 'screenshots', 'screenshot-v2.png') });
+  await p.screenshot({ path: require('./shotdir')('screenshot-v2.png') });
   console.log(JSON.stringify({ sprites, pt, target, placed, before, after, r, errs, warns }, null, 0)); if (errs.length) { console.error('GAGAL: ada error konsol'); process.exitCode = 1; } await b.close();
 })();

@@ -23,7 +23,7 @@ const { chromium } = require('playwright');
   await p.click('#achbtn'); await p.waitForTimeout(300);
   r.panel = await p.evaluate(() => ({ items: document.querySelectorAll('#achpanel .ach').length, open: document.querySelectorAll('#achpanel .ach.open').length, secret: [...document.querySelectorAll('#achpanel .ach.locked b')].filter(x => x.textContent === '???').length, head: document.querySelector('#achpanel h3').textContent }));
   await p.evaluate(() => DESA.toast('assets/icons/achievements/ach_first_fire.png', '🏅 Pencapaian terbuka: Api Pertama!', 'Percikan pertama menyala.'));
-  await p.waitForTimeout(350); await p.screenshot({ path: '../docs/screenshots/v4-achievements.png' });
+  await p.waitForTimeout(350); await p.screenshot({ path: require('./shotdir')('v4-achievements.png') });
   await p.evaluate(() => localStorage.removeItem('desaMandiriSave')); await p.reload(); await p.waitForFunction(() => window.DESA_READY && window.DESA && DESA.state, null, { timeout: 20000 });
   r.persist = await p.evaluate(() => [Object.keys(DESA.ach.unlocked).length, !!localStorage.getItem('desaMandiriPencapaian'), !localStorage.getItem('desaMandiriSave')]);
   const ok = ['A01', 'A02', 'A03', 'A07'].every(x => r.a.after.includes(x)) && r.a.kayuGain >= 10 && r.toasts.length > 0

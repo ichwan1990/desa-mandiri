@@ -6987,7 +6987,10 @@
       "teks_kecewa": [
         "Hari {hari}: Tabungan {nama} belum cukup tahun ini. \"Masih ada tahun depan,\" katanya tabah."
       ],
-      "tombol": "Setor ke celengan"
+      "tombol": "Setor ke celengan",
+      "log_berangkat": "{nama} berangkat menunaikan ibadah haji selama {jumlah} hari.",
+      "gelar_l": "Haji",
+      "gelar_p": "Hajjah"
     },
     "mancing_sore": {
       "judul": "Mancing sore di kali",
@@ -7262,7 +7265,8 @@
       "baris": "{nama}: {keinginan}",
       "terpenuhi": "Hari {hari}: Keinginan {nama} terwujud: {keinginan}!",
       "kosong": "Belum ada warga yang punya keinginan.",
-      "otomatis": "menunggu kesempatan"
+      "otomatis": "menunggu kesempatan",
+      "log_berangkat": "{nama} berangkat ke kampung halaman selama {jumlah} hari."
     }
   },
   "cerita": {
@@ -7940,7 +7944,8 @@
       "log": [
         "Hari {hari}: Panitia 17-an dibentuk di pendopo. {nama} terpilih jadi ketua dan langsung sibuk mencatat."
       ],
-      "setuju": "Setuju"
+      "setuju": "Setuju",
+      "label": "17 Agustus"
     },
     "umbul_umbul": [
       "Hari {hari}: Umbul-umbul merah putih berkibar di sepanjang jalan desa. Semua jadi bersemangat."
@@ -8119,7 +8124,8 @@
       "Pentas reog di pendopo! Dadak merak menari, gamelan bertalu, anak-anak ikut berjoget.",
       "Kendang bertalu dan dadak merak berputar gagah. Warga bersorak, anak-anak menirukan gerak jathil.",
       "Malam ini reog pentas di pendopo. {nama} menonton paling depan dengan mata berbinar."
-    ]
+    ],
+    "ikon_log": "🇮🇩"
   },
   "rencana_tahun": {
     "_catatan": "YEAR_GOALS (spec §2.4). Panel muncul di Hari Jadi. {tahun} = tahun ke-N.",
