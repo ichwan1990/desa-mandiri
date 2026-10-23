@@ -18,6 +18,7 @@ window.CONFIG = {
     batu: { cap: 28, startDay: 30, delayDays: 20, chancePerMissingDay: 0.01, maxPerDay: 0.3, amountFrac: 0.5, season: null },
     jarakBangunan: 3, nearStump: 0.7 },
   // keputusan balance 23-10: batas keras stok kayu/batu (di atas ini warga berhenti mengumpulkan sumber daya tsb)
+  ACH_HIDE_UNAVAILABLE: true, // T-04: sembunyikan pencapaian yang belum bisa diraih (riset T09+, kontrak, festival, tipe syarat belum didukung); false = tampilkan semua lagi
   RES_HARD_CAP: { kayu: { base: 150, perPop: 15 }, batu: { base: 80, perPop: 8 } },
   BUSH_REGROW_SEC: 360,
   HUNGER_PER_DAY: 25, ENERGY_PER_DAY: 20,
@@ -26,6 +27,8 @@ window.CONFIG = {
   SLEEP_REGEN_PER_SEC: 2.5,
   // v9b batas nyaman: api/rumah menaikkan mood hanya sampai base + rumah + pangan>=foodDays hari + dapur + sumur (+ monumen); di atasnya turun aboveDecay/detik
   MOOD_COMFORT: { base: 63, home: 6, partner: 2, food: 4, foodDays: 12, kitchen: 2, well: 2, max: 92, aboveDecay: 0.07 },
+  // 'harapan warga': makin lama desa berdiri, warga makin menuntut -> batas nyaman (MOOD_COMFORT) turun 'start' mulai tahun fromYear, +perYear tiap tahun, +perEra tiap era di atas perkemahan; maks 'max'
+  HARAPAN_WARGA: { fromYear: 2, start: 1, perYear: 0.5, perEra: 0.25, max: 3 },
   MOOD_CAMPFIRE_BONUS: 0.15, MOOD_DECAY: 0.05, MOOD_HOME_BONUS: 0.08, MOOD_HUNGRY_PENALTY: 0.2, // MOOD_HOME_BONUS: tidur di gubuk -> mood naik pelan
   // era: id era minimum untuk membuka bangunan (lihat ERAS). storage: bisa jadi tempat setor.
   BUILDINGS: {

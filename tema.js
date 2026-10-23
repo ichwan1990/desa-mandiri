@@ -62,7 +62,8 @@ window.THEMES = {
     TUJUAN_DISABLE: [],   // v1.7.0: overlay sedang (keinginan/monumen/cerita/teladan/rencana_tahun) menutup semua teks P1 -> semua konten P1 aktif
     STORY_PATCH: { MONKEY: { hewan: 'rubah', icon: '🦊', fallback: 'Seekor rubah menyelinap ke ladang dan membawa lari makanan!' } },
     TRAITS_PATCH: { founderNeedOneOf: null }, // aturan pengaman RISET-CERITA-TUJUAN §5.1: median d24 > 48 setelah efek sifat (55) -> hapus syarat sifat kerja pendiri
-    MOOD_COMFORT_PATCH: { base: 65 }, // 23-10: 64 -> 65 // v9b: musim dingin menekan mood -> batas nyaman sedikit lebih tinggi supaya desa bahagia aktif ~25-45% hari seperti Nusantara
+    HARAPAN_WARGA_PATCH: { fromYear: 5, perYear: 0.25, perEra: 0, max: 2 }, // harapan warga lebih lunak: musim dingin sudah menekan mood
+    MOOD_COMFORT_PATCH: { base: 64 }, // 23-10: sempat 65, dikembalikan ke 64 (tekanan akhir lewat HARAPAN_WARGA) // v9b: musim dingin menekan mood -> batas nyaman sedikit lebih tinggi supaya desa bahagia aktif ~25-45% hari seperti Nusantara
     SCHEDULE_PATCH: { dayWorkMult: 1.12, daySpeedMult: 1.2 }, // kompensasi jam tidur per tema (sim d24: 1.35 -> ~56; 1.2 + efek sifat -> 51-55; 1.12 -> lihat README)
     // pangan v9: musim empat-musim untuk memancing & jamur; pohon buah tropis, umbi hutan & keong sawah tidak ada (null = mati). Kolam Ikan membeku sebagian di musim dingin.
     FOOD_SOURCES_PATCH: { meramu: { label: 'Buah beri', time: 20 }, telur: { season: { semi: 1.1, panas: 1.0, gugur: 0.9, dingin: 0.5 } }, memancing: { season: { semi: 1.1, panas: 0.85, gugur: 0.9, dingin: 0.4 }, pondSeasonMin: 0.6 }, jamur: { season: { semi: 1.0, panas: 0.2, gugur: 1.0, dingin: 0 } }, buah: null, keong: null,
@@ -176,6 +177,7 @@ CONFIG.THREAT.wolf.hardMult = CONFIG.THREAT.wolf.winterMult;
   if (T.TRAITS_PATCH && CONFIG.TRAITS) CONFIG.TRAITS = Object.assign({}, CONFIG.TRAITS, T.TRAITS_PATCH);
   if (T.FOOD_SOURCES_PATCH && CONFIG.FOOD_SOURCES) { CONFIG.FOOD_SOURCES = Object.assign({}, CONFIG.FOOD_SOURCES);
     for (const [k, v] of Object.entries(T.FOOD_SOURCES_PATCH)) { if (v === null) delete CONFIG.FOOD_SOURCES[k]; else CONFIG.FOOD_SOURCES[k] = Object.assign({}, CONFIG.FOOD_SOURCES[k], v); } }
+  if (T.HARAPAN_WARGA_PATCH && CONFIG.HARAPAN_WARGA) CONFIG.HARAPAN_WARGA = Object.assign({}, CONFIG.HARAPAN_WARGA, T.HARAPAN_WARGA_PATCH);
   if (T.MOOD_COMFORT_PATCH && CONFIG.MOOD_COMFORT) CONFIG.MOOD_COMFORT = Object.assign({}, CONFIG.MOOD_COMFORT, T.MOOD_COMFORT_PATCH);
   if (T.SCHEDULE_PATCH && CONFIG.SCHEDULE) CONFIG.SCHEDULE = Object.assign({}, CONFIG.SCHEDULE, T.SCHEDULE_PATCH);
   CONFIG.FIELD = Object.assign({}, CONFIG.FIELD, { crops: T.FIELD_CROPS });
