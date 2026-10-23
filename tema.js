@@ -22,7 +22,9 @@ window.THEMES = {
     YEAR_SCALE: { daysPerYear: 28, threatChanceMult: 1.25, hardBufferDays: 10, extremeChanceAdd: 0.04 },
     FIELD_CROPS: { gandum: { res: 'gandum' }, wortel: { res: 'makanan' } }, FIELD_ROTATION: ['gandum', 'wortel'],
     NIGHT_THREAT: 'wolf', ART_SUFFIX: { semi: '_semi', panas: '_panas', gugur: '_gugur', dingin: '_dingin' }, WINTER_ART: 'dingin',
-    WEATHER: { panas: 'panas', gugur: 'daun', dingin: 'salju' }, ASSET_SWAP: {}, BUILDING_NAMES: { orang_orangan: 'Orang-orangan Ladang' },
+    WEATHER: { panas: 'panas', gugur: 'daun', dingin: 'salju' }, ASSET_SWAP: {}, BUILDING_NAMES: { orang_orangan: 'Orang-orangan Ladang', tambak: 'Kolam Besar' },
+    ERA_NAMES: { dusun: 'Permukiman' }, // nama netral tema sedang (Nusantara tetap 'Dusun')
+    NAMES: ['Anna', 'Hans', 'Greta', 'Jakob', 'Elise', 'Lukas', 'Marta', 'Matthias', 'Clara', 'Felix', 'Ida', 'Otto', 'Lene', 'Paul'], MERCHANT_NAME: 'Tuan Albrecht', // cadangan bila TEKS tak termuat
     RES_LABEL: {}, EVENT_DISABLE: [], EVENT_SEASON_ALIAS: {}, EVENT_RULES: {},
     MARKET_MUSIM: { dingin: { jual: { makanan: 1.25, gandum: 1.25 }, beli: { makanan: 1.4, gandum: 1.4 } }, semi: { jual: { kayu: 0.9 } }, panas: { jual: { makanan: 0.85 } } },
     // teks empat musim: path TEKS lama ([path, cadangan]); isi path-nya ditimpa TEKS-TEMA-sedang.json (lihat TEXT_OVERLAY)
@@ -170,6 +172,7 @@ CONFIG.THREAT.wolf.hardMult = CONFIG.THREAT.wolf.winterMult;
   const T = THEMES[id]; CONFIG.THEME = id;
   for (const k of ['SEASONS', 'SEASON_LEN', 'SEASON_NAMES', 'SEASON_ICONS', 'HARD_SEASON', 'HARD_COLD', 'HARD_HUNGER_MULT', 'GRANARY_HARD_HUNGER_MULT', 'HARD_BUFFER_DAYS',
     'SEASON_FX', 'NIGHT_THREAT', 'ART_SUFFIX', 'WINTER_ART', 'WEATHER', 'EVENT_DISABLE', 'EVENT_SEASON_ALIAS', 'TXT', 'TEXT_PATCH', 'TERMS', 'FIELD_ROTATION', 'ASSET_SWAP', 'RES_ICON', 'TEXT_FILE', 'TEXT_OVERLAY', 'AGUS_HIDE']) CONFIG[k] = T[k];
+  CONFIG.ERAS = CONFIG.ERAS.map(e => T.ERA_NAMES && T.ERA_NAMES[e.id] ? Object.assign({}, e, { nama: T.ERA_NAMES[e.id] }) : e); if (T.NAMES) CONFIG.NAMES = T.NAMES; if (T.MERCHANT_NAME) CONFIG.MERCHANT_NAME = T.MERCHANT_NAME;
   for (const [b, n] of Object.entries(T.BUILDING_NAMES || {})) if (CONFIG.BUILDINGS[b]) CONFIG.BUILDINGS[b] = Object.assign({}, CONFIG.BUILDINGS[b], { nama: n });
   CONFIG.YEAR_SCALE = Object.assign({}, CONFIG.YEAR_SCALE, T.YEAR_SCALE);
   CONFIG.STORY_DISABLE = T.STORY_DISABLE || []; CONFIG.TUJUAN_DISABLE = T.TUJUAN_DISABLE || []; CONFIG.STORY_SEASON_ALIAS = T.STORY_SEASON_ALIAS || null;
