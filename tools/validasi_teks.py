@@ -1117,14 +1117,15 @@ for p, s in teks_v180.jalan_teks({k: v for k, v in ov.items() if not k.startswit
 V180 = {"keinginan.tabungan_haji.log_berangkat": (("nama", "jumlah"), ("nama", "jumlah"), "log"), "keinginan._ui.log_berangkat": (("nama", "jumlah"), ("nama", "jumlah"), "log"),
         "keinginan.tabungan_haji.gelar_l": ((), (), "gelar"), "keinginan.tabungan_haji.gelar_p": ((), (), "gelar"),
         "agustusan.panitia.label": ((), (), "label"), "agustusan.ikon_log": ((), (), "ikon"),
-        "menu.simpan_berhasil": ((), (), "log"), "menu.simpan_gagal": ((), (), "log"), "menu.simpan_tema_beda": (("tema",), ("tema",), "log")}
+        "menu.simpan_berhasil": ((), (), "log"), "menu.simpan_gagal": ((), (), "log"), "menu.simpan_tema_beda": (("tema",), ("tema",), "log"),
+        "harapan_warga.naik": (("jumlah",), ("jumlah",), "variasi")}
 try:
     _g = open(ROOT + "game.js", encoding="utf-8").read()
     if not re.search(r"const ex = \{ nama: v\.name, jumlah: days \}; log\('🧳 ' \+ TX\('keinginan\.' \+ why \+ '\.log_berangkat', ex, TX\('keinginan\._ui\.log_berangkat', ex", _g):
         sed_warn.append("v1.8.0: keinginan.<id>.log_berangkat tidak lagi dibaca seperti a1e04f7 (ex = {nama, jumlah}); periksa placeholder")
     if "TX('keinginan.' + id + (v.sex === 'P' ? '.gelar_p' : '.gelar_l'), {}" not in _g: sed_warn.append("v1.8.0: gelar_l/gelar_p tidak lagi dibaca seperti a1e04f7")
     if not re.search(r"\$\{v\.gelar && a\.why === 'tabungan_haji' \? v\.gelar \+ ' ' : ''\}\$\{v\.name\}", _g): sed_warn.append("v1.8.0: gelar tidak lagi dipakai di depan nama; periksa bentuk gelar")
-    for path in ("agustusan.ikon_log", "agustusan.panitia.label", "menu.simpan_berhasil", "menu.simpan_gagal", "menu.simpan_tema_beda"):
+    for path in ("agustusan.ikon_log", "agustusan.panitia.label", "menu.simpan_berhasil", "menu.simpan_gagal", "menu.simpan_tema_beda", "harapan_warga.naik"):
         _x = re.search(r"TX\('" + re.escape(path) + r"', \{([^}]*)\}", _g)
         if not _x: sed_warn.append(f"v1.8.0: {path} tidak lagi ditemukan di game.js"); continue
         _k = set(re.findall(r"(?:^|,)\s*(\w+)\s*:", _x.group(1)))
@@ -1133,6 +1134,12 @@ except Exception as e: sed_warn.append(f"game.js tidak terbaca untuk cek v1.8.0 
 def cek_v180(T, sumber):
     for path, (ph, wajib, jenis) in V180.items():
         v = ambil(T, path)
+        if jenis == "variasi":
+            if not (isinstance(v, list) and 2 <= len(v) <= 4 and all(isinstance(x, str) for x in v)): err.append(f"{sumber}{path} harus array 2-4 variasi (log lewat TX)"); continue
+            for x in v:
+                cek_teks(x, path, sumber, ph, True)
+                if x.startswith("Hari ") or "<" in x: err.append(f"{sumber}{path}: tanpa awalan 'Hari ' dan tanpa '<'")
+            continue
         if not (isinstance(v, str) and v.strip()): err.append(f"{sumber}{path} harus string tidak kosong"); continue
         cek_teks(v, path, sumber, ph, False)
         for w in wajib:
@@ -1145,7 +1152,7 @@ def cek_v180(T, sumber):
 cek_v180(new, "")
 cek_v180(sd, "sedang:")
 for path in ("agustusan.panitia.label", "agustusan.ikon_log", "keinginan.tabungan_haji.log_berangkat", "keinginan.tabungan_haji.gelar_l",
-             "keinginan.tabungan_haji.gelar_p", "keinginan._ui.log_berangkat"):
+             "keinginan.tabungan_haji.gelar_p", "keinginan._ui.log_berangkat", "harapan_warga.naik"):
     if ambil(ov, path) is None: sed_err.append(f"overlay sedang tanpa {path} (teks Nusantara akan dipakai)")
 for path in ("keinginan.tabungan_haji.gelar_l", "keinginan.tabungan_haji.gelar_p"):
     if ambil(sd, path) in ("Haji", "Hajjah"): sed_err.append(f"sedang:{path} masih gelar Nusantara")

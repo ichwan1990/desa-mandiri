@@ -1145,12 +1145,13 @@
         "agustusan.panitia.label": "string; label kecil kartu panitia (innerHTML lewat qAttr)",
         "agustusan.ikon_log": "string emoji; awalan log panitia/lomba",
         "menu.simpan_berhasil / simpan_gagal": "string (log); tanpa placeholder",
-        "menu.simpan_tema_beda": "string (log); {tema} = id tema simpanan (L0._tema)"
+        "menu.simpan_tema_beda": "string (log); {tema} = id tema simpanan (L0._tema)",
+        "harapan_warga.naik": "array 2-4 variasi (log); {jumlah} = tingkat harapan warga (1-3) yang baru dicapai"
       },
       "r05": "Nama bangunan Title Case seperti BUILDING_NAMES (Pos Ronda, Balai Desa, Lumbung Padi, Gubuk Bambu, Bengkel Alat, Menara Jaga) di posisi mana pun; Api Unggun / Kandang Ayam / Orang-orangan Sawah / Rumah Kayu hanya bila ditulis berhuruf awal kapital (bentuk kecil = kata benda umum). Sholat -> Salat, Ramah Tamah -> Ramah-tamah. meta.bangunan = BUILDING_NAMES tema indonesia (Rumah Panggung, Balai Desa). Aturan: tools/teks_v180.py.",
       "r07": "Tema sedang memakai nama Eropa (overlay penduduk[].nama, kelahiran.nama_bayi, dialog_pedagang.nama_pedagang). meta.peta_sifat_penduduk mendapat entri nama sedang dengan sifat yang sama seperti nama Nusantara di indeks yang sama.",
       "s01": "{pasangan} di duka_harian = pasangan almarhum ATAU warga terdekat (game.js S.grief.pasangan), cadangan 'Keluarganya' berhuruf kapital -> {pasangan} hanya di awal kalimat (dicek validator).",
-      "catatan_koding": "{tema} di menu.simpan_tema_beda saat ini id mentah ('sedang'/'indonesia'); sebaiknya kirim nama tema yang ramah. Fallback 'Pak Darto' (game.js spawnMerchant), C.NAMES (balance.js), nama era 'Dusun' (C.ERAS) dan bangunan 'Tambak' masih dari kode."
+      "catatan_koding": "{tema} di menu.simpan_tema_beda saat ini id mentah ('sedang'/'indonesia'); sebaiknya kirim nama tema yang ramah. Fallback 'Pak Darto' (game.js spawnMerchant), C.NAMES (balance.js), nama era 'Dusun' (C.ERAS) dan bangunan 'Tambak' masih dari kode. harapan_warga.naik satu key untuk semua tingkat (cadangan kode membedakan tingkat 1); bila perlu teks per tingkat, baca mis. harapan_warga.naik_<lv>."
     }
   },
   "penduduk": [
@@ -10821,6 +10822,14 @@
       "Angin kencang bertiup, tapi atap yang sudah diikat tetap bertahan.",
       "Angin menderu semalaman, tapi atap yang sudah diikat erat tetap di tempatnya.",
       "Angin kencang menggoyang pepohonan. Untung atap sudah diikat dengan tali ijuk, semua tetap aman."
+    ]
+  },
+  "harapan_warga": {
+    "_catatan": "Harapan warga (game.js harapanDaily, v17 8840587): log saat tingkat harapan naik. TX('harapan_warga.naik', { jumlah: lv }) -> array = variasi acak; {jumlah} = tingkat harapan (1-3, = poin batas nyaman yang hilang). Tanpa awalan 'Hari '.",
+    "naik": [
+      "Desa makin mapan, dan harapan warga ikut naik ke tingkat {jumlah}. Hidup yang sekadar cukup tak lagi terasa istimewa.",
+      "Harapan warga naik ke tingkat {jumlah}. Kenyamanan lama kini terasa biasa; warga menanti hal-hal baik yang baru.",
+      "Warga mulai bermimpi lebih tinggi (harapan tingkat {jumlah}). Pesta, keinginan yang terwujud, dan monumen baru akan membuat mereka tetap bahagia."
     ]
   }
 }

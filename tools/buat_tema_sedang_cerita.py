@@ -782,6 +782,10 @@ import teks_v180
 from teks_v180 import NAMA_SEDANG, NAMA_BAYI_SEDANG, PEDAGANG_SEDANG, r05
 def I(**kv): return {"__byIdx": {k.lstrip("_"): v for k, v in kv.items()}}
 T02_V180 = {
+ "harapan_warga": {"naik": [
+  "Desa makin mapan, dan harapan warga ikut naik ke tingkat {jumlah}. Hidup yang sekadar cukup tak lagi terasa istimewa.",
+  "Harapan warga naik ke tingkat {jumlah}. Perapian hangat dan lumbung penuh kini terasa biasa; warga menanti hal-hal baik yang baru.",
+  "Warga mulai bermimpi lebih tinggi (harapan tingkat {jumlah}). Pesta, keinginan yang terwujud, dan monumen baru akan membuat mereka tetap bahagia."]},
  "meta": {"bangunan": {"api_unggun": "Api Unggun", "gubuk": "Gubuk", "gudang": "Gudang", "ladang": "Ladang", "sumur": "Sumur",
    "tempat_penebangan": "Tempat Penebangan", "tambang": "Tambang", "dapur": "Dapur", "bengkel_alat": "Bengkel Alat", "rumah_kayu": "Rumah Kayu",
    "lumbung": "Lumbung", "pasar": "Pasar", "balai_desa": "Balai Desa"}},

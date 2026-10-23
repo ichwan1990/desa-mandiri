@@ -3914,6 +3914,13 @@
    ]
   }
  },
+ "harapan_warga": {
+  "naik": [
+   "Desa makin mapan, dan harapan warga ikut naik ke tingkat {jumlah}. Hidup yang sekadar cukup tak lagi terasa istimewa.",
+   "Harapan warga naik ke tingkat {jumlah}. Perapian hangat dan lumbung penuh kini terasa biasa; warga menanti hal-hal baik yang baru.",
+   "Warga mulai bermimpi lebih tinggi (harapan tingkat {jumlah}). Pesta, keinginan yang terwujud, dan monumen baru akan membuat mereka tetap bahagia."
+  ]
+ },
  "_cerita_sedang": {
   "versi": "1.8.0-sedang.1",
   "alat": "tools/buat_tema_sedang_cerita.py",
